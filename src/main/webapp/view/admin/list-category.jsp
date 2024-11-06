@@ -19,7 +19,6 @@
             <c:url value="/image?fname=${cate.images }" var="imgUrl"></c:url>
             <td><img height="150" width="200" src="${imgUrl}"></td>
             <td>${cate.cateName}</td>
-
         </tr>
     </c:forEach>
 </body>

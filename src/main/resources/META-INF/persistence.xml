@@ -8,6 +8,9 @@
     <persistence-unit name="ShoeStore" transaction-type="RESOURCE_LOCAL">
 
         <class>entity.CategoryEntity</class>
+        <class>entity.Address</class>
+        <class>entity.User</class>
+        <class>entity.Customer</class>
 
         <properties>
             <property name="javax.persistence.jdbc.url" value="jdbc:mysql://mysql-e0bbe0e-student-4819.h.aivencloud.com:22002/ShoeStore?useSSL=true&amp;requireSSL=true"/>

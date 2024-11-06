@@ -13,4 +13,9 @@ public class CategoryServiceImpl implements ICategoryService {
     public List<CategoryEntity> findAll() {
         return userDao.findAll();
     }
+
+    @Override
+    public void insert() {
+
+    }
 }
