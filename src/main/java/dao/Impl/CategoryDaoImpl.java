@@ -1,12 +1,13 @@
-package dao.Impl;
+package repository.Impl;
 
-import dao.ICategoryDao;
-import entity.CategoryEntity;
+import entity.Cart;
+import repository.ICategoryDao;
+
 import java.util.List;
 
 public class CategoryDaoImpl implements ICategoryDao {
     @Override
-    public List<CategoryEntity> findAll() {
+    public List<Cart> findAll() {
         return null;
     }
 }
