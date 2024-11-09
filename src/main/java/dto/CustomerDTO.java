@@ -1,67 +1,25 @@
 package dto;
 
-public class CustomerDTO {
-    private Boolean active;
-    private LocalDate dateOfBirth;
-    private Integer loyalty;
-    private Integer userId;
-    private Integer addressId;
-    private Integer cartCartId;
-    private Integer chatId;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import java.util.*;
 
-    public Boolean getActive() {
-        return this.active;
-    }
+import java.util.Date;
 
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
-
-    public LocalDate getDateOfBirth() {
-        return this.dateOfBirth;
-    }
-
-    public void setDateOfBirth(LocalDate dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
-    public Integer getLoyalty() {
-        return this.loyalty;
-    }
-
-    public void setLoyalty(Integer loyalty) {
-        this.loyalty = loyalty;
-    }
-
-    public Integer getUserId() {
-        return this.userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public Integer getAddressId() {
-        return this.addressId;
-    }
-
-    public void setAddressId(Integer addressId) {
-        this.addressId = addressId;
-    }
-
-    public Integer getCartCartId() {
-        return this.cartCartId;
-    }
-
-    public void setCartCartId(Integer cartCartId) {
-        this.cartCartId = cartCartId;
-    }
-
-    public Integer getChatId() {
-        return this.chatId;
-    }
-
-    public void setChatId(Integer chatId) {
-        this.chatId = chatId;
-    }
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class CustomerDTO extends UserDTO {
+    private boolean active;
+    private Date dateOfBirth;
+    private int loyalty;
+    private AddressDTO addressDTO;
+    private CartDTO cartDTO;
+    private List<OrderDTO> ordersDTOList;
+    private ChatDTO chatDTO;
+    private List<ReviewDTO> reviewDTOList;
+    private List<NotifyDTO> notifyDTOList;
 }

@@ -1,4 +1,4 @@
-package entity;
+package enums;
 
 public enum OrderStatus {
     WAITING_CONFIRMATION,

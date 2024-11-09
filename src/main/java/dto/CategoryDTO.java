@@ -1,22 +1,18 @@
 package dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import java.util.List;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class CategoryDTO {
-    private Integer categoryId;
+    private int categoryId;
     private String categoryName;
 
-    public Integer getCategoryId() {
-        return this.categoryId;
-    }
-
-    public void setCategoryId(Integer categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public String getCategoryName() {
-        return this.categoryName;
-    }
-
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
-    }
+    private List<ProductDTO> productDTOList;
 }

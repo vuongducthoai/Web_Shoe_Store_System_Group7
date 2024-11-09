@@ -1,5 +1,6 @@
 package entity;
 
+import enums.PaymentMethod;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

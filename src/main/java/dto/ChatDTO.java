@@ -1,13 +1,17 @@
 package dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import java.util.*;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ChatDTO {
-    private Integer chatId;
-
-    public Integer getChatId() {
-        return this.chatId;
-    }
-
-    public void setChatId(Integer chatId) {
-        this.chatId = chatId;
-    }
+    private int chatId;
+    private CustomerDTO customer;
+    private List<MessageDTO> messages;
 }

@@ -1,7 +1,9 @@
 package dto;
 
+import java.util.*;
+
 public class CartDTO {
     private int cartId;
-    private int customerId;
-
+    private CustomerDTO customerDTO;
+    List<CartItemDTO> cartItemDTOList;
 }

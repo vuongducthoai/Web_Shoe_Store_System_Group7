@@ -1,40 +1,17 @@
 package dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class OrderItemDTO {
-    private Integer orderItemId;
+    private int orderItemId;
+    private OrderDTO orderDTO;
+    private ProductDTO productDTO;
     private Integer quantity;
-    private Integer orderId;
-    private Integer productId;
-
-    public Integer getOrderItemId() {
-        return this.orderItemId;
-    }
-
-    public void setOrderItemId(Integer orderItemId) {
-        this.orderItemId = orderItemId;
-    }
-
-    public Integer getQuantity() {
-        return this.quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public Integer getOrderId() {
-        return this.orderId;
-    }
-
-    public void setOrderId(Integer orderId) {
-        this.orderId = orderId;
-    }
-
-    public Integer getProductId() {
-        return this.productId;
-    }
-
-    public void setProductId(Integer productId) {
-        this.productId = productId;
-    }
 }

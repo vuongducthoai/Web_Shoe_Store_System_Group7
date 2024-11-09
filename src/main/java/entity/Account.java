@@ -1,5 +1,7 @@
 package entity;
 
+import enums.AuthProvider;
+import enums.RoleType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
