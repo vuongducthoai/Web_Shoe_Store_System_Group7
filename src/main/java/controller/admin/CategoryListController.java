@@ -2,7 +2,6 @@ package controller.admin;
 
 import dto.CategoryDTO;
 import dto.ProductDTO;
-import entity.Cart;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -15,7 +14,7 @@ import java.util.List;
 
 import java.io.IOException;
 
-@WebServlet(urlPatterns = {"/admin/category/list"})
+@WebServlet(urlPatterns = {"/admin/category/list", "/admin/category/insert"})
 public class CategoryListController extends HttpServlet {
     ICategoryService categoryService = new CategoryServiceImpl();
 
@@ -29,9 +28,13 @@ public class CategoryListController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String categoryName = req.getParameter("categoryName");
-        CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setCategoryName(categoryName);
-        categoryService.insert(categoryDTO);
+        String path = req.getServletPath();
+        if ("/admin/category/insert".equals(path)) {
+            String categoryName = req.getParameter("categoryName");
+            CategoryDTO categoryDTO = new CategoryDTO();
+            categoryDTO.setCategoryName(categoryName);
+            categoryService.insert(categoryDTO);
+            resp.sendRedirect(req.getContextPath() + "/admin/category/list"); // Redirect to list after insertion
+        }
     }
 }
