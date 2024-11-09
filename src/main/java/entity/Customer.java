@@ -1,11 +1,10 @@
 package entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.JoinColumn;
+import jakarta.persistence.*;
+
 import java.util.Date;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,9 +21,26 @@ public class Customer extends User {
     private Date dateOfBirth;
 
     @OneToOne
-    @JoinColumn(name = "address_id") // Tên cột khóa ngoại trong bảng Customer
+    @JoinColumn(name = "addressID")
     private Address address;
+
+    @OneToOne
+    private Cart cart;
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    private List<Order> orders;
 
     private int loyalty;
     private boolean active;
+
+
+    @OneToMany(mappedBy = "customer")
+    private List<Review> reviewList;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "chatID")
+    private Chat chat;
+
+    @OneToMany(mappedBy = "customer")
+    private List<Notify> notifyList;
 }

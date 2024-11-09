@@ -1,11 +1,7 @@
 package entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
+import java.util.List;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +19,13 @@ public class User {
     private int userID;
 
     private String fullName;
-    private String email;
-    private String password;
     private String phone;
+
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true) // Neu user bi xoa thi tham chieu den account bi bo
+    @JoinColumn(name = "accountID")
+    private Account account;
+
+    @OneToMany(mappedBy = "admin")
+    private List<Response> responses;
 }

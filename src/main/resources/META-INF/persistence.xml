@@ -6,28 +6,27 @@
        http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
 
     <persistence-unit name="ShoeStore" transaction-type="RESOURCE_LOCAL">
-
-        <class>entity.CategoryEntity</class>
-        <class>entity.Address</class>
-        <class>entity.User</class>
-        <class>entity.Customer</class>
-
         <properties>
-            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://mysql-e0bbe0e-student-4819.h.aivencloud.com:22002/ShoeStore?useSSL=true&amp;requireSSL=true"/>
-            <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
-            <property name="javax.persistence.jdbc.user" value="avnadmin"/>
-            <property name="javax.persistence.jdbc.password" value="AVNS_1_j3OIsAxKQkzPaWMW2"/>
+            <!-- Database connection properties -->
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://mysql-e0bbe0e-student-4819.h.aivencloud.com:22002/ShoeStore?useSSL=true&amp;requireSSL=true"/>
+            <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
+            <property name="jakarta.persistence.jdbc.user" value="avnadmin"/>
+            <property name="jakarta.persistence.jdbc.password" value="AVNS_1_j3OIsAxKQkzPaWMW2"/>
 
-            <!-- Hibernate specific properties -->
-            <property name="hibernate.show_sql" value="true"/>
-            <property name="hibernate.format_sql" value="true"/>
+
+            <!-- Hibernate properties -->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
 
-            <!-- Dialect -->
-            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL57Dialect"/>
+            <!-- Logging and formatting SQL -->
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.use_sql_comments" value="true"/>
 
-            <!-- Schema generation -->
-            <property name="javax.persistence.schema-generation.database.action" value="update"/>
+            <!-- Additional settings -->
+            <property name="hibernate.generate_statistics" value="true"/>
+            <property name="hibernate.cache.use_query_cache" value="false"/>
+            <property name="hibernate.cache.use_second_level_cache" value="false"/>
         </properties>
     </persistence-unit>
 </persistence>

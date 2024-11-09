@@ -1,8 +1,8 @@
 package service.Impl;
 
+import entity.Cart;
 import dao.ICategoryDao;
 import dao.Impl.CategoryDaoImpl;
-import entity.CategoryEntity;
 import service.ICategoryService;
 
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
 public class CategoryServiceImpl implements ICategoryService {
     ICategoryDao userDao = new CategoryDaoImpl();
     @Override
-    public List<CategoryEntity> findAll() {
+    public List<Cart> findAll() {
         return userDao.findAll();
     }
 

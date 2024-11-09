@@ -1,7 +1,7 @@
-package repository.Impl;
+package dao.Impl;
 
 import entity.Cart;
-import repository.ICategoryDao;
+import dao.ICategoryDao;
 
 import java.util.List;
 

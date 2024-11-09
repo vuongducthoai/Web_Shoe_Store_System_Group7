@@ -1,6 +1,6 @@
 package controller.admin;
 
-import entity.CategoryEntity;
+import entity.Cart;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -19,7 +19,7 @@ public class CategoryListController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<CategoryEntity> cateList = categoryService.findAll();
+        List<Cart> cateList = categoryService.findAll();
         req.setAttribute("cateList", cateList);
         RequestDispatcher rq = req.getRequestDispatcher("/views/admin/list-category.jsp");
         rq.forward(req, resp);

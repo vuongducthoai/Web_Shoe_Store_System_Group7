@@ -1,6 +1,6 @@
 package entity;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,9 +13,18 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Notify {
+public class Review {
 
-    private int notifyID;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int reviewID;
+    private int ratingValue;
     private Date date;
+    @ManyToOne
+    @JoinColumn(name = "customerID")
+    private Customer customer;
     private String comment;
+
+    @OneToOne(mappedBy = "review")
+    private Response response;
 }

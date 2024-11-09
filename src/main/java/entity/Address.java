@@ -24,17 +24,5 @@ public class Address {
     private String province;
     private String district;
     private String city;
-
-    public void setAddress(int houseNumber, String streetName, String province, String district, String city) {
-        this.houseNumber = houseNumber;
-        this.streetName = streetName;
-        this.province = province;
-        this.district = district;
-        this.city = city;
-    }
-
-    public String getFullAddress() {
-        return houseNumber + " " + streetName + ", " + district + ", " + city + ", " + province;
-    }
 }
 

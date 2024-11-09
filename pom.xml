@@ -47,7 +47,7 @@
         <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>6.3.1.Final</version>
+            <version>6.0.0.Final</version> <!-- Use a compatible version with Jakarta EE 9+ -->
         </dependency>
 
         <dependency>

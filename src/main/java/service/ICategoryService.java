@@ -1,9 +1,10 @@
 package service;
 
-import entity.CategoryEntity;
+import entity.Cart;
+
 import java.util.List;
 public interface ICategoryService {
-    List<CategoryEntity> findAll();
+    List<Cart> findAll();
 
     void insert();
 
