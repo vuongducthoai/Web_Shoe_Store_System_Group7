@@ -11,6 +11,12 @@ import java.util.List;
 @Getter
 @Setter
 public class ProductDTO {
+    public ProductDTO(int productId, String productName, double price) {
+        this.productId = productId;
+        this.productName = productName;
+        this.price = price;
+    }
+
     private int productId;
     private String productName;
     private double price;

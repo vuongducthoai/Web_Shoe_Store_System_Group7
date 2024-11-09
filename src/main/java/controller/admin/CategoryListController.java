@@ -1,5 +1,7 @@
 package controller.admin;
 
+import dto.CategoryDTO;
+import dto.ProductDTO;
 import entity.Cart;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -19,9 +21,17 @@ public class CategoryListController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<Cart> cateList = categoryService.findAll();
-        req.setAttribute("cateList", cateList);
+        List<ProductDTO> categoryList = categoryService.findAll();
+        req.setAttribute("categoryList", categoryList);
         RequestDispatcher rq = req.getRequestDispatcher("/views/admin/list-category.jsp");
         rq.forward(req, resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String categoryName = req.getParameter("categoryName");
+        CategoryDTO categoryDTO = new CategoryDTO();
+        categoryDTO.setCategoryName(categoryName);
+        categoryService.insert(categoryDTO);
     }
 }

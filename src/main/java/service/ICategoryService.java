@@ -1,11 +1,11 @@
 package service;
 
-import entity.Cart;
+import dto.CategoryDTO;
+import dto.ProductDTO;
 
 import java.util.List;
 public interface ICategoryService {
-    List<Cart> findAll();
+    List<ProductDTO> findAll();
 
-    void insert();
-
+    void insert(CategoryDTO categoryDTO);
 }
