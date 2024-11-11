@@ -28,5 +28,5 @@ public class ProductDTO {
     private List<CartItemDTO> cartItemDTOList;
     private List<OrderItemDTO> orderItemDTOList;
     private CategoryDTO categoryDTO;
-    private ProductDTO promotionDTO;
+    private PromotionDTO promotionDTO;
 }
