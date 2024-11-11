@@ -18,8 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Order {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int orderId;
+    private String orderId;
 
     @ManyToOne
     @JoinColumn(name = "customerID")
