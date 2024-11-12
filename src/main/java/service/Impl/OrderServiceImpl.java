@@ -42,8 +42,8 @@ public class OrderServiceImpl implements IOrderService {
         }
         PaymentDTO paymentDTO = new PaymentDTO();
             paymentDTO.setAmount(jsonKQ.getInt("amount"));
+            paymentDTO.setMomoBillId(orderId);
         OrderDTO order = new OrderDTO();
-            order.setOrderId(orderId);
             order.setCustomer(customer);
             order.setOrderItems(OrderItemDTOList);
             order.setPayment(paymentDTO);
