@@ -20,7 +20,6 @@ public class CategoryServiceImpl implements ICategoryService {
     public void insert(CategoryDTO categoryDTO) {
         Category category = new Category();
         category.setCategoryName(categoryDTO.getCategoryName());
-
         categoryDao.insert(category);
     }
 
