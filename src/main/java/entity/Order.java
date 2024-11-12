@@ -18,7 +18,8 @@ import java.util.List;
 @NoArgsConstructor
 public class Order {
     @Id
-    private String orderId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int orderId;
 
     @ManyToOne
     @JoinColumn(name = "customerID")
@@ -37,4 +38,5 @@ public class Order {
     private OrderStatus orderStatus;
 
     private Date orderDate;
+
 }
