@@ -44,7 +44,12 @@ public class Momo {
             // Chuyển đổi chữ ký từ byte sang chuỗi hex
             StringBuilder hexString = new StringBuilder();
             for (byte b : hmacBytes) {
-                hexString.append(String.format("%02x", b));
+                String hex = Integer.toHexString(b & 0xFF); // Chuyển byte thành hex
+                if (hex.length() == 1) {
+                    hexString.append("0"); // Thêm 0 nếu chuỗi hex có 1 ký tự
+                }
+                hexString.append(hex);
+
             }
             return hexString.toString();
         } catch (Exception e) {
@@ -70,6 +75,7 @@ public class Momo {
         jsonObject.put("requestId",requestId);
         jsonObject.put("extraData",extraData(items,idUser));
         jsonObject.put("signature",hash);
+        System.out.println(jsonObject.toString());
         return jsonObject;
     }
     public HttpResponse<String> CallApi(List<CartItemDTO> items,int idUser,int amount){
