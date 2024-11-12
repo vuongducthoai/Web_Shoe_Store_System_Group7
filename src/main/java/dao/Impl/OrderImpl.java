@@ -26,8 +26,19 @@ public class OrderImpl implements IOrderDao {
             Customer customer = entityManager.find(Customer.class,Integer.valueOf(order.getCustomer().getUserID()));
             List<OrderItemDTO> ListOrderItem = order.getOrderItems();
             List<OrderItem> orderItems = new ArrayList<OrderItem>();
+            Order orderEnty = new Order();
+            orderEnty.setOrderId(order.getOrderId());
+            orderEnty.setCustomer(customer);
+            orderEnty.setOrderDate(Date.from(Instant.now()));
+            orderEnty.setOrderStatus(OrderStatus.WAITING_CONFIRMATION);
+            entityManager.persist(orderEnty);
             for (OrderItemDTO item : ListOrderItem) {
-                OrderItem orderItem = entityManager.find(OrderItem.class,Integer.valueOf(item.getOrderItemId()));
+                OrderItem orderItem = new OrderItem();
+                Product product = entityManager.find(Product.class,item.getProductDTO().getProductId());
+                orderItem.setOrder(orderEnty);
+                orderItem.setProduct(product);
+                orderItem.setQuantity(item.getQuantity());
+                entityManager.persist(orderItem);
                 orderItems.add(orderItem);
             }
 
@@ -36,15 +47,12 @@ public class OrderImpl implements IOrderDao {
             payment.setPaymentMethod(PaymentMethod.MOMO);
             payment.setAmount(order.getPayment().getAmount());
             payment.setStatus(true);
-            Order orderEnty = new Order();
-            orderEnty.setOrderId(order.getOrderId());
-            orderEnty.setCustomer(customer);
+            entityManager.persist(payment);
+
             orderEnty.setPayment(payment);
-            orderEnty.setOrderDate(Date.from(Instant.now()));
-            orderEnty.setOrderStatus(OrderStatus.WAITING_CONFIRMATION);
             orderEnty.setOrderItems(orderItems);
             payment.setOrder(orderEnty);
-            entityManager.persist(orderEnty);
+
             transaction.commit();
         } catch (Exception e) {
             e.printStackTrace();

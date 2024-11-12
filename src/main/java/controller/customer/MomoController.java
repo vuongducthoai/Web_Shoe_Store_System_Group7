@@ -10,6 +10,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import service.IOrderService;
+import service.Impl.OrderServiceImpl;
 
 import java.io.IOException;
 import java.net.URI;
@@ -23,6 +25,7 @@ import java.util.List;
 
 @WebServlet(urlPatterns = {"/Momo_pay","/CallBack"})
 public class MomoController extends HttpServlet {
+    IOrderService orderService = new OrderServiceImpl();
     private Momo momo = new Momo();
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -79,8 +82,10 @@ public class MomoController extends HttpServlet {
         if (response.statusCode() == 200) {
             JSONObject jsonKQ = new JSONObject((response.body()));
             if (jsonKQ.getInt("resultCode")==0){
-                String extraData = jsonKQ.getString("extraData");
-                getServletContext().getRequestDispatcher("/view/customer/paySuccess.jsp").forward(req, resp);
+                if (orderService.CreateOrder(jsonKQ.toString()))
+                    getServletContext().getRequestDispatcher("/view/customer/paySuccess.jsp").forward(req, resp);
+                else
+                    getServletContext().getRequestDispatcher("/view/customer/payError.jsp").forward(req, resp);
             }
             else {
                 getServletContext().getRequestDispatcher("/view/customer/payError.jsp").forward(req, resp);
@@ -102,7 +107,6 @@ public class MomoController extends HttpServlet {
         System.out.println(jsonArray.toString());
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject obj = jsonArray.getJSONObject(i);
-            System.out.println(obj.toString());
             CartItemDTO item = new CartItemDTO();
             ProductDTO product = new ProductDTO();
             product.setProductId(obj.getInt("idProduct"));
@@ -111,6 +115,7 @@ public class MomoController extends HttpServlet {
             items.add(item);
         }
         HttpResponse<String> response = momo.CallApi(items,idUser,total);
+        System.out.println(response);
         if (response.statusCode() == 200) {
             JSONObject jsonKQ = new JSONObject((response.body()));
             if (jsonKQ.getInt("resultCode") ==0)
