@@ -193,10 +193,18 @@
        </span>
                 </p>
                 <form action="Momo_pay" method="post">
-                    <input type="text" name="cartItem" value="${JsonCart}">
+                    <input type="text" name="cartItem" value="${JsonCart}" hidden="hidden">
                     <input type="text" name="Total" value="${Sum}" hidden="hidden">
                     <button class="btn btn-dark w-100">
                         Go to Checkout
+                        <i class="fas fa-arrow-right">
+                        </i>
+                    </button>
+                </form>
+                <form action="Cart/Add" method="post">
+                    <input type="text" value="1" name="idProduct" hidden="hidden"/>
+                    <button class="btn btn-dark w-100">
+                        TWP
                         <i class="fas fa-arrow-right">
                         </i>
                     </button>

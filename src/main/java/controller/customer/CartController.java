@@ -24,7 +24,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-@WebServlet(urlPatterns = {"/Cart","/Cart/Add","/Cart/Remove","/Cart/Delete_Item"})
+@WebServlet(urlPatterns = {"/Cart","/Cart/Add","/Cart/Remove","/Cart/Delete_Item","/Cart/Add_TWP"})
 public class CartController extends HttpServlet {
     ICartService iCartService = new CartServiceImpl();
     @Override
@@ -74,10 +74,10 @@ public class CartController extends HttpServlet {
         }
         String encodedCartJson = URLEncoder.encode(jsonArray.toString(), StandardCharsets.UTF_8.toString());
         req.setAttribute("CartList", cart);
-        req.setAttribute("total", total);
-        req.setAttribute("discount", discount);
-        req.setAttribute("feeShip", feeShip);
-        req.setAttribute("Sum", total-discount+feeShip);
+        req.setAttribute("total", Double.valueOf(total));
+        req.setAttribute("discount", Double.valueOf(discount));
+        req.setAttribute("feeShip", Double.valueOf(feeShip));
+        req.setAttribute("Sum", Double.valueOf(total-discount+feeShip));
         req.setAttribute("JsonCart", encodedCartJson);
         req.getRequestDispatcher("/view/customer/cart.jsp").forward(req, resp);
     }
