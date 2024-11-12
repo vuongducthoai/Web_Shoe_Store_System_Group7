@@ -38,6 +38,4 @@ public class Order {
     private OrderStatus orderStatus;
 
     private Date orderDate;
-
-    private String status;
 }
