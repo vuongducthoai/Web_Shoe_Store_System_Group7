@@ -2,6 +2,7 @@ package dao.Impl;
 
 import JpaConfig.JpaConfig;
 import dao.IOrderDao;
+import dto.CartItemDTO;
 import dto.OrderDTO;
 import dto.OrderItemDTO;
 import entity.*;
@@ -100,6 +101,28 @@ public class OrderImpl implements IOrderDao {
             e.printStackTrace();
             transaction.rollback();
             return false;
+        }
+        return true;
+    }
+    public boolean CanCreateOrder(List<CartItemDTO> cartItem){
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        for (CartItemDTO item : cartItem) {
+            try {
+                Product product = entityManager.find(Product.class, item.getProductDTO().getProductId());
+                Object[] quantity = entityManager.createQuery("select count (*) from Product p" +
+                                " where p.productName like :name and p.color like :color and p.size = :size" +
+                                " and p.status = true", Object[].class)
+                        .setParameter("name", product.getProductName())
+                        .setParameter("color", product.getColor())
+                        .setParameter("size", product.getSize()).getSingleResult();
+                long quantit = (long) quantity[0];
+                if (item.getQuantity() > quantit) {
+                    return false;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
         }
         return true;
     }

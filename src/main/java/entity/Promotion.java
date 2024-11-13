@@ -24,8 +24,8 @@ public class Promotion {
 
     @OneToMany(mappedBy = "promotion")
     private List<Product> applicableProducts ;
-    private double discountValue;
-    private String discountType; // "percentage", "free-shipping", ...
+    private double discountValue; //10: 10%.
+    private String discountType; // "percentage"
     private int minimumLoyalty;
     private boolean isActive;
 

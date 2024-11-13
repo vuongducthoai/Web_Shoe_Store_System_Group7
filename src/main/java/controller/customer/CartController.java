@@ -34,8 +34,8 @@ public class CartController extends HttpServlet {
             case "/Cart":
                 Cart_View(req, resp);
                 break;
-            case "/Cart/Cart_Add":
-
+            case "/Cart/Add":
+                resp.sendRedirect("http://localhost:8080/Cart");
                 break;
             default:
                 break;
@@ -50,7 +50,7 @@ public class CartController extends HttpServlet {
                 Cart_Remove(req, resp,"http://localhost:8080/Cart");
                 break;
             case "/Cart/Add":
-                Cart_Add(req, resp,"http://localhost:8080/Cart");
+                Add_Cart(req, resp);
                 break;
             case "/Cart/Delete_Item":
                 Delete_Cart_Item(req, resp,"http://localhost:8080/Cart");
@@ -59,12 +59,12 @@ public class CartController extends HttpServlet {
                 break;
         }
     }
-
-    private void Cart_View(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<CartItemDTO> cart = iCartService.findAll(1);
+    public void Load_Cart_View(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        int idUser = 1;
+        List<CartItemDTO> cart = iCartService.findAll(idUser);
         double total = iCartService.Total_Cart(cart);
-        double discount = iCartService.Discount(cart);
-        double feeShip = iCartService.FeeShip(1);
+        double discount = iCartService.CalculateDiscount(cart,idUser);
+        double feeShip = iCartService.FeeShip(idUser);
         JSONArray jsonArray = new JSONArray();
         for (CartItemDTO cartItemDTO : cart) {
             JSONObject jsonObject = new JSONObject();
@@ -79,6 +79,17 @@ public class CartController extends HttpServlet {
         req.setAttribute("feeShip", Double.valueOf(feeShip));
         req.setAttribute("Sum", Double.valueOf(total-discount+feeShip));
         req.setAttribute("JsonCart", encodedCartJson);
+    }
+    private void Cart_View(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Load_Cart_View(req,resp);
+        req.getRequestDispatcher("/view/customer/cart.jsp").forward(req, resp);
+    }
+
+    private void Add_Cart(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        int idProduct = Integer.parseInt(req.getParameter("idProduct"));
+        int idUser = 1;
+        Cart_Add(req,resp,idUser,idProduct,"Product added to cart successfully","This product cannot be added anymore.");
+        Load_Cart_View(req,resp);
         req.getRequestDispatcher("/view/customer/cart.jsp").forward(req, resp);
     }
 
@@ -87,10 +98,16 @@ public class CartController extends HttpServlet {
         iCartService.RemoveItem(cartItemId);
         resp.sendRedirect(redirect);
     }
-    private void Cart_Add(HttpServletRequest req, HttpServletResponse resp, String redirect) throws ServletException, IOException {
-        int idProduct = Integer.parseInt(req.getParameter("idProduct"));
-        iCartService.AddItem(idProduct,1);
-        resp.sendRedirect(redirect);
+    //errCode = 0 : thanh cong , errCode = 1 : That bai
+    public void Cart_Add(HttpServletRequest req, HttpServletResponse resp,int userId,int idProduct,String messageSuccess,String messageError) throws ServletException, IOException {
+        if (iCartService.AddItem(idProduct,userId)) {
+            req.setAttribute("errCode",0);
+            req.setAttribute("message",messageSuccess);
+        }
+        else {
+            req.setAttribute("errCode",1);
+            req.setAttribute("message",messageError);
+        }
     }
     private void Delete_Cart_Item(HttpServletRequest req, HttpServletResponse resp, String redirect) throws ServletException, IOException {
         int idCartItem = Integer.parseInt(req.getParameter("cartItemId"));
