@@ -13,7 +13,7 @@ public interface ICartService {
     boolean RemoveItem(int cartItemId);
     boolean AddItem(int idProduct,int userId);
     double Total_Cart(List<CartItemDTO> cartItem);
-    double Discount(List<CartItemDTO> cartItem);
     double FeeShip(int idUser);
     boolean deleteCartItem(int cartItemId);
+    double CalculateDiscount(List<CartItemDTO> cartItem,int idUser);
 }

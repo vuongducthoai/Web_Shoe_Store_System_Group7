@@ -1,9 +1,11 @@
 package service.Impl;
 
+import JpaConfig.JpaConfig;
 import dao.IOrderDao;
 import dao.Impl.OrderImpl;
 import dto.*;
 import entity.OrderItem;
+import jakarta.persistence.EntityManager;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import service.IOrderService;
@@ -48,5 +50,10 @@ public class OrderServiceImpl implements IOrderService {
             order.setOrderItems(OrderItemDTOList);
             order.setPayment(paymentDTO);
         return orderDao.CreateOrder(order);
+    }
+
+    @Override
+    public boolean CanCreateOrder(List<CartItemDTO> cartItem) {
+        return orderDao.CanCreateOrder(cartItem);
     }
 }

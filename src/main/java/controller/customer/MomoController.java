@@ -25,6 +25,7 @@ import java.util.List;
 
 @WebServlet(urlPatterns = {"/Momo_pay","/CallBack"})
 public class MomoController extends HttpServlet {
+    CartController cartController = new CartController();
     IOrderService orderService = new OrderServiceImpl();
     private Momo momo = new Momo();
     @Override
@@ -100,12 +101,10 @@ public class MomoController extends HttpServlet {
         String cartItemJson = req.getParameter("cartItem");
         String decodedCartJson = URLDecoder.decode(cartItemJson, StandardCharsets.UTF_8.toString());
         double Total = Double.parseDouble(req.getParameter("Total"));
+        JSONArray jsonArray = new JSONArray(decodedCartJson);
         int total = (int) Total;
-        if (total>0) {
-            JSONArray jsonArray = new JSONArray(decodedCartJson);
-
+        if (!jsonArray.isEmpty()) {
             List<CartItemDTO> items = new ArrayList<CartItemDTO>();
-            System.out.println(jsonArray.toString());
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject obj = jsonArray.getJSONObject(i);
                 CartItemDTO item = new CartItemDTO();
@@ -115,6 +114,13 @@ public class MomoController extends HttpServlet {
                 item.setQuantity(obj.getInt("quantity"));
                 items.add(item);
             }
+            if (!orderService.CanCreateOrder(items)){
+                req.setAttribute("errCode",1);
+                req.setAttribute("message","Not enough stock");
+                cartController.Load_Cart_View(req,resp);
+                getServletContext().getRequestDispatcher("/view/customer/cart.jsp").forward(req, resp);
+                return;
+            }
             HttpResponse<String> response = momo.CallApi(items, idUser, total);
             System.out.println(response);
             if (response.statusCode() == 200) {
@@ -122,10 +128,17 @@ public class MomoController extends HttpServlet {
                 if (jsonKQ.getInt("resultCode") == 0)
                     resp.sendRedirect(jsonKQ.getString("shortLink"));
             } else {
-                resp.sendRedirect("http://localhost:8080/Cart");
+                req.setAttribute("errCode",1);
+                req.setAttribute("message","Payment method is error. Please try again later.");
+                cartController.Load_Cart_View(req,resp);
+                getServletContext().getRequestDispatcher("/view/customer/cart.jsp").forward(req, resp);
             }
         }
-        else
-            resp.sendRedirect("http://localhost:8080/Cart");
+        else {
+            req.setAttribute("errCode",1);
+            req.setAttribute("message","Must have items in cart");
+            cartController.Load_Cart_View(req,resp);
+            getServletContext().getRequestDispatcher("/view/customer/cart.jsp").forward(req, resp);
+        }
     }
 }

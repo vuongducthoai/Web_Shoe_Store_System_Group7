@@ -21,8 +21,8 @@
 <body class="bg-gray-100 flex items-center justify-center h-screen">
 <div class="bg-white p-8 rounded-lg shadow-lg text-center">
     <i class="fas fa-exclamation-triangle text-red-500 text-6xl mb-4"></i>
-    <h1 class="text-2xl font-bold text-red-500 mb-2">Lỗi Giao Dịch</h1>
-    <p class="text-gray-700 mb-4">Đã xảy ra vấn đề khi xử lý giao dịch của bạn. Vui lòng thử lại sau hoặc liên hệ hỗ trợ nếu vấn đề vẫn tiếp diễn.</p>
+    <h1 class="text-2xl font-bold text-red-500 mb-2">Transaction Error</h1>
+    <p class="text-gray-700 mb-4">There was a problem processing your transaction. Please try again later or contact support if the problem persists.</p>
     <a href="index.html" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Về Trang Chủ</a>
 </div>
 </body>

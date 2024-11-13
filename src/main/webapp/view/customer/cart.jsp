@@ -13,7 +13,8 @@
     <title>
         SHOP.CO - Cart
     </title>
-    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
     <style>
         body {
@@ -103,9 +104,7 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
-                <a href="#">
                     Home
-                </a>
             </li>
             <li aria-current="page" class="breadcrumb-item active">
                 Cart
@@ -192,7 +191,7 @@
         ${Sum} VND
        </span>
                 </p>
-                <form action="Momo_pay" method="post">
+                <form action="/Momo_pay" method="post">
                     <input type="text" name="cartItem" value="${JsonCart}" hidden="hidden">
                     <input type="text" name="Total" value="${Sum}" hidden="hidden">
                     <button class="btn btn-dark w-100">
@@ -201,8 +200,8 @@
                         </i>
                     </button>
                 </form>
-                <form action="Cart/Add" method="post">
-                    <input type="text" value="2" name="idProduct" hidden="hidden"/>
+                <form action="/Cart/Add" method="post">
+                    <input type="text" value="17" name="idProduct"/>
                     <button class="btn btn-dark w-100">
                         TWP
                         <i class="fas fa-arrow-right">
@@ -213,5 +212,15 @@
         </div>
     </div>
 </div>
+<script src="/js/Toast.js"></script>
+<script src="/js/cart.js"></script>
+<script>
+    var errCode = "${errCode}";
+    var message = "${message}";
+    if (errCode.length>0){
+        code = parseInt(errCode,10)
+        showError(code,message)
+    }
+</script>
 </body>
 </html>
