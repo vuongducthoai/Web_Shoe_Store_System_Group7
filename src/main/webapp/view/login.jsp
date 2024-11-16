@@ -45,7 +45,7 @@
             </div>
             <form action="loginEmail">
               <c:if test="${not empty errorMessage}">
-                <div style="color: red;">
+                <div class="error-message">
                     ${errorMessage}
                 </div>
               </c:if>
