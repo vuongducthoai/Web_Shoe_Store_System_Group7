@@ -29,7 +29,6 @@ public class Account {
     @Enumerated(EnumType.STRING)
     private RoleType role;
 
-    @OneToOne(mappedBy = "account")
+    @OneToOne(mappedBy = "account", cascade = CascadeType.PERSIST)
     private User user;
-
 }

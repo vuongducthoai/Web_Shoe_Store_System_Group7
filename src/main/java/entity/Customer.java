@@ -20,7 +20,7 @@ public class Customer extends User {
     @Temporal(TemporalType.DATE)
     private Date dateOfBirth;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "addressID")
     private Address address;
 
