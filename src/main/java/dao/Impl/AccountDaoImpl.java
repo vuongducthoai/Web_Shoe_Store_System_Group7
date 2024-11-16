@@ -28,4 +28,25 @@ public class AccountDaoImpl implements IAccountDAO {
         return false;
     }
 
+    @Override
+    public boolean findAccountForLogin(Account account) {
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        try {
+            String jpql = "SELECT a FROM Account a WHERE a.email = :email AND a.password = :password";
+            Account result = entityManager.createQuery(jpql, Account.class)
+                    .setParameter("email", account.getEmail())
+                    .setParameter("password", account.getPassword())
+                    .getSingleResult();
+
+            return result != null;
+        } catch (jakarta.persistence.NoResultException e) {
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+        return false;
+    }
+
 }

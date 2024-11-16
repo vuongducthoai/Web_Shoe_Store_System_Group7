@@ -1,10 +1,17 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
   <title>Login Page</title>
   <link rel="stylesheet" href="https://unpkg.com/bootstrap@5.3.3/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://unpkg.com/bs-brain@2.0.4/components/logins/login-9/assets/css/login-9.css">
 </head>
+<style>
+  .error-message {
+    color: red;
+    margin-bottom: 15px;
+  }
+</style>
 <body>
 <!-- Login 9 - Bootstrap Brain Component -->
 <section class="bg-primary py-3 py-md-5 py-xl-8">
@@ -32,11 +39,16 @@
               <div class="col-12">
                 <div class="mb-4">
                   <h3>Sign in</h3>
-                  <p>Don't have an account? <a href="#">Sign up</a></p>
+                  <p>Don't have an account? <a href="Register.jsp">Sign up</a></p>
                 </div>
               </div>
             </div>
             <form action="loginEmail">
+              <c:if test="${not empty errorMessage}">
+                <div style="color: red;">
+                    ${errorMessage}
+                </div>
+              </c:if>
               <div class="row gy-3 overflow-hidden">
                 <div class="col-12">
                   <div class="form-floating mb-3">

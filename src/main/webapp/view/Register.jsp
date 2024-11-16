@@ -167,7 +167,7 @@
 
                   <div data-mdb-input-init class="form-outline flex-fill mb-0">
                     <label class="form-label" for="password">Password</label>
-                    <input type="password" id="password" class="form-control" />
+                    <input type="password" name="password" id="password" class="form-control" />
                     <span id="password-error" class="error-message">Mật khẩu phải có ít nhất 6 kí tự</span>
                   </div>
 
@@ -190,7 +190,7 @@
                   <div data-mdb-input-init class="form-outline flex-fill mb-0">
 
                     <label class="form-label" for="re-password">Confirmation Password</label>
-                    <input name="re-password" type="password" id="re-password" class="form-control" />
+                    <input name="re-password" type="password" id="re-password" class="form-control" name="re-password" />
                     <span id="re-password-error" class="error-message">Xác nhận mật khẩu là bắt buộc</span>
                   </div>
 

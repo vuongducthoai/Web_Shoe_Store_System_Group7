@@ -53,6 +53,8 @@ public class RegisterController extends HttpServlet {
 
         customerDTO.getAccount().setEmail(email);
         customerDTO.getAccount().setPassword(password);
+
+        System.out.println(customerDTO.getAccount().getPassword());
         customerDTO.getAccount().setAuthProvider(AuthProvider.LOCAL);
         customerDTO.getAccount().setRole(RoleType.CUSTOMER);
         customerDTO.setFullName(fullName);

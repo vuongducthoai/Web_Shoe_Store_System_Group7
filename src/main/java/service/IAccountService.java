@@ -4,5 +4,5 @@ import dto.AccountDTO;
 
 public interface IAccountService {
     boolean InsertAccount(AccountDTO accountDTO);
-
+    boolean findAccountForLogin(AccountDTO accountDTO);
 }
