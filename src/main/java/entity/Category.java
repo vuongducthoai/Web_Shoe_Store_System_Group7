@@ -1,6 +1,7 @@
 package entity;
 
 
+import dto.CategoryDTO;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -22,4 +23,12 @@ public class Category {
 
     @OneToMany(mappedBy = "category")
     private List<Product> products;
+
+    public CategoryDTO categoryToDTO() {
+        return new CategoryDTO(
+            categoryID,
+            categoryName,
+            null
+        );
+    }
 }

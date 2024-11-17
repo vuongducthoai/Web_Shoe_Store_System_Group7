@@ -2,50 +2,37 @@ package dao.Impl;
 
 import JpaConfig.JpaConfig;
 import dao.ICategoryDao;
-import dto.ProductDTO;
-import entity.Category;
-import entity.Product;
+import dto.*;
+import entity.*;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class CategoryDaoImpl implements ICategoryDao {
     @Override
-    public List<ProductDTO> findAll() {
-        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
-        try {
-            List<Product> products = entityManager.createQuery("SELECT p FROM Product p", Product.class).getResultList();
-            return products.stream()
-                    .map(product -> new ProductDTO(
-                            product.getProductID(),
-                            product.getProductName(),
-                            product.getPrice()
-                            // Thêm các trường cần thiết từ Product sang ProductDTO
+    public List<CategoryDTO> findAllCategories() {
+        try (EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager()) {
+            try {
+                // Truy vấn tất cả danh mục và sản phẩm liên quan
+                List<Category> categories = entityManager.createQuery(
+                    "SELECT c FROM Category c LEFT JOIN FETCH c.products", Category.class)
+                    .getResultList();
+
+                // Ánh xạ từ Category sang CategoryDTO
+                return categories.stream()
+                    .map(category -> new CategoryDTO(
+                        category.getCategoryID(),
+                        category.getCategoryName(),
+                        category.getProducts().stream()
+                            .map(product -> product.productToDTO())  // Sử dụng phương thức riêng cho việc ánh xạ sản phẩm
+                            .collect(Collectors.toList())
                     ))
                     .collect(Collectors.toList());
-        } finally {
-            entityManager.close();
-        }
-    }
-
-    @Override
-    public void insert(Category category) {
-        EntityManager em = JpaConfig.getEmFactory().createEntityManager();
-        EntityTransaction transaction = em.getTransaction();
-
-        try {
-            transaction.begin();
-            em.persist(category);
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction.isActive()) {
-                transaction.rollback();
+            } finally {
+                entityManager.close();
             }
-            e.printStackTrace();
-        } finally {
-            em.close();
         }
     }
 }

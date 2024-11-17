@@ -15,7 +15,8 @@ public class ReviewDTO {
     private int reviewID;
     private int ratingValue;
     private Date date;
-    private CustomerDTO customer;
     private String comment;
+    private CustomerDTO customer;
     private ResponseDTO response;
+    private ProductDTO product;
 }
