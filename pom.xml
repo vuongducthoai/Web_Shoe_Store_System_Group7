@@ -128,8 +128,6 @@
             <artifactId>java-security</artifactId>
             <version>3.5.4</version>
         </dependency>
-
-
     </dependencies>
 
     <build>

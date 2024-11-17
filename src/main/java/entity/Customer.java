@@ -20,11 +20,11 @@ public class Customer extends User {
     @Temporal(TemporalType.DATE)
     private Date dateOfBirth;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "addressID")
     private Address address;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Cart cart;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
@@ -37,7 +37,7 @@ public class Customer extends User {
     @OneToMany(mappedBy = "customer")
     private List<Review> reviewList;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "chatID")
     private Chat chat;
 

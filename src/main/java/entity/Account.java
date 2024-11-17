@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
 
 @Entity
 @NoArgsConstructor
@@ -29,6 +31,10 @@ public class Account {
     @Enumerated(EnumType.STRING)
     private RoleType role;
 
-    @OneToOne(mappedBy = "account", cascade = CascadeType.PERSIST)
+    @OneToOne(mappedBy = "account", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @LazyToOne(LazyToOneOption.NO_PROXY)
     private User user;
+
+    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
+    private TokenForgetPassword tokenForgetPassword;
 }

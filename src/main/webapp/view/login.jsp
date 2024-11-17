@@ -11,6 +11,11 @@
     color: red;
     margin-bottom: 15px;
   }
+
+  .captcha-message {
+    display: none;
+    color: red;
+  }
 </style>
 <body>
 <!-- Login 9 - Bootstrap Brain Component -->
@@ -43,12 +48,7 @@
                 </div>
               </div>
             </div>
-            <form action="loginEmail">
-              <c:if test="${not empty errorMessage}">
-                <div class="error-message">
-                    ${errorMessage}
-                </div>
-              </c:if>
+            <form onsubmit="return validateForm()" action="loginEmail" method="post">
               <div class="row gy-3 overflow-hidden">
                 <div class="col-12">
                   <div class="form-floating mb-3">
@@ -62,6 +62,13 @@
                     <label for="password" class="form-label">Password</label>
                   </div>
                 </div>
+                <div class="col-12">
+                  <div class="form-floating mb-3">
+                    <div id="captcha" class="g-recaptcha" data-sitekey="6LdFY4EqAAAAACbQyuCRoJDTJHiYPuCsTXng2isF"></div>
+                    <span id="captcha-message" class="captcha-message">Vui lòng xác thực 2 bước và thử lại</span>
+                  </div>
+                </div>
+
                 <div class="col-12">
                   <div class="form-check">
                     <input class="form-check-input" type="checkbox" name="remember_me" id="remember_me">
@@ -107,5 +114,9 @@
     </div>
   </div>
 </section>
+
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<script src="../js/login.js"></script>
+
 </body>
 </html>

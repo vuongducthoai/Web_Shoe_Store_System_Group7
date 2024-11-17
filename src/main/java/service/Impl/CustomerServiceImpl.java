@@ -23,10 +23,10 @@ public class CustomerServiceImpl implements ICustomerService {
         customer.setFullName(customerDTO.getFullName());
 
         Address address = new Address();
-        address.setCity(customerDTO.getAddressDTO().getCity());
-        address.setDistrict(customerDTO.getAddressDTO().getDistrict());
-        address.setProvince(customerDTO.getAddressDTO().getProvince());
         address.setHouseNumber(customerDTO.getAddressDTO().getHouseNumber());
+        address.setStreetName(customerDTO.getAddressDTO().getStreetName());
+        address.setCity(customerDTO.getAddressDTO().getCity());
+        address.setProvince(customerDTO.getAddressDTO().getProvince());
         address.setDistrict(customerDTO.getAddressDTO().getDistrict());
         customer.setAddress(address);
 
@@ -46,6 +46,9 @@ public class CustomerServiceImpl implements ICustomerService {
         account.setRole(customerDTO.getAccount().getRole());
         customer.setAccount(account);
 
+        if(customerDAO.findAccountByEmail(account.getEmail())){
+            return false;
+        }
         return customerDAO.insertCustomer(customer);
 
     }

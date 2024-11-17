@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: Asus
@@ -17,6 +18,7 @@
       }
 
       .error-message {
+        margin-top: 5px;
         color: red;
         font-size: 14px;
         display: none;
@@ -43,6 +45,11 @@
       label {
         font-weight: 500;
       }
+
+      .require {
+        margin-left: 4px;
+        color: red;
+      }
     </style>
 </head>
 <body>
@@ -59,8 +66,8 @@
                 <div class="col-md-6 mb-4">
 
                   <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                    <label class="form-label" for="fullName">Họ Và Tên</label><br>
-                    <input name="fullName" type="text" id="fullName" class="form-control"/>
+                    <label class="form-label" for="fullName">Họ Và Tên</label> <span class="require">* </span><br>
+                    <input name="fullName" type="text" id="fullName" class="form-control" value="${customerDTO.getFullName()}"/>
                     <span id="fullname-error" class="error-message">Họ và tên phải có 2 từ trở lên, mỗi từ viết hoa chữ cái đầu tiên</span>
 
                   </div>
@@ -68,8 +75,8 @@
                 </div>
                 <div class="col-md-6 mb-4">
                   <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                    <label class="form-label" for="phone">Phone</label>
-                    <input name="phone" type="tel" id="phone" class="form-control" />
+                    <label class="form-label" for="phone">Phone</label><span class="require">*</span>
+                    <input name="phone" type="tel" id="phone" class="form-control"  value="${customerDTO.getPhone()}"/>
                     <span id="phone-error" class="error-message">Số điện thoại phải có 10 số</span>
                   </div>
                 </div>
@@ -77,16 +84,22 @@
 
               <div class="row">
                 <div class="col-md-6 mb-4 ">
-                  <label>Ngày sinh:</label>
+                  <label>Ngày sinh</label><span class="require">*</span>
                   <div class="row">
                     <div class="form-group">
                       <!-- Ngày -->
                       <select name="day" >
                         <option value="">Ngày</option>
                         <%
+                          String selecteDay = request.getParameter("day");
                           for (int i = 1; i <= 31; i++) {
                         %>
-                        <option value="<%=i%>"><%=i%></option>
+                        <option value="<%=i%>"
+                            <%=(selecteDay != null && selecteDay.equals(String.valueOf(i))) ? "selected" : ""%>
+                        >
+
+                          <%=i%>
+                        </option>
                         <%
                           }
                         %>
@@ -96,9 +109,13 @@
                       <select name="month" >
                         <option value="">Tháng</option>
                         <%
+                          String selectMonth = request.getParameter("month");
                           for (int i = 1; i <= 12; i++) {
                         %>
-                        <option value="<%=i%>"><%=i%></option>
+                        <option value="<%=i%>"
+                          <%=(selectMonth != null && selectMonth.equals(String.valueOf(i))) ? "selected" : ""%>
+
+                        ><%=i%></option>
                         <%
                           }
                         %>
@@ -108,10 +125,15 @@
                       <select name="year">
                         <option value="">Năm</option>
                         <%
+                          String selectYear = request.getParameter("year");
                           int currentYear = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR);
                           for (int i = 1940; i <= currentYear; i++) {
                         %>
-                        <option value="<%=i%>"><%=i%></option>
+                        <option value="<%=i%>"
+                          <%=(selectYear != null && selectYear.equals(String.valueOf(i))) ? "selected" : ""%>
+                        >
+                          <%=i%>
+                        </option>
                         <%
                           }
                         %>
@@ -126,13 +148,13 @@
                 <div class="col-md-6 mb-4">
                   <div class="row">
                     <div data-mdb-input-init class="col-md-6">
-                      <label class="form-label" for="houseNumber">Số Nhà</label>
-                      <input type="text" name="houseNumber" id="houseNumber" class="form-control" />
+                      <label class="form-label" for="houseNumber" >Số Nhà</label><span class="require">*</span>
+                      <input type="text" name="houseNumber" id="houseNumber" class="form-control" value="${customerDTO.getAddressDTO().getHouseNumber()}"/>
 
                     </div>
                     <div data-mdb-input-init class="form-outline flex-fill mb-0 col-md-6">
-                      <label class="form-label" for="streetName">Tên Đường</label>
-                      <input type="text" name="streetName" id="streetName" class="form-control" />
+                      <label class="form-label" for="streetName">Tên Đường</label><span class="require">*</span>
+                      <input type="text" name="streetName" id="streetName" class="form-control" value="${customerDTO.getAddressDTO().getStreetName()}"/>
 
                     </div>
                   </div>
@@ -144,15 +166,20 @@
                 <div class="col-md-6 mb-4 d-flex align-items-center">
 
                   <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                    <label class="form-label" for="email">Email</label>
-                    <input type="email" name="email" id="email" class="form-control" />
+                    <label class="form-label" for="email">Email</label><span class="require">*</span>
+                    <input type="email" name="email" id="email" class="form-control" value="${customerDTO.getAccount().getEmail()}"/>
                     <span id="email-error" class="error-message">Email phải đúng định dạng (vd: thoai@gmail.com, ...)</span>
+                    <c:if test="${not empty errorEmail}">
+                      <div class="error-message" style="display: block">
+                          ${errorEmail}
+                      </div>
+                    </c:if>
                   </div>
 
                 </div>
                 <div class="col-md-6 mb-4">
                   <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                    <label class="form-label" for="city">Chọn Tỉnh</label>
+                    <label class="form-label" for="city">Chọn Tỉnh</label><span class="require">*</span>
                     <select class="form-control" id="city" name="province">
                       <option value="" selected>Chọn tỉnh thành</option>
                     </select>
@@ -166,7 +193,7 @@
                 <div class="col-md-6 mb-4 d-flex align-items-center">
 
                   <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                    <label class="form-label" for="password">Password</label>
+                    <label class="form-label" for="password">Password</label><span class="require">*</span>
                     <input type="password" name="password" id="password" class="form-control" />
                     <span id="password-error" class="error-message">Mật khẩu phải có ít nhất 6 kí tự</span>
                   </div>
@@ -174,7 +201,7 @@
                 </div>
                 <div class="col-md-6 mb-4">
                   <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                    <label class="form-label" for="district">Chọn Quận / Huyện</label>
+                    <label class="form-label" for="district">Chọn Quận / Huyện</label><span class="require">*</span>
                     <select class="form-control" id="district" aria-label=".form-select-sm" name="district">
                       <option value="" selected>Chọn quận huyện</option>
                     </select>
@@ -189,7 +216,7 @@
                 <div class="col-md-6 mb-4 d-flex align-items-center">
                   <div data-mdb-input-init class="form-outline flex-fill mb-0">
 
-                    <label class="form-label" for="re-password">Confirmation Password</label>
+                    <label class="form-label" for="re-password">Confirmation Password</label><span class="require">*</span>
                     <input name="re-password" type="password" id="re-password" class="form-control" name="re-password" />
                     <span id="re-password-error" class="error-message">Xác nhận mật khẩu là bắt buộc</span>
                   </div>
@@ -197,7 +224,7 @@
                 </div>
                 <div class="col-md-6 mb-4">
                   <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                    <label class="form-label" for="ward">Chọn Phường / Xã</label>
+                    <label class="form-label" for="ward">Chọn Phường / Xã</label><span class="require">*</span>
                     <select class="form-control" id="ward" name="ward">
                       <option value="" selected>Chọn phường xã</option>
                     </select>
