@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.security.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -19,7 +19,8 @@ public class TokenForgetPassword {
     private Long id;
 
     private String token;
-    private Timestamp timestamp;
+    private LocalDateTime expireTime;
+    private boolean isUsed;
 
     @OneToOne
     @JoinColumn(name= "account_id", referencedColumnName = "accountID")
