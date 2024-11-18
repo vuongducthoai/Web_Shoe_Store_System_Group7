@@ -54,4 +54,13 @@ public class AccountServiceImpl implements IAccountService {
         }
         return false;
     }
+
+    @Override
+    public AccountDTO findAccountByEmail(String email) {
+        Account account = iAccountDAO.findAccountByEmail(email);
+        AccountDTO accountDTO = new AccountDTO();
+        accountDTO.setEmail(account.getEmail());
+        accountDTO.setAccountID(account.getAccountID());
+        return accountDTO;
+    }
 }

@@ -1,5 +1,7 @@
 package controller.login;
 
+import Authentication.FacebookAuth;
+import Authentication.GoogleAuth;
 import dto.AccountDTO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;

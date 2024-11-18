@@ -3,6 +3,7 @@ package dao.Impl;
 import JpaConfig.JpaConfig;
 import dao.IAccountDAO;
 import entity.Account;
+import enums.AuthProvider;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 
@@ -49,4 +50,21 @@ public class AccountDaoImpl implements IAccountDAO {
         return false;
     }
 
+    @Override
+    public Account findAccountByEmail(String email) {
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        try {
+            String jpql = "SELECT a FROM Account a WHERE a.email = :email AND a.authProvider=:authProvider";
+            Account result = entityManager.createQuery(jpql, Account.class)
+                    .setParameter("email", email)
+                    .setParameter("authProvider", AuthProvider.LOCAL)
+                    .getSingleResult();
+            return result;
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            entityManager.close();
+        }
+        return null;
+    }
 }
