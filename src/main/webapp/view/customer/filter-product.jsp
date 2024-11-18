@@ -32,6 +32,7 @@
 <div id="filterMinPrice" filterMinPrice="${filterMinPrice}"></div>
 <div id="filterMaxPrice" filterMaxPrice="${filterMaxPrice}"></div>
 <div id="sortOption" sortOption="${sortOption}"></div>
+<div id="totalSize" totalSize="${totalSize}"></div>
 
 <header class="bg-white shadow-sm">
     <div
@@ -56,7 +57,6 @@
     <div class="flex">
         <aside class="w-1/4 pr-8">
             <div class="bg-white p-4 rounded-lg shadow-sm mb-6">
-                <h2 class="font-semibold mb-4">Bộ lọc</h2>
                 <div class="mb-6">
                     <h3 class="font-medium mb-2">Thể loại</h3>
                     <ul class="space-y-2">
@@ -128,10 +128,9 @@
         <section class="w-3/4">
             <div class="flex justify-between items-center mb-6">
                 <div class="flex items-center space-x-4">
-						<span class="text-gray-500"> Hiển thị
-							${minSize}-${categoryList.size()} trong số ${totalSize} sản phẩm
-						</span>
+                    <span class="text-gray-500" id="dynamicSpan"></span>
                 </div>
+
 
                 <div class="relative">
                     <button id="dropdownButton"
@@ -161,7 +160,7 @@
                 <!-- Số trang hiện tại -->
                 <span class="px-4 text-sm flex-1 text-center"
                 ${totalPages == 0 ? 'style="display: none;"' : ''}
-                > Trang ${currentPage} </span>
+                > Trang ${currentPage} / ${totalPages} </span>
 
                 <!-- Nút Next -->
                 <button

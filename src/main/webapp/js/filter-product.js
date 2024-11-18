@@ -294,9 +294,18 @@ function apply(page = 1) {
 
 const categoryListJson = document.getElementById('categoryListJson').textContent;
 
+
 // Chuyển chuỗi JSON thành đối tượng JavaScript
 const categoryList = JSON.parse(categoryListJson);
 
+
+// Tìm phần tử <span> bằng ID
+const spanElement = document.getElementById("dynamicSpan");
+var totalSize = parseInt(document.getElementById("totalSize").getAttribute("totalSize"));
+
+// Cập nhật nội dung của <span>
+spanElement.textContent = "Hiển thị 1-" + categoryList.length + " trong số " + totalSize + " sản phẩm";
+    
 // Hàm render sản phẩm
 function renderProductList(products) {
     const container = document.getElementById('product-container'); // Lấy container

@@ -1,19 +1,18 @@
 package dao.Impl;
 
-import JpaConfig.JpaConfig;
+import JpaConfig.JPAConfig;
 import dao.ICategoryDao;
 import dto.*;
 import entity.*;
 import jakarta.persistence.EntityManager;
 
-import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class CategoryDaoImpl implements ICategoryDao {
     @Override
     public List<CategoryDTO> findAllCategories() {
-        try (EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager()) {
+        try (EntityManager entityManager = JPAConfig.getEmFactory().createEntityManager()) {
             try {
                 // Truy vấn tất cả danh mục và sản phẩm liên quan
                 List<Category> categories = entityManager.createQuery(

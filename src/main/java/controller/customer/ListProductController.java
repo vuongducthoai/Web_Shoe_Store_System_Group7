@@ -86,6 +86,7 @@ public class ListProductController extends HttpServlet {
         String jsonCategoryList = gson.toJson(paginatedProducts);
 
         // Gửi các thuộc tính vào request
+        req.setAttribute("productsPerPage", productsPerPage);
         req.setAttribute("minSize", totalSize != 0 ? 1 : 0);
         req.setAttribute("totalSize", totalSize);
         req.setAttribute("categoryListJson", jsonCategoryList);
