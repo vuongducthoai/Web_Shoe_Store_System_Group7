@@ -43,8 +43,8 @@
             margin-bottom: 0.5rem;
         }
         .cart-item img {
-            width: 60px;
-            height: 60px;
+            width: 120px;
+            height: 120px;
             border-radius: 10px;
         }
         .order-summary {
@@ -118,7 +118,7 @@
         <div class="col-md-8">
             <c:forEach var="cart" items="${CartList}">
                 <div class="cart-item d-flex align-items-center">
-                    <img alt="Gradient Graphic T-shirt" height="60" src="${cart.productDTO.image}" width="60"/>
+                    <img class="border border-dark" alt="Gradient Graphic T-shirt" height="120" src="${cart.productDTO.getBase64Image()}" width="120"/>
                     <div class="ms-3">
                         <h5>
                             ${cart.productDTO.productName}
@@ -126,7 +126,11 @@
                         <p>
                             Size: ${cart.productDTO.size}
                             <br/>
-                            Color: ${cart.productDTO.color}
+                        <div class="d-flex align-items-center">
+                            <span>Color:</span>
+                            <div class="border rounded ms-2"
+                                 style="background-color: ${cart.productDTO.color}; width: 30px; height: 30px;"></div>
+                        </div>
                         </p>
                         <p class="fw-bold">
                                 ${cart.productDTO.price} VND

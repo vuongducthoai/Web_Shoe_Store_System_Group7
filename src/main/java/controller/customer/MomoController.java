@@ -98,6 +98,7 @@ public class MomoController extends HttpServlet {
 
     protected void Momo_pay(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int idUser = 1;
+
         String cartItemJson = req.getParameter("cartItem");
         String decodedCartJson = URLDecoder.decode(cartItemJson, StandardCharsets.UTF_8.toString());
         double Total = Double.parseDouble(req.getParameter("Total"));
