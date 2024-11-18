@@ -24,4 +24,17 @@ public class AccountDTO {
 
     private UserDTO user;
 
+    @Override
+    public String toString() {
+        return "AccountDTO{" +
+                "accountID=" + accountID +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ",fullName='" + user.getFullName()+
+                ", authProvider=" + authProvider +
+                ", providerID='" + providerID + '\'' +
+                ", role=" + role +
+                ", user=" + user +
+                '}';
+    }
 }
