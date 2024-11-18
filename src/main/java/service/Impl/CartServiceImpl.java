@@ -75,12 +75,16 @@ public class CartServiceImpl implements ICartService {
                         item.getProductDTO().getPromotionDTO().getStartDate().compareTo(date) <= 0 &&
                         item.getProductDTO().getPromotionDTO().getEndDate().compareTo(date) >= 0 &&
                         item.getProductDTO().getPromotionDTO().isActive()) {
-                    total += item.getProductDTO().getPromotionDTO().getDiscountValue() *
-                            item.getProductDTO().getPrice() * item.getQuantity() / 100;
+                    if (item.getProductDTO().getPromotionDTO().getDiscountType().equals("percentage")) {
+                        total += item.getProductDTO().getPromotionDTO().getDiscountValue() *
+                                item.getProductDTO().getPrice() * item.getQuantity() / 100;
+                    }
+                    if (item.getProductDTO().getPromotionDTO().getDiscountType().equals("fixed-amount")){
+                        total += item.getProductDTO().getPromotionDTO().getDiscountValue()*item.getQuantity();
+                    }
                 }
             }catch (Exception ignored){}
         }
-
         return total;
     }
 }
