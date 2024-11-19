@@ -9,12 +9,16 @@ import dto.CartItemDTO;
 import entity.Cart;
 import entity.CartItem;
 import entity.Customer;
+import entity.Promotion;
+import enums.DiscountType;
+import enums.PromotionType;
 import jakarta.persistence.EntityManager;
 import service.ICartService;
 
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class CartServiceImpl implements ICartService {
     ICartDao cartDao = new CartDaoImpl();
@@ -46,7 +50,7 @@ public class CartServiceImpl implements ICartService {
     public double FeeShip(int idUser) {
         AddressDTO addressDTO = cartDao.getAddressUser(idUser);
         if (addressDTO!=null) {
-            if (addressDTO.getCity()!="HCM")
+            if (!Objects.equals(addressDTO.getProvince(), "Thành phố Hồ Chí Minh"))
                 return 30000;
         }
         return 0;
@@ -71,19 +75,37 @@ public class CartServiceImpl implements ICartService {
         Date date = Date.from(Instant.now());
         for (CartItemDTO item : cartItem) {
             try{
-                if (item.getProductDTO().getPromotionDTO().getMinimumLoyalty() <= Loyati &&
-                        item.getProductDTO().getPromotionDTO().getStartDate().compareTo(date) <= 0 &&
+                if (    item.getProductDTO().getPromotionDTO().getStartDate().compareTo(date) <= 0 &&
                         item.getProductDTO().getPromotionDTO().getEndDate().compareTo(date) >= 0 &&
                         item.getProductDTO().getPromotionDTO().isActive()) {
-                    if (item.getProductDTO().getPromotionDTO().getDiscountType().equals("percentage")) {
+                    if (item.getProductDTO().getPromotionDTO().getDiscountType().equals(DiscountType.Percentage)) {
                         total += item.getProductDTO().getPromotionDTO().getDiscountValue() *
                                 item.getProductDTO().getPrice() * item.getQuantity() / 100;
                     }
-                    if (item.getProductDTO().getPromotionDTO().getDiscountType().equals("fixed-amount")){
+                    if (item.getProductDTO().getPromotionDTO().getDiscountType().equals(DiscountType.VND)){
                         total += item.getProductDTO().getPromotionDTO().getDiscountValue()*item.getQuantity();
                     }
                 }
             }catch (Exception ignored){}
+        }
+        List<Promotion> promotion = entityManager.createQuery(
+                        "select p from Promotion p " +
+                                "where :date >= p.startDate and :date <= p.endDate and p.isActive = true and p.promotionType = :type " +
+                                "and p.minimumLoyalty<= :loyalty order by p.minimumLoyalty asc",
+                        Promotion.class)
+                .setParameter("date", date) // Bỏ dấu ":" ở đây
+                .setParameter("type", PromotionType.VOUCHER_ORDER)
+                .setParameter("loyalty", Loyati)
+                .setMaxResults(1)
+                .getResultList(); // Nếu kết quả chỉ có một record
+        if (!promotion.isEmpty()){
+            Promotion pro = promotion.get(0);
+            if (pro.getDiscountType()==DiscountType.Percentage){
+                total += total*pro.getDiscountValue()/100;
+            }
+            if (pro.getDiscountType()==DiscountType.VND){
+                total += pro.getDiscountValue();
+            }
         }
         return total;
     }

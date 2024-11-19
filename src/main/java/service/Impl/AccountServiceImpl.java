@@ -63,4 +63,7 @@ public class AccountServiceImpl implements IAccountService {
         accountDTO.setAccountID(account.getAccountID());
         return accountDTO;
     }
+    public AccountDTO getAccoutByEmail(String email){
+        return iAccountDAO.getAccoutByEmail(email);
+    }
 }

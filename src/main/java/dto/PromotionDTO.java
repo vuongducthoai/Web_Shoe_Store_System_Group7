@@ -22,4 +22,5 @@ public class PromotionDTO {
     private String discountType; // "percentage", "free-shipping", ...
     private int minimumLoyalty;
     private boolean isActive;
+    private String promotionType;
 }
