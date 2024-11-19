@@ -22,7 +22,7 @@ public class TokenForgetPassword {
     private LocalDateTime expireTime;
     private boolean isUsed;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name= "account_id", referencedColumnName = "accountID")
     private Account account;
 }

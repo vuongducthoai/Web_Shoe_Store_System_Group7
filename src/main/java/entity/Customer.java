@@ -31,7 +31,6 @@ public class Customer extends User {
     private List<Order> orders;
 
     private int loyalty;
-    private boolean active;
 
 
     @OneToMany(mappedBy = "customer")

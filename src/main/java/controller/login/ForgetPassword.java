@@ -8,6 +8,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import service.IAccountService;
 import service.ITokenForgetPw;
 import service.Impl.AccountServiceImpl;
@@ -20,13 +21,45 @@ import java.time.LocalDateTime;
 public class ForgetPassword extends HttpServlet {
     IAccountService accountService = new AccountServiceImpl();
     ITokenForgetPw tokenForgetPw = new TokenForgetPw();
+    ResetPassword resetPassword = new ResetPassword();
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getServletPath();
         if(path.equals("/view/requestPassword")) {
             req.getRequestDispatcher("/view/requestPassword.jsp").forward(req, resp);
-        } else {
-            req.getRequestDispatcher("/view/resetPassword.jsp").forward(req, resp);
+        } else if(path.equals("/view/resetPassword")) {
+            String token = req.getParameter("token");
+            HttpSession session = req.getSession();
+            if(token != null){
+
+                TokenForgetPasswordDTO tokenForgetPasswordDTO = tokenForgetPw.getToken(token);
+                System.out.println(tokenForgetPasswordDTO.getExpireTime());
+                if(tokenForgetPasswordDTO == null) {  // Token khong hop le
+                    req.setAttribute("mess", "Token invalid");
+                    req.getRequestDispatcher("/view/requestPassword.jsp").forward(req, resp);
+                    return;
+                }
+
+                 if (tokenForgetPasswordDTO.getExpireTime() == null ||
+                        resetPassword.isExpireTime(tokenForgetPasswordDTO.getExpireTime())) {
+                    req.setAttribute("mess", "Token is invalid or expired");
+                    req.getRequestDispatcher("/view/requestPassword.jsp").forward(req, resp);
+                    return;
+                }
+
+                 if(resetPassword.isExpireTime(tokenForgetPasswordDTO.getExpireTime())){  // Token da vuot qua thoi gian
+                    req.setAttribute("mess", "Token is expiry time");
+                    req.getRequestDispatcher("/view/requestPassword.jsp").forward(req, resp);
+                    return;
+                }
+                 // Truong hop thanh cong
+                    AccountDTO accoutDTO = tokenForgetPasswordDTO.getAccountDTO();
+                    req.setAttribute("email", accoutDTO.getEmail());
+                    session.setAttribute("token", tokenForgetPasswordDTO.getToken());
+                    req.getRequestDispatcher("/view/resetPassword.jsp").forward(req, resp);
+            } else {
+                req.getRequestDispatcher("/view/requestPassword.jsp").forward(req, resp);
+            }
         }
     }
 
@@ -44,45 +77,63 @@ public class ForgetPassword extends HttpServlet {
                 TokenForgetPasswordDTO tokenDTO = new TokenForgetPasswordDTO(token, timeNow, false, accountDTO);
                boolean isInsert = tokenForgetPw.insertToken(tokenDTO);
                if(!isInsert){
-                   req.setAttribute("errorEmail", "Have error in server.");
+                   req.setAttribute("mess", "Have error in server.");
                    req.getRequestDispatcher("/view/requestPassword.jsp").forward(req, resp);
                    return;
                }
                boolean isSend = resetPassword.sendEmail(email, linkReset);
                if(!isSend){
-                   req.setAttribute("errorEmail", "Can not send request");
+                   req.setAttribute("mess", "Can not send request");
                    req.getRequestDispatcher("/view/requestPassword.jsp").forward(req, resp);
                    return;
                }
-               req.setAttribute("errorEmail", "send request successfully");
+               req.setAttribute("mess", "send request successfully");
                req.getRequestDispatcher("/view/requestPassword.jsp").forward(req, resp);
 
 
              } else {
-                req.setAttribute("errorEmail", "Email không tồn tai.");
+                req.setAttribute("mess", "Email không tồn tai.");
                 req.getRequestDispatcher("/view/requestPassword.jsp").forward(req, resp);
             }
         } else if(path.equals("/view/resetPassword")) {
-            String token = req.getParameter("token");
-            if(token != null){
-                ResetPassword resetPassword = new ResetPassword();
+            String email = req.getParameter("email");
+            String password = req.getParameter("password");
+            String confirmPassword = req.getParameter("confirm_password");
 
-                TokenForgetPasswordDTO tokenForgetPasswordDTO = tokenForgetPw.getToken(token);
-                if(tokenForgetPasswordDTO == null) {
-                    req.setAttribute("errorEmail", "token invalid");
-                    req.getRequestDispatcher("/view/requestPassword.jsp").forward(req, resp);
-                }
-               else if(tokenForgetPasswordDTO.isUsed()){
-                    req.setAttribute("errorEmail", "token used");
-                    req.getRequestDispatcher("/view/requestPassword.jsp").forward(req, resp);
-                }
-                else if(resetPassword.isExpireTime(tokenForgetPasswordDTO.getExpireTime())){
-                    req.setAttribute("errorEmail", "token expired");
-                    req.getRequestDispatcher("/view/requestPassword.jsp").forward(req, resp);
-                } else {
-
-                }
+            //ValidatePassword
+            if(!password.equals(confirmPassword)) {
+                req.setAttribute("mess", "Confirm password must same password");
+                req.setAttribute("email", email);
+                req.getRequestDispatcher("/view/resetPassword.jsp").forward(req, resp);
+                return;
             }
+            HttpSession session = req.getSession();
+            String tokenStr = (String) session.getAttribute("token");
+            TokenForgetPasswordDTO tokenForgetPasswordDTO = tokenForgetPw.getToken(tokenStr);
+            if(tokenForgetPasswordDTO == null) {  // Token khong hop le
+                req.setAttribute("mess", "Token invalid");
+                req.getRequestDispatcher("/view/requestPassword.jsp").forward(req, resp);
+                return;
+            }
+            if(tokenForgetPasswordDTO.isUsed()){ // Token da duoc su dung
+                req.setAttribute("mess", "Token used");
+                req.getRequestDispatcher("/view/requestPassword.jsp").forward(req, resp);
+                return;
+            }
+            if(tokenForgetPasswordDTO.getExpireTime() == null ||resetPassword.isExpireTime(tokenForgetPasswordDTO.getExpireTime())){  // Token da vuot qua thoi gian
+                req.setAttribute("mess", "Token is expiry time");
+                req.getRequestDispatcher("/view/requestPassword.jsp").forward(req, resp);
+                return;
+            }
+            //update is used of token
+            tokenForgetPasswordDTO.setToken(tokenStr);
+            tokenForgetPasswordDTO.setUsed(true);
+
+            AccountDTO accoutDTO = tokenForgetPasswordDTO.getAccountDTO();
+            accoutDTO.setPassword(password); // Đặt mật khẩu mới
+            tokenForgetPasswordDTO.setAccountDTO(accoutDTO);
+            tokenForgetPw.updateTokenPassword(tokenForgetPasswordDTO);
+            req.getRequestDispatcher("/view/login.jsp").forward(req, resp);
         }
     }
 }

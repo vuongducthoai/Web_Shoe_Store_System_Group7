@@ -21,6 +21,7 @@ public class CustomerServiceImpl implements ICustomerService {
         customer.setUserID(customerDTO.getUserID());
         customer.setPhone(customerDTO.getPhone());
         customer.setFullName(customerDTO.getFullName());
+        customer.setActive(true);
 
         Address address = new Address();
         address.setHouseNumber(customerDTO.getAddressDTO().getHouseNumber());
