@@ -4,6 +4,7 @@ import JpaConfig.JpaConfig;
 import dao.ICartDao;
 import dto.*;
 import entity.*;
+import enums.DiscountType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
@@ -18,43 +19,41 @@ public class CartDaoImpl implements ICartDao {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
         List<CartItemDTO> cartItems = new ArrayList<>();
         try {
-            List<Object[]> cartItem1 = entityManager.createQuery(
-                    "select distinct c.cartItemId,c.quantity," +
-                            "p.id,p.productName,p.color,p.price,p.image,p.status,p.size,p.description," +
-                            "pr.id,pr.promotionName,pr.startDate,pr.endDate,pr.discountValue,pr.discountType,pr.minimumLoyalty,pr.isActive "+
-                    "from CartItem c join Product p on c.product.id = p.id left join Promotion pr on pr.id = p.promotion.id " +
-                            "where c.cart.customer.userID = :userId",Object[].class)
-                    .setParameter("userId",Integer.valueOf(userID)).getResultList();
-            for (Object[] row : cartItem1) {
-                int cartItemId = (int) row[0];
-                int quantity = (int) row[1];
-                int productId = (int) row[2];
-                String productName = (String) row[3];
-                String productColor = (String) row[4];
-                double productPrice = (double) row[5];
-                byte[] productImage = (byte[]) row[6];
-                Boolean productStatus = (Boolean) row[7];
-                int productSize = (int) row[8];
-                String productDescription = (String) row[9];
-                PromotionDTO promotionDTO = new PromotionDTO();
-                if (row[10] != null) {
-                    int promotionId = (Integer) row[10];
-                    String promotionName = (String) row[11];
-                    Date promotionStartDate = (Date) row[12];
-                    Date promotionEndDate = (Date) row[13];
-                    Double promotionDiscountValue = (Double) row[14];
-                    String promotionDiscountType = (String) row[15];
-                    Integer promotionMinimumLoyalty = (Integer) row[16];
-                    Boolean promotionIsActive = (Boolean) row[17];
-                    promotionDTO.setPromotionId(promotionId);
-                    promotionDTO.setPromotionName(promotionName);
-                    promotionDTO.setStartDate(promotionStartDate);
-                    promotionDTO.setEndDate(promotionEndDate);
-                    promotionDTO.setDiscountValue(promotionDiscountValue);
-                    promotionDTO.setDiscountType(promotionDiscountType);
-                    promotionDTO.setMinimumLoyalty(promotionMinimumLoyalty);
-                    promotionDTO.setActive(promotionIsActive);
-                }
+
+            // Sử dụng JOIN FETCH để tải dữ liệu cần thiết trong một truy vấn
+            List<Object[]> results = entityManager.createQuery(
+                            "SELECT ci, p, pr " +
+                                    "FROM CartItem ci " +
+                                    "JOIN FETCH ci.cart c " +
+                                    "JOIN FETCH c.customer cu " +
+                                    "LEFT JOIN FETCH ci.product p " +
+                                    "LEFT JOIN FETCH p.promotion pr " +
+                                    "WHERE cu.id = :userID", Object[].class)
+                    .setParameter("userID", userID)
+                    .getResultList();
+
+            // Map dữ liệu trả về thành CartItemDTO
+            for (Object[] result : results) {
+                CartItem cartItem = (CartItem) result[0];
+                Product product = (Product) result[1];
+                Promotion promotion = (Promotion) result[2];
+
+                // Tạo PromotionDTO
+                PromotionDTO promotionDTO = promotion != null
+                        ? new PromotionDTO(
+                        promotion.getPromotionID(),
+                        promotion.getPromotionName(),
+                        promotion.getStartDate(),
+                        promotion.getEndDate(),
+                        null,
+                        promotion.getDiscountValue(),
+                        "jjj",
+                        promotion.getMinimumLoyalty(),
+                        promotion.isActive())
+                        : null;
+
+                // Tạo ProductDTO
+
                 ProductDTO productDTO = new ProductDTO(
                         productId,
                         productName,

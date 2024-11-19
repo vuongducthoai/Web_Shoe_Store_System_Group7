@@ -39,7 +39,7 @@ public class Product {
     @JoinColumn(name = "categoryID")
     private Category category;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "promotionID")
     private Promotion promotion;
 
