@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.Base64;
 import java.util.List;
 
 @AllArgsConstructor
@@ -29,4 +31,10 @@ public class ProductDTO {
     private List<OrderItemDTO> orderItemDTOList;
     private CategoryDTO categoryDTO;
     private PromotionDTO promotionDTO;
+    public String getBase64Image() {
+        if (image != null) {
+            return "data:image/png;base64," + Base64.getEncoder().encodeToString(image);
+        }
+        return null; // hoặc đường dẫn ảnh mặc định nếu không có dữ liệu
+    }
 }

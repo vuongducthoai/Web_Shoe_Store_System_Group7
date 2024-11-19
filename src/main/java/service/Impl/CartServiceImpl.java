@@ -1,5 +1,6 @@
 package service.Impl;
 
+import JpaConfig.JpaConfig;
 import dao.ICartDao;
 import dao.Impl.CartDaoImpl;
 import dto.AddressDTO;
@@ -8,8 +9,11 @@ import dto.CartItemDTO;
 import entity.Cart;
 import entity.CartItem;
 import entity.Customer;
+import jakarta.persistence.EntityManager;
 import service.ICartService;
 
+import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 
 public class CartServiceImpl implements ICartService {
@@ -37,9 +41,6 @@ public class CartServiceImpl implements ICartService {
         }
         return total;
     }
-    public double Discount(List<CartItemDTO> cartItem){
-        return 0;
-    }
 
     @Override
     public double FeeShip(int idUser) {
@@ -54,5 +55,36 @@ public class CartServiceImpl implements ICartService {
     @Override
     public boolean deleteCartItem(int cartItemId) {
         return cartDao.deleteCartItem(cartItemId);
+    }
+    public double CalculateDiscount(List<CartItemDTO> cartItem,int idUser){
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        int Loyati = 0;
+        try{
+            Object[] obj = entityManager.createQuery("select c.loyalty From Customer c Where c.userID = :idUser", Object[].class)
+                    .setParameter("idUser",idUser).getSingleResult();
+            Loyati = (int)obj[0];
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        double total=0;
+        Date date = Date.from(Instant.now());
+        for (CartItemDTO item : cartItem) {
+            try{
+                if (item.getProductDTO().getPromotionDTO().getMinimumLoyalty() <= Loyati &&
+                        item.getProductDTO().getPromotionDTO().getStartDate().compareTo(date) <= 0 &&
+                        item.getProductDTO().getPromotionDTO().getEndDate().compareTo(date) >= 0 &&
+                        item.getProductDTO().getPromotionDTO().isActive()) {
+                    if (item.getProductDTO().getPromotionDTO().getDiscountType().equals("percentage")) {
+                        total += item.getProductDTO().getPromotionDTO().getDiscountValue() *
+                                item.getProductDTO().getPrice() * item.getQuantity() / 100;
+                    }
+                    if (item.getProductDTO().getPromotionDTO().getDiscountType().equals("fixed-amount")){
+                        total += item.getProductDTO().getPromotionDTO().getDiscountValue()*item.getQuantity();
+                    }
+                }
+            }catch (Exception ignored){}
+        }
+        return total;
     }
 }

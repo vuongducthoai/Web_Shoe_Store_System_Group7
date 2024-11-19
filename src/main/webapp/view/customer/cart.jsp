@@ -13,7 +13,8 @@
     <title>
         SHOP.CO - Cart
     </title>
-    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
     <style>
         body {
@@ -42,8 +43,8 @@
             margin-bottom: 0.5rem;
         }
         .cart-item img {
-            width: 60px;
-            height: 60px;
+            width: 120px;
+            height: 120px;
             border-radius: 10px;
         }
         .order-summary {
@@ -103,9 +104,7 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
-                <a href="#">
                     Home
-                </a>
             </li>
             <li aria-current="page" class="breadcrumb-item active">
                 Cart
@@ -119,7 +118,7 @@
         <div class="col-md-8">
             <c:forEach var="cart" items="${CartList}">
                 <div class="cart-item d-flex align-items-center">
-                    <img alt="Gradient Graphic T-shirt" height="60" src="${cart.productDTO.image}" width="60"/>
+                    <img class="border border-dark" alt="Gradient Graphic T-shirt" height="120" src="${cart.productDTO.getBase64Image()}" width="120"/>
                     <div class="ms-3">
                         <h5>
                             ${cart.productDTO.productName}
@@ -127,7 +126,11 @@
                         <p>
                             Size: ${cart.productDTO.size}
                             <br/>
-                            Color: ${cart.productDTO.color}
+                        <div class="d-flex align-items-center">
+                            <span>Color:</span>
+                            <div class="border rounded ms-2"
+                                 style="background-color: ${cart.productDTO.color}; width: 30px; height: 30px;"></div>
+                        </div>
                         </p>
                         <p class="fw-bold">
                                 ${cart.productDTO.price} VND
@@ -192,11 +195,19 @@
         ${Sum} VND
        </span>
                 </p>
-                <form action="Momo_pay" method="post">
-                    <input type="text" name="cartItem" value="${JsonCart}">
+                <form action="/Momo_pay" method="post">
+                    <input type="text" name="cartItem" value="${JsonCart}" hidden="hidden">
                     <input type="text" name="Total" value="${Sum}" hidden="hidden">
                     <button class="btn btn-dark w-100">
                         Go to Checkout
+                        <i class="fas fa-arrow-right">
+                        </i>
+                    </button>
+                </form>
+                <form action="/Cart/Add" method="post">
+                    <input type="text" value="17" name="idProduct"/>
+                    <button class="btn btn-dark w-100">
+                        TWP
                         <i class="fas fa-arrow-right">
                         </i>
                     </button>
@@ -205,5 +216,15 @@
         </div>
     </div>
 </div>
+<script src="/js/Toast.js"></script>
+<script src="/js/cart.js"></script>
+<script>
+    var errCode = "${errCode}";
+    var message = "${message}";
+    if (errCode.length>0){
+        code = parseInt(errCode,10)
+        showError(code,message)
+    }
+</script>
 </body>
 </html>
