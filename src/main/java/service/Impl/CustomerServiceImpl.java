@@ -3,9 +3,8 @@ package service.Impl;
 import dao.ICustomerDAO;
 import dao.Impl.CustomerDAOImpl;
 import dto.CustomerDTO;
-import entity.Account;
-import entity.Address;
-import entity.Customer;
+import entity.*;
+import org.checkerframework.checker.units.qual.C;
 import service.ICustomerService;
 import util.PasswordHashingSHA;
 
@@ -22,6 +21,14 @@ public class CustomerServiceImpl implements ICustomerService {
         customer.setPhone(customerDTO.getPhone());
         customer.setFullName(customerDTO.getFullName());
         customer.setActive(true);
+
+        Cart cart = new Cart();
+        customer.setCart(cart);
+        cart.setCustomer(customer);
+
+        Chat chat = new Chat();
+        customer.setChat(chat);
+        chat.setCustomer(customer);
 
         Address address = new Address();
         address.setHouseNumber(customerDTO.getAddressDTO().getHouseNumber());
