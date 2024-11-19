@@ -68,10 +68,11 @@ public class LoginController extends HttpServlet {
             }
 
             if(accountService.findAccountForLogin(accountDTO)){
+                AccountDTO account = accountService.findAccountByEmail(email);
                 //Tao mot session moi hoac lay session hien co
                 HttpSession session = req.getSession();
                 //Luu thong tin nguoi dung vao session
-                session.setAttribute("user", accountDTO);
+                session.setAttribute("user", account);
                 req.getRequestDispatcher("/index.jsp").forward(req, resp);
             } else {
                 req.setAttribute("loginSuccess" , true);

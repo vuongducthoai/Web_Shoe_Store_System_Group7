@@ -1,5 +1,6 @@
 package dao;
 
+import dto.AccountDTO;
 import entity.Account;
 
 public interface IAccountDAO {
@@ -7,4 +8,5 @@ public interface IAccountDAO {
     boolean findAccountForLogin(Account account);
     Account findAccountByEmail(String email);
     Account findAccountById(int id);
+    AccountDTO getAccoutByEmail(String email);
 }

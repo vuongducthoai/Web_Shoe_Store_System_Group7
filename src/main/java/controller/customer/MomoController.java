@@ -1,16 +1,22 @@
 package controller.customer;
 
 import ThirdParty.Momo.Momo;
+import dto.AccountDTO;
+import dto.AddressDTO;
 import dto.CartItemDTO;
 import dto.ProductDTO;
+import enums.RoleType;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import service.IAddressService;
 import service.IOrderService;
+import service.Impl.AddressServiceImpl;
 import service.Impl.OrderServiceImpl;
 
 import java.io.IOException;
@@ -27,10 +33,19 @@ import java.util.List;
 public class MomoController extends HttpServlet {
     CartController cartController = new CartController();
     IOrderService orderService = new OrderServiceImpl();
+    IAddressService addressService = new AddressServiceImpl();
     private Momo momo = new Momo();
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getServletPath();
+        HttpSession session = req.getSession();
+        AccountDTO accountDTO = (AccountDTO) session.getAttribute("user");
+        if (accountDTO==null || accountDTO.getUser().getUserID()==-1||!accountDTO.getUser().isActive()){
+            return;
+        }
+        if (accountDTO.getRole()== RoleType.ADMIN){
+            return;
+        }
         switch (path) {
             case "/Momo_pay":
                 Momo_pay(req, resp);
@@ -43,6 +58,14 @@ public class MomoController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getServletPath();
+        HttpSession session = req.getSession();
+        AccountDTO accountDTO = (AccountDTO) session.getAttribute("user");
+        if (accountDTO==null || accountDTO.getUser().getUserID()==-1||!accountDTO.getUser().isActive()){
+            return;
+        }
+        if (accountDTO.getRole()== RoleType.ADMIN){
+            return;
+        }
         switch (path) {
             case "/CallBack":
                 Callback(req, resp);
@@ -73,8 +96,6 @@ public class MomoController extends HttpServlet {
         HttpResponse<String> response = null;
         try {
             response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println(response.body());
-            System.out.println(response.statusCode());
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -97,8 +118,17 @@ public class MomoController extends HttpServlet {
     }
 
     protected void Momo_pay(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int idUser = 1;
-
+        HttpSession session = req.getSession();
+        AccountDTO accountDTO = (AccountDTO) session.getAttribute("user");
+        int idUser = accountDTO.getUser().getUserID();
+        AddressDTO addressDTO = addressService.getAddressByID(idUser);
+        if (addressDTO== null){
+            req.setAttribute("errCode",1);
+            req.setAttribute("message","Unable to get shipping address, Please update personal information");
+            cartController.Load_Cart_View(req,resp);
+            getServletContext().getRequestDispatcher("/view/customer/cart.jsp").forward(req, resp);
+            return;
+        }
         String cartItemJson = req.getParameter("cartItem");
         String decodedCartJson = URLDecoder.decode(cartItemJson, StandardCharsets.UTF_8.toString());
         double Total = Double.parseDouble(req.getParameter("Total"));
