@@ -1,5 +1,7 @@
 package entity;
 
+import enums.DiscountType;
+import enums.PromotionType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,8 +27,12 @@ public class Promotion {
     @OneToMany(mappedBy = "promotion")
     private List<Product> applicableProducts ;
     private double discountValue;
-    private String discountType; // "percentage", "free-shipping", ...
+
+    @Enumerated(EnumType.STRING)
+    private DiscountType discountType; // "percentage", "free-shipping", ...
     private int minimumLoyalty;
     private boolean isActive;
 
+    @Enumerated(EnumType.STRING)
+    private PromotionType promotionType;
 }

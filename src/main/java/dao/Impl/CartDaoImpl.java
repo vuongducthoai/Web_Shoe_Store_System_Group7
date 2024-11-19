@@ -4,6 +4,7 @@ import JpaConfig.JpaConfig;
 import dao.ICartDao;
 import dto.*;
 import entity.*;
+import enums.DiscountType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
@@ -45,7 +46,7 @@ public class CartDaoImpl implements ICartDao {
                         promotion.getEndDate(),
                         null,
                         promotion.getDiscountValue(),
-                        promotion.getDiscountType(),
+                        "jjj",
                         promotion.getMinimumLoyalty(),
                         promotion.isActive())
                         : null;
