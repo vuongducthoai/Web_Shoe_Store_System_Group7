@@ -16,14 +16,25 @@
     display: none;
     color: red;
   }
+
+  @media (max-width: 768px) {
+    .hero-left {
+      display: none;
+    }
+
+    .hero-right {
+      margin: auto;
+    }
+  }
 </style>
 <body>
 <!-- Login 9 - Bootstrap Brain Component -->
 <section class="bg-primary py-3 py-md-5 py-xl-8">
   <div class="container">
-    <div class="row gy-4 align-items-center">
-      <div class="col-12 col-md-6 col-xl-7">
-        <div class="d-flex justify-content-center text-bg-primary">
+    <div class="row align-items-center">
+    <%-- Hero Left   --%>
+      <div class="col-12 col-md-6 hero-left">
+        <div class="d-flex text-bg-primary">
           <div class="col-12 col-xl-9">
             <img class="img-fluid rounded mb-4" loading="lazy" src="../image/shoe-Photoroom.png" width="245" height="80" alt="ShoeStore Logo">
             <hr class="border-primary-subtle mb-4">
@@ -37,7 +48,9 @@
           </div>
         </div>
       </div>
-      <div class="col-12 col-md-6 col-xl-5">
+
+      <%-- Hero Right --%>
+      <div class="col-12 col-md-6 hero-right">
         <div class="card border-0 rounded-4">
           <div class="card-body p-3 p-md-4 p-xl-5">
             <div class="row">
@@ -86,7 +99,7 @@
             </form>
             <div class="row">
               <div class="col-12">
-                <div class="d-flex gap-2 gap-md-4 flex-column flex-md-row justify-content-md-end mt-4">
+                <div class="d-flex gap-2 justify-content-end mt-4">
                   <a href="requestPassword">Forgot password</a>
                 </div>
               </div>

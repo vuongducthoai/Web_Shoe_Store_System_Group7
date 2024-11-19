@@ -2,10 +2,10 @@ package dao.Impl;
 
 import JpaConfig.JpaConfig;
 import dao.ITokenForgetPw;
+import entity.Account;
 import entity.TokenForgetPassword;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.Query;
 
 
 public class TokenForgetPw implements ITokenForgetPw {
@@ -15,7 +15,7 @@ public class TokenForgetPw implements ITokenForgetPw {
         EntityTransaction transaction = entityManager.getTransaction();
         try{
             transaction.begin();
-            entityManager.persist(token);
+            entityManager.merge(token);
             transaction.commit();
             return true;
         }catch (Exception e){
@@ -46,4 +46,36 @@ public class TokenForgetPw implements ITokenForgetPw {
         return null;
     }
 
+    @Override
+    public boolean updateTokenPassword(TokenForgetPassword tokenForgetPassword) {
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        EntityTransaction transaction = null;
+        try {
+            transaction = entityManager.getTransaction();
+            transaction.begin();
+
+            Account account = tokenForgetPassword.getAccount();
+            if(account != null){
+                //Cap nhat mat khau trong account
+                Account existingAccount = entityManager.find(Account.class, account.getAccountID());
+                if(existingAccount != null){
+                    existingAccount.setPassword(account.getPassword());
+                    entityManager.merge(existingAccount);
+                    tokenForgetPassword.setAccount(existingAccount);
+                }
+            }
+            //Merge the token  entity to update it in the database
+            entityManager.merge(tokenForgetPassword);
+            transaction.commit();
+            return true;
+        } catch (Exception e){
+            if(transaction != null && transaction.isActive()){
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+        return false;
+    }
 }

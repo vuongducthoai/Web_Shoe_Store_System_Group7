@@ -13,8 +13,11 @@
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
       .card-registration {
-        width: 1000px;
+        max-width: 100%;
+        width: 100%;
         margin: auto; /* Căn giữa form */
+        padding: 15px;
+        box-sizing: border-box;
       }
 
       .error-message {
@@ -50,6 +53,24 @@
         margin-left: 4px;
         color: red;
       }
+
+      @media(max-width: 576px){
+        .card-registration {
+          padding: 10px;
+        }
+
+        .form-group select {
+          margin-left: 10px;
+        }
+
+        label {
+          font-size: 16px;
+        }
+
+        .error-message {
+          font-size: 12px;
+        }
+      }
     </style>
 </head>
 <body>
@@ -62,18 +83,19 @@
             <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Registration Form</h3>
             <form onsubmit="return validateForm()" action="register" method="post">
 
+            <%--flex-column: Tren man hinh nho, cac ptu trong hang se xep theo chieu doc
+                flex-md-row: Tren man hinh trung binh (kich thuoc >= 768px), cac phan tu se tro ve dang hang (row)
+            --%>
               <div class="row">
-                <div class="col-md-6 mb-4">
-
+                <div class="col-12 col-md-6 mb-4">
                   <div data-mdb-input-init class="form-outline flex-fill mb-0">
                     <label class="form-label" for="fullName">Họ Và Tên</label> <span class="require">* </span><br>
                     <input name="fullName" type="text" id="fullName" class="form-control" value="${customerDTO.getFullName()}"/>
                     <span id="fullname-error" class="error-message">Họ và tên phải có 2 từ trở lên, mỗi từ viết hoa chữ cái đầu tiên</span>
 
                   </div>
-
                 </div>
-                <div class="col-md-6 mb-4">
+                <div class="col-12 col-md-6 mb-4">
                   <div data-mdb-input-init class="form-outline flex-fill mb-0">
                     <label class="form-label" for="phone">Phone</label><span class="require">*</span>
                     <input name="phone" type="tel" id="phone" class="form-control"  value="${customerDTO.getPhone()}"/>
@@ -83,7 +105,7 @@
               </div>
 
               <div class="row">
-                <div class="col-md-6 mb-4 ">
+                <div class="col-12 col-md-6 mb-4">
                   <label>Ngày sinh</label><span class="require">*</span>
                   <div class="row">
                     <div class="form-group">
@@ -145,7 +167,7 @@
 
 
                 </div>
-                <div class="col-md-6 mb-4">
+                <div class="col-12 col-md-6 mb-4">
                   <div class="row">
                     <div data-mdb-input-init class="col-md-6">
                       <label class="form-label" for="houseNumber" >Số Nhà</label><span class="require">*</span>
@@ -163,7 +185,7 @@
               </div>
 
               <div class="row">
-                <div class="col-md-6 mb-4 d-flex align-items-center">
+                <div class="col-12 col-md-6 mb-4">
 
                   <div data-mdb-input-init class="form-outline flex-fill mb-0">
                     <label class="form-label" for="email">Email</label><span class="require">*</span>
@@ -177,7 +199,7 @@
                   </div>
 
                 </div>
-                <div class="col-md-6 mb-4">
+                <div class="col-12 col-md-6 mb-4">
                   <div data-mdb-input-init class="form-outline flex-fill mb-0">
                     <label class="form-label" for="city">Chọn Tỉnh</label><span class="require">*</span>
                     <select class="form-control" id="city" name="province">
@@ -190,7 +212,7 @@
               </div>
 
               <div class="row">
-                <div class="col-md-6 mb-4 d-flex align-items-center">
+                <div class="col-12 col-md-6 mb-4">
 
                   <div data-mdb-input-init class="form-outline flex-fill mb-0">
                     <label class="form-label" for="password">Password</label><span class="require">*</span>
@@ -199,7 +221,7 @@
                   </div>
 
                 </div>
-                <div class="col-md-6 mb-4">
+                <div class="col-12 col-md-6 mb-4">
                   <div data-mdb-input-init class="form-outline flex-fill mb-0">
                     <label class="form-label" for="district">Chọn Quận / Huyện</label><span class="require">*</span>
                     <select class="form-control" id="district" aria-label=".form-select-sm" name="district">
@@ -213,7 +235,7 @@
 
 
               <div class="row">
-                <div class="col-md-6 mb-4 d-flex align-items-center">
+                <div class="col-12 col-md-6 mb-4">
                   <div data-mdb-input-init class="form-outline flex-fill mb-0">
 
                     <label class="form-label" for="re-password">Confirmation Password</label><span class="require">*</span>
@@ -222,7 +244,7 @@
                   </div>
 
                 </div>
-                <div class="col-md-6 mb-4">
+                <div class="col-12 col-md-6 mb-4">
                   <div data-mdb-input-init class="form-outline flex-fill mb-0">
                     <label class="form-label" for="ward">Chọn Phường / Xã</label><span class="require">*</span>
                     <select class="form-control" id="ward" name="ward">

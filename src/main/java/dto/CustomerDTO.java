@@ -13,7 +13,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CustomerDTO extends UserDTO {
-    private boolean active;
+
     private Date dateOfBirth;
     private int loyalty;
     private AddressDTO addressDTO;

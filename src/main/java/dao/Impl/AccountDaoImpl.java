@@ -15,7 +15,7 @@ public class AccountDaoImpl implements IAccountDAO {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            entityManager.persist(account);
+            entityManager.merge(account);
             transaction.commit();
             return true;
         } catch (Exception e){
@@ -63,6 +63,24 @@ public class AccountDaoImpl implements IAccountDAO {
         }catch (Exception e){
             e.printStackTrace();
         }finally {
+            entityManager.close();
+        }
+        return null;
+    }
+
+    @Override
+    public Account findAccountById(int accountID) {
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        try {
+            String jqpl = "SELECT a FROM Account a WHERE a.accountID = :id";
+            Account result = entityManager.createQuery(jqpl, Account.class)
+                    .setParameter("id", accountID)
+                    .getSingleResult();
+            return result;
+
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
             entityManager.close();
         }
         return null;

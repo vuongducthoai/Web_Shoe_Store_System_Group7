@@ -20,6 +20,8 @@ public class User {
 
     private String fullName;
     private String phone;
+    private boolean active;
+
 
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true) // Neu user bi xoa thi tham chieu den account bi bo
