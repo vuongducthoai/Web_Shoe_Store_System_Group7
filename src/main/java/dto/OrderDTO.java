@@ -15,7 +15,7 @@ import java.util.Date;
 @Getter
 @Setter
 public class OrderDTO {
-    private int orderId;
+    private String orderId;
     private CustomerDTO customer;
     private List<OrderItemDTO> orderItems;
     private PaymentDTO payment;

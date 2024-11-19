@@ -26,10 +26,12 @@ public class Promotion {
 
     @OneToMany(mappedBy = "promotion")
     private List<Product> applicableProducts ;
+
     private double discountValue;
 
     @Enumerated(EnumType.STRING)
     private DiscountType discountType; // "percentage", "free-shipping", ...
+
     private int minimumLoyalty;
     private boolean isActive;
 

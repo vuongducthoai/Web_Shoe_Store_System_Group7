@@ -10,6 +10,7 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class CartDaoImpl implements ICartDao {
@@ -17,8 +18,8 @@ public class CartDaoImpl implements ICartDao {
     public List<CartItemDTO> findAll(int userID) {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
         List<CartItemDTO> cartItems = new ArrayList<>();
-
         try {
+
             // Sử dụng JOIN FETCH để tải dữ liệu cần thiết trong một truy vấn
             List<Object[]> results = entityManager.createQuery(
                             "SELECT ci, p, pr " +
@@ -52,33 +53,31 @@ public class CartDaoImpl implements ICartDao {
                         : null;
 
                 // Tạo ProductDTO
+
                 ProductDTO productDTO = new ProductDTO(
-                        product.getProductID(),
-                        product.getProductName(),
-                        product.getPrice(),
-                        product.getImage(),
-                        product.getColor(),
-                        product.getSize(),
-                        product.isStatus(),
-                        product.getDescription(),
+                        productId,
+                        productName,
+                        productPrice,
+                        productImage,
+                        productColor,
+                        productSize,
+                        productStatus,
+                        productDescription,
                         null,
                         null,
                         null,
                         promotionDTO);
-
-                // Tạo CartItemDTO
                 CartItemDTO cartItemDTO = new CartItemDTO(
-                        cartItem.getCartItemId(),
-                        cartItem.getQuantity(),
+                        cartItemId,
+                        quantity,
                         null,
                         productDTO);
-
                 cartItems.add(cartItemDTO);
             }
         } finally {
             entityManager.close();
         }
-
+        System.out.println(cartItems.size());
         return cartItems;
     }
 
@@ -90,9 +89,9 @@ public class CartDaoImpl implements ICartDao {
                 "p.size = :size_i and p.color = :Color_i and p.status = :status";
         Query query = entityManager.createQuery(queryStr);
         query.setParameter("name",name);
-        query.setParameter("size_i",size_i);
+        query.setParameter("size_i",Integer.valueOf(size_i));
         query.setParameter("Color_i",Color_i);
-        query.setParameter("status",1);
+        query.setParameter("status",Boolean.valueOf(true));
         Long count = (Long) query.getSingleResult();
         return count.intValue();
     }
@@ -100,7 +99,7 @@ public class CartDaoImpl implements ICartDao {
     @Override
     public boolean RemoveItem(int cartItemId) {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
-        CartItem cartItem = entityManager.find(CartItem.class, cartItemId);
+        CartItem cartItem = entityManager.find(CartItem.class, Integer.valueOf(cartItemId));
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
         if (cartItem.getQuantity()<=1){
@@ -113,26 +112,27 @@ public class CartDaoImpl implements ICartDao {
         return true;
     }
 
-    public boolean AddItem(int idProduct,int idUser) {
+    public boolean AddItem(int idProduct, int idUser) {
         try {
             EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
             Cart cart = entityManager.createQuery("select p " +
-                    "from Cart p where p.customer.userID = :idUser",Cart.class)
-                    .setParameter("idUser",idUser).getSingleResult();
-            Product product = entityManager.find(Product.class, idProduct);
+                            "from Cart p where p.customer.userID = :idUser",Cart.class)
+                    .setParameter("idUser",Integer.valueOf(idUser)).getSingleResult();
+            Product product = entityManager.find(Product.class, Integer.valueOf(idProduct));
             String queryStr = "select p " +
                     "from CartItem p where p.cart = :cartId and p.product.productName like :name and " +
                     "p.product.size = :size_i and p.product.color like :Color_i ";
-            Query query = entityManager.createQuery(queryStr);
+            Query query = entityManager.createQuery(queryStr,CartItem.class);
             query.setParameter("cartId",cart);
             query.setParameter("name",product.getProductName());
             query.setParameter("Color_i",product.getColor());
-            query.setParameter("size_i",product.getSize());
-            CartItem cartItem = (CartItem) query.getSingleResult();
+            query.setParameter("size_i",Integer.valueOf(product.getSize()));
+            List<CartItem> cartItemL =  query.getResultList();
             EntityTransaction transaction = entityManager.getTransaction();
             transaction.begin();
-            if (cartItem != null) {
-                cartItem.setQuantity(cartItem.getQuantity()+1);
+            if (!cartItemL.isEmpty()) {
+                CartItem cartItem = cartItemL.get(0); // Lấy đối tượng đầu tiên
+                cartItem.setQuantity(cartItem.getQuantity() + 1);
             }
             else {
                 CartItem cartItem1 = new CartItem();
@@ -149,12 +149,12 @@ public class CartDaoImpl implements ICartDao {
             return false;
         }
     }
+
     public boolean canAdd(int idProduct,int userId){
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
-        Customer customer = entityManager.find(Customer.class, userId);
+        Customer customer = entityManager.find(Customer.class, Integer.valueOf(userId));
         Cart cart = customer.getCart();
-        int idCart = cart.getCartID(); // id cart vua user
-        Product product = entityManager.find(Product.class, idProduct);
+        Product product = entityManager.find(Product.class, Integer.valueOf(idProduct));
         String queryStr = "select p " +
                 "from CartItem p where p.cart = :cartId and p.product.productName like :name and " +
                 "p.product.size = :size_i and p.product.color like :Color_i ";
@@ -162,18 +162,19 @@ public class CartDaoImpl implements ICartDao {
         query.setParameter("cartId",cart);
         query.setParameter("name",product.getProductName());
         query.setParameter("Color_i",product.getColor());
-        query.setParameter("size_i",product.getSize());
-        CartItem cartItem = (CartItem) query.getSingleResult();
+        query.setParameter("size_i",Integer.valueOf(product.getSize()));
+        List<CartItem> cartItemL = query.getResultList();
         String queryStr1 = "select count (*)" +
                 "from Product p where productName like :name and " +
                 "p.size = :size_i and color like :Color_i and status = :status";
         Query query1 = entityManager.createQuery(queryStr1);
         query1.setParameter("name",product.getProductName());
-        query1.setParameter("size_i",product.getSize());
+        query1.setParameter("size_i",Integer.valueOf(product.getSize()));
         query1.setParameter("Color_i",product.getColor());
-        query1.setParameter("status",true);
+        query1.setParameter("status",Boolean.valueOf(true));
         Long count = (Long) query1.getSingleResult();
-        if (cartItem != null) {
+        if (!cartItemL.isEmpty()) {
+            CartItem cartItem = cartItemL.get(0);
             if (count>=cartItem.getQuantity()+1)
                 return true;
             else return false;
@@ -189,7 +190,7 @@ public class CartDaoImpl implements ICartDao {
     @Override
     public AddressDTO getAddressUser(int idUser) {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
-        Customer customer = entityManager.find(Customer.class, idUser);
+        Customer customer = entityManager.find(Customer.class, Integer.valueOf(idUser));
         AddressDTO addressDTO = new AddressDTO();
         if (customer.getAddress() != null) {
             addressDTO.setId(customer.getAddress().getId());
@@ -204,7 +205,7 @@ public class CartDaoImpl implements ICartDao {
     }
     public boolean deleteCartItem(int cartItemId){
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
-        CartItem cartItem = entityManager.find(CartItem.class, cartItemId);
+        CartItem cartItem = entityManager.find(CartItem.class, Integer.valueOf(cartItemId));
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
@@ -215,6 +216,5 @@ public class CartDaoImpl implements ICartDao {
         catch (Exception e) {
             return false;
         }
-
     }
 }
