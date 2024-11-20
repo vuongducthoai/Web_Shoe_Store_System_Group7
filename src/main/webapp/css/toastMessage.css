@@ -5,7 +5,7 @@
     z-index: 999999;
 }
 
-.toast {
+.toast_custom {
     display: flex !important;
     align-items: center;
     background-color: #fff !important;
