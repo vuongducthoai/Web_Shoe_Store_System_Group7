@@ -5,6 +5,7 @@ import dao.ICartDao;
 import dto.*;
 import entity.*;
 import enums.DiscountType;
+import enums.PromotionType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
@@ -44,10 +45,10 @@ public class CartDaoImpl implements ICartDao {
                     Date promotionStartDate = (Date) row[12];
                     Date promotionEndDate = (Date) row[13];
                     Double promotionDiscountValue = (Double) row[14];
-                    String promotionDiscountType = (String) row[15];
-                    Integer promotionMinimumLoyalty = (Integer) row[16];
+                    DiscountType promotionDiscountType = (DiscountType) row[15];
+                    Integer promotionMinimumLoyalty = (Integer)     row[16];
                     Boolean promotionIsActive = (Boolean) row[17];
-                    String promotionType = (String) row[18];
+                    PromotionType promotionType = (PromotionType) row[18];
                     promotionDTO.setPromotionId(promotionId);
                     promotionDTO.setPromotionName(promotionName);
                     promotionDTO.setStartDate(promotionStartDate);
@@ -110,7 +111,21 @@ public class CartDaoImpl implements ICartDao {
             entityManager.remove(cartItem);
         }
         else{
-            cartItem.setQuantity(cartItem.getQuantity()-1);
+            Long count = (Long) entityManager.createQuery("select count(p) from Product p where " +
+                    "p.productName like :name and p.color like :color and p.size = :size " +
+                    "and p.status=true")
+                            .setParameter("name",cartItem.getProduct().getProductName())
+                                    .setParameter("color",cartItem.getProduct().getColor())
+                                            .setParameter("size",cartItem.getProduct().getSize())
+                                                    .getSingleResult();
+            if (count == 0){
+                entityManager.remove(cartItem);
+            }
+            else if (cartItem.getQuantity()-1>count){
+                cartItem.setQuantity(count.intValue());
+            }
+            else
+                cartItem.setQuantity(cartItem.getQuantity()-1);
         }
         transaction.commit();
         return true;
