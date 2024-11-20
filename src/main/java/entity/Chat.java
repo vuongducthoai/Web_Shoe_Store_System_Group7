@@ -17,8 +17,9 @@ public class Chat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int chatID;
 
-    @OneToOne(mappedBy = "chat", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Customer customer;
+    @OneToOne
+    @JoinColumn(name = "userID")
+    private User user;
 
     @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL)
     private List<Message> messages;

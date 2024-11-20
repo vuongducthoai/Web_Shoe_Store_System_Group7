@@ -2,32 +2,27 @@ package dao.Impl;
 
 import JpaConfig.JpaConfig;
 import dao.ICategoryDao;
-import dto.ProductDTO;
 import entity.Category;
 import entity.Product;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
 public class CategoryDaoImpl implements ICategoryDao {
+
     @Override
-    public List<ProductDTO> findAll() {
+    public List<Category> categoryList() {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
         try {
-            List<Product> products = entityManager.createQuery("SELECT p FROM Product p", Product.class).getResultList();
-            return products.stream()
-                    .map(product -> new ProductDTO(
-                            product.getProductID(),
-                            product.getProductName(),
-                            product.getPrice()
-                            // Thêm các trường cần thiết từ Product sang ProductDTO
-                    ))
-                    .collect(Collectors.toList());
-        } finally {
+            return entityManager.createQuery("SELECT c FROM Category c", Category.class).getResultList();
+        }
+        catch (Exception e) {
+            e.getMessage();
+        }
+        finally {
             entityManager.close();
         }
+        return null;
     }
 
     @Override
@@ -48,4 +43,29 @@ public class CategoryDaoImpl implements ICategoryDao {
             em.close();
         }
     }
+
+    @Override
+    public List<Product> productListByCategoryId(int id) {
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        List<Product> productList = null;
+
+        try {
+            // JPQL truy vấn các sản phẩm theo categoryID
+            String jpql = "SELECT p FROM Product p WHERE p.category.categoryID = :id";
+
+            // Thực thi truy vấn
+            productList = entityManager.createQuery(jpql, Product.class)
+                    .setParameter("id", id)
+                    .getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+
+        return productList;
+    }
+
+
+
 }

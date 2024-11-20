@@ -6,6 +6,7 @@ import entity.Account;
 import entity.Customer;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.NoResultException;
 
 public class CustomerDAOImpl implements ICustomerDAO {
 
@@ -15,10 +16,11 @@ public class CustomerDAOImpl implements ICustomerDAO {
         EntityTransaction transaction = entityManager.getTransaction();
         try{
             transaction.begin();
-            entityManager.persist(customer);
+            entityManager.merge(customer);
             transaction.commit();
             return true;
         }catch (Exception e){
+            System.out.println(e.getMessage());
             if(transaction.isActive()){
                 transaction.rollback();
             }
@@ -32,15 +34,14 @@ public class CustomerDAOImpl implements ICustomerDAO {
     public boolean findAccountByEmail(String email) {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
         try {
-            String jpql= "SELECT a FROM Account a where a.email = :email";
-            Account result = entityManager.createQuery(jpql, Account.class).setParameter("email", email).getSingleResult();
-            return result != null;
-        }catch (Exception e){
-            e.printStackTrace();
-        }finally {
-            entityManager.close();
+            String jpql = "SELECT a FROM Account a WHERE a.email = :email";
+            Account account = entityManager.createQuery(jpql, Account.class)
+                    .setParameter("email", email)
+                    .getSingleResult();
+            return account != null;
+        } catch (NoResultException e) {
+            return false;
         }
-        return false;
     }
 
 }

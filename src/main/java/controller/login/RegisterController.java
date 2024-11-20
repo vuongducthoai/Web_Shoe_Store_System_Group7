@@ -55,7 +55,6 @@ public class RegisterController extends HttpServlet {
 
             customerDTO.getAccount().setEmail(email);
             customerDTO.getAccount().setPassword(password);
-            System.out.println(customerDTO.getAccount().getPassword());
             customerDTO.getAccount().setAuthProvider(AuthProvider.LOCAL);
             customerDTO.getAccount().setRole(RoleType.CUSTOMER);
             customerDTO.setFullName(fullName);
@@ -63,6 +62,7 @@ public class RegisterController extends HttpServlet {
 
         try {
             if (!customerService.insertCustomer(customerDTO)) {
+
                 req.setAttribute("errorEmail", "Email đã tồn tại!");
                 System.out.println(req.getAttribute("errorEmail"));
                 req.setAttribute("customerDTO", customerDTO);
@@ -71,6 +71,7 @@ public class RegisterController extends HttpServlet {
             }
             resp.sendRedirect("/view/login.jsp");
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             req.setAttribute("errorMessage", "Đã xảy ra lỗi. Vui lòng thử lại!");
             req.setAttribute("customerDTO", customerDTO);
             req.getRequestDispatcher("/view/Register.jsp").forward(req, resp);
