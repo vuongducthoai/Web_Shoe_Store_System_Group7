@@ -5,6 +5,7 @@ import dao.ICartDao;
 import dto.*;
 import entity.*;
 import enums.DiscountType;
+import enums.PromotionType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
@@ -22,7 +23,7 @@ public class CartDaoImpl implements ICartDao {
             List<Object[]> cartItem1 = entityManager.createQuery(
                             "select distinct c.cartItemId,c.quantity," +
                                     "p.id,p.productName,p.color,p.price,p.image,p.status,p.size,p.description," +
-                                    "pr.id,pr.promotionName,pr.startDate,pr.endDate,pr.discountValue,pr.discountType,pr.minimumLoyalty,pr.isActive "+
+                                    "pr.id,pr.promotionName,pr.startDate,pr.endDate,pr.discountValue,pr.discountType,pr.minimumLoyalty,pr.isActive,pr.promotionType "+
                                     "from CartItem c join Product p on c.product.id = p.id left join Promotion pr on pr.id = p.promotion.id " +
                                     "where c.cart.customer.userID = :userId",Object[].class)
                     .setParameter("userId",Integer.valueOf(userID)).getResultList();
@@ -44,9 +45,10 @@ public class CartDaoImpl implements ICartDao {
                     Date promotionStartDate = (Date) row[12];
                     Date promotionEndDate = (Date) row[13];
                     Double promotionDiscountValue = (Double) row[14];
-                    String promotionDiscountType = (String) row[15];
-                    Integer promotionMinimumLoyalty = (Integer) row[16];
+                    DiscountType promotionDiscountType = (DiscountType) row[15];
+                    Integer promotionMinimumLoyalty = (Integer)     row[16];
                     Boolean promotionIsActive = (Boolean) row[17];
+                    PromotionType promotionType = (PromotionType) row[18];
                     promotionDTO.setPromotionId(promotionId);
                     promotionDTO.setPromotionName(promotionName);
                     promotionDTO.setStartDate(promotionStartDate);
@@ -55,6 +57,7 @@ public class CartDaoImpl implements ICartDao {
                     promotionDTO.setDiscountType(promotionDiscountType);
                     promotionDTO.setMinimumLoyalty(promotionMinimumLoyalty);
                     promotionDTO.setActive(promotionIsActive);
+                    promotionDTO.setPromotionType(promotionType);
                 }
                 ProductDTO productDTO = new ProductDTO(
                         productId,
@@ -108,7 +111,21 @@ public class CartDaoImpl implements ICartDao {
             entityManager.remove(cartItem);
         }
         else{
-            cartItem.setQuantity(cartItem.getQuantity()-1);
+            Long count = (Long) entityManager.createQuery("select count(p) from Product p where " +
+                    "p.productName like :name and p.color like :color and p.size = :size " +
+                    "and p.status=true")
+                            .setParameter("name",cartItem.getProduct().getProductName())
+                                    .setParameter("color",cartItem.getProduct().getColor())
+                                            .setParameter("size",cartItem.getProduct().getSize())
+                                                    .getSingleResult();
+            if (count == 0){
+                entityManager.remove(cartItem);
+            }
+            else if (cartItem.getQuantity()-1>count){
+                cartItem.setQuantity(count.intValue());
+            }
+            else
+                cartItem.setQuantity(cartItem.getQuantity()-1);
         }
         transaction.commit();
         return true;
@@ -182,10 +199,7 @@ public class CartDaoImpl implements ICartDao {
             else return false;
         }
         else {
-            if (count>0)
-                return true;
-            else
-                return false;
+            return count > 0;
         }
     }
 

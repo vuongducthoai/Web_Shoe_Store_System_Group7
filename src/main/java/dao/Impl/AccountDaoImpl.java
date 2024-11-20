@@ -2,6 +2,8 @@ package dao.Impl;
 
 import JpaConfig.JpaConfig;
 import dao.IAccountDAO;
+import dto.AccountDTO;
+import dto.UserDTO;
 import entity.Account;
 import enums.AuthProvider;
 import jakarta.persistence.EntityManager;
@@ -82,6 +84,29 @@ public class AccountDaoImpl implements IAccountDAO {
             e.printStackTrace();
         } finally {
             entityManager.close();
+        }
+        return null;
+    }
+
+    public AccountDTO getAccoutByEmail(String email) {
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        try{
+            Account account = entityManager.createQuery("select a from Account a where a.email like :email",Account.class)
+                    .setParameter("email",email).getSingleResult();
+            AccountDTO accountDTO = new AccountDTO();
+            accountDTO.setAccountID(account.getAccountID());
+            accountDTO.setEmail(account.getEmail());
+            accountDTO.setRole(account.getRole());
+            accountDTO.setUser(new UserDTO());
+            accountDTO.getUser().setUserID(-1);
+            if (account.getUser()!=null){
+                accountDTO.getUser().setUserID(account.getUser().getUserID());
+                accountDTO.getUser().setActive(account.getUser().isActive());
+            }
+            return accountDTO;
+        }
+        catch (Exception e){
+            e.printStackTrace();
         }
         return null;
     }

@@ -1,11 +1,13 @@
 package controller.customer;
 
 import JpaConfig.JpaConfig;
+import dto.AccountDTO;
 import dto.CartItemDTO;
 import entity.Cart;
 import entity.CartItem;
 import entity.Customer;
 import entity.Product;
+import enums.RoleType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.servlet.RequestDispatcher;
@@ -14,6 +16,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import service.ICartService;
@@ -30,6 +33,14 @@ public class CartController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getServletPath();
+        HttpSession session = req.getSession();
+        AccountDTO accountDTO = (AccountDTO) session.getAttribute("user");
+        if (accountDTO==null || accountDTO.getUser().getUserID()==-1||!accountDTO.getUser().isActive()){
+            return;
+        }
+        if (accountDTO.getRole()== RoleType.ADMIN){
+            return;
+        }
         switch (path){
             case "/Cart":
                 Cart_View(req, resp);
@@ -45,6 +56,14 @@ public class CartController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getServletPath();
+        HttpSession session = req.getSession();
+        AccountDTO accountDTO = (AccountDTO) session.getAttribute("user");
+        if (accountDTO==null || accountDTO.getUser().getUserID()==-1||!accountDTO.getUser().isActive()){
+            return;
+        }
+        if (accountDTO.getRole() == RoleType.ADMIN){
+            return;
+        }
         switch (path){
             case "/Cart/Remove":
                 Cart_Remove(req, resp,"http://localhost:8080/Cart");
@@ -60,7 +79,9 @@ public class CartController extends HttpServlet {
         }
     }
     public void Load_Cart_View(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int idUser = 1;
+        HttpSession session = req.getSession();
+        AccountDTO accountDTO = (AccountDTO) session.getAttribute("user");
+        int idUser = accountDTO.getUser().getUserID();
         List<CartItemDTO> cart = iCartService.findAll(idUser);
         double total = iCartService.Total_Cart(cart);
         double discount = iCartService.CalculateDiscount(cart,idUser);
@@ -87,7 +108,9 @@ public class CartController extends HttpServlet {
 
     private void Add_Cart(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int idProduct = Integer.parseInt(req.getParameter("idProduct"));
-        int idUser = 1;
+        HttpSession session = req.getSession();
+        AccountDTO accountDTO = (AccountDTO) session.getAttribute("user");
+        int idUser = accountDTO.getUser().getUserID();
         Cart_Add(req,resp,idUser,idProduct,"Product added to cart successfully","This product cannot be added anymore.");
         Load_Cart_View(req,resp);
         req.getRequestDispatcher("/view/customer/cart.jsp").forward(req, resp);
