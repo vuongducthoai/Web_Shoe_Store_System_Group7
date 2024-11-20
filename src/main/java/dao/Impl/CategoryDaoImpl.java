@@ -45,7 +45,7 @@ public class CategoryDaoImpl implements ICategoryDao {
     }
 
     @Override
-    public List<Product> productListByCategoryId(int id) {
+    public List<Product> findAllProductByCategoryWithPagination(int id, int offset, int limit) {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
         List<Product> productList = null;
 
@@ -56,6 +56,8 @@ public class CategoryDaoImpl implements ICategoryDao {
             // Thực thi truy vấn
             productList = entityManager.createQuery(jpql, Product.class)
                     .setParameter("id", id)
+                    .setFirstResult(offset)
+                    .setMaxResults(limit)
                     .getResultList();
         } catch (Exception e) {
             e.printStackTrace();
@@ -64,8 +66,6 @@ public class CategoryDaoImpl implements ICategoryDao {
         }
 
         return productList;
+
     }
-
-
-
 }

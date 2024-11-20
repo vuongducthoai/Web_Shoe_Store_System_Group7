@@ -128,111 +128,112 @@
     </div>
     <!-- section wrapper and col -->
     <div class="grid-wrapper">
-        <div class="col- collection-item" data-item="men" data-aos="zoom-in-up">
-            <figure><img src="./image/pr1.png" alt=""></figure>
-            <div class="col-body">
-                <p class="rating-icon"><i class="fa-solid fa-star"></i> <span class="rating-num">4.9</span></p>
-                <h3 class="heading-three">nike running</h3>
-                <p class="sub-heading">air zoom pagasus</p>
-                <div class="col-footer">
-                    <p class="shoe-price">$350</p>
-                    <button class="shoe-btn btn">Add to cart</button>
-                </div>
-            </div>
-        </div>
+<%--        <div class="col- collection-item" data-item="men" data-aos="zoom-in-up">--%>
+<%--            <figure><img src="./image/pr1.png" alt=""></figure>--%>
+<%--            <div class="col-body">--%>
+<%--                <p class="rating-icon"><i class="fa-solid fa-star"></i> <span class="rating-num">4.9</span></p>--%>
+<%--                <h3 class="heading-three">nike running</h3>--%>
+<%--                <p class="sub-heading">air zoom pagasus</p>--%>
+<%--                <div class="col-footer">--%>
+<%--                    <p class="shoe-price">$350</p>--%>
+<%--                    <button class="shoe-btn btn">Add to cart</button>--%>
+<%--                </div>--%>
+<%--            </div>--%>
+<%--        </div>--%>
 
 
-        <div class="col- collection-item" data-item="women" data-aos="zoom-in-up">
-            <figure><img src="/image/pr2.png" alt=""></figure>
-            <div class="col-body">
-                <p class="rating-icon"><i class="fa-solid fa-star"></i> <span class="rating-num">4.9</span></p>
-                <h3 class="heading-three">nike running</h3>
-                <p class="sub-heading">air zoom pagasus</p>
-                <div class="col-footer">
-                    <p class="shoe-price">$350</p>
-                    <button class="shoe-btn btn">Add to cart</button>
-                </div>
-            </div>
-        </div>
+<%--        <div class="col- collection-item" data-item="women" data-aos="zoom-in-up">--%>
+<%--            <figure><img src="/image/pr2.png" alt=""></figure>--%>
+<%--            <div class="col-body">--%>
+<%--                <p class="rating-icon"><i class="fa-solid fa-star"></i> <span class="rating-num">4.9</span></p>--%>
+<%--                <h3 class="heading-three">nike running</h3>--%>
+<%--                <p class="sub-heading">air zoom pagasus</p>--%>
+<%--                <div class="col-footer">--%>
+<%--                    <p class="shoe-price">$350</p>--%>
+<%--                    <button class="shoe-btn btn">Add to cart</button>--%>
+<%--                </div>--%>
+<%--            </div>--%>
+<%--        </div>--%>
 
-        <div class="col- collection-item" data-item="men" data-aos="zoom-in-up">
-            <figure><img src="/image/pr3.png" alt=""></figure>
-            <div class="col-body">
-                <p class="rating-icon"><i class="fa-solid fa-star"></i> <span class="rating-num">4.9</span></p>
-                <h3 class="heading-three">nike running</h3>
-                <p class="sub-heading">air zoom pagasus</p>
-                <div class="col-footer">
-                    <p class="shoe-price">$350</p>
-                    <button class="shoe-btn btn">Add to cart</button>
-                </div>
-            </div>
-        </div>
+<%--        <div class="col- collection-item" data-item="men" data-aos="zoom-in-up">--%>
+<%--            <figure><img src="/image/pr3.png" alt=""></figure>--%>
+<%--            <div class="col-body">--%>
+<%--                <p class="rating-icon"><i class="fa-solid fa-star"></i> <span class="rating-num">4.9</span></p>--%>
+<%--                <h3 class="heading-three">nike running</h3>--%>
+<%--                <p class="sub-heading">air zoom pagasus</p>--%>
+<%--                <div class="col-footer">--%>
+<%--                    <p class="shoe-price">$350</p>--%>
+<%--                    <button class="shoe-btn btn">Add to cart</button>--%>
+<%--                </div>--%>
+<%--            </div>--%>
+<%--        </div>--%>
 
-        <div class="col- collection-item" data-item="sports" data-aos="zoom-in-up">
-            <figure><img src="/image/pr4.png" alt=""></figure>
-            <div class="col-body">
-                <p class="rating-icon"><i class="fa-solid fa-star"></i> <span class="rating-num">4.9</span></p>
-                <h3 class="heading-three">nike running</h3>
-                <p class="sub-heading">air zoom pagasus</p>
-                <div class="col-footer">
-                    <p class="shoe-price">$350</p>
-                    <button class="shoe-btn btn">Add to cart</button>
-                </div>
-            </div>
-        </div>
+<%--        <div class="col- collection-item" data-item="sports" data-aos="zoom-in-up">--%>
+<%--            <figure><img src="/image/pr4.png" alt=""></figure>--%>
+<%--            <div class="col-body">--%>
+<%--                <p class="rating-icon"><i class="fa-solid fa-star"></i> <span class="rating-num">4.9</span></p>--%>
+<%--                <h3 class="heading-three">nike running</h3>--%>
+<%--                <p class="sub-heading">air zoom pagasus</p>--%>
+<%--                <div class="col-footer">--%>
+<%--                    <p class="shoe-price">$350</p>--%>
+<%--                    <button class="shoe-btn btn">Add to cart</button>--%>
+<%--                </div>--%>
+<%--            </div>--%>
+<%--        </div>--%>
 
-        <div class="col- collection-item" data-item="men" data-aos="zoom-in-up">
-            <figure><img src="/image/pr5.png" alt=""></figure>
-            <div class="col-body">
-                <p class="rating-icon"><i class="fa-solid fa-star"></i> <span class="rating-num">4.9</span></p>
-                <h3 class="heading-three">nike running</h3>
-                <p class="sub-heading">air zoom pagasus</p>
-                <div class="col-footer">
-                    <p class="shoe-price">$350</p>
-                    <button class="shoe-btn btn">Add to cart</button>
-                </div>
-            </div>
-        </div>
+<%--        <div class="col- collection-item" data-item="men" data-aos="zoom-in-up">--%>
+<%--            <figure><img src="/image/pr5.png" alt=""></figure>--%>
+<%--            <div class="col-body">--%>
+<%--                <p class="rating-icon"><i class="fa-solid fa-star"></i> <span class="rating-num">4.9</span></p>--%>
+<%--                <h3 class="heading-three">nike running</h3>--%>
+<%--                <p class="sub-heading">air zoom pagasus</p>--%>
+<%--                <div class="col-footer">--%>
+<%--                    <p class="shoe-price">$350</p>--%>
+<%--                    <button class="shoe-btn btn">Add to cart</button>--%>
+<%--                </div>--%>
+<%--            </div>--%>
+<%--        </div>--%>
 
-        <div class="col- collection-item" data-item="women" data-aos="zoom-in-up">
-            <figure><img src="/image/pr6.png" alt=""></figure>
-            <div class="col-body">
-                <p class="rating-icon"><i class="fa-solid fa-star"></i> <span class="rating-num">4.9</span></p>
-                <h3 class="heading-three">nike running</h3>
-                <p class="sub-heading">air zoom pagasus</p>
-                <div class="col-footer">
-                    <p class="shoe-price">$350</p>
-                    <button class="shoe-btn btn">Add to cart</button>
-                </div>
-            </div>
-        </div>
+<%--        <div class="col- collection-item" data-item="women" data-aos="zoom-in-up">--%>
+<%--            <figure><img src="/image/pr6.png" alt=""></figure>--%>
+<%--            <div class="col-body">--%>
+<%--                <p class="rating-icon"><i class="fa-solid fa-star"></i> <span class="rating-num">4.9</span></p>--%>
+<%--                <h3 class="heading-three">nike running</h3>--%>
+<%--                <p class="sub-heading">air zoom pagasus</p>--%>
+<%--                <div class="col-footer">--%>
+<%--                    <p class="shoe-price">$350</p>--%>
+<%--                    <button class="shoe-btn btn">Add to cart</button>--%>
+<%--                </div>--%>
+<%--            </div>--%>
+<%--        </div>--%>
 
-        <div class="col- collection-item" data-item="sports" data-aos="zoom-in-up">
-            <figure><img src="/image/pr7.png" alt=""></figure>
-            <div class="col-body">
-                <p class="rating-icon"><i class="fa-solid fa-star"></i> <span class="rating-num">4.9</span></p>
-                <h3 class="heading-three">nike running</h3>
-                <p class="sub-heading">air zoom pagasus</p>
-                <div class="col-footer">
-                    <p class="shoe-price">$350</p>
-                    <button class="shoe-btn btn">Add to cart</button>
-                </div>
-            </div>
-        </div>
+<%--        <div class="col- collection-item" data-item="sports" data-aos="zoom-in-up">--%>
+<%--            <figure><img src="/image/pr7.png" alt=""></figure>--%>
+<%--            <div class="col-body">--%>
+<%--                <p class="rating-icon"><i class="fa-solid fa-star"></i> <span class="rating-num">4.9</span></p>--%>
+<%--                <h3 class="heading-three">nike running</h3>--%>
+<%--                <p class="sub-heading">air zoom pagasus</p>--%>
+<%--                <div class="col-footer">--%>
+<%--                    <p class="shoe-price">$350</p>--%>
+<%--                    <button class="shoe-btn btn">Add to cart</button>--%>
+<%--                </div>--%>
+<%--            </div>--%>
+<%--        </div>--%>
 
-        <div class="col- collection-item" data-item="men" data-aos="zoom-in-up">
-            <figure><img src="/image/pr8.png" alt=""></figure>
-            <div class="col-body">
-                <p class="rating-icon"><i class="fa-solid fa-star"></i> <span class="rating-num">4.9</span></p>
-                <h3 class="heading-three">nike running</h3>
-                <p class="sub-heading">air zoom pagasus</p>
-                <div class="col-footer">
-                    <p class="shoe-price">$350</p>
-                    <button class="shoe-btn btn">Add to cart</button>
-                </div>
-            </div>
-        </div>
+<%--        <div class="col- collection-item" data-item="men" data-aos="zoom-in-up">--%>
+<%--            <figure><img src="/image/pr8.png" alt=""></figure>--%>
+<%--            <div class="col-body">--%>
+<%--                <p class="rating-icon"><i class="fa-solid fa-star"></i> <span class="rating-num">4.9</span></p>--%>
+<%--                <h3 class="heading-three">nike running</h3>--%>
+<%--                <p class="sub-heading">air zoom pagasus</p>--%>
+<%--                <div class="col-footer">--%>
+<%--                    <p class="shoe-price">$350</p>--%>
+<%--                    <button class="shoe-btn btn">Add to cart</button>--%>
+<%--                </div>--%>
+<%--            </div>--%>
+<%--        </div>--%>
     </div>
+    <button style="margin-top: 20px; background-color: aqua;" id="load-more-btn" class="btn">Load More</button>
 </section>
 <!-- customer review -->
 <section class="container testimonial">

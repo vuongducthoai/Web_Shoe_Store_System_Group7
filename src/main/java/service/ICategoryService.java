@@ -8,5 +8,5 @@ public interface ICategoryService {
     void insert(CategoryDTO categoryDTO);
     List<CategoryDTO> listCategory();
 
-    List<ProductDTO> productListByCategoryId(int categoryId);
+    List<ProductDTO> findAllProductByCategoryWithPagination(int categoryId, int offset, int limit);
 }

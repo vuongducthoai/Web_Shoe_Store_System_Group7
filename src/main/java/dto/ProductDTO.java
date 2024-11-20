@@ -37,4 +37,10 @@ public class ProductDTO {
         }
         return null; // hoặc đường dẫn ảnh mặc định nếu không có dữ liệu
     }
+
+    public boolean hasImage() {
+        return image != null && image.length > 0;
+    }
+
+
 }
