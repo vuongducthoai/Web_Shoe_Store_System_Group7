@@ -4,7 +4,6 @@ import dao.ICustomerDAO;
 import dao.Impl.CustomerDAOImpl;
 import dto.CustomerDTO;
 import entity.*;
-import org.checkerframework.checker.units.qual.C;
 import service.ICustomerService;
 import util.PasswordHashingSHA;
 
@@ -14,7 +13,7 @@ public class CustomerServiceImpl implements ICustomerService {
     private ICustomerDAO customerDAO = new CustomerDAOImpl();
     @Override
     public boolean insertCustomer(CustomerDTO customerDTO) {
-
+    try {
         Customer customer = new Customer();
         customer.setDateOfBirth(customerDTO.getDateOfBirth());
         customer.setUserID(customerDTO.getUserID());
@@ -27,8 +26,9 @@ public class CustomerServiceImpl implements ICustomerService {
         cart.setCustomer(customer);
 
         Chat chat = new Chat();
+        chat.setUser(customer);
+
         customer.setChat(chat);
-        chat.setCustomer(customer);
 
         Address address = new Address();
         address.setHouseNumber(customerDTO.getAddressDTO().getHouseNumber());
@@ -55,9 +55,14 @@ public class CustomerServiceImpl implements ICustomerService {
         customer.setAccount(account);
 
         if(customerDAO.findAccountByEmail(account.getEmail())){
+            System.out.println("12333423432432432432");
             return false;
         }
+        System.out.println("ưadeqweqweqweqw");
         return customerDAO.insertCustomer(customer);
-
+    } catch (Exception e){
+        System.out.println(e.getMessage());
+    }
+        return false;
     }
 }

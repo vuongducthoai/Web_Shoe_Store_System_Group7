@@ -1,8 +1,9 @@
 package dao;
 
-import dto.ProductDTO;
+import entity.Product;
+
 import java.util.List;
 
 public interface IProductDAO {
-    List<ProductDTO> getAllProduct();
+    List<Product> findAllWithPagination(int offset, int limit);
 }
