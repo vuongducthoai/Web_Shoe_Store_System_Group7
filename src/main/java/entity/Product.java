@@ -47,4 +47,5 @@ public class Product {
     @JoinColumn(name = "promotionID")
     private Promotion promotion;
 
+
 }

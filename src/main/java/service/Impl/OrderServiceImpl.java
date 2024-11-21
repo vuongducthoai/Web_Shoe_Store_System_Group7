@@ -1,20 +1,15 @@
 package service.Impl;
 
-import JpaConfig.JpaConfig;
 import dao.IOrderDao;
 import dao.Impl.OrderImpl;
 import dto.*;
-import entity.OrderItem;
-import jakarta.persistence.EntityManager;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import service.IOrderService;
 
 import java.nio.charset.StandardCharsets;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Date;
 import java.util.List;
 
 public class OrderServiceImpl implements IOrderService {

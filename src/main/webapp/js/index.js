@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let buttons = document.querySelectorAll(".btn-col");
     const loadMoreBtn = document.querySelector("#load-more-btn"); // chỉ lấy phần tử đầu tiên
     let productItems = document.querySelector(".grid-wrapper");
-    let offset = 0;
+    let offset = 8;
     const limit = 8;
 
     buttons.forEach((btn) => {
@@ -12,13 +12,10 @@ document.addEventListener("DOMContentLoaded", function () {
             this.classList.add("active");
 
             const category = this.getAttribute("data-btn");
-
+            offset = 0; // Reset offset khi đổi category
             const newUrl = `/loadProducts?category=${category}&offset=${offset}&limit=${limit}`;
             window.history.pushState({ path: newUrl }, '', newUrl);
-
             productItems.innerHTML = "";
-            offset = 0; // Reset offset khi đổi category
-
             loadProducts(category);
         });
     });
@@ -37,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 <div class="col-body">
                                     <p class="rating-icon"><i class="fa-solid fa-star"></i> <span class="rating-num">5</span></p>
                                     <h3 class="heading-three">${product.productName}</h3>
-                                    <p class="sub-heading">${product.description}</p>
+                                    <p class="sub-heading">${product.quantity}</p>
                                     <div class="col-footer">
                                         <p class="shoe-price">$${product.price}</p>
                                         <button class="shoe-btn btn">Add to cart</button>
@@ -49,7 +46,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     });
                     offset += limit; // Cập nhật offset sau mỗi lần tải
                 } else {
-                    loadMoreBtn.style.display = "none"; // Nếu không có dữ liệu thì ẩn nút load more
+                    loadMoreBtn.style.display = "none";
+                    showSuccessToast({title: "Tất cả sản phẩm đã được tải!", message: "Cảm ơn bạn đã xem tất cả sản phẩm. Hãy quay lại sau để xem thêm.", type:"info"});
+                    // Nếu không có dữ liệu thì ẩn nút load more
                 }
             })
             .catch(error => console.error("Error loading products:", error));
@@ -63,9 +62,9 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Tải sản phẩm khi trang lần đầu tiên được tải
-    const defaultCategory = document.querySelector(".btn-col.active")?.getAttribute("data-btn") || "all"; // Lấy category mặc định
-    loadProducts(defaultCategory);
+    // // Tải sản phẩm khi trang lần đầu tiên được tải
+    // const defaultCategory = document.querySelector(".btn-col.active")?.getAttribute("data-btn") || "all"; // Lấy category mặc định
+    // loadProducts(defaultCategory);
 
     let ul = document.querySelector("ul");
     let burger_icon = document.querySelector(".burger_icon");
