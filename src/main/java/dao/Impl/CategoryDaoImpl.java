@@ -6,8 +6,13 @@ import entity.Category;
 import entity.Product;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.TypedQuery;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+
 public class CategoryDaoImpl implements ICategoryDao {
 
     @Override
@@ -53,12 +58,25 @@ public class CategoryDaoImpl implements ICategoryDao {
             // JPQL truy vấn các sản phẩm theo categoryID
             String jpql = "SELECT p FROM Product p WHERE p.category.categoryID = :id";
 
+            TypedQuery<Product> typedQuery  = entityManager.createQuery(jpql, Product.class);
+
+            typedQuery.setParameter("id", id);
+
+            // Phân trang
+            typedQuery.setFirstResult(offset);
+            typedQuery.setMaxResults(limit);
+
             // Thực thi truy vấn
-            productList = entityManager.createQuery(jpql, Product.class)
-                    .setParameter("id", id)
-                    .setFirstResult(offset)
-                    .setMaxResults(limit)
-                    .getResultList();
+            List<Product> products = typedQuery.getResultList();
+
+            // Loại bỏ các sản phẩm trùng tên (giữ lại 1 sản phẩm cho mỗi tên)
+            Map<String, Product> uniqueProductsMap = new LinkedHashMap<>();
+            for (Product product : products) {
+                uniqueProductsMap.putIfAbsent(product.getProductName(), product);
+            }
+
+            // Trả về danh sách các sản phẩm không trùng tên
+            return new ArrayList<>(uniqueProductsMap.values());
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

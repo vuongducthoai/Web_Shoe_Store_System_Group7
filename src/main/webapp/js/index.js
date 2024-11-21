@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 <div class="col-body">
                                     <p class="rating-icon"><i class="fa-solid fa-star"></i> <span class="rating-num">5</span></p>
                                     <h3 class="heading-three">${product.productName}</h3>
-                                    <p class="sub-heading">${product.description}</p>
+                                    <p class="sub-heading">${product.quantity}</p>
                                     <div class="col-footer">
                                         <p class="shoe-price">$${product.price}</p>
                                         <button class="shoe-btn btn">Add to cart</button>
