@@ -1,5 +1,10 @@
 package dto;
 
+<<<<<<< HEAD
+=======
+import entity.Category;
+import entity.PromotionProduct;
+>>>>>>> 09ec808b37ffca16cea1ffc9d16b5ddc7ecac064
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,6 +37,16 @@ public class ProductDTO {
         this.productName = productName;
         this.cartItemDTOList = cartItemDTOList;
         this.orderItemDTOList = orderItemDTOList;
+        this.categoryDTO = categoryDTO;
+    }
+    public ProductDTO(String productName, double price, byte[] imageUrl, String color, int size, CategoryDTO categoryDTO, String description, boolean status) {
+        this.description = description;
+        this.status = status;
+        this.size = size;
+        this.color = color;
+        this.image = imageUrl;
+        this.price = price;
+        this.productName = productName;
         this.categoryDTO = categoryDTO;
     }
 

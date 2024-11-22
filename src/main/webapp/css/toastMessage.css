@@ -16,7 +16,6 @@
     max-width: 450px !important;
     border-left: 4px solid !important;
     transition: all linear 0.3s !important;
-    animation: slideInLeft ease 0.3s, fadeOut linear 1s 0.3s forwards;
 }
 
 .toast__body {

@@ -30,7 +30,7 @@ public class Promotion {
     private double discountValue;
 
     @Enumerated(EnumType.STRING)
-    private DiscountType discountType; // "percentage", "free-shipping", ...
+    private DiscountType discountType; // "percentage", , ...
 
     private int minimumLoyalty;
     private boolean isActive;
