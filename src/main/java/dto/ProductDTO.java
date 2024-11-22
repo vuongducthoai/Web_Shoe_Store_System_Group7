@@ -1,10 +1,7 @@
 package dto;
 
-<<<<<<< HEAD
-=======
 import entity.Category;
 import entity.PromotionProduct;
->>>>>>> 09ec808b37ffca16cea1ffc9d16b5ddc7ecac064
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
