@@ -1,5 +1,6 @@
 <%@ page import="org.json.JSONArray" %>
-<%@ page import="org.json.JSONObject" %><%--
+<%@ page import="org.json.JSONObject" %>
+<%@ page import="java.text.NumberFormat" %><%--
   Created by IntelliJ IDEA.
   User: hung5
   Date: 10/11/2024
@@ -8,11 +9,14 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
     <title>
         SHOP.CO - Cart
     </title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="../../css/toastMessage.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
@@ -100,7 +104,9 @@
     </style>
 </head>
 <body>
-<div class="container">
+<div id="custom-toast"></div>
+<jsp:include page="../../view/header.jsp"></jsp:include>
+<div class="container" style="margin: 69px;">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
@@ -133,7 +139,7 @@
                         </div>
                         </p>
                         <p class="fw-bold">
-                                ${cart.productDTO.price} VND
+                            <fmt:formatNumber value="${cart.productDTO.price}" groupingUsed="true"/> VND
                         </p>
                     </div>
                     <div class="ms-auto d-flex align-items-center">
@@ -173,27 +179,27 @@
                 <p>
                     Subtotal
                     <span class="float-end">
-        ${total} VND
-       </span>
+                        <fmt:formatNumber value="${total}" groupingUsed="true"/> VND
+                    </span>
                 </p>
                 <p>
                     Discount
                     <span class="float-end text-danger">
-        -${discount} VND
-       </span>
+                        -<fmt:formatNumber value="${discount}" groupingUsed="true"/> VND
+                    </span>
                 </p>
                 <p>
                     Delivery Fee
                     <span class="float-end">
-        ${feeShip} VND
-       </span>
+                        <fmt:formatNumber value="${feeShip}" groupingUsed="true"/> VND
+                    </span>
                 </p>
                 <hr/>
                 <p class="total">
                     Total
                     <span class="float-end">
-        ${Sum} VND
-       </span>
+                        <fmt:formatNumber value="${Sum}" groupingUsed="true"/> VND
+                    </span>
                 </p>
                 <form action="/Momo_pay" method="post">
                     <input type="text" name="cartItem" value="${JsonCart}" hidden="hidden">
@@ -216,7 +222,7 @@
         </div>
     </div>
 </div>
-<script src="/js/Toast.js"></script>
+<jsp:include page="../../view/footer.jsp"></jsp:include>
 <script src="/js/cart.js"></script>
 <script>
     var errCode = "${errCode}";
