@@ -395,7 +395,7 @@ section .main .button:hover i{
     transition: var(--transition-one);
 }
 .collection .btn-col{
-    margin-right: 5px;
+    margin: 10px;
     border: none;
     outline: none;
     border: 1px solid var(--first-gra-clr);

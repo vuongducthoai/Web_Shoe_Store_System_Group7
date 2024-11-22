@@ -1,6 +1,5 @@
 package dto;
 
-import entity.PromotionProduct;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
