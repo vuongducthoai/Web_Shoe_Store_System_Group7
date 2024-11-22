@@ -70,19 +70,19 @@ public class CartServiceImpl implements ICartService {
         double total=0;
         Date date = Date.from(Instant.now());
         for (CartItemDTO item : cartItem) {
-            try{
-                if (    item.getProductDTO().getPromotionDTO().getStartDate().compareTo(date) <= 0 &&
-                        item.getProductDTO().getPromotionDTO().getEndDate().compareTo(date) >= 0 &&
-                        item.getProductDTO().getPromotionDTO().isActive()) {
-                    if (item.getProductDTO().getPromotionDTO().getDiscountType().equals(DiscountType.Percentage)) {
-                        total += item.getProductDTO().getPromotionDTO().getDiscountValue() *
-                                item.getProductDTO().getPrice() * item.getQuantity() / 100;
-                    }
-                    if (item.getProductDTO().getPromotionDTO().getDiscountType().equals(DiscountType.VND)){
-                        total += item.getProductDTO().getPromotionDTO().getDiscountValue()*item.getQuantity();
-                    }
-                }
-            }catch (Exception ignored){}
+//            try{
+//                if (    item.getProductDTO().getPromotionDTO().getStartDate().compareTo(date) <= 0 &&
+//                        item.getProductDTO().getPromotionDTO().getEndDate().compareTo(date) >= 0 &&
+//                        item.getProductDTO().getPromotionDTO().isActive()) {
+//                    if (item.getProductDTO().getPromotionDTO().getDiscountType().equals(DiscountType.Percentage)) {
+//                        total += item.getProductDTO().getPromotionDTO().getDiscountValue() *
+//                                item.getProductDTO().getPrice() * item.getQuantity() / 100;
+//                    }
+//                    if (item.getProductDTO().getPromotionDTO().getDiscountType().equals(DiscountType.VND)){
+//                        total += item.getProductDTO().getPromotionDTO().getDiscountValue()*item.getQuantity();
+//                    }
+//                }
+//            }catch (Exception ignored){}
         }
         List<Promotion> promotion = entityManager.createQuery(
                         "select p from Promotion p " +

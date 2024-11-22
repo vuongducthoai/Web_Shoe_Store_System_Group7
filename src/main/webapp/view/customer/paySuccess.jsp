@@ -37,7 +37,7 @@
                     <i class="fas fa-check-circle success-icon"></i>
                     <h1 class="card-title mt-3">Payment Successful!</h1>
                     <p class="card-text">Thank you for your purchase. Your order has been processed successfully.</p>
-                    <a href="#" class="btn btn-primary mt-3">Quay lại trang chủ</a>
+                    <a href="/" class="btn btn-primary mt-3">Go to Home</a>
                 </div>
             </div>
         </div>
