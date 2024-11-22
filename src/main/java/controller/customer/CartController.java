@@ -35,7 +35,7 @@ public class CartController extends HttpServlet {
         String path = req.getServletPath();
         HttpSession session = req.getSession();
         AccountDTO accountDTO = (AccountDTO) session.getAttribute("user");
-        if (accountDTO==null || accountDTO.getUser().getUserID()==-1||!accountDTO.getUser().isActive()){
+        if (accountDTO==null || accountDTO.getUser()==null||!accountDTO.getUser().isActive()){
             return;
         }
         if (accountDTO.getRole()== RoleType.ADMIN){
@@ -58,10 +58,10 @@ public class CartController extends HttpServlet {
         String path = req.getServletPath();
         HttpSession session = req.getSession();
         AccountDTO accountDTO = (AccountDTO) session.getAttribute("user");
-        if (accountDTO==null || accountDTO.getUser().getUserID()==-1||!accountDTO.getUser().isActive()){
+        if (accountDTO==null || accountDTO.getUser()==null||!accountDTO.getUser().isActive()){
             return;
         }
-        if (accountDTO.getRole() == RoleType.ADMIN){
+        if (accountDTO.getRole()== RoleType.ADMIN){
             return;
         }
         switch (path){

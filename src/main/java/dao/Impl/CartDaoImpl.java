@@ -208,6 +208,7 @@ public class CartDaoImpl implements ICartDao {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
         Customer customer = entityManager.find(Customer.class, Integer.valueOf(idUser));
         AddressDTO addressDTO = new AddressDTO();
+        if (customer== null) return null;
         if (customer.getAddress() != null) {
             addressDTO.setId(customer.getAddress().getId());
             addressDTO.setCity(customer.getAddress().getCity());
