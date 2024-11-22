@@ -8,7 +8,7 @@ import entity.Customer;
 import java.util.List;
 
 public interface ICartDao {
-    List<CartItemDTO> findAll(int userID);
+    List<CartItem> findAll(int userID);
     int Count_Item(String name,int size,String Color);
     boolean RemoveItem( int cartItemId);
     boolean AddItem(int idProduct,int userId);
