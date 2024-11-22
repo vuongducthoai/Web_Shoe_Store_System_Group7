@@ -3,11 +3,16 @@ package service.Impl;
 import dao.IOrderDao;
 import dao.Impl.OrderImpl;
 import dto.*;
+import entity.OrderItem;
+import enums.OrderStatus;
+import jakarta.persistence.EntityManager;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import service.IOrderService;
 
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -50,5 +55,84 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     public boolean CanCreateOrder(List<CartItemDTO> cartItem) {
         return orderDao.CanCreateOrder(cartItem);
+    }
+
+    @Override
+    public List<OrderDTO> findAllOrders() {
+        return orderDao.findAllOrders();
+    }
+
+    @Override
+    public boolean updateOrderStatus(String orderId, OrderStatus newStatus) {
+        return orderDao.updateOrderStatus(orderId, newStatus);
+    }
+
+    // Phương thức lấy danh sách đơn hàng đã lọc
+    @Override
+    public List<OrderDTO> getFilteredOrders(String searchKeyword, String orderStatus, String startDate, String endDate) {
+        // Lấy toàn bộ danh sách đơn hàng
+        List<OrderDTO> orderDTOList = orderDao.findAllOrders();
+
+        // Lọc theo từ khóa
+        if (searchKeyword != null && !searchKeyword.isEmpty()) {
+            orderDTOList = filterOrdersByKeyword(orderDTOList, searchKeyword);
+        }
+
+        // Lọc theo trạng thái
+        if (orderStatus != null && !orderStatus.isEmpty()) {
+            orderDTOList = filterOrdersByStatus(orderDTOList, orderStatus);
+        }
+
+        // Lọc theo ngày
+        if (startDate != null && !startDate.isEmpty() && endDate != null && !endDate.isEmpty()) {
+            orderDTOList = filterOrdersByDate(orderDTOList, startDate, endDate);
+        }
+
+        return orderDTOList;
+    }
+
+    // Lọc các đơn hàng theo trạng thái
+    private List<OrderDTO> filterOrdersByStatus(List<OrderDTO> orders, String status) {
+        List<OrderDTO> filteredOrders = new ArrayList<>();
+        for (OrderDTO order : orders) {
+            if (order.getOrderStatus().name().equalsIgnoreCase(status)) {
+                filteredOrders.add(order);
+            }
+        }
+        return filteredOrders;
+    }
+
+    // Lọc theo ngày
+    private List<OrderDTO> filterOrdersByDate(List<OrderDTO> orderList, String startDate, String endDate) {
+        List<OrderDTO> filteredList = new ArrayList<>();
+        try {
+            // Chuyển đổi startDate và endDate từ String sang Date
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date start = sdf.parse(startDate);
+            Date end = sdf.parse(endDate);
+
+            for (OrderDTO order : orderList) {
+                Date orderDate = order.getOrderDate(); // Là kiểu Date, không cần parse
+                if (!orderDate.before(start) && !orderDate.after(end)) { // Kiểm tra ngày nằm trong khoảng
+                    filteredList.add(order);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return filteredList;
+    }
+
+    // Lọc theo từ khóa (orderId hoặc tên khách hàng)
+    private List<OrderDTO> filterOrdersByKeyword(List<OrderDTO> fullOrderList, String keyword) {
+        List<OrderDTO> filteredList = new ArrayList<>();
+        for (OrderDTO order : fullOrderList) {
+            // Kiểm tra xem orderId hoặc tên khách hàng có chứa từ khóa không
+            if (String.valueOf(order.getOrderId()).contains(keyword) ||
+                    order.getCustomer().getFullName().toLowerCase().contains(keyword.toLowerCase())) {
+                filteredList.add(order);
+            }
+        }
+        return filteredList;
     }
 }
