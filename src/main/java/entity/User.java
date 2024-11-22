@@ -25,7 +25,7 @@ public class User {
     @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
     private Chat chat;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true) // Neu user bi xoa thi tham chieu den account bi bo
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "accountID")
     private Account account;
 

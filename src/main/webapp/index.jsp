@@ -125,15 +125,16 @@
     <!-- section wrapper and col -->
     <div class="grid-wrapper">
         <c:forEach var="product" items="${productDTOList}">
-            <div class="col- collection-item" data-item="men" data-aos="zoom-in-up">
+            <div class="col- collection-item" data-item="" data-aos="zoom-in-up">
                 <figure><img src="./image/shoes2.png" alt=""></figure>
                 <div class="col-body">
-                    <p class="rating-icon"><i class="fa-solid fa-star"></i> <span class="rating-num">4.9</span></p>
+
                     <h3  class="heading-three">${product.productName}</h3>
-                    <p  class="sub-heading">${product.quantity}</p>
+
                     <div class="col-footer">
-                        <p  class="shoe-price">${product.price}</p>
-                        <button class="shoe-btn btn">Add to cart</button>
+                        <p  class="shoe-price">${product.price}₫</p>
+                        <p  class="sub-heading">Đã bán :${product.quantity}</p>
+                        <p class="rating-icon"><i class="fa-solid fa-star"></i> <span class="rating-num">4.9</span></p>
                     </div>
                 </div>
             </div>

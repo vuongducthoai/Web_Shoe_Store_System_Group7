@@ -22,7 +22,7 @@ function custom_toast({ title = "", message = "", type = "success", duration = 1
         const toast = document.createElement("div");
 
         // Auto remove toast
-        const autoRemoveId = setTimeout(() => main.removeChild(toast), duration + 1000);
+        const autoRemoveId = setTimeout(() => main.removeChild(toast), 1000);
 
         toast.onclick = (e) => {
             if (e.target.closest(".toast__close")) {
@@ -42,7 +42,7 @@ function custom_toast({ title = "", message = "", type = "success", duration = 1
         const delay = (duration / 1000).toFixed(2);
 
         toast.classList.add("toast_custom", `toast--${type}`);
-        toast.style.animation = `slideInLeft ease .3s, fadeOut linear 1s ${delay}s forwards`;
+        toast.style.animation = `slideInLeft ease .3s, fadeOut linear 1s ${delay}s forwards !important`;
 
         toast.innerHTML = `
             <div class="toast__icon">

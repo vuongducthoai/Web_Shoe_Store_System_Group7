@@ -88,25 +88,20 @@ public class AccountDaoImpl implements IAccountDAO {
         return null;
     }
 
-    public AccountDTO getAccoutByEmail(String email) {
+    @Override
+    public Account findAccoutByProvide(String provideID, AuthProvider authProvider) {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
-        try{
-            Account account = entityManager.createQuery("select a from Account a where a.email like :email",Account.class)
-                    .setParameter("email",email).getSingleResult();
-            AccountDTO accountDTO = new AccountDTO();
-            accountDTO.setAccountID(account.getAccountID());
-            accountDTO.setEmail(account.getEmail());
-            accountDTO.setRole(account.getRole());
-            accountDTO.setUser(new UserDTO());
-            accountDTO.getUser().setUserID(-1);
-            if (account.getUser()!=null){
-                accountDTO.getUser().setUserID(account.getUser().getUserID());
-                accountDTO.getUser().setActive(account.getUser().isActive());
-            }
-            return accountDTO;
-        }
-        catch (Exception e){
+        try {
+            String jpql = "SELECT a FROM Account a WHERE a.providerID = :provideID AND a.authProvider=:authProvider";
+            Account result = entityManager.createQuery(jpql, Account.class)
+                    .setParameter("provideID", provideID)
+                    .setParameter("authProvider", authProvider)
+                    .getSingleResult();
+            return result;
+        }catch (Exception e){
             e.printStackTrace();
+        }finally {
+            entityManager.close();
         }
         return null;
     }

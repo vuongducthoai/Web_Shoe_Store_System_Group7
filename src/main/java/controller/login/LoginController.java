@@ -40,6 +40,7 @@ public class LoginController extends HttpServlet {
             accountService.InsertAccount(accountDTO);
         }
         //Tao mot session moi hoac lay session hien co
+        accountDTO = accountService.findAccoutByProvide(accountDTO.getProviderID(),accountDTO.getAuthProvider());
         HttpSession session = req.getSession();
         //Luu thong tin nguoi dung vao session
         req.setAttribute("loginSuccess" , true);
