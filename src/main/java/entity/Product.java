@@ -43,8 +43,6 @@ public class Product {
     @JoinColumn(name = "categoryID")
     private Category category;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "promotionID")
-    private Promotion promotion;
-
+    @OneToMany(mappedBy = "product")
+    private List<PromotionProduct> promotionProducts;
 }

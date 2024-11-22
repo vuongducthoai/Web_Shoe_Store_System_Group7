@@ -24,7 +24,7 @@ public class HomeController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<CategoryDTO> categoryDTOList = categoryService.listCategory();
         req.setAttribute("categoryDTOList", categoryDTOList);
-        List<ProductDTO> productDTOList = productService.findAllWithPagination(0 ,8);
+        List<ProductDTO> productDTOList = productService.findAllWithPagination(0 ,10);
         req.setAttribute("productDTOList", productDTOList);
         req.getRequestDispatcher("index.jsp").forward(req, resp);
     }

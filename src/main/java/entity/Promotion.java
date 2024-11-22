@@ -25,12 +25,12 @@ public class Promotion {
     private Date endDate;
 
     @OneToMany(mappedBy = "promotion")
-    private List<Product> applicableProducts ;
+    private List<PromotionProduct> promotionProducts;
 
     private double discountValue;
 
     @Enumerated(EnumType.STRING)
-    private DiscountType discountType; // "percentage", "free-shipping", ...
+    private DiscountType discountType; // "percentage", , ...
 
     private int minimumLoyalty;
     private boolean isActive;

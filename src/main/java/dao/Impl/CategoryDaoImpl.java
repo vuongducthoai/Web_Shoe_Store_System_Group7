@@ -6,8 +6,13 @@ import entity.Category;
 import entity.Product;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.TypedQuery;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+
 public class CategoryDaoImpl implements ICategoryDao {
 
     @Override
@@ -50,15 +55,23 @@ public class CategoryDaoImpl implements ICategoryDao {
         List<Product> productList = null;
 
         try {
-            // JPQL truy vấn các sản phẩm theo categoryID
             String jpql = "SELECT p FROM Product p WHERE p.category.categoryID = :id";
 
-            // Thực thi truy vấn
-            productList = entityManager.createQuery(jpql, Product.class)
-                    .setParameter("id", id)
-                    .setFirstResult(offset)
-                    .setMaxResults(limit)
-                    .getResultList();
+            TypedQuery<Product> typedQuery  = entityManager.createQuery(jpql, Product.class);
+
+            typedQuery.setParameter("id", id);
+
+            typedQuery.setFirstResult(offset);
+            typedQuery.setMaxResults(limit);
+
+            List<Product> products = typedQuery.getResultList();
+
+            Map<String, Product> uniqueProductsMap = new LinkedHashMap<>();
+            for (Product product : products) {
+                uniqueProductsMap.putIfAbsent(product.getProductName(), product);
+            }
+
+            return new ArrayList<>(uniqueProductsMap.values());
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

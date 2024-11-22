@@ -1,5 +1,7 @@
 package service.Impl;
 
+import dao.IProductDAO;
+import dao.Impl.ProductDAOImpl;
 import dto.CategoryDTO;
 import dao.ICategoryDao;
 import dao.Impl.CategoryDaoImpl;
@@ -13,6 +15,7 @@ import java.util.List;
 
 public class CategoryServiceImpl implements ICategoryService {
     ICategoryDao categoryDao = new CategoryDaoImpl();
+    IProductDAO productService = new ProductDAOImpl();
 
     @Override
     public void insert(CategoryDTO categoryDTO) {
@@ -40,19 +43,15 @@ public class CategoryServiceImpl implements ICategoryService {
         List<ProductDTO> productDTOList = new ArrayList<>();
         for (Product product : categoryList) {
             ProductDTO productDTO = new ProductDTO();
-            if (productDTO.hasImage()) {
-                System.out.println("Product has an image.");
-            } else {
-                System.out.println("Product does not have an image.");
-            }
             Category category = product.getCategory();
             CategoryDTO categoryDTO = new CategoryDTO();
             category.setCategoryID(product.getProductID());
             categoryDTO.setCategoryId(category.getCategoryID());
             productDTO.setCategoryDTO(categoryDTO);
-
             productDTO.setProductId(product.getProductID());
             productDTO.setProductName(product.getProductName());
+            productDTO.setCreateDate(product.getCreateDate());
+            productDTO.setQuantity(productService.countProductName(productDTO.getProductName()));
             productDTO.setDescription(product.getDescription());
             productDTO.setPrice(product.getPrice());
             productDTO.setImage(product.getImage());

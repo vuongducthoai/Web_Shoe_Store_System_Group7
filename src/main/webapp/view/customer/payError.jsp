@@ -23,7 +23,7 @@
     <i class="fas fa-exclamation-triangle text-red-500 text-6xl mb-4"></i>
     <h1 class="text-2xl font-bold text-red-500 mb-2">Transaction Error</h1>
     <p class="text-gray-700 mb-4">There was a problem processing your transaction. Please try again later or contact support if the problem persists.</p>
-    <a href="index.html" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Về Trang Chủ</a>
+    <a href="/" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Go to Home</a>
 </div>
 </body>
 </html>
