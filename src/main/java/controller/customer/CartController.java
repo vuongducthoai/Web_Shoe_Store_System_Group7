@@ -36,7 +36,9 @@ public class CartController extends HttpServlet {
         HttpSession session = req.getSession();
         AccountDTO accountDTO = (AccountDTO) session.getAttribute("user");
         if (accountDTO==null || accountDTO.getUser()==null||!accountDTO.getUser().isActive()){
-            return;
+            // Xóa session
+            session.invalidate();
+            resp.sendRedirect("/view/login.jsp");
         }
         if (accountDTO.getRole()== RoleType.ADMIN){
             return;
@@ -59,7 +61,8 @@ public class CartController extends HttpServlet {
         HttpSession session = req.getSession();
         AccountDTO accountDTO = (AccountDTO) session.getAttribute("user");
         if (accountDTO==null || accountDTO.getUser()==null||!accountDTO.getUser().isActive()){
-            return;
+            session.invalidate();
+            resp.sendRedirect("/view/login.jsp");
         }
         if (accountDTO.getRole()== RoleType.ADMIN){
             return;

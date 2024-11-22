@@ -60,18 +60,19 @@ public class CartDaoImpl implements ICartDao {
                     promotionDTO.setPromotionType(promotionType);
                 }
                 ProductDTO productDTO = new ProductDTO(
-                        productId,
-                        productName,
-                        productPrice,
-                        productImage,
-                        productColor,
-                        productSize,
-                        productStatus,
-                        productDescription,
-                        null,
-                        null,
-                        null,
-                        promotionDTO);
+//                        productId,
+//                        productName,
+//                        productPrice,
+//                        productImage,
+//                        productColor,
+//                        productSize,
+//                        productStatus,
+//                        productDescription,
+//                        null,
+//                        null,
+//                        null,
+//                        promotionDTO);
+                );
                 CartItemDTO cartItemDTO = new CartItemDTO(
                         cartItemId,
                         quantity,
