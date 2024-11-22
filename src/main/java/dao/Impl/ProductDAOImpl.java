@@ -2,8 +2,16 @@ package dao.Impl;
 
 import JpaConfig.JpaConfig;
 import dao.IProductDAO;
+import dto.AddressDTO;
+import dto.CategoryDTO;
+import dto.ProductDTO;
+import entity.Cart;
+import entity.CartItem;
+import entity.Customer;
 import entity.Product;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 
 import java.util.ArrayList;
@@ -60,4 +68,86 @@ public class ProductDAOImpl implements IProductDAO {
         }
         return 0;
     }
+
+
+    public boolean AddProduct(Product product) {
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            entityManager.persist(product);
+            transaction.commit();
+            return true;
+        } catch (Exception e){
+            if(transaction.isActive()){
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+        return false;
+    }
+
+    public boolean UpdateProduct(Product product) {
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            entityManager.merge(product);
+            transaction.commit();
+            return true;
+        } catch (Exception e){
+            if(transaction.isActive()){
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+        return false;
+    }
+
+    public List<ProductDTO> getListProductDTO(){
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        try {
+            String hql = "SELECT p FROM Product p";
+            TypedQuery<Product> query = entityManager.createQuery(hql, Product.class);
+            List<Product> products = query.getResultList();
+
+            // Chuyển đổi từ Product sang ProductDTO
+            List<ProductDTO> productDTOs = new ArrayList<>();
+            for (Product product : products) {
+                // Kiểm tra nếu category không null
+                CategoryDTO categoryDTO = null;
+                if (product.getCategory() != null) {
+                    categoryDTO = new CategoryDTO(
+                            product.getCategory().getCategoryID(), // ID của Category
+                            product.getCategory().getCategoryName() // Tên của Category
+                    );
+                }
+
+                // Tạo đối tượng ProductDTO
+                ProductDTO dto = new ProductDTO(
+                        product.getProductName(),
+                        product.getPrice(),
+                        product.getImage(),
+                        product.getColor(),
+                        product.getSize(),
+                        categoryDTO, // Truyền đối tượng CategoryDTO vào đây
+                        product.getDescription(),
+                        product.isStatus()
+                );
+
+                productDTOs.add(dto); // Thêm vào danh sách
+            }
+            return productDTOs;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            entityManager.close();
+        }
+    }
 }
+
