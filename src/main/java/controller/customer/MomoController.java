@@ -43,6 +43,7 @@ public class MomoController extends HttpServlet {
         if (accountDTO==null || accountDTO.getUser()==null||!accountDTO.getUser().isActive()){
             session.invalidate();
             resp.sendRedirect("/view/login.jsp");
+            return;
         }
         if (accountDTO.getRole()== RoleType.ADMIN){
             return;
@@ -64,6 +65,7 @@ public class MomoController extends HttpServlet {
         if (accountDTO==null || accountDTO.getUser()==null||!accountDTO.getUser().isActive()){
             session.invalidate();
             resp.sendRedirect("/view/login.jsp");
+            return;
         }
         if (accountDTO.getRole()== RoleType.ADMIN){
             return;
