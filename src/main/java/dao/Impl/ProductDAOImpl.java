@@ -21,9 +21,12 @@ public class ProductDAOImpl implements IProductDAO {
             String query = "SELECT p FROM Product p";
             TypedQuery<Product> typedQuery  = entityManager.createQuery(query, Product.class);
 
+            //Tang gioi hạn để láy thêm dữ liệu (gấp 3 limit)
+            int fetchSize = limit * 2;
+
             // Phân trang
             typedQuery.setFirstResult(offset);
-            typedQuery.setMaxResults(limit);
+            typedQuery.setMaxResults(fetchSize);
 
             // Thực thi truy vấn
             List<Product> products = typedQuery.getResultList();
@@ -34,8 +37,9 @@ public class ProductDAOImpl implements IProductDAO {
                 uniqueProductsMap.putIfAbsent(product.getProductName(), product);
             }
 
-            // Trả về danh sách các sản phẩm không trùng tên
-            return new ArrayList<>(uniqueProductsMap.values());
+            List<Product> uniqueProducts = new ArrayList<>(uniqueProductsMap.values());
+            return uniqueProducts.size() > limit ? uniqueProducts.subList(0, limit) // lay dung so luong
+                                : uniqueProducts;
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -50,7 +54,7 @@ public class ProductDAOImpl implements IProductDAO {
     public int countProductName(String name) {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
         try {
-            String query = "SELECT COUNT(p) FROM Product p WHERE p.productName = :productName";
+            String query = "SELECT COUNT(p) FROM Product p WHERE p.productName = :productName AND p.status = false";
             TypedQuery<Long> typedQuery = entityManager.createQuery(query, Long.class);
             typedQuery.setParameter("productName", name);
             Long result = typedQuery.getSingleResult();

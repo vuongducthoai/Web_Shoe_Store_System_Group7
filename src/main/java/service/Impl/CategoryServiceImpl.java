@@ -50,6 +50,7 @@ public class CategoryServiceImpl implements ICategoryService {
             productDTO.setCategoryDTO(categoryDTO);
             productDTO.setProductId(product.getProductID());
             productDTO.setProductName(product.getProductName());
+            productDTO.setCreateDate(product.getCreateDate());
             productDTO.setQuantity(productService.countProductName(productDTO.getProductName()));
             productDTO.setDescription(product.getDescription());
             productDTO.setPrice(product.getPrice());

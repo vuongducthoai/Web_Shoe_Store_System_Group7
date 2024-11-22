@@ -26,9 +26,11 @@ public class ProductServiceImpl implements IProductService {
             productDTO.setProductId(product.getProductID());
             productDTO.setProductName(product.getProductName());
             productDTO.setDescription(product.getDescription());
+            productDTO.setCreateDate(product.getCreateDate());
             productDTO.setPrice(product.getPrice());
             productDTO.setImage(product.getImage());
             productDTO.setQuantity(productDAO.countProductName(product.getProductName()));
+            System.out.println("abc: " + productDTO.getQuantity());
             System.out.println(productDTO.getQuantity());
             productDTOList.add(productDTO);
         }

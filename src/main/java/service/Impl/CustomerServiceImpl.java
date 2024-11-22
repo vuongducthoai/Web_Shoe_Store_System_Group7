@@ -27,8 +27,8 @@ public class CustomerServiceImpl implements ICustomerService {
 
         Chat chat = new Chat();
         chat.setUser(customer);
-
         customer.setChat(chat);
+
 
         Address address = new Address();
         address.setHouseNumber(customerDTO.getAddressDTO().getHouseNumber());
@@ -53,6 +53,7 @@ public class CustomerServiceImpl implements ICustomerService {
         account.setAuthProvider(customerDTO.getAccount().getAuthProvider());
         account.setRole(customerDTO.getAccount().getRole());
         customer.setAccount(account);
+
 
         if(customerDAO.findAccountByEmail(account.getEmail())){
             System.out.println("12333423432432432432");

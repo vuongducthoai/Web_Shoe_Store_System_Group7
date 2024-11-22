@@ -55,27 +55,22 @@ public class CategoryDaoImpl implements ICategoryDao {
         List<Product> productList = null;
 
         try {
-            // JPQL truy vấn các sản phẩm theo categoryID
             String jpql = "SELECT p FROM Product p WHERE p.category.categoryID = :id";
 
             TypedQuery<Product> typedQuery  = entityManager.createQuery(jpql, Product.class);
 
             typedQuery.setParameter("id", id);
 
-            // Phân trang
             typedQuery.setFirstResult(offset);
             typedQuery.setMaxResults(limit);
 
-            // Thực thi truy vấn
             List<Product> products = typedQuery.getResultList();
 
-            // Loại bỏ các sản phẩm trùng tên (giữ lại 1 sản phẩm cho mỗi tên)
             Map<String, Product> uniqueProductsMap = new LinkedHashMap<>();
             for (Product product : products) {
                 uniqueProductsMap.putIfAbsent(product.getProductName(), product);
             }
 
-            // Trả về danh sách các sản phẩm không trùng tên
             return new ArrayList<>(uniqueProductsMap.values());
         } catch (Exception e) {
             e.printStackTrace();

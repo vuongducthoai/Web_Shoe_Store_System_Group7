@@ -25,7 +25,7 @@ public class Promotion {
     private Date endDate;
 
     @OneToMany(mappedBy = "promotion")
-    private List<Product> applicableProducts ;
+    private List<PromotionProduct> promotionProducts;
 
     private double discountValue;
 
