@@ -36,4 +36,24 @@ public class ProductServiceImpl implements IProductService {
         }
         return productDTOList;
     }
+
+    public List<ProductDTO> findByName(String name) {
+        return productDAO.findByName(name);
+    }
+
+
+    public List<ProductDTO> findRandomProducts(int offset, int limit, String currentProductName) {
+
+        List<Product> products = productDAO.findRandomProducts(offset, limit, currentProductName);
+        List<ProductDTO> productDTOList = new ArrayList<>();
+        for (Product product : products) {
+            ProductDTO productDTO = new ProductDTO();
+            productDTO.setProductName(product.getProductName());
+            productDTO.setPrice(product.getPrice());
+            productDTO.setImage(product.getImage());
+            productDTOList.add(productDTO);
+        }
+        return productDTOList;
+
+    }
 }

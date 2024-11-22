@@ -2,14 +2,13 @@ package dao.Impl;
 
 import JpaConfig.JpaConfig;
 import dao.IProductDAO;
+import dto.ProductDTO;
 import entity.Product;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ProductDAOImpl implements IProductDAO {
 
@@ -64,4 +63,65 @@ public class ProductDAOImpl implements IProductDAO {
         }
         return 0;
     }
+
+
+    @Override
+    public List<ProductDTO> findByName(String name) {
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        try {
+            // Truy vấn các sản phẩm có tên chứa từ khóa
+            List<Product> products = entityManager.createQuery(
+                            "SELECT p FROM Product p WHERE p.productName = :name", Product.class)
+                    .setParameter("name", name) // Tìm kiếm gần đúng
+                    .getResultList();
+
+            // Chuyển đổi từ Product (Entity) sang ProductDTO
+            return products.stream()
+                    .map(product -> new ProductDTO(
+                            product.getProductID(),
+                            product.getProductName(),
+                            product.getPrice(),
+                            product.getImage(),
+                            product.getColor(),
+                            product.getSize(),
+                            product.isStatus(),
+                            product.getDescription(),
+                            null, // cartItemDTOList
+                            null, // orderItemDTOList
+                            null, // categoryDTO
+                            null  // promotionDTO
+                    ))
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            entityManager.close();
+        }
+    }
+
+
+
+    public List<Product> findRandomProducts(int offset, int limit, String CurrentProductName) {
+        // Lấy danh sách sản phẩm phân trang và không trùng tên
+        List<Product> products = findAllWithPagination(offset, limit);
+
+        if (products == null || products.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<Product> filteredProducts = products.stream()
+                .filter(product -> !CurrentProductName.equalsIgnoreCase(product.getProductName()))
+                .collect(Collectors.toList());
+
+        if (filteredProducts.size() <= 4) {
+            // Nếu có ít hơn hoặc bằng 4 sản phẩm sau khi lọc, trả về danh sách đó
+            return filteredProducts;
+        }
+
+        // Lấy 4 sản phẩm ngẫu nhiên
+        Collections.shuffle(filteredProducts);
+        return filteredProducts.subList(0, 4);
+    }
+
 }
