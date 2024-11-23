@@ -36,7 +36,8 @@ public class ProductDTO {
         this.orderItemDTOList = orderItemDTOList;
         this.categoryDTO = categoryDTO;
     }
-    public ProductDTO(String productName, double price, byte[] imageUrl, String color, int size, CategoryDTO categoryDTO, String description, boolean status) {
+    public ProductDTO(int productID, String productName, double price, byte[] imageUrl, String color, int size, CategoryDTO categoryDTO, String description, boolean status) {
+        this.productId = productID;
         this.description = description;
         this.status = status;
         this.size = size;
@@ -68,5 +69,8 @@ public class ProductDTO {
         }
         return null; // hoặc đường dẫn ảnh mặc định nếu không có dữ liệu
     }
+
+
+
 }
 

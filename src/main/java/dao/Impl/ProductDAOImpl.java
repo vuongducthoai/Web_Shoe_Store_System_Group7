@@ -127,12 +127,15 @@ public class ProductDAOImpl implements IProductDAO {
                     categoryDTO = new CategoryDTO(
                             product.getCategory().getCategoryID(), // ID của Category
                             product.getCategory().getCategoryName() // Tên của Category
+
                     );
                 }
 
                 System.out.println(categoryDTO.getCategoryName());
+
                 // Tạo đối tượng ProductDTO
                 ProductDTO dto = new ProductDTO(
+                        product.getProductID(),
                         product.getProductName(),
                         product.getPrice(),
                         product.getImage(),
