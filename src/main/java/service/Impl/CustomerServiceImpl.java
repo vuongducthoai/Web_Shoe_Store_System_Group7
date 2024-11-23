@@ -109,7 +109,7 @@ public class CustomerServiceImpl implements ICustomerService {
 
             // Nếu khách hàng có tài khoản (Account), sao chép thông tin tài khoản
             if (customer.getAccount() != null) {
-                customerDTO.setCustomerId(customer.getAccount().getAccountID());
+                customerDTO.setUserID(customer.getAccount().getAccountID());
             }
 
             return customerDTO;
