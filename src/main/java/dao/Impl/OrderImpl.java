@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class OrderImpl implements IOrderDao {
-    public boolean CreateOrder(OrderDTO order){
+    public boolean CreateOrder(OrderDTO order,AddressDTO addressDTO){
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
@@ -27,6 +27,14 @@ public class OrderImpl implements IOrderDao {
                     "from Order o Where o.payment.momoBillId like :momoID",Order.class)
                     .setParameter("momoID",order.getPayment().getMomoBillId()).getResultList();
             if (order1.isEmpty()) {
+                String address = "";
+                if (addressDTO!=null){
+                    address+= addressDTO.getHouseNumber()+", ";
+                    address+= addressDTO.getStreetName()+", ";
+                    address+= addressDTO.getCity()+", ";
+                    address+= addressDTO.getDistrict()+", ";
+                    address+= addressDTO.getProvince();
+                }
                 Customer customer = entityManager.find(Customer.class, Integer.valueOf(order.getCustomer().getUserID()));
                 List<OrderItemDTO> ListOrderItem = order.getOrderItems();
                 List<OrderItem> orderItems = new ArrayList<OrderItem>();
@@ -34,6 +42,7 @@ public class OrderImpl implements IOrderDao {
                 orderEnty.setCustomer(customer);
                 orderEnty.setOrderDate(Date.from(Instant.now()));
                 orderEnty.setOrderStatus(OrderStatus.WAITING_CONFIRMATION);
+                orderEnty.setShippingAddress(address);
                 entityManager.persist(orderEnty);
                 for (OrderItemDTO item : ListOrderItem) {
                     OrderItem orderItem = new OrderItem();

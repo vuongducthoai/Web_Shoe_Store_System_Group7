@@ -21,7 +21,7 @@ import java.util.List;
 public class OrderServiceImpl implements IOrderService {
     IOrderDao orderDao = new OrderImpl();
     @Override
-    public boolean CreateOrder(String json) {
+    public boolean CreateOrder(String json,AddressDTO addressDTO) {
         JSONObject jsonKQ = new JSONObject(json);
         String orderId = jsonKQ.getString("orderId");
         String extraData = jsonKQ.getString("extraData");
@@ -50,7 +50,7 @@ public class OrderServiceImpl implements IOrderService {
             order.setCustomer(customer);
             order.setOrderItems(OrderItemDTOList);
             order.setPayment(paymentDTO);
-        return orderDao.CreateOrder(order);
+        return orderDao.CreateOrder(order,addressDTO);
     }
 
     @Override
