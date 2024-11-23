@@ -21,7 +21,7 @@ public class ReviewDAOImpl implements IReviewDAO {
                     .map(String::valueOf)
                     .reduce((id1, id2) -> id1 + "," + id2)
                     .orElse("");
-            String sql = "SELECT  u.fullName, r.comment, r.ratingValue, r.date, res.adminID, adminUser.fullName, res.content, res.timeStamp " +
+            String sql = "SELECT  u.fullName, r.comment, r.ratingValue, r.date, res.adminID, adminUser.fullName, res.content, res.timeStamp, r.reviewID " +
                     "FROM Review r " +
                     "JOIN Product p ON r.productID = p.productID " +
                     "JOIN User u ON r.customerID = u.userID " +
@@ -56,6 +56,7 @@ public class ReviewDAOImpl implements IReviewDAO {
                 response.setAdmin(admin);
 
                 ReviewDTO dto = new ReviewDTO();
+                dto.setReviewID((Integer) row[8]);
                 dto.setComment((String) row[1]);
                 dto.setDate((Date) row[3]);
                 dto.setRatingValue((Integer) row[2]);
