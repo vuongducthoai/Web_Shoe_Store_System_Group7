@@ -1,28 +1,60 @@
-window.onload = function() {
-    const slidesContainer = document.querySelector('.slides-container');
-    const slides = document.querySelectorAll('.slide');
-    const prevButton = document.querySelector('.prev');
-    const nextButton = document.querySelector('.next');
+window.onload = function () {
+    // Hero Slider
+    const heroContainer = document.querySelector('#hero-slider .slides-container');
+    const heroSlides = document.querySelectorAll('#hero-slider .slide');
+    const heroPrevBtn = document.querySelector('#hero-slider .prev');
+    const heroNextBtn = document.querySelector('#hero-slider .next');
 
-    let currentIndex = 0;
+    let heroCurrentIndex = 0;
 
-    function updateSlidePosition() {
-        const offset = -currentIndex * 100;
-        slidesContainer.style.transform = `translateX(${offset}%)`;
+    function updateHeroSlidePosition() {
+        const offset = -heroCurrentIndex * 100;
+        heroContainer.style.transform = `translateX(${offset}%)`;
     }
 
-    function nextSlide() {
-        currentIndex = (currentIndex + 1) % slides.length;
-        updateSlidePosition();
+    function nextHeroSlide() {
+        if (heroSlides.length === 0) return;
+        heroCurrentIndex = (heroCurrentIndex + 1) % heroSlides.length;
+        updateHeroSlidePosition();
     }
 
-    function prevSlide() {
-        currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-        updateSlidePosition();
+    function prevHeroSlide() {
+        if (heroSlides.length === 0) return;
+        heroCurrentIndex = (heroCurrentIndex - 1 + heroSlides.length) % heroSlides.length;
+        updateHeroSlidePosition();
     }
 
-    nextButton.addEventListener('click', nextSlide);
-    prevButton.addEventListener('click', prevSlide);
+    heroNextBtn.addEventListener('click', nextHeroSlide);
+    heroPrevBtn.addEventListener('click', prevHeroSlide);
 
-    setInterval(nextSlide, 5000);
+
+    // Testimonial Slider
+    const testimonialWrapper = document.querySelector('#testimonial-slider .slides-review');
+    const testimonialSlides = document.querySelectorAll('#testimonial-slider .slide-review');
+    const testimonialPrevBtn = document.querySelector('#testimonial-slider .prev-view');
+    const testimonialNextBtn = document.querySelector('#testimonial-slider .next-view');
+
+    const slidesToShow = 3; // Số lượng slide hiển thị
+    const totalTestimonialSlides = testimonialSlides.length;
+    let testimonialCurrentIndex = 0;
+
+    function updateTestimonialPosition() {
+        testimonialWrapper.style.transform = `translateX(-${(testimonialCurrentIndex * 100) / slidesToShow}%)`;
+    }
+
+    function nextTestimonialSlide() {
+        if (totalTestimonialSlides <= slidesToShow) return;
+        testimonialCurrentIndex = (testimonialCurrentIndex + 1) % Math.ceil(totalTestimonialSlides / slidesToShow);
+        updateTestimonialPosition();
+    }
+
+    function prevTestimonialSlide() {
+        if (totalTestimonialSlides <= slidesToShow) return;
+        testimonialCurrentIndex = (testimonialCurrentIndex - 1 + Math.ceil(totalTestimonialSlides / slidesToShow)) %
+            Math.ceil(totalTestimonialSlides / slidesToShow);
+        updateTestimonialPosition();
+    }
+
+    testimonialNextBtn.addEventListener('click', nextTestimonialSlide);
+    testimonialPrevBtn.addEventListener('click', prevTestimonialSlide);
 };

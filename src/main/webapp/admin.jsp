@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -82,11 +83,11 @@
                                     <td>${product.productName}</td>
                                     <td>${product.price}</td>
                                     <td>
-                                        <img src="${product.imagePath}" alt="${product.productName}" width="100" height="100">
+<%--                                        <img src="${product.getBase64Image()}" alt="${product.productName}" width="100" height="100">--%>
                                     </td>
-                                    <td>${product.colors}</td>
-                                    <td>${product.sizes}</td>
-                                    <td>${product.category}</td>
+                                    <td>${product.color}</td>
+                                    <td>${product.size}</td>
+<%--                                    <td>${product.categoryDTO.categoryName}</td>--%>
                                     <td>${product.description}</td>
                                     <td>${product.status}</td>
                                     <td>
