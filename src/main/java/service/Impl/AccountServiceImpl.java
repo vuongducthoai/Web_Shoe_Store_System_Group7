@@ -3,8 +3,10 @@ package service.Impl;
 import dao.IAccountDAO;
 import dao.Impl.AccountDaoImpl;
 import dto.AccountDTO;
+import dto.UserDTO;
 import entity.Account;
 import entity.User;
+import enums.AuthProvider;
 import service.IAccountService;
 import util.PasswordHashingSHA;
 
@@ -58,12 +60,33 @@ public class AccountServiceImpl implements IAccountService {
     @Override
     public AccountDTO findAccountByEmail(String email) {
         Account account = iAccountDAO.findAccountByEmail(email);
-        AccountDTO accountDTO = new AccountDTO();
-        accountDTO.setEmail(account.getEmail());
-        accountDTO.setAccountID(account.getAccountID());
-        return accountDTO;
+        if (account != null) {
+            AccountDTO accountDTO = new AccountDTO();
+            if (account.getUser() != null) {
+                accountDTO.setUser(new UserDTO());
+                accountDTO.getUser().setUserID(account.getUser().getUserID());
+                accountDTO.getUser().setActive(account.getUser().isActive());
+            }
+            accountDTO.setEmail(account.getEmail());
+            accountDTO.setAccountID(account.getAccountID());
+            accountDTO.setRole(account.getRole());
+            return accountDTO;
+        }
+        return null;
     }
-    public AccountDTO getAccoutByEmail(String email){
-        return iAccountDAO.getAccoutByEmail(email);
+    public AccountDTO findAccoutByProvide(String provideID, AuthProvider authProvider){
+        Account account = iAccountDAO.findAccoutByProvide(provideID,authProvider);
+        if (account != null) {
+            AccountDTO accountDTO = new AccountDTO();
+            if (account.getUser() != null) {
+                accountDTO.setUser(new UserDTO());
+                accountDTO.getUser().setUserID(account.getUser().getUserID());
+                accountDTO.getUser().setActive(account.getUser().isActive());
+            }
+            accountDTO.setAccountID(account.getAccountID());
+            accountDTO.setRole(account.getRole());
+            return accountDTO;
+        }
+        return null;
     }
 }

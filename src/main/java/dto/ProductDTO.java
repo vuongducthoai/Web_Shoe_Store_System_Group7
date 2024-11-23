@@ -1,12 +1,12 @@
 package dto;
 
 import entity.Category;
+import entity.PromotionProduct;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
@@ -22,9 +22,9 @@ public class ProductDTO {
         this.price = price;
     }
 
-    public ProductDTO(int productId, String productName, double price, byte[] imageUrl, String color, int size, boolean status, String description, List<CartItemDTO> cartItemDTOList, List<OrderItemDTO> orderItemDTOList, CategoryDTO categoryDTO, PromotionDTO promotionDTO) {
+    public ProductDTO(int productId, String productName, double price, byte[] imageUrl, String color, int size, boolean status, String description, List<CartItemDTO> cartItemDTOList, List<OrderItemDTO> orderItemDTOList, CategoryDTO categoryDTO, List<PromotionProductDTO> promotionDTO) {
         this.productId = productId;
-        this.promotionDTO = promotionDTO;
+        this.promotionProducts = promotionDTO;
         this.description = description;
         this.status = status;
         this.size = size;
@@ -60,7 +60,7 @@ public class ProductDTO {
     private List<CartItemDTO> cartItemDTOList;
     private List<OrderItemDTO> orderItemDTOList;
     private CategoryDTO categoryDTO;
-    private PromotionDTO promotionDTO;
+    private List<PromotionProductDTO> promotionProducts;
     private int quantity;
     public String getBase64Image() {
         if (image != null) {
@@ -72,3 +72,4 @@ public class ProductDTO {
 
 
 }
+

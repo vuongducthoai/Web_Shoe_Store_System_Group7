@@ -3,15 +3,17 @@ package service.Impl;
 import JpaConfig.JpaConfig;
 import dao.ICartDao;
 import dao.Impl.CartDaoImpl;
-import dto.AddressDTO;
-import dto.CartItemDTO;
+import dto.*;
+import entity.CartItem;
 import entity.Promotion;
+import entity.PromotionProduct;
 import enums.DiscountType;
 import enums.PromotionType;
 import jakarta.persistence.EntityManager;
 import service.ICartService;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -20,7 +22,42 @@ public class CartServiceImpl implements ICartService {
     ICartDao cartDao = new CartDaoImpl();
     @Override
     public List<CartItemDTO> findAll(int idUser) {
-        return cartDao.findAll(idUser);
+        List<CartItem> listC = cartDao.findAll(idUser);
+        List<CartItemDTO> listDTO = new ArrayList<>();
+        for (CartItem item : listC) {
+            CartItemDTO cartItemDTO = new CartItemDTO();
+            cartItemDTO.setProductDTO(new ProductDTO());
+            if (item.getProduct().getPromotionProducts()!= null){
+                List<PromotionProductDTO> listPromotion = new ArrayList<>();
+                for (PromotionProduct pp : item.getProduct().getPromotionProducts()) {
+                    PromotionProductDTO prp = new PromotionProductDTO();
+                    prp.setProduct(cartItemDTO.getProductDTO());
+                    prp.setPromotion(new PromotionDTO());
+                    prp.getPromotion().setStartDate(pp.getPromotion().getStartDate());
+                    prp.getPromotion().setEndDate(pp.getPromotion().getEndDate());
+                    prp.getPromotion().setDiscountType(pp.getPromotion().getDiscountType());
+                    prp.getPromotion().setActive(pp.getPromotion().isActive());
+                    prp.getPromotion().setDiscountValue(pp.getPromotion().getDiscountValue());
+                    prp.getPromotion().setPromotionType(pp.getPromotion().getPromotionType());
+                    prp.getPromotion().setPromotionId(pp.getPromotion().getPromotionID());
+                    prp.getPromotion().setPromotionName(pp.getPromotion().getPromotionName());
+                    listPromotion.add(prp);
+                }
+                cartItemDTO.getProductDTO().setPromotionProducts(listPromotion);
+                cartItemDTO.getProductDTO().setProductId(item.getProduct().getProductID());
+                cartItemDTO.getProductDTO().setProductName(item.getProduct().getProductName());
+                cartItemDTO.getProductDTO().setPrice(item.getProduct().getPrice());
+                cartItemDTO.getProductDTO().setImage(item.getProduct().getImage());
+                cartItemDTO.getProductDTO().setColor(item.getProduct().getColor());
+                cartItemDTO.getProductDTO().setSize(item.getProduct().getSize());
+                cartItemDTO.getProductDTO().setStatus(item.getProduct().isStatus());
+                cartItemDTO.getProductDTO().setDescription(item.getProduct().getDescription());
+                cartItemDTO.setQuantity(item.getQuantity());
+                cartItemDTO.setCartItemId(item.getCartItemId());
+                listDTO.add(cartItemDTO);
+            }
+        }
+        return listDTO;
     }
 
     @Override
@@ -70,19 +107,39 @@ public class CartServiceImpl implements ICartService {
         double total=0;
         Date date = Date.from(Instant.now());
         for (CartItemDTO item : cartItem) {
+//            try{
+//                if (    item.getProductDTO().getPromotionDTO().getStartDate().compareTo(date) <= 0 &&
+//                        item.getProductDTO().getPromotionDTO().getEndDate().compareTo(date) >= 0 &&
+//                        item.getProductDTO().getPromotionDTO().isActive()) {
+//                    if (item.getProductDTO().getPromotionDTO().getDiscountType().equals(DiscountType.Percentage)) {
+//                        total += item.getProductDTO().getPromotionDTO().getDiscountValue() *
+//                                item.getProductDTO().getPrice() * item.getQuantity() / 100;
+//                    }
+//                    if (item.getProductDTO().getPromotionDTO().getDiscountType().equals(DiscountType.VND)){
+//                        total += item.getProductDTO().getPromotionDTO().getDiscountValue()*item.getQuantity();
+//                    }
+//                }
+//            }catch (Exception ignored){}
             try{
-                if (    item.getProductDTO().getPromotionDTO().getStartDate().compareTo(date) <= 0 &&
-                        item.getProductDTO().getPromotionDTO().getEndDate().compareTo(date) >= 0 &&
-                        item.getProductDTO().getPromotionDTO().isActive()) {
-                    if (item.getProductDTO().getPromotionDTO().getDiscountType().equals(DiscountType.Percentage)) {
-                        total += item.getProductDTO().getPromotionDTO().getDiscountValue() *
-                                item.getProductDTO().getPrice() * item.getQuantity() / 100;
-                    }
-                    if (item.getProductDTO().getPromotionDTO().getDiscountType().equals(DiscountType.VND)){
-                        total += item.getProductDTO().getPromotionDTO().getDiscountValue()*item.getQuantity();
+                List<PromotionProductDTO> listPP  = item.getProductDTO().getPromotionProducts();
+                double priceT = item.getProductDTO().getPrice()*item.getQuantity();
+                for (PromotionProductDTO pp : listPP) {
+                    if (pp.getPromotion().getStartDate().compareTo(date)<=0 &&
+                            pp.getPromotion().getEndDate().compareTo(date)>=0 &&
+                    pp.getPromotion().isActive() && pp.getPromotion().getPromotionType()==PromotionType.VOUCHER_PRODUCT) {
+                        if (pp.getPromotion().getDiscountType()==DiscountType.Percentage){
+                            total += priceT*pp.getPromotion().getDiscountValue()/100;
+                            priceT = priceT*(100-pp.getPromotion().getDiscountValue())/100;
+                        }
+                        if (pp.getPromotion().getDiscountType() == DiscountType.VND){
+                            total += pp.getPromotion().getDiscountValue()*item.getQuantity();
+                        }
                     }
                 }
-            }catch (Exception ignored){}
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
         }
         List<Promotion> promotion = entityManager.createQuery(
                         "select p from Promotion p " +

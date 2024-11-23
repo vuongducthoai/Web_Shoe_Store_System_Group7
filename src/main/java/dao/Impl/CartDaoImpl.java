@@ -16,74 +16,76 @@ import java.util.List;
 
 public class CartDaoImpl implements ICartDao {
     @Override
-    public List<CartItemDTO> findAll(int userID) {
+    public List<CartItem> findAll(int userID) {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
-        List<CartItemDTO> cartItems = new ArrayList<>();
-        try {
-            List<Object[]> cartItem1 = entityManager.createQuery(
-                            "select distinct c.cartItemId,c.quantity," +
-                                    "p.id,p.productName,p.color,p.price,p.image,p.status,p.size,p.description," +
-                                    "pr.id,pr.promotionName,pr.startDate,pr.endDate,pr.discountValue,pr.discountType,pr.minimumLoyalty,pr.isActive,pr.promotionType "+
-                                    "from CartItem c join Product p on c.product.id = p.id left join Promotion pr on pr.id = p.promotion.id " +
-                                    "where c.cart.customer.userID = :userId",Object[].class)
-                    .setParameter("userId",Integer.valueOf(userID)).getResultList();
-            for (Object[] row : cartItem1) {
-                int cartItemId = (int) row[0];
-                int quantity = (int) row[1];
-                int productId = (int) row[2];
-                String productName = (String) row[3];
-                String productColor = (String) row[4];
-                double productPrice = (double) row[5];
-                byte[] productImage = (byte[]) row[6];
-                Boolean productStatus = (Boolean) row[7];
-                int productSize = (int) row[8];
-                String productDescription = (String) row[9];
-                PromotionDTO promotionDTO = new PromotionDTO();
-                if (row[10] != null) {
-                    int promotionId = (Integer) row[10];
-                    String promotionName = (String) row[11];
-                    Date promotionStartDate = (Date) row[12];
-                    Date promotionEndDate = (Date) row[13];
-                    Double promotionDiscountValue = (Double) row[14];
-                    DiscountType promotionDiscountType = (DiscountType) row[15];
-                    Integer promotionMinimumLoyalty = (Integer)     row[16];
-                    Boolean promotionIsActive = (Boolean) row[17];
-                    PromotionType promotionType = (PromotionType) row[18];
-                    promotionDTO.setPromotionId(promotionId);
-                    promotionDTO.setPromotionName(promotionName);
-                    promotionDTO.setStartDate(promotionStartDate);
-                    promotionDTO.setEndDate(promotionEndDate);
-                    promotionDTO.setDiscountValue(promotionDiscountValue);
-                    promotionDTO.setDiscountType(promotionDiscountType);
-                    promotionDTO.setMinimumLoyalty(promotionMinimumLoyalty);
-                    promotionDTO.setActive(promotionIsActive);
-                    promotionDTO.setPromotionType(promotionType);
-                }
-                ProductDTO productDTO = new ProductDTO(
-                        productId,
-                        productName,
-                        productPrice,
-                        productImage,
-                        productColor,
-                        productSize,
-                        productStatus,
-                        productDescription,
-                        null,
-                        null,
-                        null,
-                        promotionDTO);
-                CartItemDTO cartItemDTO = new CartItemDTO(
-                        cartItemId,
-                        quantity,
-                        null,
-                        productDTO);
-                cartItems.add(cartItemDTO);
-            }
-        } finally {
-            entityManager.close();
-        }
-        System.out.println(cartItems.size());
-        return cartItems;
+        return entityManager.createQuery("select c from  CartItem c where c.cart.customer.userID = :uID",CartItem.class)
+                .setParameter("uID",userID).getResultList();
+//        List<CartItemDTO> cartItems = new ArrayList<>();
+//        try {
+//            List<Object[]> cartItem1 = entityManager.createQuery(
+//                            "select distinct c.cartItemId,c.quantity," +
+//                                    "p.id,p.productName,p.color,p.price,p.image,p.status,p.size,p.description," +
+//                                    "pr.id,pr.promotionName,pr.startDate,pr.endDate,pr.discountValue,pr.discountType,pr.minimumLoyalty,pr.isActive,pr.promotionType "+
+//                                    "from CartItem c join Product p on c.product.id = p.id left join Promotion pr on pr.id = p.promotion.id " +
+//                                    "where c.cart.customer.userID = :userId",Object[].class)
+//                    .setParameter("userId",Integer.valueOf(userID)).getResultList();
+//            for (Object[] row : cartItem1) {
+//                int cartItemId = (int) row[0];
+//                int quantity = (int) row[1];
+//                int productId = (int) row[2];
+//                String productName = (String) row[3];
+//                String productColor = (String) row[4];
+//                double productPrice = (double) row[5];
+//                byte[] productImage = (byte[]) row[6];
+//                Boolean productStatus = (Boolean) row[7];
+//                int productSize = (int) row[8];
+//                String productDescription = (String) row[9];
+//                PromotionDTO promotionDTO = new PromotionDTO();
+//                if (row[10] != null) {
+//                    int promotionId = (Integer) row[10];
+//                    String promotionName = (String) row[11];
+//                    Date promotionStartDate = (Date) row[12];
+//                    Date promotionEndDate = (Date) row[13];
+//                    Double promotionDiscountValue = (Double) row[14];
+//                    DiscountType promotionDiscountType = (DiscountType) row[15];
+//                    Integer promotionMinimumLoyalty = (Integer)     row[16];
+//                    Boolean promotionIsActive = (Boolean) row[17];
+//                    PromotionType promotionType = (PromotionType) row[18];
+//                    promotionDTO.setPromotionId(promotionId);
+//                    promotionDTO.setPromotionName(promotionName);
+//                    promotionDTO.setStartDate(promotionStartDate);
+//                    promotionDTO.setEndDate(promotionEndDate);
+//                    promotionDTO.setDiscountValue(promotionDiscountValue);
+//                    promotionDTO.setDiscountType(promotionDiscountType);
+//                    promotionDTO.setMinimumLoyalty(promotionMinimumLoyalty);
+//                    promotionDTO.setActive(promotionIsActive);
+//                    promotionDTO.setPromotionType(promotionType);
+//                }
+//                ProductDTO productDTO = new ProductDTO(
+////                        productId,
+////                        productName,
+////                        productPrice,
+////                        productImage,
+////                        productColor,
+////                        productSize,
+////                        productStatus,
+////                        productDescription,
+////                        null,
+////                        null,
+////                        null,
+////                        promotionDTO);
+//                );
+//                CartItemDTO cartItemDTO = new CartItemDTO(
+//                        cartItemId,
+//                        quantity,
+//                        null,
+//                        productDTO);
+//                cartItems.add(cartItemDTO);
+//            }
+//        } finally {
+//            entityManager.close();
+//        }
+//        System.out.println(cartItems.size());
     }
 
     @Override
@@ -208,6 +210,7 @@ public class CartDaoImpl implements ICartDao {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
         Customer customer = entityManager.find(Customer.class, Integer.valueOf(idUser));
         AddressDTO addressDTO = new AddressDTO();
+        if (customer== null) return null;
         if (customer.getAddress() != null) {
             addressDTO.setId(customer.getAddress().getId());
             addressDTO.setCity(customer.getAddress().getCity());
