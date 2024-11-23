@@ -167,8 +167,7 @@ public class OrderImpl implements IOrderDao {
                             paymentDTO,
                             order.getShippingAddress(),
                             order.getOrderStatus(),
-                            order.getOrderDate(),
-                            order.getStatus()
+                            order.getOrderDate()
                     );
                 }).collect(Collectors.toList());
 
@@ -266,8 +265,7 @@ public class OrderImpl implements IOrderDao {
                         paymentDTO,
                         order.getShippingAddress(),
                         order.getOrderStatus(),
-                        order.getOrderDate(),
-                        order.getStatus()
+                        order.getOrderDate()
                 );
             }).collect(Collectors.toList());
 

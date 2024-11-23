@@ -137,6 +137,16 @@ public class CartController extends HttpServlet {
             req.setAttribute("message",messageError);
         }
     }
+    public void Cart_Add_Quantity(HttpServletRequest req, HttpServletResponse resp,int userId,int idProduct,int quantity,String messageSuccess,String messageError) throws ServletException, IOException {
+        if (iCartService.AddItemWithQuantity(idProduct,userId,quantity)) {
+            req.setAttribute("errCode",0);
+            req.setAttribute("message",messageSuccess);
+        }
+        else {
+            req.setAttribute("errCode",1);
+            req.setAttribute("message",messageError);
+        }
+    }
     private void Delete_Cart_Item(HttpServletRequest req, HttpServletResponse resp, String redirect) throws ServletException, IOException {
         int idCartItem = Integer.parseInt(req.getParameter("cartItemId"));
         iCartService.deleteCartItem(idCartItem);

@@ -27,7 +27,7 @@ section .main .main_content{
 section .main .main_content .main_text h1{
     font-size: 90px;
     line-height: 70px;
-    background: linear-gradient(to right, #c72092,#6c14d0);
+    background: linear-gradient(to right, green,greenyellow);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     position: relative;
@@ -37,13 +37,17 @@ section .main .main_content .main_text h1{
 
 section .main .main_content .main_text h1 span{
     font-size: 70px;
-    background: linear-gradient(to right, #c72092,#6c14d0);
+    background: linear-gradient(to right, green,greenyellow);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
 section .main .main_content .main_text p{
-    width: 600px;
+   color: red;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    width: 300px;
+    font-size: 18px;
     text-align: justify;
     line-height: 21px;
     position: relative;
@@ -56,6 +60,26 @@ section .main .main_content .main_image img{
     position: relative;
     left: -10%;
     top: 150px;
+}
+
+
+.hero-img-off{
+    width: 260px;
+    height: auto;
+    padding: 20px 10px;
+    background-color: orange;
+    backdrop-filter: blur(10px);
+    word-break: break-all;
+    line-height: 1.8;
+    border-radius: 5px;
+    position: absolute;
+    bottom: 160px;
+    left: 400px;;
+}
+
+.hero-img-off p{
+    font-size: 14px;
+    color: black;
 }
 
 
