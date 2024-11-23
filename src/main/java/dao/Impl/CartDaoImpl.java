@@ -212,7 +212,7 @@ public class CartDaoImpl implements ICartDao {
         AddressDTO addressDTO = new AddressDTO();
         if (customer== null) return null;
         if (customer.getAddress() != null) {
-            addressDTO.setId(customer.getAddress().getId());
+            addressDTO.setAddressID(customer.getAddress().getAddressID());
             addressDTO.setCity(customer.getAddress().getCity());
             addressDTO.setDistrict(customer.getAddress().getDistrict());
             addressDTO.setProvince(customer.getAddress().getProvince());

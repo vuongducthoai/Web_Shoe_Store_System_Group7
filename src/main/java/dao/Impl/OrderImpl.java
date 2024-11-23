@@ -1,3 +1,4 @@
+
 package dao.Impl;
 
 import JpaConfig.JpaConfig;
@@ -18,7 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class OrderImpl implements IOrderDao {
-    public boolean CreateOrder(OrderDTO order,AddressDTO addressDTO){
+    public boolean CreateOrder(OrderDTO order){
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
@@ -27,14 +28,6 @@ public class OrderImpl implements IOrderDao {
                     "from Order o Where o.payment.momoBillId like :momoID",Order.class)
                     .setParameter("momoID",order.getPayment().getMomoBillId()).getResultList();
             if (order1.isEmpty()) {
-                String address = "";
-                if (addressDTO!=null){
-                    address+= addressDTO.getHouseNumber()+", ";
-                    address+= addressDTO.getStreetName()+", ";
-                    address+= addressDTO.getCity()+", ";
-                    address+= addressDTO.getDistrict()+", ";
-                    address+= addressDTO.getProvince();
-                }
                 Customer customer = entityManager.find(Customer.class, Integer.valueOf(order.getCustomer().getUserID()));
                 List<OrderItemDTO> ListOrderItem = order.getOrderItems();
                 List<OrderItem> orderItems = new ArrayList<OrderItem>();
@@ -42,7 +35,6 @@ public class OrderImpl implements IOrderDao {
                 orderEnty.setCustomer(customer);
                 orderEnty.setOrderDate(Date.from(Instant.now()));
                 orderEnty.setOrderStatus(OrderStatus.WAITING_CONFIRMATION);
-                orderEnty.setShippingAddress(address);
                 entityManager.persist(orderEnty);
                 for (OrderItemDTO item : ListOrderItem) {
                     OrderItem orderItem = new OrderItem();
@@ -204,4 +196,88 @@ public class OrderImpl implements IOrderDao {
             }
         }
     }
+    public List<OrderDTO> findOrdersByCustomerId(int customerId) {
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        try {
+            // Truy vấn các đơn hàng theo customerId
+            List<Order> orders = entityManager.createQuery(
+                            "SELECT o FROM Order o WHERE o.customer.userID = :userID", Order.class)
+                    .setParameter("userID", customerId)
+                    .getResultList();
+
+            // Chuyển đổi từ Order sang OrderDTO
+            List<OrderDTO> orderDTOs = orders.stream().map(order -> {
+                // Chuyển đổi Customer sang CustomerDTO
+                CustomerDTO customerDTO = new CustomerDTO(
+                        order.getCustomer().getUserID(),
+                        order.getCustomer().getFullName(),
+                        order.getCustomer().getPhone(),
+                        order.getCustomer().isActive(),
+                        order.getCustomer().getDateOfBirth(),
+                        order.getCustomer().getLoyalty()
+                );
+
+                // Chuyển đổi Payment sang PaymentDTO
+                PaymentDTO paymentDTO = null;
+                if (order.getPayment() != null) {
+                    paymentDTO = new PaymentDTO(
+                            order.getPayment().getPaymentId(),
+                            null, // Tránh vòng lặp lồng nhau
+                            order.getPayment().getPaymentMethod(),
+                            order.getPayment().getAmount(),
+                            order.getPayment().getPaymentDate(),
+                            order.getPayment().isStatus(),
+                            order.getPayment().getMomoBillId()
+                    );
+                }
+
+                // Chuyển đổi danh sách OrderItem sang OrderItemDTO
+                List<OrderItemDTO> orderItemDTOs = order.getOrderItems().stream().map(orderItem -> {
+                    // Chuyển đổi Product sang ProductDTO
+                    ProductDTO productDTO = new ProductDTO(
+                            orderItem.getProduct().getProductID(),
+                            orderItem.getProduct().getProductName(),
+                            orderItem.getProduct().getPrice(),
+                            orderItem.getProduct().getImage(), // Byte array của ảnh
+                            orderItem.getProduct().getColor(),
+                            orderItem.getProduct().getSize(),
+                            orderItem.getProduct().isStatus(),
+                            orderItem.getProduct().getDescription(),
+                            null, // Không cần danh sách CartItemDTO trong trường hợp này
+                            null, // Không cần danh sách OrderItemDTO trong trường hợp này
+                            null, // Không cần CategoryDTO
+                            null  // Không cần PromotionProductDTO
+                    );
+
+                    // Tạo OrderItemDTO
+                    return new OrderItemDTO(
+                            orderItem.getOrderItemID(),
+                            null, // Không cần tham chiếu đến OrderDTO để tránh vòng lặp
+                            productDTO,
+                            orderItem.getQuantity()
+                    );
+                }).collect(Collectors.toList());
+
+                // Tạo OrderDTO
+                return new OrderDTO(
+                        String.valueOf(order.getOrderId()), // Convert orderId to String
+                        customerDTO,
+                        orderItemDTOs,
+                        paymentDTO,
+                        order.getShippingAddress(),
+                        order.getOrderStatus(),
+                        order.getOrderDate(),
+                        order.getStatus()
+                );
+            }).collect(Collectors.toList());
+
+            return orderDTOs;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>(); // Trả về danh sách rỗng nếu có lỗi
+        } finally {
+            entityManager.close();
+        }
+    }
+
 }

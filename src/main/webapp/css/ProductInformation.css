@@ -42,7 +42,7 @@ main{
 }
 
 .fa-star{
-    color: rgb(217, 217, 16);
+    color: #baba14;
 }
 
 .product-badge{
@@ -108,14 +108,11 @@ main{
 
 }
 
-.reviews-container{
-    height:200px;
-    position: relative;
-}
+
+
 
 .rated-date{
-    bottom:0;
-    position: absolute;
+
 }
 
 .card-product{
@@ -147,3 +144,16 @@ main{
     max-height: 45px;
 }
 
+
+.response-container{
+    background-color: #cecaca;
+    border-radius: 5px;
+    opacity:0.8;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+    max-height: 40%;
+    white-space: normal;
+
+}
