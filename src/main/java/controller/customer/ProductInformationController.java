@@ -1,8 +1,10 @@
 package controller.customer;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dto.ProductDTO;
 import dto.ResponseDTO;
 import dto.ReviewDTO;
+import dto.UserDTO;
 import entity.Product;
 import entity.Response;
 import jakarta.servlet.ServletException;
@@ -11,21 +13,23 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import service.IProductService;
+import service.IResponseService;
 import service.IReviewService;
 import service.Impl.ProductServiceImpl;
+import service.Impl.ResponseServiceImpl;
 import service.Impl.ReviewServiceImpl;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @WebServlet(urlPatterns = {"/product/details"})
 public class ProductInformationController extends HttpServlet {
     private IProductService productService = new ProductServiceImpl();
     private IReviewService reviewService = new ReviewServiceImpl();
+    private IResponseService responseService = new ResponseServiceImpl();
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         String productName = req.getParameter("productName");
         if (productName == null || productName.trim().isEmpty()) {
@@ -78,6 +82,10 @@ public class ProductInformationController extends HttpServlet {
             req.setAttribute("price", productDetails.getFirst().getPrice());
             req.setAttribute("name", productDetails.getFirst().getProductName());
             req.setAttribute("description", productDetails.getFirst().getDescription());
+
+
+
+
             req.getRequestDispatcher("/ProductInformation.jsp").forward(req, resp);
         }
 
@@ -86,10 +94,53 @@ public class ProductInformationController extends HttpServlet {
     public void destroy() {
     }
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getParameter("reviewID");
-        ResponseDTO response = new ResponseDTO();
 
 
-        doGet(req, resp);
+
+        try{
+            String productName = req.getParameter("productName");
+            if (productName == null || productName.trim().isEmpty()) {
+                req.setAttribute("error", "Tên sản phẩm không được cung cấp.");
+                req.getRequestDispatcher("/error.jsp").forward(req, resp);
+                return;
+            }
+
+            String reviewIDStr = req.getParameter("reviewID");
+            String responseContent = req.getParameter("responseContent");
+            String responseIDStr = req.getParameter("responseID");
+            int reviewID=0;
+            if(reviewIDStr != null || !reviewIDStr.trim().isEmpty()) {
+                reviewID = Integer.parseInt(reviewIDStr);
+            }
+            int responseID=0;
+            if(responseIDStr != null || !responseIDStr.trim().isEmpty()) {
+                responseID = Integer.parseInt(responseIDStr);
+            }
+
+            ReviewDTO reviewDTO = new ReviewDTO();
+            reviewDTO.setReviewID(reviewID);
+
+            UserDTO userDTO = new UserDTO();
+            userDTO.setUserID(48);
+
+            ResponseDTO response = new ResponseDTO();
+            response.setResponseID(responseID);
+            response.setContent(responseContent);
+            response.setReview(reviewDTO);
+            response.setAdmin(userDTO);
+            Date currentDate = new Date();
+            response.setTimeStamp(currentDate);
+
+
+            if(responseService.addResponse(response)) {
+                String redirectURL = req.getContextPath() + "/product/details?productName=" + productName;
+                System.out.println("Redirect URL: " + redirectURL);
+                resp.sendRedirect(redirectURL);
+            }else  req.getRequestDispatcher("/error.jsp").forward(req, resp);
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        //doGet(req, resp);
     }
 }

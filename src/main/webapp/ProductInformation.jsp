@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,6 +17,8 @@
     <jsp:include page="./view/header.jsp"></jsp:include>
 </header>
 <main>
+
+
     <div class="container">
         <div class="product-detail w-100">
             <div class="row">
@@ -53,6 +56,8 @@
                             <button class="d-flex justify-content-center align-items-center size rounded-pill me-2">${size}</button>
                         </c:forEach>
                     </div>
+
+
                     <hr class="vw-100">
                     <div class="d-flex">
                         <div class="quantity-container rounded-pill d-flex justify-content-around align-items-center  ">
@@ -93,34 +98,36 @@
         <div class="reviews d-flex flex-wrap row">
             <c:forEach var="review" items="${reviews}">
                     <div class="col-6 mt-3">
-                    <div class="reviews-container border rounded-3 container-fluid" style="min-height: 200px; position: relative;">
-                        <div class="rated mt-2">
-                            <span class="rated-number">${review.ratingValue}</span>
-                            <i class="fa-solid fa-star me-1"></i>
-                            <span class="rated-writer fw-bolder fs-4 d-block mt-2">${review.customer.getFullName()}</span>
-                            <span class="rated-content d-block">${review.comment}</span><br>
-                            <span class="rated-date mb-3 ">${review.date}</span>
-                        </div>
-
-                        <c:if test="${review.response != null}">
-                            <div class="response-container mb-2 d-flex justify-content-between">
-                                <div class="m-2">
-                                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                                    <span class="response-name">${review.response.admin.fullName}</span><br>
-                                    <input type="text" class="response-content" value="${review.response.content}" style="background-color: transparent; border: none; " readonly><br>
-                                    <span class="response-date fw-lighter" style="font-size: 10px">${review.response.timeStamp}</span><br>
-
+                            <div class="reviews-container border rounded-3 container-fluid" style="min-height: 200px; position: relative;">
+                                <div class="rated mt-2">
+                                    <span class="rated-number">${review.ratingValue}</span>
+                                    <i class="fa-solid fa-star me-1"></i>
+                                    <span class="rated-writer fw-bolder fs-4 d-block mt-2">${review.customer.getFullName()}</span>
+                                    <span class="rated-content d-block">${review.comment}</span><br>
+                                    <span class="rated-date mb-3 ">${review.date}</span>
                                 </div>
 
-                            </div>
-                        </c:if>
-                        <c:if test="${role == 1}">
-                        <button type="button" class="btn bg-dark rounded-pill me-2 mb-1" data-bs-toggle="modal" data-bs-target="#responseModal"
-                                onclick="document.getElementById('modalReviewID').value = '${review.reviewID}'"
-                                style="color:white" >Phản hồi</button>
-                    </c:if>
+                                <c:if test="${review.response != null}">
+                                    <div class="response-container mb-2 d-flex justify-content-between">
+                                        <div class="m-2">
+                                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                                            <span class="response-name">${review.response.admin.fullName}</span><br>
+                                            <span class="response-content">${review.response.content}</span><br>
+                                            <span class="response-date fw-lighter" style="font-size: 10px">${review.response.timeStamp}</span><br>
+                                            <input type="hidden"  id="ResponseID" value="${review.response.responseID}">
+                                        </div>
+                                    </div>
+                                </c:if>
+                                <c:if test="${role == 1}">
+                                    <button type="button" class="btn bg-dark rounded-pill ms-auto me-2 mb-1 mt-2 " data-bs-toggle="modal" data-bs-target="#responseModal"
+                                            onclick="document.getElementById('modalReviewID').value = '${review.reviewID}'"
+                                            style="color:white" >Phản hồi</button>
+                                </c:if>
+                        </div>
 
-                    </div>
+
+
+
                 </div>
             </c:forEach>
         </div>
@@ -135,10 +142,13 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
-                        <form action="${pageContext.request.contextPath}/product/details" method="post">
+                        <form action="${pageContext.request.contextPath}/product/details" method="post" onsubmit="setResponseContentAndResponseID()">
                             <input type="hidden" name="reviewID" id="modalReviewID">
+                            <input type="hidden" name="productName" value="${name}">
+                            <input type="hidden" name="ResponseID" id="modalResponseID">
                             <label class="fw-bold fs-5 mb-2">Nội dung</label><br>
-                            <textarea class="form-control form-control-lg mb-3 rounded-2" rows="3" placeholder="Nhập nội dung"></textarea>
+                            <textarea class="form-control form-control-lg mb-3 rounded-2" id="responseText" rows="3" placeholder="Nhập nội dung"></textarea>
+                            <input type="hidden" name="responseContent" id="responseContent">
                             <div class="d-flex justify-content-end">
                                 <button type="submit" class="btn bg-dark rounded-pill ms-2" style="color:white">Gửi</button>
                             </div>
@@ -187,6 +197,7 @@
 <footer>
     <jsp:include page="./view/footer.jsp"></jsp:include>
 </footer>
+
 <script src="${pageContext.request.contextPath}/js/ProductInformation.js"></script>
 </body>
 </html>
