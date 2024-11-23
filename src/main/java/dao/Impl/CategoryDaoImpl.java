@@ -2,6 +2,7 @@ package dao.Impl;
 
 import JpaConfig.JpaConfig;
 import dao.ICategoryDao;
+import dto.CategoryDTO;
 import entity.Category;
 import entity.Product;
 import jakarta.persistence.EntityManager;
@@ -86,4 +87,36 @@ public class CategoryDaoImpl implements ICategoryDao {
         return productList;
 
     }
+
+    public List<CategoryDTO> categoryDTOList() {
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        try {
+            String hql = "SELECT c FROM Category c";
+            TypedQuery<Category> query = entityManager.createQuery(hql, Category.class);
+            List<Category> categoryList = query.getResultList();
+            List<CategoryDTO> categoryDTOList = new ArrayList<>();
+            for (Category category : categoryList)
+            {
+                CategoryDTO categoryDTO = new CategoryDTO(
+                        category.getCategoryID(),
+                        category.getCategoryName()
+
+
+                );
+                categoryDTOList.add(categoryDTO);
+            }
+            return categoryDTOList;
+        }
+        catch (Exception e) {
+            e.getMessage();
+            return null;
+        }
+        finally {
+            entityManager.close();
+        }
+
+
+    }
+
+
 }

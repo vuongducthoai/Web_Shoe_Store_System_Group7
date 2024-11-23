@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: Admin
@@ -6,6 +7,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -67,6 +69,7 @@
                     <div class="table-container">
                         <table class="table table-bordered table-hover">
                             <tr class="row-dark">
+                                <th>ID</th>
                                 <th>Tên Sản Phẩm</th>
                                 <th>Giá</th>
                                 <th>Hình ảnh</th>
@@ -79,18 +82,32 @@
                             </tr>
                             <c:forEach var="product" items="${products}">
                                 <tr>
+                                    <td>${product.productId}</td>
                                     <td>${product.productName}</td>
                                     <td>${product.price}</td>
                                     <td>
-                                        <img src="${product.imagePath}" alt="${product.productName}" width="100" height="100">
+                                        <img  src="${product.getBase64Image()}" alt="${product.productName}" width="100" height="100">
                                     </td>
-                                    <td>${product.colors}</td>
-                                    <td>${product.sizes}</td>
-                                    <td>${product.category}</td>
+                                    <td>${product.color}</td>
+                                    <td>${product.size}</td>
+                                    <td>
+                                        <c:if test="${not empty product.categoryDTO}">
+                                            ${product.categoryDTO.categoryName}
+                                        </c:if>
+                                    </td>
                                     <td>${product.description}</td>
                                     <td>${product.status}</td>
                                     <td>
-                                        <a href="#" class="btn-edit" onclick="editProduct(this)">Sửa</a>
+                                        <a href="#" class="btn-edit"
+                                           data-product-id="${product.productId}"
+                                           data-product-name="${product.productName}"
+                                           data-product-price="${product.price}"
+                                           data-product-color="${product.color}"
+                                           data-product-size="${product.size}"
+                                           data-product-img = "${product.getBase64Image()}"
+                                           data-product-description="${product.description}"
+                                           data-category-name="${product.categoryDTO.categoryName}"
+                                           onclick="editProduct(this)">Sửa</a>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -106,16 +123,17 @@
                     </div>
 
                     <!-- nút thêm sản phẩm -->
+                    <form action="ProductController" method="post">
                     <div class="product-management-form" id="add-product-management-form">
                         <h3>Thêm sản phẩm mới</h3>
                         <label for="product-id">ID</label>
-                        <input type="text" id="add-product-id" placeholder="Nhập ID sản phẩm">
+                        <input type="text" id="add-product-id" name="productId" placeholder="Nhập ID sản phẩm">
 
                         <label for="product-name">Tên sản phẩm</label>
-                        <input type="text" id="product-name" placeholder="Nhập tên sản phẩm">
+                        <input type="text" id="product-name" name="productName" placeholder="Nhập tên sản phẩm">
 
                         <label for="add-product-price">Giá</label>
-                        <input type="text" id="add-product-price" placeholder="Nhập giá sản phẩm">
+                        <input type="text" id="add-product-price" name="productPrice" placeholder="Nhập giá sản phẩm">
 
                         <!-- <label for="product-image">Hình ảnh (URL)</label>
                         <input type="text" id="product-image" placeholder="Nhập URL hình ảnh"> -->
@@ -126,32 +144,34 @@
                                 <img class="imageDisplay" src="" alt="No image" />
                             </div>
                             <button class="loadImageBtn">Load Image</button>
-                            <input type="file" class="imageInput" style="display: none;" accept="image/*">
+                            <input type="file" name="productImage" class="imageInput" style="display: none;" accept="image/*">
                             <button class="cancelBtn">Cancel Image</button>
                         </div>
 
                         <label for="add-product-color">Màu sắc</label>
-                        <input type="text" id="add-product-color" placeholder="Nhập màu sắc sản phẩm">
+                        <input type="text" id="add-product-color" name="productColor" placeholder="Nhập màu sắc sản phẩm">
 
                         <label for="product-size">Size</label>
-                        <input type="text" id="product-size" placeholder="Nhập size sản phẩm">
+                        <input type="text" id="product-size" name="productSize" placeholder="Nhập size sản phẩm">
 
                         <label for="add-product-category">Danh mục</label>
-                        <select id="add-product-category" multiple>
-                            <option value="">Người lớn</option>
-                            <option value="">Trẻ em</option>
-                            <option value="">Nam</option>
-                            <option value="">Nữ</option>
-                            <option value="">Giày bóng đá</option>
+                        <select id="add-product-category" name="CategoryName">
+                            <c:forEach var="category" items="${CategoryList}">
+                                <option value="${category.getCategoryName()}">
+                                        ${category.getCategoryName()}
+                                </option>
+                            </c:forEach>
                         </select>
 
                         <label for="add-product-description">Mô tả</label>
-                        <input type="text" id="add-product-description" placeholder="Nhập mô tả sản phẩm">
+                        <input type="text" id="add-product-description" name="productDescription" placeholder="Nhập mô tả sản phẩm">
 
-                        <button class="action-btn">Thêm sản phẩm</button>
-
+                        <button class="action-btn" name="submitAction" value="add-product">Thêm sản phẩm</button>
                     </div>
+                    </form>
 
+<%--                    Nút sửa sản phẩm--%>
+                    <form action="ProductController" method="post">
                     <div class="product-management-form" id="edit-product-management-form">
                         <h3>Sửa sản phẩm</h3>
                         <label for="product-id">ID</label>
@@ -177,24 +197,25 @@
                         <input type="text" id="product-color" placeholder="Nhập màu sắc sản phẩm">
 
                         <label for="product-size">Size</label>
-                        <input type="text" id="f" placeholder="Nhập size sản phẩm">
+                        <input type="text" id="edit-product-size" placeholder="Nhập size sản phẩm">
 
                         <label for="edit-product-category">Danh mục</label>
-                        <select id="edit-product-category" multiple>
-                            <option value="">Người lớn</option>
-                            <option value="">Trẻ em</option>
-                            <option value="">Nam</option>
-                            <option value="">Nữ</option>
-                            <option value="">Giày bóng đá</option>
+                        <select id="edit-product-category" name="CategoryName">
+                            <c:forEach var="category" items="${CategoryList}">
+                                <option value="${category.getCategoryName()}">
+                                        ${category.getCategoryName()}
+                                </option>
+                            </c:forEach>
                         </select>
 
                         <label for="edit-product-description">Mô tả</label>
                         <input type="text" id="edit-product-description" placeholder="Nhập mô tả sản phẩm">
 
                         <button class="action-btn">Sửa sản phẩm</button>
-
-
                     </div>
+                    </form>
+
+                    <%-- Nút xóa sản phẩm--%>
                     <div class="product-management-form" id="delete-product-management-form">
                         <h3>Xóa sản phẩm</h3>
                         <label for="product-id">ID</label>
@@ -714,6 +735,7 @@
     // Hàm để tải hình ảnh
     loadImageBtns.forEach((btn, index) => {
         btn.addEventListener('click', () => {
+            event.preventDefault(); // Ngừng hành động mặc định (reload trang)
             imageInputs[index].click();
         });
     });
@@ -787,6 +809,38 @@
         promotionManagement.style.display="block";
 
     });
+
+
+    function editProduct(button) {
+        event.preventDefault();
+        // Lấy thông tin sản phẩm từ thuộc tính data- của nút sửa
+        var productId = button.getAttribute('data-product-id');
+        var productName = button.getAttribute('data-product-name');
+        var productPrice = button.getAttribute('data-product-price');
+        var productColor = button.getAttribute('data-product-color');
+        var productSize = button.getAttribute('data-product-size');
+        var imgURL = button.getAttribute('data-product-img');
+        var productDescription = button.getAttribute('data-product-description');
+        var categoryName = button.getAttribute('data-category-name');
+
+        // Điền thông tin vào form sửa sản phẩm
+        document.getElementById('product-id').value = productId;
+        document.getElementById('edit-product-name').value = productName;
+        document.getElementById('edit-product-price').value = productPrice;
+        document.getElementById('product-color').value = productColor;
+        document.getElementById('edit-product-size').value = productSize;
+        document.getElementById('edit-product-description').value = productDescription;
+        document.querySelector('.imageDisplay').src = imgURL;
+        // Điền thông tin danh mục vào dropdown
+        var categorySelect = document.getElementById('edit-product-category');
+        for (var i = 0; i < categorySelect.options.length; i++) {
+            if (categorySelect.options[i].text === categoryName) {
+                categorySelect.selectedIndex = i;
+                break;
+            }
+        }
+    }
+
 </script>
 </body>
 
