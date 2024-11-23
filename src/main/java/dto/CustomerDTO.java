@@ -14,6 +14,7 @@ import java.util.Date;
 @AllArgsConstructor
 public class CustomerDTO extends UserDTO {
 
+    private int customerId;
     private Date dateOfBirth;
     private int loyalty;
     private AddressDTO addressDTO;
@@ -22,6 +23,7 @@ public class CustomerDTO extends UserDTO {
     private ChatDTO chatDTO;
     private List<ReviewDTO> reviewDTOList;
     private List<NotifyDTO> notifyDTOList;
+
 
     public CustomerDTO(int userID, String fullName, String phone, boolean active, Date dateOfBirth, int loyalty) {
         super(userID, fullName, phone,active, null, null); // Gọi constructor lớp cha (UserDTO)

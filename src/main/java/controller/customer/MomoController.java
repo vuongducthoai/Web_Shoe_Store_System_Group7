@@ -80,6 +80,10 @@ public class MomoController extends HttpServlet {
     }
 
     protected void Callback(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
+        AccountDTO accountDTO = (AccountDTO) session.getAttribute("user");
+        int idUser = accountDTO.getUser().getUserID();
+        AddressDTO addressDTO = addressService.getAddressByID(idUser);
         String orderId = req.getParameter("orderId");
         String requestId = req.getParameter("requestId");
         String partnerCode = req.getParameter("partnerCode");

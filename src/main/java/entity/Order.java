@@ -22,7 +22,7 @@ public class Order {
     private int orderId;
 
     @ManyToOne
-    @JoinColumn(name = "customerID")
+    @JoinColumn(name = "customer_id", referencedColumnName = "userID")
     private Customer customer;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.REMOVE)

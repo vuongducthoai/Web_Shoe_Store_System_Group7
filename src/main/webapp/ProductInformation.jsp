@@ -31,12 +31,12 @@
                 <div class="product-describe col-sm-6 d-flex flex-column">
                     <h3 class="product-name fw-bolder fs-1 ">${name}</h3>
                     <div class="rated d-flex">
-                        <span class="d-block rated-number ms-2 mb-2">5/5</span>
+                        <span class="d-block rated-number ms-2 mb-2">${averageRating != null ? averageRating: 0}/5</span>
                         <i class="fa-solid fa-star me-1 mt-1 ms-2 "></i>
                     </div>
                     <div class="price  d-inline-block ">
-                        <span class="current-price fw-bold fs-2 ">${price}</span>
-                        <span class="product-badge badge bg-danger rounded-pill align-items-center ms-3">-40%</span>
+                        <span class="current-price fw-bold fs-2 ">${price}đ</span>
+                        <%--<span class="product-badge badge bg-danger rounded-pill align-items-center ms-3">-40%</span>--%>
                     </div>
                     <span class="product-description mt-2">${description}</span>
                     <hr class="vw-100">
@@ -70,8 +70,9 @@
         <div class="review-control d-flex justify-content-between">
             <div class="d-flex">
                 <span class="fw-bolder fs-3">All Reviews</span>
+                <span class="review-number fw-light fs-5 ms-2 ">(${reviews.size()})</span>
             </div>
-            <div class="btn-group">
+            <%--<div class="btn-group">
                 <div class="dropdown">
                     <button  class="btn-dropdown-menu btn dropdown-toggle rounded-pill ms-2" data-bs-toggle="dropdown" aria-expanded="false">Latest</button>
                     <ul class="dropdown-menu rounded-2 text-center">
@@ -80,43 +81,69 @@
                         <li><button class="dropdown-item">Worst</button></li>
                     </ul>
                 </div>
-                <button type="button" class="btn bg-dark rounded-pill ms-2" data-bs-toggle="modal" data-bs-target=".modal" style="color:white">Write a Review</button>
-            </div>
+                &lt;%&ndash;<button type="button" class="btn bg-dark rounded-pill ms-2" data-bs-toggle="modal" data-bs-target=".modal" style="color:white">Write a Review</button>&ndash;%&gt;
+            </div>--%>
         </div>
+        <c:if test="${empty reviews}">
+            <div class="d-flex justify-content-center">
+                <p class="fw-bolder fs-3">Không có đánh giá nào</p>
+            </div>
+
+        </c:if>
         <div class="reviews d-flex flex-wrap row">
             <c:forEach var="review" items="${reviews}">
                     <div class="col-6 mt-3">
-                    <div class="reviews-container border rounded-3 container-fluid">
+                    <div class="reviews-container border rounded-3 container-fluid" style="min-height: 200px; position: relative;">
                         <div class="rated mt-2">
                             <span class="rated-number">${review.ratingValue}</span>
                             <i class="fa-solid fa-star me-1"></i>
                             <span class="rated-writer fw-bolder fs-4 d-block mt-2">${review.customer.getFullName()}</span>
                             <span class="rated-content d-block">${review.comment}</span><br>
+                            <span class="rated-date mb-3 ">${review.date}</span>
                         </div>
-                        <span class="rated-date mb-3 ">${review.date}</span>
+
+                        <c:if test="${review.response != null}">
+                            <div class="response-container mb-2 d-flex justify-content-between">
+                                <div class="m-2">
+                                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                                    <span class="response-name">${review.response.admin.fullName}</span><br>
+                                    <input type="text" class="response-content" value="${review.response.content}" style="background-color: transparent; border: none; " readonly><br>
+                                    <span class="response-date fw-lighter" style="font-size: 10px">${review.response.timeStamp}</span><br>
+
+                                </div>
+
+                            </div>
+                        </c:if>
+                        <c:if test="${role == 1}">
+                        <button type="button" class="btn bg-dark rounded-pill me-2 mb-1" data-bs-toggle="modal" data-bs-target="#responseModal"
+                                onclick="document.getElementById('modalReviewID').value = '${review.reviewID}'"
+                                style="color:white" >Phản hồi</button>
+                    </c:if>
+
                     </div>
                 </div>
-                </c:forEach>
+            </c:forEach>
         </div>
 
 
 
-        <div class="modal fade">
+        <div class="modal fade" id="responseModal">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h3 class="text-center fw-bolder">Gửi đánh giá của bạn</h3>
+                        <h3 class="text-center fw-bolder">Gửi phản hồi</h3>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
-                        <label class="fw-bold fs-5 me-2">Đánh giá sản phẩm</label>
-                        <input class="mb-3 rounded-2" type="number" min="1" max="5" step="1" value="5">
-                        <i class="fa-solid fa-star me-1"></i><br>
-                        <label class="fw-bold fs-5 mb-2">Nội dung</label><br>
-                        <textarea class="form-control form-control-lg mb-3 rounded-2" rows="3" placeholder="Nhập nội dung"></textarea>
-                        <div class="d-flex justify-content-end">
-                            <button type="button" class="btn bg-dark rounded-pill ms-2" style="color:white">Gửi</button>
-                        </div>
+                        <form action="${pageContext.request.contextPath}/product/details" method="post">
+                            <input type="hidden" name="reviewID" id="modalReviewID">
+                            <label class="fw-bold fs-5 mb-2">Nội dung</label><br>
+                            <textarea class="form-control form-control-lg mb-3 rounded-2" rows="3" placeholder="Nhập nội dung"></textarea>
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" class="btn bg-dark rounded-pill ms-2" style="color:white">Gửi</button>
+                            </div>
+                        </form>
+
                     </div>
 
                 </div>
@@ -125,27 +152,32 @@
 
         <h2 class="text-center mt-5 mb-5 fw-bolder">YOU MIGHT ALSO LIKE</h2>
         <div class="d-flex gap-3 ">
+
             <c:forEach var="recomendProduct" items="${RecommendProducts}">
                 <div class="col-3">
-                    <div class="card-product card" style="border:none">
-                        <c:choose>
-                            <c:when test="${recomendProduct.getImage() != null}">
-                                <img src="${recomendProduct.getBase64Image()}" alt="" class="card-img-top rounded-4">
-                            </c:when>
-                            <c:otherwise>
-                                <p class="card-img-top rounded-4">Image not available</p>
-                            </c:otherwise>
-                        </c:choose>
-                        <div class="card-product-body">
-                            <h5 class="card-product-name mt-2">${recomendProduct.productName}</h5>
-                            <div class="price d-inline-block">
-                                <span class="current-price fw-bold fs-4">${recomendProduct.price}</span>
-                                <span class="product-badge badge bg-danger rounded-pill align-items-center ms-3">-40%</span>
+                    <a href="${pageContext.request.contextPath}/product/details?productName=${recomendProduct.key.productName}" class="text-decoration-none">
+                        <div class="card-product card" style="border:none">
+                            <c:choose>
+                                <c:when test="${recomendProduct.key.getImage() != null}">
+                                    <img src="${recomendProduct.key.getBase64Image()}" alt="" class="card-img-top rounded-4">
+                                </c:when>
+                                <c:otherwise>
+                                    <p class="card-img-top rounded-4">Image not available</p>
+                                </c:otherwise>
+                            </c:choose>
+                            <div class="card-product-body">
+                                <h5 class="card-product-name mt-2">${recomendProduct.key.productName}</h5>
+                                <div class="d-flex price d-inline-block">
+                                    <span class="d-block rated-number mb-2">${recomendProduct.value != null ? recomendProduct.value: 0}/5</span>
+                                    <i class="fa-solid fa-star me-1 mt-1 ms-2 "></i>
+
+                                </div><span class="current-price fw-bold fs-4">${recomendProduct.key.price}đ</span>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             </c:forEach>
+
 
         </div>
     </div>

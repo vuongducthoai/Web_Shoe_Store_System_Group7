@@ -1,3 +1,4 @@
+
 package service.Impl;
 
 import dao.IOrderDao;
@@ -15,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 
 public class OrderServiceImpl implements IOrderService {
@@ -135,4 +137,9 @@ public class OrderServiceImpl implements IOrderService {
         }
         return filteredList;
     }
+    @Override
+    public List<OrderDTO> getOrdersByCustomerId(int customerId) {
+        return orderDao.findOrdersByCustomerId(customerId);
+    }
+
 }

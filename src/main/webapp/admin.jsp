@@ -8,6 +8,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" 
 <!DOCTYPE html>
 <html lang="en">
 
@@ -95,6 +96,7 @@
                                             ${product.categoryDTO.categoryName}
                                         </c:if>
                                     </td>
+
                                     <td>${product.description}</td>
                                     <td>${product.status}</td>
                                     <td>
