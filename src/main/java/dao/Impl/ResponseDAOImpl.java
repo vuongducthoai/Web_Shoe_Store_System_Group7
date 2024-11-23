@@ -12,11 +12,12 @@ public class ResponseDAOImpl implements IResponseDAO {
         EntityTransaction transaction = entityManager.getTransaction();
         try{
             transaction.begin();
-            entityManager.merge(response);
+            entityManager.persist(response);
             transaction.commit();
             return true;
         }catch(Exception e){
-            System.out.println(e.getMessage());
+            e.printStackTrace();
+
             if(transaction.isActive()){
                 transaction.rollback();
             }

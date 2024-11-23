@@ -48,8 +48,44 @@ fa_minus.onclick = () => {
         quantity.innerText = qual.toString();
 }
 
+function setResponseContentAndResponseID(){
+    var responseText = document.getElementById("responseText").value;
+    document.getElementById("responseContent").value= responseText;
+
+    var responseID = document.getElementById("ResponseID").value;
+    document.getElementById("modalResponseID").value = responseID;
+}
 
 
+
+
+//Hiển thị size của màu
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Parse JSON từ biến được server gửi
+    const colorOptions = document.querySelectorAll('.color-option'); // Các nút màu
+    const sizeButtons = document.querySelectorAll('.size-option'); // Các nút size
+
+    // Khi người dùng chọn một màu
+    colorOptions.forEach(option => {
+        option.addEventListener('click', () => {
+            const selectedColor = option.getAttribute('data-color'); // Lấy màu được chọn
+            const availableSizes = colorSizeMap[selectedColor] || []; // Lấy danh sách size khả dụng
+
+            // Đặt trạng thái cho các nút size
+            sizeButtons.forEach(button => {
+                const size = parseInt(button.innerText); // Lấy size từ nút
+                if (availableSizes.includes(size)) {
+                    button.removeAttribute('disabled'); // Bật nút size
+                    button.classList.add('active-size'); // Thêm hiệu ứng
+                } else {
+                    button.setAttribute('disabled', true); // Tắt nút size
+                    button.classList.remove('active-size'); // Loại bỏ hiệu ứng
+                }
+            });
+        });
+    });
+});
 
 
 
