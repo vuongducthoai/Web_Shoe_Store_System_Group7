@@ -22,5 +22,4 @@ public class OrderDTO {
     private String shippingAddress;
     private OrderStatus orderStatus;
     private Date orderDate;
-    private String status;
 }

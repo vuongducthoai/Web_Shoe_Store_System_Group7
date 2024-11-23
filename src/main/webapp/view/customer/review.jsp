@@ -182,8 +182,8 @@
 
         .testimonial .col p{
             margin-top: 10px;
-            font-size: 20px;
-            word-break: break-all;
+            font-size: 15px;
+            white-space: nowrap;
         }
 
         .testimonial .col h3{
@@ -234,6 +234,7 @@
         }
 
         .product_message {
+            white-space: nowrap;
             margin-top: 10px;
         }
     </style>
@@ -253,7 +254,7 @@
                 <div class="slide-review">
                     <div class="col" data-aos="zoom-in-up">
                         <div class="block-header" style="display: flex; align-items: center; gap: 30px;">
-                            <figure><img src="../../image/tes-${status.index + 1}.png" alt=""></figure>
+                            <figure><img style="height: 100px; border-radius: 50%" src="../../image/tes-${status.index + 1}.png" alt=""></figure>
                             <div>
                                 <h3 class="heading-three" style="text-align: left;">${review.customer.fullName}</h3>
                                 <span class="ratting">
@@ -261,7 +262,7 @@
                                       <i class="fa-solid fa-star"></i>
                                   </c:forEach>
                                 </span>
-                                <p class="sub-heading">${review.date}</p>
+                                <p style="color: #333333">${review.date}</p>
                             </div>
                         </div>
                         <p class="product_message">Sản phẩm: ${review.productDTO.productName} </p> <span>Size: ${review.productDTO.size}</span>
