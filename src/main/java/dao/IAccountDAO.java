@@ -8,6 +8,9 @@ public interface IAccountDAO {
     boolean InsertAccount(Account account);
     boolean findAccountForLogin(Account account);
     Account findAccountByEmail(String email);
-    Account findAccountById(int id);
-    Account findAccoutByProvide(String provideID, AuthProvider authProvider);
+    public Account getAccountByID(int accountID);
+    public Account findAccoutByProvide(String provideID, AuthProvider authProvider);
+
+    Account findAccountByProvide(String provideID, AuthProvider authProvider);
+    boolean updateAccountByAccountID(int accountID, AccountDTO accountDTO);
 }
