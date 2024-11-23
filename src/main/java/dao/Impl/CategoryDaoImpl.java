@@ -2,32 +2,32 @@ package dao.Impl;
 
 import JpaConfig.JpaConfig;
 import dao.ICategoryDao;
-import dto.ProductDTO;
 import entity.Category;
 import entity.Product;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.TypedQuery;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 public class CategoryDaoImpl implements ICategoryDao {
+
     @Override
-    public List<ProductDTO> findAll() {
+    public List<Category> categoryList() {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
         try {
-            List<Product> products = entityManager.createQuery("SELECT p FROM Product p", Product.class).getResultList();
-            return products.stream()
-                    .map(product -> new ProductDTO(
-                            product.getProductID(),
-                            product.getProductName(),
-                            product.getPrice()
-                            // Thêm các trường cần thiết từ Product sang ProductDTO
-                    ))
-                    .collect(Collectors.toList());
-        } finally {
+            return entityManager.createQuery("SELECT c FROM Category c", Category.class).getResultList();
+        }
+        catch (Exception e) {
+            e.getMessage();
+        }
+        finally {
             entityManager.close();
         }
+        return null;
     }
 
     @Override
@@ -47,5 +47,38 @@ public class CategoryDaoImpl implements ICategoryDao {
         } finally {
             em.close();
         }
+    }
+
+    @Override
+    public List<Product> findAllProductByCategoryWithPagination(int id, int offset, int limit) {
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        List<Product> productList = null;
+
+        try {
+            String jpql = "SELECT p FROM Product p WHERE p.category.categoryID = :id";
+
+            TypedQuery<Product> typedQuery  = entityManager.createQuery(jpql, Product.class);
+
+            typedQuery.setParameter("id", id);
+
+            typedQuery.setFirstResult(offset);
+            typedQuery.setMaxResults(limit);
+
+            List<Product> products = typedQuery.getResultList();
+
+            Map<String, Product> uniqueProductsMap = new LinkedHashMap<>();
+            for (Product product : products) {
+                uniqueProductsMap.putIfAbsent(product.getProductName(), product);
+            }
+
+            return new ArrayList<>(uniqueProductsMap.values());
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+
+        return productList;
+
     }
 }

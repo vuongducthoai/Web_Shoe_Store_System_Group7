@@ -20,26 +20,22 @@ public class Customer extends User {
     @Temporal(TemporalType.DATE)
     private Date dateOfBirth;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "addressID")
     private Address address;
 
-    @OneToOne
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Cart cart;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private List<Order> orders;
 
     private int loyalty;
-    private boolean active;
 
 
     @OneToMany(mappedBy = "customer")
     private List<Review> reviewList;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "chatID")
-    private Chat chat;
 
     @OneToMany(mappedBy = "customer")
     private List<Notify> notifyList;

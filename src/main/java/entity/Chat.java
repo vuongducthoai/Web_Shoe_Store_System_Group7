@@ -19,7 +19,7 @@ public class Chat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int chatID;
 
-    @OneToOne
+
     @JoinColumn(name = "userID", nullable = false) // Foreign key to Customer
     private Customer customer;
 

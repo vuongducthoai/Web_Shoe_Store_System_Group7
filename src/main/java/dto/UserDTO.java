@@ -14,6 +14,7 @@ public class UserDTO {
     private int userID;
     private String fullName;
     private String phone;
+    private boolean active;
     private AccountDTO account;
     private List<ResponseDTO> responseDTOList;
 }

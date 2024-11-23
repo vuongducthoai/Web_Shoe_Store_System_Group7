@@ -13,7 +13,8 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CustomerDTO extends UserDTO {
-    private boolean active;
+
+    private int customerId;
     private Date dateOfBirth;
     private int loyalty;
     private AddressDTO addressDTO;
@@ -22,4 +23,17 @@ public class CustomerDTO extends UserDTO {
     private ChatDTO chatDTO;
     private List<ReviewDTO> reviewDTOList;
     private List<NotifyDTO> notifyDTOList;
+
+
+    public CustomerDTO(int userID, String fullName, String phone, boolean active, Date dateOfBirth, int loyalty) {
+        super(userID, fullName, phone,active, null, null); // Gọi constructor lớp cha (UserDTO)
+        this.dateOfBirth = dateOfBirth;
+        this.loyalty = loyalty;
+        this.addressDTO = null;
+        this.cartDTO = null;
+        this.ordersDTOList = null;
+        this.chatDTO = null;
+        this.reviewDTOList = null;
+        this.notifyDTOList = null;
+    }
 }

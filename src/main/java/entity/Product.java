@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -35,12 +37,12 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private List<OrderItem> orderItems;
 
+    private LocalDateTime createDate;
+
     @ManyToOne
     @JoinColumn(name = "categoryID")
     private Category category;
 
-    @ManyToOne
-    @JoinColumn(name = "promotionID")
-    private Promotion promotion;
-
+    @OneToMany(mappedBy = "product")
+    private List<PromotionProduct> promotionProducts;
 }

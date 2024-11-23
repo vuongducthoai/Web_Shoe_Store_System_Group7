@@ -5,7 +5,8 @@ import dto.ProductDTO;
 
 import java.util.List;
 public interface ICategoryService {
-    List<ProductDTO> findAll();
-
     void insert(CategoryDTO categoryDTO);
+    List<CategoryDTO> listCategory();
+
+    List<ProductDTO> findAllProductByCategoryWithPagination(int categoryId, int offset, int limit);
 }
