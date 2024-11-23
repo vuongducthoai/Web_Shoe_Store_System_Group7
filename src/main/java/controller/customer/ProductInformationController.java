@@ -1,8 +1,10 @@
 package controller.customer;
 
 import dto.ProductDTO;
+import dto.ResponseDTO;
 import dto.ReviewDTO;
 import entity.Product;
+import entity.Response;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -14,8 +16,10 @@ import service.Impl.ProductServiceImpl;
 import service.Impl.ReviewServiceImpl;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 
 
 @WebServlet(urlPatterns = {"/product/details"})
@@ -23,7 +27,7 @@ public class ProductInformationController extends HttpServlet {
     private IProductService productService = new ProductServiceImpl();
     private IReviewService reviewService = new ReviewServiceImpl();
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        String productName  = "A";
+        String productName = req.getParameter("productName");
         if (productName == null || productName.trim().isEmpty()) {
             req.setAttribute("error", "Tên sản phẩm không hợp lệ.");
             return;
@@ -59,21 +63,15 @@ public class ProductInformationController extends HttpServlet {
                     .map(ProductDTO::getProductId)
                     .distinct().toList();
             List<ReviewDTO> reviews = reviewService.getReviewsByProductID(IDs);
+            req.setAttribute("reviews", reviews);
+            req.setAttribute("averageRating", reviewService.averageRating(reviews));
 
-            if(reviews == null || reviews.isEmpty()) {
-                req.setAttribute("errorReview", "Không có đánh giá.");
 
-            }else{
-                req.setAttribute("reviews", reviews);
-            }
-
-            List<ProductDTO> RecommendProducts = productService.findRandomProducts(1, 20, productName);
+            Map<ProductDTO, Double> RecommendProducts = productService.findRandomProducts(1, 20, productName);
             req.setAttribute("RecommendProducts", RecommendProducts);
 
+            req.setAttribute("role", 1);
 
-
-
-            // Truyền dữ liệu sang JSP
             req.setAttribute("images", images);
             req.setAttribute("colors", colors);
             req.setAttribute("sizes", sizes);
@@ -86,5 +84,12 @@ public class ProductInformationController extends HttpServlet {
     }
 
     public void destroy() {
+    }
+    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.getParameter("reviewID");
+        ResponseDTO response = new ResponseDTO();
+
+
+        doGet(req, resp);
     }
 }
