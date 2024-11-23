@@ -112,7 +112,7 @@ public class MomoController extends HttpServlet {
         if (response.statusCode() == 200) {
             JSONObject jsonKQ = new JSONObject((response.body()));
             if (jsonKQ.getInt("resultCode")==0){
-                if (orderService.CreateOrder(jsonKQ.toString(),addressDTO))
+                if (orderService.CreateOrder(jsonKQ.toString()))
                     getServletContext().getRequestDispatcher("/view/customer/paySuccess.jsp").forward(req, resp);
                 else
                     getServletContext().getRequestDispatcher("/view/customer/payError.jsp").forward(req, resp);
