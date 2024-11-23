@@ -14,6 +14,7 @@ import java.util.Date;
 @AllArgsConstructor
 public class CustomerDTO extends UserDTO {
 
+    private int customerId;
     private Date dateOfBirth;
     private int loyalty;
     private AddressDTO addressDTO;
@@ -22,4 +23,10 @@ public class CustomerDTO extends UserDTO {
     private ChatDTO chatDTO;
     private List<ReviewDTO> reviewDTOList;
     private List<NotifyDTO> notifyDTOList;
+//    private int userID;
+//    private String fullName;
+//    private String phone;
+//    private boolean active;
+//    private AccountDTO account;
+//    private List<ResponseDTO> responseDTOList;
 }
