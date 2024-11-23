@@ -14,7 +14,7 @@ function custom_toast({ title = "", message = "", type = "success", duration = 1
     const main = document.querySelector("#custom-toast");
     if (main) {
         const toast = document.createElement("div");
-
+        console.log(duration)
         // Auto remove toast
         const autoRemoveId = setTimeout(() => main.removeChild(toast), duration + 1000);
 

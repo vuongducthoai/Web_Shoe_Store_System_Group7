@@ -15,4 +15,10 @@ public class CategoryDTO {
     private String categoryName;
 
     private List<ProductDTO> productDTOList;
+
+
+    public CategoryDTO(int categoryId, String categoryNamet) {
+        this.categoryId = categoryId;
+        this.categoryName = categoryName;
+    }
 }

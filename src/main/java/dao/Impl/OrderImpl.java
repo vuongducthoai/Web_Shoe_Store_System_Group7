@@ -2,9 +2,7 @@ package dao.Impl;
 
 import JpaConfig.JpaConfig;
 import dao.IOrderDao;
-import dto.CartItemDTO;
-import dto.OrderDTO;
-import dto.OrderItemDTO;
+import dto.*;
 import entity.*;
 import enums.OrderStatus;
 import enums.PaymentMethod;
@@ -17,9 +15,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class OrderImpl implements IOrderDao {
-    public boolean CreateOrder(OrderDTO order){
+    public boolean CreateOrder(OrderDTO order,AddressDTO addressDTO){
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
@@ -28,6 +27,14 @@ public class OrderImpl implements IOrderDao {
                     "from Order o Where o.payment.momoBillId like :momoID",Order.class)
                     .setParameter("momoID",order.getPayment().getMomoBillId()).getResultList();
             if (order1.isEmpty()) {
+                String address = "";
+                if (addressDTO!=null){
+                    address+= addressDTO.getHouseNumber()+", ";
+                    address+= addressDTO.getStreetName()+", ";
+                    address+= addressDTO.getCity()+", ";
+                    address+= addressDTO.getDistrict()+", ";
+                    address+= addressDTO.getProvince();
+                }
                 Customer customer = entityManager.find(Customer.class, Integer.valueOf(order.getCustomer().getUserID()));
                 List<OrderItemDTO> ListOrderItem = order.getOrderItems();
                 List<OrderItem> orderItems = new ArrayList<OrderItem>();
@@ -35,6 +42,7 @@ public class OrderImpl implements IOrderDao {
                 orderEnty.setCustomer(customer);
                 orderEnty.setOrderDate(Date.from(Instant.now()));
                 orderEnty.setOrderStatus(OrderStatus.WAITING_CONFIRMATION);
+                orderEnty.setShippingAddress(address);
                 entityManager.persist(orderEnty);
                 for (OrderItemDTO item : ListOrderItem) {
                     OrderItem orderItem = new OrderItem();
@@ -125,5 +133,75 @@ public class OrderImpl implements IOrderDao {
             }
         }
         return true;
+    }
+    @Override
+    public List<OrderDTO> findAllOrders() {
+        try (EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager()) {
+            try {
+                // Truy vấn tất cả các Order
+                List<Order> orders = entityManager.createQuery("SELECT o FROM Order o", Order.class)
+                        .getResultList();
+
+                // Chuyển đổi từ Order sang OrderDTO
+                List<OrderDTO> orderDTOs = orders.stream().map(order -> {
+
+                    // Chuyển đổi Customer sang CustomerDTO
+                    CustomerDTO customerDTO = new CustomerDTO(
+                            order.getCustomer().getUserID(),
+                            order.getCustomer().getFullName(),
+                            order.getCustomer().getPhone(),
+                            order.getCustomer().isActive(),
+                            order.getCustomer().getDateOfBirth(),
+                            order.getCustomer().getLoyalty()
+                    );
+
+
+                    // Chuyển đổi Payment sang PaymentDTO
+                    PaymentDTO paymentDTO = new PaymentDTO(
+                            order.getPayment().getPaymentId(),
+                            null, // Quan hệ vòng lặp OrderDTO, có thể set null
+                            order.getPayment().getPaymentMethod(),
+                            order.getPayment().getAmount(),
+                            order.getPayment().getPaymentDate(),
+                            order.getPayment().isStatus(),
+                            order.getPayment().getMomoBillId()
+                    );
+
+                    // Tạo OrderDTO
+                    return new OrderDTO(
+                            String.valueOf(order.getOrderId()),  // Convert orderId to String
+                            customerDTO,
+                            null,
+                            paymentDTO,
+                            order.getShippingAddress(),
+                            order.getOrderStatus(),
+                            order.getOrderDate(),
+                            order.getStatus()
+                    );
+                }).collect(Collectors.toList());
+
+                return orderDTOs;
+            } finally {
+                entityManager.close();
+            }
+        }
+    }
+    @Override
+    public boolean updateOrderStatus(String orderId, OrderStatus newStatus) {
+        try (EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager()) {
+            entityManager.getTransaction().begin();
+
+            // Lấy đơn hàng theo orderId
+            Order order = entityManager.find(Order.class, orderId);
+            if (order != null) {
+                // Cập nhật trạng thái đơn hàng
+                order.setOrderStatus(newStatus);
+                entityManager.getTransaction().commit();
+                return true;
+            } else {
+                entityManager.getTransaction().rollback();
+                return false;
+            }
+        }
     }
 }
