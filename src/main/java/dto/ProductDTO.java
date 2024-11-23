@@ -1,5 +1,6 @@
 package dto;
 
+import entity.Review;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,7 @@ public class ProductDTO {
         this.productName = productName;
         this.price = price;
     }
+
 
     public ProductDTO(int productId, String productName, double price, byte[] imageUrl, String color, int size, boolean status, String description, List<CartItemDTO> cartItemDTOList, List<OrderItemDTO> orderItemDTOList, CategoryDTO categoryDTO, List<PromotionProductDTO> promotionDTO) {
         this.productId = productId;
@@ -59,6 +61,7 @@ public class ProductDTO {
     private CategoryDTO categoryDTO;
     private List<PromotionProductDTO> promotionProducts;
     private int quantity;
+    private List<ReviewDTO> reviewDTOList;
     public String getBase64Image() {
         if (image != null) {
             return "data:image/png;base64," + Base64.getEncoder().encodeToString(image);
