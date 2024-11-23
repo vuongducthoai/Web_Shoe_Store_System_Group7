@@ -18,4 +18,5 @@ public class ReviewDTO {
     private CustomerDTO customer;
     private String comment;
     private ResponseDTO response;
+    private ProductDTO productDTO;
 }
