@@ -395,7 +395,7 @@ section .main .button:hover i{
     transition: var(--transition-one);
 }
 .collection .btn-col{
-    margin-right: 5px;
+    margin: 10px;
     border: none;
     outline: none;
     border: 1px solid var(--first-gra-clr);
@@ -436,45 +436,6 @@ section .main .button:hover i{
 .col-footer .rating-num {
     color: black;
 }
-
-/* customer review section */
-.testimonial .sub-heading{
-    color: var(--first-gra-clr);
-    font-weight: bold;
-}
-.testimonial .wrapper{
-    gap: 30px;
-    align-items: center;
-}
-
-.testimonial figure{
-    width: 80px;
-}
-
-.testimonial .col{
-    align-items: center;
-    text-align: center;
-    gap: 20px;
-    padding: 1.2rem 1.4rem;
-    border-radius: var(--btn-radius);
-    background-color: var(--light-bg);
-    backdrop-filter: blur(10px);
-    z-index: 200;
-}
-
-.testimonial .col p{
-    font-size: var(--font-sm);
-    word-break: break-all;
-}
-
-.testimonial .col h3{
-    color: var(--first-gra-clr);
-}
-.testimonial .fa-star{
-    color: #ffd700;
-    margin-right: 4px;
-}
-
 
 @keyframes changing {
     0%{

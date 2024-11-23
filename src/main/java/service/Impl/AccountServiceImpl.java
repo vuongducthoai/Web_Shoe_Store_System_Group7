@@ -13,7 +13,7 @@ import util.PasswordHashingSHA;
 import java.security.NoSuchAlgorithmException;
 
 public class AccountServiceImpl implements IAccountService {
-   private IAccountDAO iAccountDAO = new AccountDaoImpl();
+    private IAccountDAO iAccountDAO = new AccountDaoImpl();
 
     @Override
     public boolean InsertAccount(AccountDTO accountDTO) {
@@ -51,7 +51,7 @@ public class AccountServiceImpl implements IAccountService {
         Account account = new Account();
         account.setEmail(accountDTO.getEmail());
         account.setPassword(passwordHash);
-        if(iAccountDAO.findAccountForLogin(account)){
+        if (iAccountDAO.findAccountForLogin(account)) {
             return true;
         }
         return false;
@@ -74,12 +74,33 @@ public class AccountServiceImpl implements IAccountService {
         }
         return null;
     }
-    public AccountDTO findAccoutByProvide(String provideID, AuthProvider authProvider){
-        Account account = iAccountDAO.findAccoutByProvide(provideID,authProvider);
+    @Override
+    public AccountDTO findAccoutByProvide(String provideID, AuthProvider authProvider) {
+        Account account = iAccountDAO.findAccoutByProvide(provideID, authProvider);
         if (account != null) {
             AccountDTO accountDTO = new AccountDTO();
             if (account.getUser() != null) {
                 accountDTO.setUser(new UserDTO());
+                accountDTO.getUser().setUserID(account.getUser().getUserID());
+                accountDTO.getUser().setActive(account.getUser().isActive());
+            }
+            accountDTO.setAccountID(account.getAccountID());
+            accountDTO.setRole(account.getRole());
+            return accountDTO;
+        }
+        return null;
+    }
+
+
+    @Override
+    public AccountDTO getAccountByID(int id) {
+        Account account = iAccountDAO.getAccountByID(id);
+        if (account != null) {
+            AccountDTO accountDTO = new AccountDTO();
+            if (account.getUser() != null) {
+                accountDTO.setUser(new UserDTO());
+                accountDTO.setEmail(account.getEmail());
+
                 accountDTO.getUser().setUserID(account.getUser().getUserID());
                 accountDTO.getUser().setActive(account.getUser().isActive());
             }

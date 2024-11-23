@@ -72,7 +72,7 @@ public class TokenForgetPw implements ITokenForgetPw {
         account.setAccountID(token.getAccountDTO().getAccountID());
         account.setPassword(passwordHash);
 
-        Account existingAccount = iAccountDAO.findAccountById(account.getAccountID());
+        Account existingAccount = iAccountDAO.getAccountByID(account.getAccountID());
         if (existingAccount != null) {
             existingAccount.setPassword(account.getPassword());
             tokenForgetPassword.setAccount(existingAccount);

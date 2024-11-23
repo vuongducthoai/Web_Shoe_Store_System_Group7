@@ -1,3 +1,4 @@
+
 package dao;
 
 import dto.CartItemDTO;
@@ -11,4 +12,5 @@ public interface IOrderDao {
     boolean CanCreateOrder(List<CartItemDTO> cartItem);
     List<OrderDTO> findAllOrders();
     boolean updateOrderStatus(String orderId, OrderStatus newStatus);
+    List<OrderDTO> findOrdersByCustomerId(int customerId);
 }

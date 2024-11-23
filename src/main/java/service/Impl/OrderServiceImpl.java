@@ -1,3 +1,4 @@
+
 package service.Impl;
 
 import dao.IOrderDao;
@@ -136,4 +137,9 @@ public class OrderServiceImpl implements IOrderService {
         }
         return filteredList;
     }
+    @Override
+    public List<OrderDTO> getOrdersByCustomerId(int customerId) {
+        return orderDao.findOrdersByCustomerId(customerId);
+    }
+
 }

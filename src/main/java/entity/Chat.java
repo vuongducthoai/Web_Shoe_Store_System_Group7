@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -17,10 +19,14 @@ public class Chat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int chatID;
 
-    @OneToOne
-    @JoinColumn(name = "userID")
-    private User user;
+
+    @JoinColumn(name = "userID", nullable = false) // Foreign key to Customer
+    private Customer customer;
 
     @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL)
     private List<Message> messages;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "createdDate", columnDefinition = "DATETIME DEFAULT NOW()")
+    private Date createdDate;
 }

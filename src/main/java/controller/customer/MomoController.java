@@ -43,6 +43,7 @@ public class MomoController extends HttpServlet {
         if (accountDTO==null || accountDTO.getUser()==null||!accountDTO.getUser().isActive()){
             session.invalidate();
             resp.sendRedirect("/view/login.jsp");
+            return;
         }
         if (accountDTO.getRole()== RoleType.ADMIN){
             return;
@@ -64,6 +65,7 @@ public class MomoController extends HttpServlet {
         if (accountDTO==null || accountDTO.getUser()==null||!accountDTO.getUser().isActive()){
             session.invalidate();
             resp.sendRedirect("/view/login.jsp");
+            return;
         }
         if (accountDTO.getRole()== RoleType.ADMIN){
             return;
@@ -78,6 +80,10 @@ public class MomoController extends HttpServlet {
     }
 
     protected void Callback(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
+        AccountDTO accountDTO = (AccountDTO) session.getAttribute("user");
+        int idUser = accountDTO.getUser().getUserID();
+        AddressDTO addressDTO = addressService.getAddressByID(idUser);
         String orderId = req.getParameter("orderId");
         String requestId = req.getParameter("requestId");
         String partnerCode = req.getParameter("partnerCode");
@@ -106,7 +112,7 @@ public class MomoController extends HttpServlet {
         if (response.statusCode() == 200) {
             JSONObject jsonKQ = new JSONObject((response.body()));
             if (jsonKQ.getInt("resultCode")==0){
-                if (orderService.CreateOrder(jsonKQ.toString()))
+                if (orderService.CreateOrder(jsonKQ.toString(),addressDTO))
                     getServletContext().getRequestDispatcher("/view/customer/paySuccess.jsp").forward(req, resp);
                 else
                     getServletContext().getRequestDispatcher("/view/customer/payError.jsp").forward(req, resp);
