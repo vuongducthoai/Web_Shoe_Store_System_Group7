@@ -23,9 +23,16 @@
       <div class="slides-container">
         <div class="slide">
           <div class="main_content">
-            <div class="main_text">
-              <h1>NIKE<br><span>Collection</span></h1>
-              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry...</p>
+            <div>
+              <div class="main_text">
+                <h1>NIKE<br><span>Collectiona</span></h1>
+                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry...</p>
+                <button style="margin: 100px 0 0 50px;" class="btn btn-hero">pre-order now</button>
+              </div>
+              <div style="margin-top: 200px;" class="hero-img-off" data-aos="zoom-in-up">
+                <h3 class="heading-three">get up to 50% OFF</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est inventore </p>
+              </div>
             </div>
             <div class="main_image">
               <img src="../image/shoes.png">
@@ -34,23 +41,37 @@
         </div>
         <div class="slide">
           <div class="main_content">
-            <div class="main_text">
-              <h1>Adidas<br><span>New Arrivals</span></h1>
-              <p>The latest collection of Adidas with innovative designs and styles.</p>
+            <div>
+              <div class="main_text">
+                <h1>NIKE<br><span>Collectiona</span></h1>
+                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry...</p>
+                <button style="margin: 100px 0 0 50px;" class="btn btn-hero">pre-order now</button>
+              </div>
+              <div style="margin-top: 200px;" class="hero-img-off" data-aos="zoom-in-up">
+                <h3 class="heading-three">get up to 50% OFF</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est inventore </p>
+              </div>
             </div>
             <div class="main_image">
-              <img src="../image/shoes2.png" alt="Shoe 2">
+              <img src="../image/shoes.png">
             </div>
           </div>
         </div>
         <div class="slide">
           <div class="main_content">
-            <div class="main_text">
-              <h1>Puma<br><span>Exclusive</span></h1>
-              <p>Get the most exclusive Puma shoes available now!</p>
+            <div>
+              <div class="main_text">
+                <h1>NIKE<br><span>Collectiona</span></h1>
+                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry...</p>
+                <button style="margin: 100px 0 0 50px;" class="btn btn-hero">pre-order now</button>
+              </div>
+              <div style="margin-top: 200px;" class="hero-img-off" data-aos="zoom-in-up">
+                <h3 class="heading-three">get up to 50% OFF</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est inventore </p>
+              </div>
             </div>
             <div class="main_image">
-              <img src="../image/shoes3.png" alt="Shoe 3">
+              <img src="../image/shoes.png">
             </div>
           </div>
         </div>

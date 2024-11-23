@@ -24,9 +24,19 @@ window.onload = function () {
         updateHeroSlidePosition();
     }
 
-    heroNextBtn.addEventListener('click', nextHeroSlide);
-    heroPrevBtn.addEventListener('click', prevHeroSlide);
+    let heroInterval = setInterval(nextHeroSlide, 4000);
 
+    heroNextBtn.addEventListener('click', () => {
+        clearInterval(heroInterval); // Dừng tự động
+        nextHeroSlide();
+        heroInterval = setInterval(nextHeroSlide, 3000); // Khởi động lại
+    });
+
+    heroPrevBtn.addEventListener('click', () => {
+        clearInterval(heroInterval);
+        prevHeroSlide();
+        heroInterval = setInterval(nextHeroSlide, 3000);
+    });
 
     // Testimonial Slider
     const testimonialWrapper = document.querySelector('#testimonial-slider .slides-review');
@@ -57,4 +67,5 @@ window.onload = function () {
 
     testimonialNextBtn.addEventListener('click', nextTestimonialSlide);
     testimonialPrevBtn.addEventListener('click', prevTestimonialSlide);
+    setInterval(nextTestimonialSlide, 4000);
 };
