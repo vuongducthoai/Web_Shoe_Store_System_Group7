@@ -11,6 +11,5 @@ public class ReviewServiceImpl implements IReviewService {
     private IReviewDAO reviewDAO = new ReviewDAOImpl();
     public List<ReviewDTO> getReviewsByProductID(List<Integer> productID) {
         return reviewDAO.getReviewsByProductID(productID);
-
     }
 }
