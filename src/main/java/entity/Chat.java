@@ -19,9 +19,9 @@ public class Chat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int chatID;
 
-
-    @JoinColumn(name = "userID", nullable = false) // Foreign key to Customer
-    private Customer customer;
+    @OneToOne
+    @JoinColumn(name = "userID")
+    private User user;
 
     @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL)
     private List<Message> messages;
