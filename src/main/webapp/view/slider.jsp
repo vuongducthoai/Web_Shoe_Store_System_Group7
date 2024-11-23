@@ -17,7 +17,7 @@
   </style>
 </head>
 <body>
-<section class="hero">
+<section class="hero" id="hero-slider">
   <div class="main" id="Home">
     <div class="slider">
       <div class="slides-container">
@@ -25,19 +25,13 @@
           <div class="main_content">
             <div class="main_text">
               <h1>NIKE<br><span>Collection</span></h1>
-              <p>
-                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
-                been the industry's standard dummy text ever since the 1500s, when an unknown printer took
-                a galley of type and scrambled it to make a type specimen book. It has survived not only
-                five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
-              </p>
+              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry...</p>
             </div>
             <div class="main_image">
               <img src="../image/shoes.png">
             </div>
           </div>
         </div>
-
         <div class="slide">
           <div class="main_content">
             <div class="main_text">
@@ -49,7 +43,6 @@
             </div>
           </div>
         </div>
-
         <div class="slide">
           <div class="main_content">
             <div class="main_text">
@@ -63,15 +56,14 @@
         </div>
       </div>
     </div>
-
     <div class="slider-controls">
       <button class="prev"><i style="color: white" class="fa-solid fa-chevron-left"></i></button>
       <button class="next"><i style="color: white" class="fa-solid fa-chevron-right"></i></button>
     </div>
   </div>
 </section>
-<script src="../js/slider.js">
 
+<script src="../js/slider.js">
 </script>
 </body>
 </html>

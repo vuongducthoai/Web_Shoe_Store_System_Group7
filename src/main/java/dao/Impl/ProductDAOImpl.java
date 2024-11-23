@@ -130,6 +130,7 @@ public class ProductDAOImpl implements IProductDAO {
                     );
                 }
 
+                System.out.println(categoryDTO.getCategoryName());
                 // Tạo đối tượng ProductDTO
                 ProductDTO dto = new ProductDTO(
                         product.getProductName(),
@@ -141,7 +142,6 @@ public class ProductDAOImpl implements IProductDAO {
                         product.getDescription(),
                         product.isStatus()
                 );
-
                 productDTOs.add(dto); // Thêm vào danh sách
             }
             return productDTOs;

@@ -1,7 +1,5 @@
 package dto;
 
-import entity.Category;
-import entity.PromotionProduct;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
