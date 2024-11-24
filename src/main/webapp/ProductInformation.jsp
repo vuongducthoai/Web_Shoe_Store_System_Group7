@@ -23,7 +23,7 @@
         <div class="product-detail w-100">
             <div class="row">
                 <div class="col-sm-6 d-flex">
-                    <div class="product-image-list col-sm-3 d-flex flex-column">
+                    <div class="product-image-list col-sm-3 d-flex flex-column me-2">
 
                         <c:forEach var="image" items="${images}">
                             <img src="${image}" alt="" class="product-images-item mb-1 h-auto rounded-4">
@@ -31,6 +31,8 @@
                     </div>
                     <img src="${images[0]}" alt="" class="product-image-focus col-sm-9 img-fluid rounded-4">
                 </div>
+
+
                 <div class="product-describe col-sm-6 d-flex flex-column">
                     <h3 class="product-name fw-bolder fs-1 ">${name}</h3>
                     <div class="rated d-flex">
@@ -97,33 +99,35 @@
         </c:if>
         <div class="reviews d-flex flex-wrap row">
             <c:forEach var="review" items="${reviews}">
-                    <div class="col-6 mt-3">
-                            <div class="reviews-container border rounded-3 container-fluid" style="min-height: 200px; position: relative;">
-                                <div class="rated mt-2">
-                                    <span class="rated-number">${review.ratingValue}</span>
-                                    <i class="fa-solid fa-star me-1"></i>
-                                    <span class="rated-writer fw-bolder fs-4 d-block mt-2">${review.customer.getFullName()}</span>
-                                    <span class="rated-content d-block">${review.comment}</span><br>
-                                    <span class="rated-date mb-3 ">${review.date}</span>
-                                </div>
-
-                                <c:if test="${review.response != null}">
-                                    <div class="response-container mb-2 d-flex justify-content-between">
-                                        <div class="m-2">
-                                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                                            <span class="response-name">${review.response.admin.fullName}</span><br>
-                                            <span class="response-content">${review.response.content}</span><br>
-                                            <span class="response-date fw-lighter" style="font-size: 10px">${review.response.timeStamp}</span><br>
-                                            <input type="hidden"  id="ResponseID" value="${review.response.responseID}">
-                                        </div>
-                                    </div>
-                                </c:if>
-                                <c:if test="${role == 1}">
-                                    <button type="button" class="btn bg-dark rounded-pill ms-auto me-2 mb-1 mt-2 " data-bs-toggle="modal" data-bs-target="#responseModal"
-                                            onclick="document.getElementById('modalReviewID').value = '${review.reviewID}'"
-                                            style="color:white" >Phản hồi</button>
-                                </c:if>
+                <div class="col-6 mt-3">
+                    <div class="reviews-container border rounded-3 container-fluid" style="min-height: 200px; position: relative;">
+                        <div class="rated mt-2">
+                            <span class="rated-number">${review.ratingValue}</span>
+                            <i class="fa-solid fa-star me-1"></i>
+                            <span class="rated-writer fw-bolder fs-4 d-block mt-2">${review.customer.getFullName()}</span>
+                            <span class="rated-content d-block">${review.comment}<br>
+                                <span class="rated-date mb-3 ">${review.date}</span>
                         </div>
+
+                        <c:if test="${review.getResponse().getResponseID() != 0}">
+                            <div class="response-container mb-2 d-flex justify-content-between">
+                                <div class="m-2">
+                                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                                    <span class="response-name">${review.response.admin.fullName}</span><br>
+                                    <span class="response-content">${review.response.content}</span><br>
+                                    <span class="response-date fw-lighter" style="font-size: 10px">${review.response.timeStamp}</span><br>
+                                        <%--<input type="hidden"  id="ResponseID" value="${review.getResponse().getResponseID()}">--%>
+                                </div>
+                            </div>
+                        </c:if>
+                        <c:if test="${role == 1}">
+                            <button type="button" class="btn bg-dark rounded-pill ms-auto me-2 mb-1 mt-2 " data-bs-toggle="modal" data-bs-target="#responseModal"
+                                    onclick="document.getElementById('modalReviewID').value = '${review.getReviewID()}';
+                                            document.getElementById('modalResponseID').value = '${review.getResponse().getResponseID()}';"
+
+                                    style="color:white" >Phản hồi</button>
+                        </c:if>
+                    </div>
 
 
 

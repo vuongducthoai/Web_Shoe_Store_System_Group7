@@ -67,6 +67,9 @@ public class ProductInformationController extends HttpServlet {
                     .map(ProductDTO::getProductId)
                     .distinct().toList();
             List<ReviewDTO> reviews = reviewService.getReviewsByProductID(IDs);
+
+
+
             req.setAttribute("reviews", reviews);
             req.setAttribute("averageRating", reviewService.averageRating(reviews));
 
@@ -85,7 +88,7 @@ public class ProductInformationController extends HttpServlet {
 
 
 
-
+            req.setAttribute("productDetails", productDetails);
             req.getRequestDispatcher("/ProductInformation.jsp").forward(req, resp);
         }
 
@@ -98,24 +101,26 @@ public class ProductInformationController extends HttpServlet {
 
 
         try{
-            String productName = req.getParameter("productName");
+            String productName = req.getParameter("productName").trim();
             if (productName == null || productName.trim().isEmpty()) {
                 req.setAttribute("error", "Tên sản phẩm không được cung cấp.");
-                req.getRequestDispatcher("/error.jsp").forward(req, resp);
+                req.getRequestDispatcher("/errorNULL.jsp").forward(req, resp);
                 return;
             }
 
             String reviewIDStr = req.getParameter("reviewID");
             String responseContent = req.getParameter("responseContent");
-            String responseIDStr = req.getParameter("responseID");
+            String responseIDStr = req.getParameter("ResponseID");
+
             int reviewID=0;
-            if(reviewIDStr != null || !reviewIDStr.trim().isEmpty()) {
+            if (reviewIDStr != null && !reviewIDStr.trim().isEmpty()) {
                 reviewID = Integer.parseInt(reviewIDStr);
             }
-            int responseID=0;
-            if(responseIDStr != null || !responseIDStr.trim().isEmpty()) {
-                responseID = Integer.parseInt(responseIDStr);
-            }
+
+
+            int responseID = Integer.parseInt(responseIDStr);
+
+
 
             ReviewDTO reviewDTO = new ReviewDTO();
             reviewDTO.setReviewID(reviewID);
@@ -134,11 +139,17 @@ public class ProductInformationController extends HttpServlet {
 
             if(responseService.addResponse(response)) {
                 String redirectURL = req.getContextPath() + "/product/details?productName=" + productName;
-                System.out.println("Redirect URL: " + redirectURL);
                 resp.sendRedirect(redirectURL);
-            }else  req.getRequestDispatcher("/error.jsp").forward(req, resp);
+            }else  {
+                req.getRequestDispatcher("/errorAddFalse.jsp").forward(req, resp);
+                return;
+            }
         }catch (Exception e) {
             System.out.println(e.getMessage());
+            e.printStackTrace();
+            req.setAttribute("error", "Có lỗi xảy ra: " + e.getMessage());
+            req.getRequestDispatcher("/errorCatch.jsp").forward(req, resp);
+            return;
         }
 
         //doGet(req, resp);
