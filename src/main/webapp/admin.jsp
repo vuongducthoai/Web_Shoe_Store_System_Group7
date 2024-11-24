@@ -7,6 +7,10 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -18,7 +22,30 @@
 
     <!-- bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
 
+        /* Cố định độ rộng cho các cột */
+        .table th:nth-child(1), .table td:nth-child(1) {
+        }
+        .table th:nth-child(2), .table td:nth-child(2) {
+            min-width: 165px; /* Cột Tên Khách Hàng */
+        }
+        .table th:nth-child(3), .table td:nth-child(3) {
+            min-width: 240px; /* Cột Email */
+        }
+        .table th:nth-child(4), .table td:nth-child(4) {
+            min-width: 130px; /* Cột Mật khẩu */
+        }
+        .table th:nth-child(5), .table td:nth-child(5) {
+            min-width: 120px;/* Cột Số điện thoại */
+        }
+        .table th:nth-child(6), .table td:nth-child(6) {
+            min-width: 100px; /* Cột Trạng thái */
+        }
+        .table th:nth-child(7), .table td:nth-child(7) {
+            min-width: 150px; /* Cột Hành động */
+        }
+    </style>
 
 
 </head>
@@ -294,43 +321,52 @@
             </div>
             <!-- Kết thúc quản lý danh mục sản phẩm -->
 
-            <!-- Quản lý tài khoản khách hàng  -->
-            <div class="account-management" id="account-management">
+            <!-- Bắt đầu quản lý tài khoản -->
+            <div class="account-management" id="account-management" style="display: none;">
                 <div class="title">Quản lý tài khoản khách hàng</div>
-                <input type="text" id="name-custommer" placeholder="Nhập họ tên khách hàng">
-                <button class="action-btn">Tìm</button>
+                <input type="text" id="search-input" placeholder="Tìm kiếm theo tên khách hàng" >
+                <button class="action-btn" onclick="searchCustomer()">Tìm</button>
                 <div class="table-container">
                     <table class="table table-bordered table-hover">
-                        <tr class="row-dark">
+                        <thead>
+                        <tr>
                             <th>ID</th>
                             <th>Tên Khách Hàng</th>
                             <th>Email</th>
                             <th>Mật khẩu</th>
                             <th>Số điện thoại</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
                         </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Luc</td>
-                            <td>lelamluc1234@gmail.com</td>
-                            <td>12345</td>
-                            <td>0947332839</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Luc2</td>
-                            <td>lela31mluc1234@gmail.com</td>
-                            <td>12345</td>
-                            <td>0947332839</td>
-                        </tr>
+                        </thead>
+                        <tbody id="account-table-body">
+                        <c:forEach var="account" items="${accounts}">
+                            <tr
+                                <%--ghi nhớ dữ liệu full của 3 cột--%>
+                                data-account-name="${account.user.fullName}"
+                                data-account-email="${account.email}"
+                                data-account-password="${account.password}">
+
+                                <td>${account.accountID}</td>
+                                <td>${fn:substring(account.user.fullName, 0, 17)}<c:if test="${fn:length(account.user.fullName) > 17}">...</c:if></td>
+                                <td>${fn:substring(account.email, 0, 25)}<c:if test="${fn:length(account.email) > 25}">...</c:if></td>
+                                <td>${fn:substring(account.password, 0, 10)}<c:if test="${fn:length(account.password) > 10}">...</c:if></td>
+                                <td>${account.user.phone}</td>
+                                <td class="status">${account.user.active ? 'Hoạt động' : 'Bị chặn'}</td>
+                                <td><button class="btn btn-primary btn-history" data-customer-id="${account.accountID}">Xem lịch sử</button></td>
+                            </tr>
+                        </c:forEach>
+                        </tbody>
+
                     </table>
                 </div>
                 <br>
                 <div class="account-management-actions">
                     <button class="action-btn" id="btn-account-management-actions-view">Xem thông tin chi tiết khách hàng</button>
                     <button class="action-btn" id="btn-account-management-actions-edit">Sửa thông tin khách hàng</button>
-                    <button class="action-btn" id="btn-account-management-actions-delete">Chặn khách hàng</button>
+                    <button class="action-btn" id="btn-account-management-actions-block">Chặn khách hàng</button>
+                    <button class="action-btn" id="btn-account-management-actions-unblock">Bỏ chặn khách hàng</button>
                 </div>
-
                 <!-- xem thông tin khách hàng  -->
                 <div class="account-management-form" id="view-account-management-form">
                     <h3>Thông tin chi tiết</h3>
@@ -349,32 +385,72 @@
                     <label for="view-account-phone">SĐT</label>
                     <input type="text" id="view-account-phone">
 
-                    <label for="account-buy">Lịch sử mua hàng</label>
-                    <input type="text" id="account-buy">
                 </div>
 
                 <!-- sửa thông tin khách hàng  -->
-                <div class="account-management-form" id="edit-account-management-form">
-                    <h3>Sửa thông tin khách hàng</h3>
-                    <label for="edit-account-id">ID</label>
-                    <input type="text" id="edit-account-id">
+                <form action="${pageContext.request.contextPath}/AccountController" method="POST">
+                    <div class="account-management-form" id="edit-account-management-form">
+                        <h3>Sửa thông tin khách hàng</h3>
+                        <input type="hidden" name="action" value="update">
+                        <label for="edit-account-id-display">ID</label>
+                        <input type="text" id="edit-account-id-display" name="accountID" readonly> <!-- ID chỉ để xem -->
+                        <label for="edit-account-name">Họ Tên</label>
+                        <input type="text" name="fullName" id="edit-account-name">
+                        <label for="edit-account-email">Email</label>
+                        <input type="text" name="email" id="edit-account-email">
 
-                    <label for="edit-account-name">Họ Tên</label>
-                    <input type="text" id="edit-account-name">
+                        <label for="edit-account-pass">Mật Khẩu</label>
+                        <input type="text" name="password" id="edit-account-pass">
 
-                    <label for="edit-account-email">Email</label>
-                    <input type="text" id="edit-account-email">
+                        <label for="edit-account-phone">SĐT</label>
+                        <input type="text" name="phone" id="edit-account-phone">
 
-                    <label for="edit-account-pass">Mật Khẩu</label>
-                    <input type="text" id="edit-account-pass">
+                        <button class="action-btn" type="submit">Sửa thông tin</button>
 
-                    <label for="edit-account-phone">SĐT</label>
-                    <input type="text" id="edit-account-phone">
+                    </div>
+                </form>
+                <!-- chặn khách hàng  -->
 
-                    <button class="action-btn">Sửa thông tin</button>
+                <form action="${pageContext.request.contextPath}/AccountController" method="POST">
+                    <div class="account-management-form" id="block-account-management-form">
+                        <h3>Chặn tài khoản khách hàng</h3>
+                        <input type="hidden" name="action" value="block">
+                        <label for="block-account-id">ID</label>
+                        <input type="text" id="block-account-id" name="accountID" readonly>
+                        <button class="action-btn" type="submit">Chặn</button>
+                    </div>
+                </form>
+
+                <!--bỏ chặn khách hàng  -->
+                <form action="${pageContext.request.contextPath}/AccountController" method="POST">
+                    <div class="account-management-form" id="unBlock-account-management-form">
+                        <h3> Bỏ chặn tài khoản khách hàng</h3>
+                        <input type="hidden" name="action" value="unblock">
+                        <label for="unBlock-account-id">ID</label>
+                        <input type="text" id="unBlock-account-id" name="accountID" readonly>
+                        <button class="action-btn" type="submit">Bỏ chặn</button>
+                    </div>
+                </form>
+                <!-- Popup lịch sử đơn hàng -->
+                <div class="order-history-popup" id="order-history-popup" style="display: none;">
+                    <h3>Lịch sử đơn hàng</h3>
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>ID đơn hàng</th>
+                            <th>Ngày mua</th>
+                            <th>Sản phẩm</th>
+                            <th>Tổng tiền</th>
+                        </tr>
+                        </thead>
+                        <tbody id="order-history-content">
+                        <!-- Nội dung sẽ được cập nhật bằng JavaScript -->
+                        </tbody>
+                    </table>
+                    <button class="btn btn-secondary" id="close-history-popup">Đóng</button>
                 </div>
             </div>
-            <!-- kết thúc quản lý tài khoản khách hàng -->
+
 
             <!-- chức năng quản lý đơn hàng -->
             <div class="order-management" id="order-management">
@@ -696,18 +772,37 @@
 
         var viewInfor = document.querySelector("#view-account-management-form");
         var editInfor = document.querySelector("#edit-account-management-form");
+        var blockInfor = document.querySelector("#block-account-management-form");
+        var unBlockInfor = document.querySelector("#unBlock-account-management-form");
 
 
         document.getElementById("btn-account-management-actions-view").addEventListener("click", function(event) {
             viewInfor.style.display="flex";
             editInfor.style.display="none";
+            blockInfor.style.display="none";
+            unBlockInfor.style.display="none";
 
         });
         document.getElementById("btn-account-management-actions-edit").addEventListener("click", function(event) {
             viewInfor.style.display="none";
             editInfor.style.display="flex";
+            blockInfor.style.display="none";
+            unBlockInfor.style.display="none";
 
         });
+        document.getElementById("btn-account-management-actions-block").addEventListener("click", function(event) {
+            viewInfor.style.display="none";
+            editInfor.style.display="none";
+            blockInfor.style.display="flex";
+            unBlockInfor.style.display="none";
+        });
+        document.getElementById("btn-account-management-actions-unblock").addEventListener("click", function(event) {
+            viewInfor.style.display="none";
+            editInfor.style.display="none";
+            blockInfor.style.display="none";
+            unBlockInfor.style.display="flex";
+        });
+
     });
 
     // Lắng nghe sự kiện khi người dùng click vào "Quản lý đơn hàng"
@@ -809,6 +904,152 @@
         promotionManagement.style.display="block";
 
     });
+
+    function searchCustomer() {
+        // Lấy giá trị tìm kiếm từ input
+        var input = document.getElementById("search-input").value.toLowerCase();
+        var table = document.getElementById("account-table-body");
+        var rows = table.getElementsByTagName("tr");
+
+        // Duyệt qua tất cả các hàng trong bảng và ẩn những hàng không khớp với từ khóa
+        for (var i = 0; i < rows.length; i++) {
+            var cells = rows[i].getElementsByTagName("td");
+            var match = false;
+
+            // Kiểm tra trong mỗi cột, nếu cột nào có dữ liệu khớp với từ khóa tìm kiếm, hiển thị hàng
+            for (var j = 0; j < cells.length; j++) {
+                if (cells[j].textContent.toLowerCase().includes(input)) {
+                    match = true;
+                    break;
+                }
+            }
+
+            // Nếu có từ khóa trùng, hiển thị hàng, ngược lại ẩn hàng
+            if (match) {
+                rows[i].style.display = "";
+            } else {
+                rows[i].style.display = "none";
+            }
+        }
+    }
+
+    // xem chi tiết account
+    document.addEventListener('DOMContentLoaded', function () {
+        const tableBody = document.getElementById('account-table-body');
+        const detailForm = document.getElementById('view-account-management-form');
+
+        // Các trường chi tiết
+        const inputID = document.getElementById('view-account-id');
+        const inputName = document.getElementById('view-account-name');
+        const inputEmail = document.getElementById('view-account-email');
+        const inputPassword = document.getElementById('view-account-pass');
+        const inputPhone = document.getElementById('view-account-phone');
+
+        // Gắn sự kiện dblclick cho từng dòng trong bảng
+        tableBody.addEventListener('dblclick', function (event) {
+            const targetRow = event.target.closest('tr'); // Tìm hàng chứa phần tử được nhấp đúp
+            if (targetRow) {
+                // Lấy dữ liệu từ các cột
+                const accountID = targetRow.cells[0].innerText.trim();
+                const fullName = targetRow.getAttribute('data-account-name');
+                const email = targetRow.getAttribute('data-account-email');
+
+                const password = targetRow.getAttribute('data-account-password');
+                const phone = targetRow.cells[4].innerText.trim();
+
+                // Điền dữ liệu vào form
+                inputID.value = accountID;
+                inputName.value = fullName;
+                inputEmail.value = email;
+                inputPassword.value = password;
+                inputPhone.value = phone;
+                inputHistory.value = history;
+
+                // Hiển thị form nếu chưa hiển thị
+            }
+        });
+    });
+    // sửa account
+    document.addEventListener('DOMContentLoaded', function () {
+        const tableBody = document.getElementById('account-table-body');
+        const detailForm = document.getElementById('view-account-management-form');
+
+        // Các trường chi tiết
+        const inputID = document.getElementById('edit-account-id-display');
+        const inputName = document.getElementById('edit-account-name');
+        const inputEmail = document.getElementById('edit-account-email');
+        const inputPassword = document.getElementById('edit-account-pass');
+        const inputPhone = document.getElementById('edit-account-phone');
+
+        // Gắn sự kiện dblclick cho từng dòng trong bảng
+        tableBody.addEventListener('dblclick', function (event) {
+            const targetRow = event.target.closest('tr'); // Tìm hàng chứa phần tử được nhấp đúp
+            if (targetRow) {
+                // Lấy dữ liệu từ các cột
+                const accountID = targetRow.cells[0].innerText.trim();
+                const fullName = targetRow.getAttribute('data-account-name');
+                const email = targetRow.getAttribute('data-account-email');
+
+                const password = targetRow.getAttribute('data-account-password');
+                const phone = targetRow.cells[4].innerText.trim();
+
+                // Điền dữ liệu vào form
+                inputID.value = accountID;
+                inputName.value = fullName;
+                inputEmail.value = email;
+                inputPassword.value = password;
+                inputPhone.value = phone;
+                inputHistory.value = history;
+
+                // Hiển thị form nếu chưa hiển thị
+            }
+        });
+    });
+    // blockAccount
+    document.addEventListener('DOMContentLoaded', function () {
+        const tableBody = document.getElementById('account-table-body');
+        const detailForm = document.getElementById('view-account-management-form');
+
+        // Các trường chi tiết
+        const inputID = document.getElementById('block-account-id');
+
+        // Gắn sự kiện dblclick cho từng dòng trong bảng
+        tableBody.addEventListener('dblclick', function (event) {
+            const targetRow = event.target.closest('tr'); // Tìm hàng chứa phần tử được nhấp đúp
+            if (targetRow) {
+                // Lấy dữ liệu từ các cột
+                const accountID = targetRow.cells[0].innerText.trim();
+
+                // Điền dữ liệu vào form
+                inputID.value = accountID;
+
+                // Hiển thị form nếu chưa hiển thị
+            }
+        });
+    });
+    // unblock
+    document.addEventListener('DOMContentLoaded', function () {
+        const tableBody = document.getElementById('account-table-body');
+        const detailForm = document.getElementById('view-account-management-form');
+
+        // Các trường chi tiết
+        const inputID = document.getElementById('unBlock-account-id');
+
+        // Gắn sự kiện dblclick cho từng dòng trong bảng
+        tableBody.addEventListener('dblclick', function (event) {
+            const targetRow = event.target.closest('tr'); // Tìm hàng chứa phần tử được nhấp đúp
+            if (targetRow) {
+                // Lấy dữ liệu từ các cột
+                const accountID = targetRow.cells[0].innerText.trim();
+
+                // Điền dữ liệu vào form
+                inputID.value = accountID;
+
+                // Hiển thị form nếu chưa hiển thị
+            }
+        });
+    });
+
 
 
     function editProduct(button) {
