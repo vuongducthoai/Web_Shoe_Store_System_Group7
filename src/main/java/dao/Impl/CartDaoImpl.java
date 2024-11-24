@@ -170,7 +170,43 @@ public class CartDaoImpl implements ICartDao {
             return false;
         }
     }
-
+    public boolean AddItemWithQuantity(int idProduct,int userId,int quantity){
+        try {
+            EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+            Cart cart = entityManager.createQuery("select p " +
+                            "from Cart p where p.customer.userID = :idUser",Cart.class)
+                    .setParameter("idUser",Integer.valueOf(userId)).getSingleResult();
+            Product product = entityManager.find(Product.class, Integer.valueOf(idProduct));
+            String queryStr = "select p " +
+                    "from CartItem p where p.cart = :cartId and p.product.productName like :name and " +
+                    "p.product.size = :size_i and p.product.color like :Color_i ";
+            Query query = entityManager.createQuery(queryStr,CartItem.class);
+            query.setParameter("cartId",cart);
+            query.setParameter("name",product.getProductName());
+            query.setParameter("Color_i",product.getColor());
+            query.setParameter("size_i",Integer.valueOf(product.getSize()));
+            List<CartItem> cartItemL =  query.getResultList();
+            EntityTransaction transaction = entityManager.getTransaction();
+            transaction.begin();
+            if (!cartItemL.isEmpty()) {
+                CartItem cartItem = cartItemL.get(0); // Lấy đối tượng đầu tiên
+                cartItem.setQuantity(cartItem.getQuantity() + quantity);
+            }
+            else {
+                CartItem cartItem1 = new CartItem();
+                cartItem1.setCart(cart);
+                cartItem1.setProduct(product);
+                cartItem1.setQuantity(quantity);
+                entityManager.persist(cartItem1);
+                cart.getCardItems().add(cartItem1);
+            }
+            transaction.commit();
+            return true;
+        }
+        catch (Exception e) {
+            return false;
+        }
+    }
     public boolean canAdd(int idProduct,int userId){
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
         Customer customer = entityManager.find(Customer.class, Integer.valueOf(userId));
@@ -204,7 +240,39 @@ public class CartDaoImpl implements ICartDao {
             return count > 0;
         }
     }
-
+    public boolean canAddQuantity(int idProduct,int userId,int quantity){
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        Customer customer = entityManager.find(Customer.class, Integer.valueOf(userId));
+        Cart cart = customer.getCart();
+        Product product = entityManager.find(Product.class, Integer.valueOf(idProduct));
+        String queryStr = "select p " +
+                "from CartItem p where p.cart = :cartId and p.product.productName like :name and " +
+                "p.product.size = :size_i and p.product.color like :Color_i ";
+        Query query = entityManager.createQuery(queryStr);
+        query.setParameter("cartId",cart);
+        query.setParameter("name",product.getProductName());
+        query.setParameter("Color_i",product.getColor());
+        query.setParameter("size_i",Integer.valueOf(product.getSize()));
+        List<CartItem> cartItemL = query.getResultList();
+        String queryStr1 = "select count (*)" +
+                "from Product p where productName like :name and " +
+                "p.size = :size_i and color like :Color_i and status = :status";
+        Query query1 = entityManager.createQuery(queryStr1);
+        query1.setParameter("name",product.getProductName());
+        query1.setParameter("size_i",Integer.valueOf(product.getSize()));
+        query1.setParameter("Color_i",product.getColor());
+        query1.setParameter("status",Boolean.valueOf(true));
+        Long count = (Long) query1.getSingleResult();
+        if (!cartItemL.isEmpty()) {
+            CartItem cartItem = cartItemL.get(0);
+            if (count>=cartItem.getQuantity()+quantity)
+                return true;
+            else return false;
+        }
+        else {
+            return count >= quantity;
+        }
+    }
     @Override
     public AddressDTO getAddressUser(int idUser) {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
