@@ -221,7 +221,7 @@ section .main .main_content .main_text h1{
     font-size: 90px;
     line-height: 70px;
     font-family: pyxidium quick;
-    background: linear-gradient(to right, #c72092,#6c14d0);
+    background: linear-gradient(to right, green,greenyellow);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     position: relative;
@@ -231,12 +231,13 @@ section .main .main_content .main_text h1{
 
 section .main .main_content .main_text h1 span{
     font-size: 70px;
-    background: linear-gradient(to right, #c72092,#6c14d0);
+    background: linear-gradient(to right,green,greenyellow);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
 section .main .main_content .main_text p{
+    color: tomato;
     width: 600px;
     text-align: justify;
     line-height: 21px;
@@ -267,7 +268,7 @@ section .main .social_icon i{
 }
 
 section .main .social_icon i:hover{
-    color: #c72092;
+    color: gold;
 }
 
 section .main .button{
@@ -275,7 +276,7 @@ section .main .button{
     left: 6%;
     padding: 10px 20px;
     border-radius: 30px;
-    background: linear-gradient(to right,#c72092 , #6c14d0);
+    background: linear-gradient(to right,green , greenyellow);
 }
 
 section .main .button a{
@@ -332,7 +333,7 @@ section .main .button:hover i{
 }
 
 .col-body .col-footer .shoe-btn:hover {
-    background-color: #b60af5;
+    background-color: green;
 }
 
 /* about us section */

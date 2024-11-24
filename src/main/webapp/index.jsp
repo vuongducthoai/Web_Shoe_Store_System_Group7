@@ -134,13 +134,12 @@
                     <div class="col-footer">
                         <p  class="shoe-price">${product.price}₫</p>
                         <p  class="sub-heading">Đã bán :${product.quantity}</p>
-                        <p class="rating-icon"><i class="fa-solid fa-star"></i> <span class="rating-num">4.9</span></p>
                     </div>
                 </div>
             </div>
         </c:forEach>
     </div>
-    <button style="margin-top: 20px; background-color: aqua;" id="load-more-btn" class="btn">Load More</button>
+    <button style="margin-top: 20px; background-color: #baba14;" id="load-more-btn" class="btn">Load More</button>
 </section>
 <!-- customer review -->
 <jsp:include page="view/customer/review.jsp"></jsp:include>

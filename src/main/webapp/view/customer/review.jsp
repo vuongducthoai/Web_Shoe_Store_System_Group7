@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: Asus
@@ -181,8 +182,8 @@
 
         .testimonial .col p{
             margin-top: 10px;
-            font-size: 20px;
-            word-break: break-all;
+            font-size: 15px;
+            white-space: nowrap;
         }
 
         .testimonial .col h3{
@@ -233,6 +234,7 @@
         }
 
         .product_message {
+            white-space: nowrap;
             margin-top: 10px;
         }
     </style>
@@ -248,95 +250,27 @@
 
     <div class="review-container">
         <div class="wrapper slides-review">
-            <div class="slide-review">
-                <div class="col" data-aos="zoom-in-up">
-                    <div class="block-header" style="display: flex; align-items: center; gap: 30px;">
-                        <figure><img src="../../image/tes-1.png" alt=""></figure>
-                        <div>
-                            <h3 class="heading-three" style="text-align: left;">thor</h3>
-                            <span class="ratting"><i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i
-                                    class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i
-                                    class="fa-solid fa-star"></i></span>
-                            <p class="sub-heading">2024-11-17 00:00</p>
+            <c:forEach var="review" items="${reviewDTOList}" varStatus="status">
+                <div class="slide-review">
+                    <div class="col" data-aos="zoom-in-up">
+                        <div class="block-header" style="display: flex; align-items: center; gap: 30px;">
+                            <figure><img style="height: 100px; border-radius: 50%" src="../../image/tes-${status.index + 1}.png" alt=""></figure>
+                            <div>
+                                <h3 class="heading-three" style="text-align: left;">${review.customer.fullName}</h3>
+                                <span class="ratting">
+                                  <c:forEach var="i" begin="1" end="${review.ratingValue}">
+                                      <i class="fa-solid fa-star"></i>
+                                  </c:forEach>
+                                </span>
+                                <p style="color: #333333">${review.date}</p>
+                            </div>
                         </div>
+                        <p class="product_message">Sản phẩm: ${review.productDTO.productName} </p> <span>Size: ${review.productDTO.size}</span>
+                        <p class="testi-message">${review.comment}</p>
+
                     </div>
-                    <p class="product_message">Sản phẩm: </p> <span>Size:</span>
-                    <p class="testi-message">Sản phẩm tuyệt vời, chất lượng tốt!</p>
-
                 </div>
-            </div>
-
-            <div class="slide-review">
-                <div class="col" data-aos="zoom-in-up">
-                    <div class="block-header" style="display: flex; align-items: center; gap: 30px;">
-                        <figure><img src="../../image/tes-2.png" alt=""></figure>
-                        <div>
-                            <h3 class="heading-three" style="text-align: left;"> john</h3>
-                            <span class="ratting"><i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i
-                                    class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i
-                                    class="fa-solid fa-star"></i></span>
-                            <p class="sub-heading">2024-11-17 00:00</p>
-                        </div>
-                    </div>
-                    <p class="product_message"> Sản phẩm: </p> <span>Size:</span>
-                    <p class="testi-message">Sản phẩm tuyệt vời, chất lượng tốt!</p>
-
-                </div>
-            </div>
-            <div class="slide-review">
-                <div class="col" data-aos="zoom-in-up">
-                    <div class="block-header" style="display: flex; align-items: center; gap: 30px;">
-                        <figure><img src="../../image/tes-3.png" alt=""></figure>
-                        <div>
-                            <h3 class="heading-three" style="text-align: left;">ABC</h3>
-                            <span class="ratting"><i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i
-                                    class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i
-                                    class="fa-solid fa-star"></i></span>
-                            <p class="sub-heading">2024-11-17 00:00</p>
-                        </div>
-                    </div>
-                    <span class="product_message">Sản phẩm: </span> <span>Size:</span>
-                    <span class="testi-message">Đánh giá: Sản phẩm tuyệt vời, chất lượng tốt!</span>
-
-                </div>
-            </div>
-
-            <div class="slide-review">
-                <div class="col" data-aos="zoom-in-up">
-                    <div class="block-header" style="display: flex; align-items: center; gap: 30px;">
-                        <figure><img style="border-radius: 50%; width: 100px; height: 100px" src="../../image/tes-4.jpg" alt=""></figure>
-                        <div>
-                            <h3 class="heading-three" style="text-align: left;">BCD</h3>
-                            <span class="ratting"><i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i
-                                    class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i
-                                    class="fa-solid fa-star"></i></span>
-                            <p class="sub-heading">2024-11-17 00:00</p>
-                        </div>
-                    </div>
-                    <p class="product_message">Sản phẩm: </p> <span>Size:</span>
-                    <p class="testi-message">Sản phẩm tuyệt vời, chất lượng tốt!</p>
-
-                </div>
-            </div>
-
-
-            <div class="slide-review">
-                <div class="col" data-aos="zoom-in-up">
-                    <div class="block-header" style="display: flex; align-items: center; gap: 30px;">
-                        <figure><img style="border-radius: 50%;width: 100px; height: 100px" src="../../image/tes-5.jpg" alt=""></figure>
-                        <div>
-                            <h3 class="heading-three" style="text-align: left;">BCD</h3>
-                            <span class="ratting"><i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i
-                                    class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i
-                                    class="fa-solid fa-star"></i></span>
-                            <p class="sub-heading">2024-11-17 00:00</p>
-                        </div>
-                    </div>
-                    <p class="product_message">Sản phẩm: </p> <span>Size:</span>
-                    <p class="testi-message">Sản phẩm tuyệt vời, chất lượng tốt!</p>
-
-                </div>
-            </div>
+            </c:forEach>
         </div>
         <div class="slider-view-controls">
             <button class="prev-view"><i class="fa-solid fa-chevron-left"></i></button>

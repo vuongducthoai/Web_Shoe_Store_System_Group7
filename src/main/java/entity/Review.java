@@ -20,6 +20,11 @@ public class Review {
     private int reviewID;
     private int ratingValue;
     private Date date;
+
+    @ManyToOne
+    @JoinColumn(name = "productID")
+    private Product product;
+
     @ManyToOne
     @JoinColumn(name = "customerID")
     private Customer customer;
@@ -27,4 +32,5 @@ public class Review {
 
     @OneToOne(mappedBy = "review")
     private Response response;
+
 }
