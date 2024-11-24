@@ -38,7 +38,7 @@ public class CartController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getServletPath();
         if (Objects.equals(path, "/TWP_ACCOUNT")){
-            AccountDTO account = accountService.findAccountByEmail("Phuhoa@gmail.com");
+            AccountDTO account = accountService.findAccountByEmail("thoai1234@gmail.com");
             //Tao mot session moi hoac lay session hien co
             HttpSession session = req.getSession();
             //Luu thong tin nguoi dung vao session

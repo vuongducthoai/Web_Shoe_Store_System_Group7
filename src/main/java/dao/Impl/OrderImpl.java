@@ -31,36 +31,40 @@ public class OrderImpl implements IOrderDao {
                 Customer customer = entityManager.find(Customer.class, Integer.valueOf(order.getCustomer().getUserID()));
                 List<OrderItemDTO> ListOrderItem = order.getOrderItems();
                 List<OrderItem> orderItems = new ArrayList<OrderItem>();
+                String address = "";
+                if (customer.getAddress()!=null) {
+                    address+=customer.getAddress().getHouseNumber()+", ";
+                    address+=customer.getAddress().getStreetName()+", ";
+                    address+=customer.getAddress().getCity()+", ";
+                    address+=customer.getAddress().getDistrict()+", ";
+                    address+=customer.getAddress().getProvince();
+                }
                 Order orderEnty = new Order();
                 orderEnty.setCustomer(customer);
                 orderEnty.setOrderDate(Date.from(Instant.now()));
                 orderEnty.setOrderStatus(OrderStatus.WAITING_CONFIRMATION);
+                orderEnty.setShippingAddress(address);
                 entityManager.persist(orderEnty);
                 for (OrderItemDTO item : ListOrderItem) {
                     OrderItem orderItem = new OrderItem();
-                    Product product = entityManager.find(Product.class, item.getProductDTO().getProductId());
-                    orderItem.setOrder(orderEnty);
-                    orderItem.setProduct(product);
-                    orderItem.setQuantity(item.getQuantity());
-                    entityManager.persist(orderItem);
-                    orderItems.add(orderItem);
-                    // Cap nhap lai Cart va Product
+                    Product productTWP = entityManager.find(Product.class,item.getProductDTO().getProductId());
+                    //
                     List<CartItem> listCartItem = entityManager.createQuery("Select c " +
-                            "from CartItem c Where c.product.productName like :name " +
-                            "and c.product.color like :color and c.product.size = :size " +
+                                    "from CartItem c Where c.product.productName like :name " +
+                                    "and c.product.color like :color and c.product.size = :size " +
                                     "and c.cart.customer.userID = :userId ",CartItem.class)
-                            .setParameter("name",product.getProductName())
-                            .setParameter("color",product.getColor())
-                            .setParameter("size",product.getSize())
+                            .setParameter("name",productTWP.getProductName())
+                            .setParameter("color",productTWP.getColor())
+                            .setParameter("size",productTWP.getSize())
                             .setParameter("userId",order.getCustomer().getUserID())
                             .getResultList();
                     List<Product> listProduct = entityManager.createQuery("Select p" +
-                            " from Product p " +
-                            "Where p.productName like :name and p.size = :size " +
-                            "and p.color like :color and p.status = true",Product.class)
-                            .setParameter("name",product.getProductName())
-                            .setParameter("color",product.getColor())
-                            .setParameter("size",product.getSize())
+                                    " from Product p " +
+                                    "Where p.productName like :name and p.size = :size " +
+                                    "and p.color like :color and p.status = true",Product.class)
+                            .setParameter("name",productTWP.getProductName())
+                            .setParameter("color",productTWP.getColor())
+                            .setParameter("size",productTWP.getSize())
                             .setMaxResults(item.getQuantity())
                             .getResultList();
                     if (listProduct.size()!= item.getQuantity()) {
@@ -82,6 +86,28 @@ public class OrderImpl implements IOrderDao {
                             entityManager.remove(cartItem);
                         }
                     }
+                    //
+
+                    Product product = entityManager.createQuery(
+                                    "select p from Product p " +
+                                            "where p.color like :color and p.size = :size " +
+                                            "and p.productName like :name and p.status = false " +
+                                            "and p.id not in (select o.product.id from OrderItem o " +
+                                            "                 where o.product.color like :color and o.product.size = :size " +
+                                            "                 and o.product.productName like :name)",
+                                    Product.class)
+                            .setParameter("color", productTWP.getColor())
+                            .setParameter("size", productTWP.getSize())
+                            .setParameter("name", productTWP.getProductName())
+                            .setMaxResults(1)
+                            .getSingleResult();
+                    orderItem.setOrder(orderEnty);
+                    orderItem.setProduct(product);
+                    orderItem.setQuantity(item.getQuantity());
+                    entityManager.persist(orderItem);
+                    orderItems.add(orderItem);
+                    // Cap nhap lai Cart va Product
+
                 }
 
                 Payment payment = new Payment();
