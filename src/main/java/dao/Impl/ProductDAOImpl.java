@@ -183,7 +183,7 @@ public class ProductDAOImpl implements IProductDAO {
                             product.getDescription(),
                             null, // cartItemDTOList
                             null, // orderItemDTOList
-                            null, // categoryDTO
+                            new CategoryDTO(product.getCategory().getCategoryID(), null, null), // categoryDTO
                             null  // promotionDTO
                     ))
                     .collect(Collectors.toList());
@@ -196,27 +196,40 @@ public class ProductDAOImpl implements IProductDAO {
     }
 
 
-    public List<Product> findRandomProducts(int offset, int limit, String CurrentProductName) {
-        // Lấy danh sách sản phẩm phân trang và không trùng tên
-        List<Product> products = findAllWithPagination(offset, limit);
+    public List<Product> findRandomProducts(String currentProductName, int categoryID) {
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        try {
+            // JPQL truy vấn các sản phẩm cùng CategoryID nhưng khác tên
+            String jpql = "SELECT p FROM Product p WHERE p.category.categoryID = :categoryID " +
+                    "AND p.productName <> :currentProductName";
 
-        if (products == null || products.isEmpty()) {
+            TypedQuery<Product> query = entityManager.createQuery(jpql, Product.class);
+            query.setParameter("categoryID", categoryID);
+            query.setParameter("currentProductName", currentProductName);
+
+            // Lấy danh sách kết quả
+            List<Product> products = query.getResultList();
+
+            if (products.isEmpty()) {
+                System.out.println("No products found for category ID: " + categoryID);
+                return Collections.emptyList();
+            }
+
+            // Trộn danh sách để lấy ngẫu nhiên
+            Collections.shuffle(products);
+
+            // Trả về danh sách dù có ít hơn 4 sản phẩm
+            return products.size() <= 4 ? products : products.subList(0, 4);
+        } catch (Exception e) {
+            System.err.println("Error during findRandomProducts:");
+            e.printStackTrace();
             return Collections.emptyList();
+        } finally {
+            entityManager.close();
         }
-
-        List<Product> filteredProducts = products.stream()
-                .filter(product -> !CurrentProductName.equalsIgnoreCase(product.getProductName()))
-                .collect(Collectors.toList());
-
-        if (filteredProducts.size() <= 4) {
-            // Nếu có ít hơn hoặc bằng 4 sản phẩm sau khi lọc, trả về danh sách đó
-            return filteredProducts;
-        }
-
-        // Lấy 4 sản phẩm ngẫu nhiên
-        Collections.shuffle(filteredProducts);
-        return filteredProducts.subList(0, 4);
     }
+
+
 
 }
 

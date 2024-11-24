@@ -50,9 +50,9 @@ public class ProductServiceImpl implements IProductService {
     }
 
 
-    public Map<ProductDTO, Double> findRandomProducts(int offset, int limit, String currentProductName) {
+    public Map<ProductDTO, Double> findRandomProducts(String currentProductName, int CID) {
         Map<ProductDTO, Double> result = new HashMap<>();
-        List<Product> products = productDAO.findRandomProducts(offset, limit, currentProductName);
+        List<Product> products = productDAO.findRandomProducts(currentProductName, CID);
         for (Product product : products) {
             ProductDTO productDTO = new ProductDTO();
             productDTO.setProductId(product.getProductID());

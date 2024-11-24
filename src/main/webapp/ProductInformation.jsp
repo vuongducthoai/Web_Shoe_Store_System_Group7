@@ -48,17 +48,19 @@
                     <span class="mt-1 fs-5 fw-lighter">Select color</span>
                     <div class="product-colors d-flex mt-2 mb-3">
                         <c:forEach var="color" items="${colors}">
-                            <div class="circle me-3" style="background-color: ${color}"></div>
+                            <div class="circle me-3" data-color="${color}" style="background-color: ${color}"></div>
                         </c:forEach>
                     </div>
                     <hr class="vw-100">
                     <span class="mt-1 fs-5 fw-lighter">Choose size</span>
                     <div class="d-flex mt-2 mb-3">
                         <c:forEach var="size" items="${sizes}">
-                            <button class="d-flex justify-content-center align-items-center size rounded-pill me-2">${size}</button>
+                            <button class="d-flex justify-content-center align-items-center size rounded-pill me-2" data-size="${size}">${size}</button>
                         </c:forEach>
                     </div>
-
+                    <div>
+                        <span class="label-quantity-remain">chọn màu và kích thước </span><span id="quantity-display"></span>
+                    </div>
 
                     <hr class="vw-100">
                     <div class="d-flex">
@@ -201,7 +203,13 @@
 <footer>
     <jsp:include page="./view/footer.jsp"></jsp:include>
 </footer>
+<script>
+    // Nhận dữ liệu từ backend
+    const productDetails = JSON.parse('${productDetails}');
+    console.log("Product Details:", productDetails);
+</script>
 
 <script src="${pageContext.request.contextPath}/js/ProductInformation.js"></script>
+
 </body>
 </html>
