@@ -11,7 +11,7 @@ public interface ICategoryDao {
     List<Category> categoryList();
     List<CategoryDTO> categoryDTOList();
 
-    void insert(Category category);
-
+    boolean insert(Category category);
+    boolean remove(int categoryId);
     List<Product> findAllProductByCategoryWithPagination(int id, int offset, int limit);
 }
