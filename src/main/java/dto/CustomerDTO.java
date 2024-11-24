@@ -23,6 +23,7 @@ public class CustomerDTO extends UserDTO {
     private List<ReviewDTO> reviewDTOList;
     private List<NotifyDTO> notifyDTOList;
 
+
     public CustomerDTO(int userID, String fullName, String phone, boolean active, Date dateOfBirth, int loyalty) {
         super(userID, fullName, phone,active, null, null); // Gọi constructor lớp cha (UserDTO)
         this.dateOfBirth = dateOfBirth;

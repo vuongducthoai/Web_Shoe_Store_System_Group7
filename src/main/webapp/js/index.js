@@ -45,10 +45,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 const productDiv = document.createElement("div");
                 productDiv.className = "col- collection-item";
                 productDiv.dataset.item = product.categoryDTO.categoryId;
+                fragment.appendChild(productDiv);
                 productDiv.innerHTML = `
-                        <figure><img src="../image/shoes1.png" alt="${product.productName}"></figure>
+                        <figure><img src="${product.getBase64Image()}" alt="${product.productName}"></figure>
                         <div class="col-body">
-                            <h3 class="heading-three">${product.productName}</h3>
+                            <h3 class="two">${product.productName}</h3>
+                            <h3 class="heading-three">${product.description}</h3>
                             <div class="col-footer">
                                 <p class="shoe-price">$${product.price}₫</p>
                                 <p class="sub-heading">Đã bán: ${product.quantity}</p>
@@ -56,7 +58,6 @@ document.addEventListener("DOMContentLoaded", function () {
                             </div>
                         </div>
                     `;
-                fragment.appendChild(productDiv);
             });
             productItems.appendChild(fragment); // Chỉ cập nhật DOM một lần
             offset += limit;

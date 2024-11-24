@@ -146,11 +146,16 @@ figure img{
     color: var(--primar-clr);
 }
 .heading-two{
-    font-size: 2.8rem;
+    font-size: 2.4rem;
     text-transform: capitalize;
 }
 .heading-three{
-    font-size: 1.4rem;
+    font-size: 1.6rem;
+    text-transform: capitalize;
+}
+
+.heading-four{
+    font-size: 1.2rem;
     text-transform: capitalize;
 }
 
@@ -221,7 +226,7 @@ section .main .main_content .main_text h1{
     font-size: 90px;
     line-height: 70px;
     font-family: pyxidium quick;
-    background: linear-gradient(to right, #c72092,#6c14d0);
+    background: linear-gradient(to right, green,greenyellow);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     position: relative;
@@ -231,17 +236,21 @@ section .main .main_content .main_text h1{
 
 section .main .main_content .main_text h1 span{
     font-size: 70px;
-    background: linear-gradient(to right, #c72092,#6c14d0);
+    background: linear-gradient(to right,green,greenyellow);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
 section .main .main_content .main_text p{
-    width: 600px;
+    color: orange;
+    -webkit-background-clip: text;
+    width: 300px;
+    font-size: 25px;
+    font-weight: 800;
     text-align: justify;
-    line-height: 21px;
+    line-height: 35px;
     position: relative;
-    top: 85px;
+    top: 60px;
     left: 5%;
 }
 
@@ -249,7 +258,7 @@ section .main .main_content .main_image img{
     width: 450px;
     position: relative;
     left: -10%;
-    top: 150px;
+    top: 0;
 }
 
 section .main .social_icon{
@@ -267,7 +276,7 @@ section .main .social_icon i{
 }
 
 section .main .social_icon i:hover{
-    color: #c72092;
+    color: gold;
 }
 
 section .main .button{
@@ -275,7 +284,7 @@ section .main .button{
     left: 6%;
     padding: 10px 20px;
     border-radius: 30px;
-    background: linear-gradient(to right,#c72092 , #6c14d0);
+    background: linear-gradient(to right,green , greenyellow);
 }
 
 section .main .button a{
@@ -332,7 +341,7 @@ section .main .button:hover i{
 }
 
 .col-body .col-footer .shoe-btn:hover {
-    background-color: #b60af5;
+    background-color: green;
 }
 
 /* about us section */
@@ -395,7 +404,7 @@ section .main .button:hover i{
     transition: var(--transition-one);
 }
 .collection .btn-col{
-    margin-right: 5px;
+    margin: 10px;
     border: none;
     outline: none;
     border: 1px solid var(--first-gra-clr);
@@ -426,6 +435,13 @@ section .main .button:hover i{
 .col-footer .shoe-price {
     color: red;
     font-size: 18px;
+    font-weight: 600;
+}
+
+.col-footer .shoe-sold{
+    color: black;
+    font-weight: 500;
+    font-size: 17px;
 }
 
 .col-footer .rating-icon {
@@ -436,45 +452,6 @@ section .main .button:hover i{
 .col-footer .rating-num {
     color: black;
 }
-
-/* customer review section */
-.testimonial .sub-heading{
-    color: var(--first-gra-clr);
-    font-weight: bold;
-}
-.testimonial .wrapper{
-    gap: 30px;
-    align-items: center;
-}
-
-.testimonial figure{
-    width: 80px;
-}
-
-.testimonial .col{
-    align-items: center;
-    text-align: center;
-    gap: 20px;
-    padding: 1.2rem 1.4rem;
-    border-radius: var(--btn-radius);
-    background-color: var(--light-bg);
-    backdrop-filter: blur(10px);
-    z-index: 200;
-}
-
-.testimonial .col p{
-    font-size: var(--font-sm);
-    word-break: break-all;
-}
-
-.testimonial .col h3{
-    color: var(--first-gra-clr);
-}
-.testimonial .fa-star{
-    color: #ffd700;
-    margin-right: 4px;
-}
-
 
 @keyframes changing {
     0%{

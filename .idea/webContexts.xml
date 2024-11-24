@@ -8,7 +8,9 @@
         <entry key="file://$PROJECT_DIR$/src/main/webapp/slider.jsp" value="file://$PROJECT_DIR$/src/main/webapp" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/view/Register.jsp" value="file://$PROJECT_DIR$/src/main/webapp/view" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/view/admin/list-category.jsp" value="file://$PROJECT_DIR$/src/main/webapp/view/admin" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/view/customer/orderHistory.jsp" value="file://$PROJECT_DIR$/src/main/webapp/view/customer" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/view/login.jsp" value="file://$PROJECT_DIR$/src/main/webapp/view" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/view/review.jsp" value="file://$PROJECT_DIR$/src/main/webapp/view" />
       </map>
     </option>
   </component>

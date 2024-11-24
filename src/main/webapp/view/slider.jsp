@@ -1,3 +1,5 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%--
   Created by IntelliJ IDEA.
   User: Asus
@@ -17,61 +19,51 @@
   </style>
 </head>
 <body>
-<section class="hero">
+<section class="hero" id="hero-slider">
   <div class="main" id="Home">
     <div class="slider">
       <div class="slides-container">
-        <div class="slide">
-          <div class="main_content">
-            <div class="main_text">
-              <h1>NIKE<br><span>Collection</span></h1>
-              <p>
-                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
-                been the industry's standard dummy text ever since the 1500s, when an unknown printer took
-                a galley of type and scrambled it to make a type specimen book. It has survived not only
-                five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
-              </p>
-            </div>
-            <div class="main_image">
-              <img src="../image/shoes.png">
-            </div>
-          </div>
-        </div>
+        <c:forEach var="promotionProduct" items="${promotionProductDTOList}">
+          <c:set var="productName" value="${promotionProduct.product.productName}" />
+          <c:set var="nameParts" value="${fn:split(productName, ' ')}" />
 
-        <div class="slide">
-          <div class="main_content">
-            <div class="main_text">
-              <h1>Adidas<br><span>New Arrivals</span></h1>
-              <p>The latest collection of Adidas with innovative designs and styles.</p>
-            </div>
-            <div class="main_image">
-              <img src="../image/shoes2.png" alt="Shoe 2">
-            </div>
-          </div>
-        </div>
+          <!-- Set individual parts based on array indices -->
+          <c:set var="namePart1" value="${nameParts[0]}" />
+          <c:set var="namePart2" value="${nameParts[1]}" />
 
-        <div class="slide">
-          <div class="main_content">
-            <div class="main_text">
-              <h1>Puma<br><span>Exclusive</span></h1>
-              <p>Get the most exclusive Puma shoes available now!</p>
-            </div>
-            <div class="main_image">
-              <img src="../image/shoes3.png" alt="Shoe 3">
+          <div class="slide">
+            <div class="main_content">
+              <div>
+                <div class="main_text">
+                  <h1>${namePart1}<br><span>${namePart2}</span></h1>
+                  <p>${promotionProduct.product.description}</p>
+                  <button style="margin: 100px 0 0 50px;" class="btn btn-hero">pre-order now</button>
+                </div>
+                <div style="margin-top: 100px;" class="hero-img-off" data-aos="zoom-in-up">
+                  <h3 class="heading-three">${promotionProduct.promotion.promotionName}</h3>
+                  <p>StartDate: ${promotionProduct.promotion.startDate}</p>
+                  <p>EndDate: ${promotionProduct.promotion.endDate}</p>
+                </div>
+              </div>
+              <div class="main_image">
+                <img src="../image/shoes3.png">
+              </div>
             </div>
           </div>
-        </div>
+        </c:forEach>
+
+
+
       </div>
     </div>
-
     <div class="slider-controls">
       <button class="prev"><i style="color: white" class="fa-solid fa-chevron-left"></i></button>
       <button class="next"><i style="color: white" class="fa-solid fa-chevron-right"></i></button>
     </div>
   </div>
 </section>
-<script src="../js/slider.js">
 
+<script src="../js/slider.js">
 </script>
 </body>
 </html>

@@ -71,6 +71,12 @@ public class CartServiceImpl implements ICartService {
         }
         else return false;
     }
+    public boolean AddItemWithQuantity(int idProduct,int userId,int quantity){
+        if (cartDao.canAddQuantity(idProduct, userId,quantity)) {
+            return  cartDao.AddItemWithQuantity(idProduct, userId,quantity);
+        }
+        else return false;
+    }
     public double Total_Cart(List<CartItemDTO> cartItem){
         double total = 0;
         for (CartItemDTO cartItemDTO : cartItem) {

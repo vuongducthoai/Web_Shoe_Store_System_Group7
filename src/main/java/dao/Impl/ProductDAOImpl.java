@@ -150,7 +150,6 @@ public class ProductDAOImpl implements IProductDAO {
                         product.getDescription(),
                         product.isStatus()
                 );
-
                 productDTOs.add(dto); // Thêm vào danh sách
             }
             return productDTOs;

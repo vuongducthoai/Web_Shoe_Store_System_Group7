@@ -136,4 +136,13 @@ public class OrderServiceImpl implements IOrderService {
         }
         return filteredList;
     }
+    @Override
+    public List<OrderDTO> getOrdersByCustomerId(int customerId) {
+        return orderDao.findOrdersByCustomerId(customerId);
+    }
+    @Override
+    public OrderDTO getOrderById(int orderId){
+        return orderDao.getOrderById(orderId);
+    }
+
 }

@@ -126,66 +126,23 @@
     <div class="grid-wrapper">
         <c:forEach var="product" items="${productDTOList}">
             <div class="col- collection-item" data-item="" data-aos="zoom-in-up">
-                <figure><img src="./image/shoes2.png" alt=""></figure>
+                <figure><img src="${product.getBase64Image()}" alt=""></figure>
                 <div class="col-body">
 
                     <h3  class="heading-three">${product.productName}</h3>
-
+                    <h3  class="heading-four">${product.description}</h3>
                     <div class="col-footer">
-                        <p  class="shoe-price">${product.price}₫</p>
-                        <p  class="sub-heading">Đã bán :${product.quantity}</p>
-                        <p class="rating-icon"><i class="fa-solid fa-star"></i> <span class="rating-num">4.9</span></p>
+                        <p class="shoe-price">${product.price}₫</p>
+                        <p class="shoe-sold">Đã bán :${product.quantity}</p>
                     </div>
                 </div>
             </div>
         </c:forEach>
     </div>
-    <button style="margin-top: 20px; background-color: aqua;" id="load-more-btn" class="btn">Load More</button>
+    <button style="margin-top: 20px; background-color: #baba14;" id="load-more-btn" class="btn">Load More</button>
 </section>
 <!-- customer review -->
-<section class="container testimonial">
-    <div class="clr-one"></div>
-    <div class="section-heading">
-        <div class="heading">
-            <p class="sub-heading">testimonial</p>
-            <h2 class="heading-two">what our customer says</h2>
-        </div>
-    </div>
-    <div class="wrapper">
-        <div class="col" data-aos="zoom-in-up">
-            <figure><img src="asses/testimonail/tes-1.png" alt=""></figure>
-            <h3 class="heading-three">thor john</h3>
-            <p class="testi-message">I stumbled upon this shoe website and decided to give it a try. Wow, was I
-                impressed! The quality of the shoes exceeded my expectations, and the customer service was
-                outstanding. I'll definitely be a repeat customer!"</p>
-            <span class="ratting"><i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i
-                    class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i
-                    class="fa-solid fa-star"></i></span>
-        </div>
-
-        <div class="col" data-aos="zoom-in-up">
-            <figure><img src="asses/testimonail/tes-2.png" alt=""></figure>
-            <h3 class="heading-three">john wick</h3>
-            <p class="testi-message">I've been searching for the perfect pair of shoes for months, and I finally
-                found them on this website. Not only are they stylish and comfortable, but the ordering process was
-                seamless</p>
-            <span class="ratting"><i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i
-                    class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i
-                    class="fa-solid fa-star"></i></span>
-        </div>
-
-        <div class="col" data-aos="zoom-in-up">
-            <figure><img src="asses/testimonail/tes-3.png" alt=""></figure>
-            <h3 class="heading-three">James Jackie</h3>
-            <p class="testi-message">I'm not one to leave reviews often, but I had to for this website. The variety
-                of shoes available is fantastic, and the prices are unbeatable. Plus, the shoes I ordered arrived in
-                pristine condition and fit perfectly."</p>
-            <span class="ratting"><i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i
-                    class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i
-                    class="fa-solid fa-star"></i></span>
-        </div>
-    </div>
-</section>
+<jsp:include page="view/customer/review.jsp"></jsp:include>
 <script src="./js/toastMessage.js"></script>
 <%--Footer--%>
 <jsp:include page="./view/footer.jsp"></jsp:include>
