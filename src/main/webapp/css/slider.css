@@ -19,6 +19,7 @@
     background-position: center;
 }
 section .main .main_content{
+    margin-top: 100px;
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -29,7 +30,6 @@ section .main .main_content .main_text h1{
     line-height: 70px;
     background: linear-gradient(to right, green,greenyellow);
     -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
     position: relative;
     top: 45px;
     left: 5%;
@@ -39,19 +39,18 @@ section .main .main_content .main_text h1 span{
     font-size: 70px;
     background: linear-gradient(to right, green,greenyellow);
     -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
 }
 
 section .main .main_content .main_text p{
-   color: red;
+    color: orange;
     -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
     width: 300px;
-    font-size: 18px;
+    font-size: 25px;
+    font-weight: 800;
     text-align: justify;
-    line-height: 21px;
+    line-height: 35px;
     position: relative;
-    top: 85px;
+    top: 60px;
     left: 5%;
 }
 
@@ -59,27 +58,29 @@ section .main .main_content .main_image img{
     width: 450px;
     position: relative;
     left: -10%;
-    top: 150px;
+    top: 0;
 }
 
 
 .hero-img-off{
     width: 260px;
-    height: auto;
     padding: 20px 10px;
     background-color: orange;
     backdrop-filter: blur(10px);
     word-break: break-all;
     line-height: 1.8;
     border-radius: 5px;
-    position: absolute;
-    bottom: 160px;
-    left: 400px;;
+    position: relative;
+    margin: 20px 0 0 40px;
 }
 
 .hero-img-off p{
     font-size: 14px;
-    color: black;
+    color: white;
+}
+
+.hero-img-off h3{
+    color: white;
 }
 
 
