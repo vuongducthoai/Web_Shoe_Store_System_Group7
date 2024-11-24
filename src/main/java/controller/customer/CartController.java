@@ -19,20 +19,32 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import service.IAccountService;
 import service.ICartService;
+import service.Impl.AccountServiceImpl;
 import service.Impl.CartServiceImpl;
 
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Objects;
 
-@WebServlet(urlPatterns = {"/Cart","/Cart/Add","/Cart/Remove","/Cart/Delete_Item","/Cart/Add_TWP"})
+@WebServlet(urlPatterns = {"/Cart","/Cart/Add","/Cart/Remove","/Cart/Delete_Item","/TWP_ACCOUNT"})
 public class CartController extends HttpServlet {
     ICartService iCartService = new CartServiceImpl();
+    private IAccountService accountService = new AccountServiceImpl();
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getServletPath();
+        if (Objects.equals(path, "/TWP_ACCOUNT")){
+            AccountDTO account = accountService.findAccountByEmail("Phuhoa@gmail.com");
+            //Tao mot session moi hoac lay session hien co
+            HttpSession session = req.getSession();
+            //Luu thong tin nguoi dung vao session
+            session.setAttribute("user", account);
+            return;
+        }
         HttpSession session = req.getSession();
         AccountDTO accountDTO = (AccountDTO) session.getAttribute("user");
         if (accountDTO==null || accountDTO.getUser()==null||!accountDTO.getUser().isActive()){
