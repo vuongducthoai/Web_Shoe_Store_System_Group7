@@ -1,91 +1,121 @@
 <!DOCTYPE html>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lịch Sử Mua Hàng</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Roboto', Arial, sans-serif;
       margin: 0;
       padding: 0;
-      background-color: #f5f5f5;
+      background-color: #f9f9f9;
+    }
+
+    h2 {
+      text-align: center;
+      margin: 20px 0;
+      color: #333;
+      font-size: 24px;
     }
 
     .order-history {
-      width: 80%;
+      width: 90%;
+      max-width: 1200px;
       margin: 20px auto;
       background-color: #fff;
       border-radius: 8px;
       padding: 20px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
-    .order-filter ul {
+    .search-bar {
+      margin-bottom: 20px;
       display: flex;
-      list-style: none;
+      justify-content: center;
+    }
+
+    .search-input {
+      padding: 8px;
+      width: 60%;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .search-button {
+      padding: 8px 15px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      background-color: #ee4d2d;
+      color: white;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+
+    .order-filter {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 20px;
       padding: 0;
-      margin: 0 0 20px 0;
-      border-bottom: 2px solid #f5f5f5;
+      list-style: none;
     }
 
     .order-filter li {
-      padding: 10px 20px;
       cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
       color: #555;
+      padding: 10px 15px;
+      border: 1px solid transparent;
+      border-radius: 5px;
+      transition: all 0.3s ease;
     }
 
     .order-filter li.active {
-      font-weight: bold;
-      color: #ee4d2d;
-      border-bottom: 2px solid #ee4d2d;
+      background-color: #ee4d2d;
+      color: white;
+      border-color: #ee4d2d;
     }
 
-    .order-list {
-      padding: 10px 0;
+    .order-filter li:hover {
+      background-color: #ff7043;
+      color: white;
     }
 
     .order-item {
-      border-bottom: 1px solid #f5f5f5;
-      padding: 15px 0;
+      border-bottom: 1px solid #e0e0e0;
+      padding: 20px 0;
+      display: flex;
+      flex-direction: column;
     }
 
     .order-item:last-child {
       border-bottom: none;
     }
 
-    .order-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
     .order-header span {
-      font-size: 16px;
+      font-size: 18px;
       font-weight: bold;
-    }
-
-    .order-header .btn-shop {
-      background-color: #f5f5f5;
-      border: 1px solid #ddd;
-      padding: 5px 10px;
-      cursor: pointer;
-      font-size: 14px;
-      border-radius: 4px;
+      color: #555;
     }
 
     .order-content {
       display: flex;
       align-items: center;
+      gap: 15px;
+      margin-top: 10px;
     }
 
     .order-content img {
       width: 100px;
       height: 100px;
-      margin-right: 15px;
+      border-radius: 8px;
       border: 1px solid #ddd;
-      border-radius: 4px;
+      object-fit: cover;
     }
 
     .product-details {
@@ -95,98 +125,195 @@
     .product-name {
       font-size: 16px;
       font-weight: bold;
-      margin: 0;
+      color: #333;
+      margin: 0 0 5px 0;
     }
 
-    .product-variant,
-    .product-quantity {
+    .product-variant {
       font-size: 14px;
       color: #666;
+      margin-bottom: 5px;
+    }
+
+    .product-quantity {
+      font-size: 14px;
+      color: #888;
     }
 
     .order-status {
       text-align: right;
+      min-width: 100px;
     }
 
     .status {
-      display: block;
       font-size: 14px;
-      margin-bottom: 5px;
-    }
-
-    .status.success {
-      color: #2fb917;
-    }
-
-    .status.completed {
-      color: #ee4d2d;
       font-weight: bold;
+    }
+
+    .status.WAITING_CONFIRMATION {
+      color: #ff9800;
+    }
+
+    .status.CONFIRMED {
+      color: #2196f3;
+    }
+
+    .status.SHIPPED {
+      color: #ff5722;
+    }
+
+    .status.COMPLETED {
+      color: #4caf50;
+    }
+
+    .status.CANCELLED {
+      color: #f44336;
+    }
+
+    .order-footer .btn {
+      text-decoration: none;
+      padding: 8px 15px;
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+      border: 1px solid transparent;
+    }
+
+    .btn-more {
+      background-color: #ee4d2d;
+      justify-content: center;
+      color: #fff;
+      border-color: #ee4d2d;
+    }
+
+    .btn-more:hover {
+      background-color: #d94425;
+    }
+
+    .btn-rate {
+      background-color: #f5f5f5;
+      color: #555;
+      border-color: #ddd;
+    }
+
+    .btn-rate:hover {
+      background-color: #e0e0e0;
     }
 
     .order-footer {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 10px;
     }
 
-    .order-footer .order-total {
+    .order-total {
       font-size: 16px;
       font-weight: bold;
+      color: #333;
     }
 
-    .order-footer .btn {
-      padding: 5px 10px;
-      font-size: 14px;
-      cursor: pointer;
-      border: none;
-      border-radius: 4px;
-    }
-
-    .order-footer .btn-rate {
-      background-color: #ee4d2d;
-      color: white;
-    }
-
-    .order-footer .btn-refund {
-      background-color: #f5f5f5;
-      color: #555;
-    }
-
-    .order-footer .btn-more {
-      background-color: #f5f5f5;
-      color: #555;
-    }
   </style>
+  <script>
+    // Hiển thị các đơn hàng theo trạng thái
+    function filterOrdersByStatus(status) {
+      const orders = document.querySelectorAll('.order-item');
+      orders.forEach(order => {
+        if (status === 'ALL' || order.dataset.status === status) {
+          order.style.display = 'block';
+        } else {
+          order.style.display = 'none';
+        }
+      });
+    }
+
+    // Tìm kiếm đơn hàng theo tên khách hàng hoặc ID đơn hàng
+    function searchOrders() {
+      const searchTerm = document.querySelector('.search-input').value.toLowerCase();
+      const orders = document.querySelectorAll('.order-item');
+      orders.forEach(order => {
+        // Lấy tên sản phẩm trong đơn hàng
+        const productName = order.querySelector('.product-name').innerText.toLowerCase();
+
+        // Kiểm tra xem tên sản phẩm có chứa từ khóa tìm kiếm không
+        if (productName.includes(searchTerm)) {
+          order.style.display = 'block'; // Hiển thị sản phẩm nếu tìm thấy
+        } else {
+          order.style.display = 'none'; // Ẩn sản phẩm nếu không tìm thấy
+        }
+      });
+    }
+
+    // Thiết lập sự kiện cho bộ lọc trạng thái và tìm kiếm
+    window.onload = () => {
+      const filters = document.querySelectorAll('.order-filter li');
+      filters.forEach(filter => {
+        filter.addEventListener('click', () => {
+          filters.forEach(f => f.classList.remove('active'));
+          filter.classList.add('active');
+          filterOrdersByStatus(filter.dataset.status);
+        });
+      });
+      // Mặc định hiển thị tất cả
+      filterOrdersByStatus('ALL');
+
+      // Thiết lập sự kiện cho thanh tìm kiếm
+      document.querySelector('.search-button').addEventListener('click', searchOrders);
+    };
+  </script>
 </head>
 <body>
+<h2>Lịch Sử Mua Hàng</h2>
+
 <div class="order-history">
-  <h2>Lịch sử mua hàng</h2>
-  <div class="order-list">
-    <!-- Duyệt qua danh sách đơn hàng từ request -->
-    <c:forEach var="order" items="${customerOrders}">
-      <div class="order-item">
-        <div class="order-header">
-          <span>Mã đơn hàng: ${order.orderId}</span>
-          <span>Ngày đặt: ${order.orderDate}</span>
-          <span>Trạng thái: ${order.orderStatus}</span>
-          <span>Tổng tiền: ${order.payment.amount} VNĐ</span>
-        </div>
-        <div class="order-content">
-          <c:forEach var="orderItem" items="${order.orderItems}">
-            <div class="product-details">
-              <p class="product-name">${orderItem.productName}</p>
-              <p class="product-variant">Kích cỡ: ${orderItem.size}, Màu: ${orderItem.color}</p>
-              <p class="product-quantity">Số lượng: ${orderItem.quantity}</p>
-            </div>
-          </c:forEach>
-        </div>
-        <div class="order-status">
-          <button class="btn btn-dark btn-sm">Xem</button>
-        </div>
-      </div>
-    </c:forEach>
+  <!-- Thanh tìm kiếm -->
+  <div class="search-bar">
+    <input type="text" class="search-input" placeholder="Tìm kiếm theo tên sản phẩm...">
+    <button class="search-button">Tìm kiếm</button>
   </div>
+
+  <!-- Thanh điều hướng trạng thái -->
+  <ul class="order-filter">
+    <li class="active" data-status="ALL">Tất cả</li>
+    <li data-status="WAITING_CONFIRMATION">Chờ xác nhận</li>
+    <li data-status="CONFIRMED">Đã xác nhận</li>
+    <li data-status="SHIPPED">Đang giao</li>
+    <li data-status="COMPLETED">Hoàn thành</li>
+    <li data-status="CANCELLED">Đã hủy</li>
+  </ul>
+
+  <!-- Hiển thị danh sách đơn hàng -->
+  <c:forEach var="order" items="${customerOrders}">
+    <div class="order-item" data-status="${order.orderStatus}" data-order-id="${order.orderId}">
+      <div class="order-header">
+        <span>${order.customer.fullName}</span>
+      </div>
+      <div class="order-content">
+        <c:if test="${not empty order.orderItems}">
+          <c:set var="firstItem" value="${order.orderItems[0]}" />
+          <img src="https://th.bing.com/th/id/OIP.pl0SIxw_ezFPUpgrzWrjBgAAAA?w=383&h=383&rs=1&pid=ImgDetMain" alt="Product Image">
+          <div class="product-details">
+            <p class="product-name">${firstItem.productDTO.productName}</p>
+            <p class="product-variant">Phân loại hàng: ${firstItem.productDTO.color} - Size: ${firstItem.productDTO.size}</p>
+            <p class="product-quantity">x${firstItem.quantity}</p>
+          </div>
+        </c:if>
+      </div>
+
+      <!-- Trạng thái đơn hàng -->
+      <div class="order-status">
+        <span class="status ${order.orderStatus}">${order.orderStatus}</span>
+      </div>
+
+      <!-- Footer đơn hàng -->
+      <div class="order-footer">
+        <a href="orderDetails?id=${order.orderId}" class="btn btn-more">Xem chi tiết</a>
+        <c:if test="${order.orderStatus == 'COMPLETED'}">
+          <a href="rateOrder?id=${order.orderId}" class="btn btn-rate">Đánh giá</a>
+        </c:if>
+      </div>
+    </div>
+  </c:forEach>
 </div>
 </body>
 </html>

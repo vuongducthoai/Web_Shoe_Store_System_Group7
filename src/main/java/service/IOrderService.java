@@ -14,5 +14,7 @@ public interface IOrderService {
     boolean updateOrderStatus(String orderId, OrderStatus newStatus);
     List<OrderDTO> getFilteredOrders(String searchKeyword, String orderStatus, String startDate, String endDate);
     List<OrderDTO> getOrdersByCustomerId(int customerId);
+    OrderDTO getOrderById(int orderId);
+
 }
 
