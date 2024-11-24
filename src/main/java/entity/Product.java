@@ -43,7 +43,7 @@ public class Product {
     private LocalDateTime createDate;
 
     @ManyToOne
-    @JoinColumn(name = "categoryID")
+    @JoinColumn(name = "categoryID", nullable = true)
     private Category category;
 
     @OneToMany(mappedBy = "product")
