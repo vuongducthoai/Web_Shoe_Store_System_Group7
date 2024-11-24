@@ -5,11 +5,8 @@ import dao.IProductDAO;
 import dto.AddressDTO;
 import dto.CategoryDTO;
 import dto.ProductDTO;
-import entity.Cart;
-import entity.CartItem;
-import entity.Customer;
+import entity.*;
 import dto.ProductDTO;
-import entity.Product;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
@@ -78,11 +75,18 @@ public class ProductDAOImpl implements IProductDAO {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            entityManager.persist(product);
+
+            // Kiểm tra và lấy category từ DB
+            if (product.getCategory() != null) {
+                Category managedCategory = entityManager.find(Category.class, product.getCategory().getCategoryID());
+                product.setCategory(managedCategory); // Gán lại category đã được quản lý
+            }
+
+            entityManager.merge(product); // Hoặc entityManager.merge(product);
             transaction.commit();
             return true;
-        } catch (Exception e){
-            if(transaction.isActive()){
+        } catch (Exception e) {
+            if (transaction.isActive()) {
                 transaction.rollback();
             }
             e.printStackTrace();
@@ -91,6 +95,7 @@ public class ProductDAOImpl implements IProductDAO {
         }
         return false;
     }
+
 
     public boolean UpdateProduct(Product product) {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
@@ -189,7 +194,6 @@ public class ProductDAOImpl implements IProductDAO {
             entityManager.close();
         }
     }
-
 
 
     public List<Product> findRandomProducts(int offset, int limit, String CurrentProductName) {

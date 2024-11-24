@@ -89,7 +89,7 @@
 
 
             <!-- chức năng quản lý sản Phẩm -->
-            <div class="product-management" id="product-management">
+            <div class="product-management" id="product-management" >
                 <div class="product-management-header">
                     <div class="title">Quản lý sản phẩm</div>
                     <div class="table-container">
@@ -150,11 +150,9 @@
                     </div>
 
                     <!-- nút thêm sản phẩm -->
-                    <form action="ProductController" method="post">
+                    <form action="ProductController" method="post" enctype="multipart/form-data">
                     <div class="product-management-form" id="add-product-management-form">
                         <h3>Thêm sản phẩm mới</h3>
-                        <label for="product-id">ID</label>
-                        <input type="text" id="add-product-id" name="productId" placeholder="Nhập ID sản phẩm">
 
                         <label for="product-name">Tên sản phẩm</label>
                         <input type="text" id="product-name" name="productName" placeholder="Nhập tên sản phẩm">
@@ -162,23 +160,19 @@
                         <label for="add-product-price">Giá</label>
                         <input type="text" id="add-product-price" name="productPrice" placeholder="Nhập giá sản phẩm">
 
-                        <!-- <label for="product-image">Hình ảnh (URL)</label>
-                        <input type="text" id="product-image" placeholder="Nhập URL hình ảnh"> -->
-
-                        <div class="LoadImageContent">
-                            <label >Hình ảnh</label>
-                            <div class="picturebox">
-                                <img class="imageDisplay" src="" alt="No image" />
-                            </div>
-                            <button class="loadImageBtn">Load Image</button>
-                            <input type="file" name="productImage" class="imageInput" style="display: none;" accept="image/*">
-                            <button class="cancelBtn">Cancel Image</button>
-                        </div>
-
                         <label for="add-product-color">Màu sắc</label>
                         <input type="text" id="add-product-color" name="productColor" placeholder="Nhập màu sắc sản phẩm">
 
                         <label for="product-size">Size</label>
+                        <div class="LoadImageContent">
+                        <label >Hình ảnh</label>
+                        <div class="picturebox">
+                            <img id="add-product-imageDisplay" class="imageDisplay" src="" alt="No image" />
+                        </div>
+                        <button class="loadImageBtn">Load Image</button>
+                        <input type="file" name="productImage" class="imageInput" style="display: none;" accept="image/*">
+                        <button class="cancelBtn">Cancel Image</button>
+                        </div>
                         <input type="text" id="product-size" name="productSize" placeholder="Nhập size sản phẩm">
 
                         <label for="add-product-category">Danh mục</label>
@@ -197,37 +191,37 @@
                     </div>
                     </form>
 
-<%--                    Nút sửa sản phẩm--%>
-                    <form action="ProductController" method="post">
+<%--                    <%--  Nút sửa sản phẩm--%>
+                    <form action="ProductController" method="post" enctype="multipart/form-data">
                     <div class="product-management-form" id="edit-product-management-form">
                         <h3>Sửa sản phẩm</h3>
-                        <label for="product-id">ID</label>
-                        <input type="text" id="product-id" placeholder="Nhập ID sản phẩm">
+                        <label for="edit-product-id">ID</label>
+                        <input type="text" id="edit-product-id" name="edit-productID" placeholder="Nhập ID sản phẩm">
 
                         <label for="product-name">Tên sản phẩm</label>
-                        <input type="text" id="edit-product-name" placeholder="Nhập tên sản phẩm">
+                        <input type="text" id="edit-product-name" name="edit-productName" placeholder="Nhập tên sản phẩm">
 
                         <label for="edit-product-price">Giá</label>
-                        <input type="text" id="edit-product-price" placeholder="Nhập giá sản phẩm">
+                        <input type="text" id="edit-product-price" name="edit-productPrice"  placeholder="Nhập giá sản phẩm">
 
                         <div class="LoadImageContent">
                             <label >Hình ảnh</label>
                             <div class="picturebox">
-                                <img class="imageDisplay" src="" alt="No image" />
+                                <img id="edit-product-imageDisplay" class="imageDisplay" src="" alt="No image" />
                             </div>
                             <button class="loadImageBtn">Load Image</button>
-                            <input type="file" class="imageInput" style="display: none;" accept="image/*">
+                            <input type="file" name="edit-productImage" class="imageInput" style="display: none;" accept="image/*">
                             <button class="cancelBtn">Cancel Image</button>
                         </div>
 
                         <label for="product-color">Màu sắc</label>
-                        <input type="text" id="product-color" placeholder="Nhập màu sắc sản phẩm">
+                        <input type="text" id="product-color" name="edit-productColor" placeholder="Nhập màu sắc sản phẩm">
 
                         <label for="product-size">Size</label>
-                        <input type="text" id="edit-product-size" placeholder="Nhập size sản phẩm">
+                        <input type="text" id="edit-product-size" name="edit-productSize" placeholder="Nhập size sản phẩm">
 
                         <label for="edit-product-category">Danh mục</label>
-                        <select id="edit-product-category" name="CategoryName">
+                        <select id="edit-product-category" name="edit-CategoryName">
                             <c:forEach var="category" items="${CategoryList}">
                                 <option value="${category.getCategoryName()}">
                                         ${category.getCategoryName()}
@@ -236,22 +230,22 @@
                         </select>
 
                         <label for="edit-product-description">Mô tả</label>
-                        <input type="text" id="edit-product-description" placeholder="Nhập mô tả sản phẩm">
+                        <input type="text" id="edit-product-description" name="edit-productDescription" placeholder="Nhập mô tả sản phẩm">
 
-                        <button class="action-btn">Sửa sản phẩm</button>
+                        <button class="action-btn" name="submitAction" value="edit-product">Sửa sản phẩm</button>
                     </div>
                     </form>
 
                     <%-- Nút xóa sản phẩm--%>
                     <div class="product-management-form" id="delete-product-management-form">
                         <h3>Xóa sản phẩm</h3>
-                        <label for="product-id">ID</label>
+
                         <input type="text" id="delete-product-id" placeholder="Nhập ID sản phẩm">
                         <button class="action-btn">Xóa sản phẩm</button>
                     </div>
                 </div>
             </div>
-            <!-- kết thúc quản lý khách hàng -->
+            <!-- kết thúc quản lý sản phẩm -->
 
             <!-- Quản lý danh mục sản phẩm -->
             <div class="category-management" id="category-management">
@@ -263,18 +257,14 @@
                                 <th>ID</th>
                                 <th>Tên danh mục</th>
                                 <th>Sản phẩm trong danh mục</th>
-
                             </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>Nam</td>
-                                <td><a href="ThongTinSanPham.html" class="view-info-btn">Xem</a></td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Nữ</td>
-                                <td><a href="ThongTinSanPham.html" class="view-info-btn">Xem</a></td>
-                            </tr>
+                            <c:forEach var="category" items="${categoryList}">
+                                <tr>
+                                    <td>${category.categoryId}</td>
+                                    <td>${category.categoryName}</td>
+                                    <td><a href="ThongTinSanPham.html" class="view-info-btn">Xem</a></td>
+                                </tr>
+                            </c:forEach>
 
                         </table>
                     </div>
@@ -286,37 +276,42 @@
 
                     </div>
 
-                    <!-- nút thêm sản phẩm -->
+                    <!-- nút thêm danh mục sản phẩm -->
+                    <form action="CategoryController" method="post" >
                     <div class="category-management-form" id="add-category-management-form">
                         <h3>Thêm danh mục mới</h3>
-                        <label for="add-category-id">ID</label>
-                        <input type="text" id="add-category-id" placeholder="Nhập ID danh mục">
 
                         <label for="add-category-name">Tên danh mục</label>
-                        <input type="text" id="add-category-name" placeholder="Nhập tên danh mục">
+                        <input type="text" id="add-category-name" name="add-categoryName" placeholder="Nhập tên danh mục">
 
 
-                        <button class="action-btn">Thêm danh mục</button>
-
+                        <button class="action-btn" name="submitAction" value="add-category">Thêm danh mục</button>
                     </div>
-                    <%-- sửa--%>
+                    </form>
+
+
+                    <%-- sửa danh mục sản phẩm--%>
+                    <form action="CategoryController" method="post" >
                     <div class="category-management-form" id="edit-category-management-form">
                         <h3>Sửa danh mục</h3>
                         <label for="edit-category-id">ID</label>
-                        <input type="text" id="edit-category-id" placeholder="Nhập ID danh mục">
+                        <input type="text" id="edit-category-id" name="edit-categoryID" placeholder="Nhập ID danh mục">
 
                         <label for="edit-category-name">Tên danh mục</label>
-                        <input type="text" id="edit-category-name" placeholder="Nhập tên danh mục">
-                        <button class="action-btn">Sửa danh mục</button>
-
-
+                        <input type="text" id="edit-category-name" name="edit-categoryName" placeholder="Nhập tên danh mục">
+                        <button class="action-btn" name="submitAction" value="edit-category">Sửa danh mục</button>
                     </div>
+                    </form>
+
+                    <%--nút xóa danh mục sản phẩm--%>
+                    <form action="CategoryController" method="post" >
                     <div class="category-management-form" id="delete-category-management-form">
                         <h3>Xóa danh mục</h3>
                         <label for="delete-category-id">ID</label>
-                        <input type="text" id="delete-category-id" placeholder="Nhập ID danh mục">
-                        <button class="action-btn">Xóa danh mục</button>
+                        <input type="text" id="delete-category-id" name="delete-categoryID" placeholder="Nhập ID danh mục">
+                        <button class="action-btn" name="submitAction" value="delete-category">Xóa danh mục</button>
                     </div>
+                    </form>
                 </div>
             </div>
             <!-- Kết thúc quản lý danh mục sản phẩm -->
@@ -1065,13 +1060,14 @@
         var categoryName = button.getAttribute('data-category-name');
 
         // Điền thông tin vào form sửa sản phẩm
-        document.getElementById('product-id').value = productId;
+        console.log('imgURL:', imgURL); // Kiểm tra giá trị imgURL
+        document.getElementById('edit-product-id').value = productId;
         document.getElementById('edit-product-name').value = productName;
         document.getElementById('edit-product-price').value = productPrice;
         document.getElementById('product-color').value = productColor;
         document.getElementById('edit-product-size').value = productSize;
         document.getElementById('edit-product-description').value = productDescription;
-        document.querySelector('.imageDisplay').src = imgURL;
+        document.getElementById('edit-product-imageDisplay').src = imgURL;
         // Điền thông tin danh mục vào dropdown
         var categorySelect = document.getElementById('edit-product-category');
         for (var i = 0; i < categorySelect.options.length; i++) {
