@@ -13,5 +13,5 @@ public interface IProductDAO {
     boolean UpdateProduct(Product product);
     List<ProductDTO> getListProductDTO();
     List<ProductDTO> findByName(String name);
-    List<Product> findRandomProducts(int offset, int limit, String CurrentProductName);
+    List<Product> findRandomProducts(String CurrentProductName, int CID);
 }

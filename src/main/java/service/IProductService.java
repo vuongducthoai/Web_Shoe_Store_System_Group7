@@ -9,5 +9,5 @@ import java.util.Map;
 public interface IProductService {
     List<ProductDTO> findAllWithPagination(int offset, int limit);
     List<ProductDTO> findByName(String name);
-    Map<ProductDTO, Double> findRandomProducts(int offset, int limit, String CurrentProductName);
+    Map<ProductDTO, Double> findRandomProducts(String CurrentProductName, int CID);
 }

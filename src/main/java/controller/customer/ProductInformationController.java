@@ -1,6 +1,8 @@
 package controller.customer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.google.gson.Gson;
 import dto.ProductDTO;
 import dto.ResponseDTO;
 import dto.ReviewDTO;
@@ -43,7 +45,7 @@ public class ProductInformationController extends HttpServlet {
         if (productDetails == null || productDetails.isEmpty()) {
 //            req.setAttribute("error", "Không tìm thấy sản phẩm.");
 //            req.getRequestDispatcher("/error.jsp").forward(req, resp);
-            resp.getWriter().print("Không tìm thấy sản phẩm");
+            System.out.println("Không tìm thấy sản phẩm");
         } else {
             List<String> images = productDetails.stream()
                     .map(ProductDTO::getBase64Image)
@@ -74,7 +76,12 @@ public class ProductInformationController extends HttpServlet {
             req.setAttribute("averageRating", reviewService.averageRating(reviews));
 
 
-            Map<ProductDTO, Double> RecommendProducts = productService.findRandomProducts(1, 20, productName);
+            Map<ProductDTO, Double> RecommendProducts = productService.findRandomProducts(productName, productDetails.getFirst().getCategoryDTO().getCategoryId());
+            if (RecommendProducts == null || RecommendProducts.isEmpty()) {
+                System.out.println("RecommendProducts is null or empty.");
+                return;
+            }
+
             req.setAttribute("RecommendProducts", RecommendProducts);
 
             req.setAttribute("role", 1);
@@ -88,7 +95,15 @@ public class ProductInformationController extends HttpServlet {
 
 
 
-            req.setAttribute("productDetails", productDetails);
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.registerModule(new JavaTimeModule());
+
+            // Chuyển danh sách thành JSON
+            String jsonProductDetails = objectMapper.writeValueAsString(productDetails);
+
+            // Gửi JSON qua JSP
+            req.setAttribute("productDetails", jsonProductDetails);
+
             req.getRequestDispatcher("/ProductInformation.jsp").forward(req, resp);
         }
 
