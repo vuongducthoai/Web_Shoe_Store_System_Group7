@@ -22,7 +22,7 @@ public class Order {
     private int orderId;
 
     @ManyToOne
-    @JoinColumn(name = "customerID")
+    @JoinColumn(name = "customerID", referencedColumnName = "userID")
     private Customer customer;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.REMOVE)
@@ -38,7 +38,4 @@ public class Order {
     private OrderStatus orderStatus;
 
     private Date orderDate;
-
-    private String status;
-
 }

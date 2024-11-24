@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -23,4 +25,8 @@ public class Chat {
 
     @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL)
     private List<Message> messages;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "createdDate", columnDefinition = "DATETIME DEFAULT NOW()")
+    private Date createdDate;
 }

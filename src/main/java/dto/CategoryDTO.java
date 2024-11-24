@@ -17,7 +17,7 @@ public class CategoryDTO {
     private List<ProductDTO> productDTOList;
 
 
-    public CategoryDTO(int categoryId, String categoryNamet) {
+    public CategoryDTO(int categoryId, String categoryName) {
         this.categoryId = categoryId;
         this.categoryName = categoryName;
     }

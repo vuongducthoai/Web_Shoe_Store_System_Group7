@@ -14,7 +14,6 @@ import java.util.Date;
 @AllArgsConstructor
 public class CustomerDTO extends UserDTO {
 
-    private int userId;
     private Date dateOfBirth;
     private int loyalty;
     private AddressDTO addressDTO;

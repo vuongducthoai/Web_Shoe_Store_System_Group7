@@ -1,3 +1,4 @@
+
 package service.Impl;
 
 import dao.IOrderDao;
@@ -21,7 +22,7 @@ import java.util.List;
 public class OrderServiceImpl implements IOrderService {
     IOrderDao orderDao = new OrderImpl();
     @Override
-    public boolean CreateOrder(String json,AddressDTO addressDTO) {
+    public boolean CreateOrder(String json) {
         JSONObject jsonKQ = new JSONObject(json);
         String orderId = jsonKQ.getString("orderId");
         String extraData = jsonKQ.getString("extraData");
@@ -50,7 +51,7 @@ public class OrderServiceImpl implements IOrderService {
             order.setCustomer(customer);
             order.setOrderItems(OrderItemDTOList);
             order.setPayment(paymentDTO);
-        return orderDao.CreateOrder(order,addressDTO);
+        return orderDao.CreateOrder(order);
     }
 
     @Override
@@ -136,4 +137,13 @@ public class OrderServiceImpl implements IOrderService {
         }
         return filteredList;
     }
+    @Override
+    public List<OrderDTO> getOrdersByCustomerId(int customerId) {
+        return orderDao.findOrdersByCustomerId(customerId);
+    }
+    @Override
+    public OrderDTO getOrderById(int orderId){
+        return orderDao.getOrderById(orderId);
+    }
+
 }

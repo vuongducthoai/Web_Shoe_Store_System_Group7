@@ -13,6 +13,8 @@ public interface ICartDao {
     boolean RemoveItem( int cartItemId);
     boolean AddItem(int idProduct,int userId);
     boolean canAdd(int idProduct,int userId);
+    boolean canAddQuantity(int idProduct,int userId,int quantity);
     AddressDTO getAddressUser(int idUser);
     boolean deleteCartItem(int cartItemId);
+    boolean AddItemWithQuantity(int idProduct,int userId,int quantity);
 }
