@@ -31,6 +31,7 @@
         </ul>
 
         <div class="icons">
+
             <i style="font-size: 30px;" class="fa-solid fa-cart-shopping"></i>
             <i style="font-size: 30px; margin-left: 20px;" class="fa-solid fa-user"></i>
         </div>
