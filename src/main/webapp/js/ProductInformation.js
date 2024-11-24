@@ -48,8 +48,10 @@ fa_minus.onclick = () => {
         quantity.innerText = qual.toString();
 }
 
-
-
+function setResponseContentAndResponseID(){
+    var responseText = document.getElementById("responseText").value;
+    document.getElementById("responseContent").value= responseText;
+}
 
 
 

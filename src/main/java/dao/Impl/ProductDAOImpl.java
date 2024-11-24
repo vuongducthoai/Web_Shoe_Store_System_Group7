@@ -170,7 +170,7 @@ public class ProductDAOImpl implements IProductDAO {
                     .setParameter("name", name) // Tìm kiếm gần đúng
                     .getResultList();
 
-            // Chuyển đổi từ Product (Entity) sang ProductDTO
+
             return products.stream()
                     .map(product -> new ProductDTO(
                             product.getProductID(),
