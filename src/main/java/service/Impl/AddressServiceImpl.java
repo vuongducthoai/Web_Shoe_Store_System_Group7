@@ -3,6 +3,7 @@ package service.Impl;
 import dao.IAddressDAO;
 import dao.Impl.AddressDaoImpl;
 import dto.AddressDTO;
+import entity.Address;
 import service.IAddressService;
 
 public class AddressServiceImpl implements IAddressService {
@@ -14,13 +15,21 @@ public class AddressServiceImpl implements IAddressService {
     }
     @Override
     public boolean updateAddress(AddressDTO addressDTO) {
-//        AddressEntity addressEntity = new AddressEntity();
-//        addressEntity.setUserID(addressDTO.getUserID());
-//        addressEntity.setHouseNumber(addressDTO.getHouseNumber());
-//        addressEntity.setStreetName(addressDTO.getStreetName());
-//        addressEntity.setDistrict(addressDTO.getDistrict());
-//        addressEntity.setCity(addressDTO.getCity());
-//        return addressDAO.updateAddress(addressEntity);
-        return false;
+        try {
+            // Chuyển AddressDTO sang Address entity
+            Address address = new Address();
+            address.setAddressID(addressDTO.getAddressID());
+            address.setHouseNumber(addressDTO.getHouseNumber());
+            address.setStreetName(addressDTO.getStreetName());
+            address.setDistrict(addressDTO.getDistrict());
+            address.setCity(addressDTO.getCity());
+            address.setProvince(addressDTO.getProvince());
+
+            // Gọi DAO để cập nhật Address
+            return iAddressDAO.updateAddress(address);
+        } catch (Exception e) {
+            System.out.println("Error in service updateAddress: " + e.getMessage());
+            return false;
+        }
     }
 }

@@ -64,6 +64,7 @@ public class InformationController extends HttpServlet {
 
                 // Đưa các thông tin của khách hàng vào request
                 if (customerDTO != null) {
+                    req.setAttribute("userID", customerDTO.getUserID());
                     req.setAttribute("fullName", customerDTO.getFullName());
                     req.setAttribute("phone", customerDTO.getPhone());
                     req.setAttribute("dateOfBirth", customerDTO.getDateOfBirth());
@@ -93,33 +94,61 @@ public class InformationController extends HttpServlet {
     }
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String fullName= req.getParameter("fullName");
-        String phone = req.getParameter("phone");
-        String dateOfBirth = req.getParameter("dateOfBirth");
+        try {
+            // Lấy dữ liệu từ form
+            String fullName = req.getParameter("fullName");
+            String phone = req.getParameter("phone");
+            String dateOfBirthStr = req.getParameter("dateOfBirth");
 
-        CustomerDTO customerDTO = new CustomerDTO();
+            int userID = Integer.parseInt(req.getParameter("userID"));
+            int houseNumber = Integer.parseInt(req.getParameter("houseNumber"));
+            String streetName = req.getParameter("streetName");
+            String district = req.getParameter("district");
+            String city = req.getParameter("city");
 
-        Integer userID = Integer.parseInt(req.getParameter("userID"));
-        Integer houseNumber = Integer.parseInt(req.getParameter("houseNumber"));
-        String streetName = req.getParameter("streetName");
-        String district = req.getParameter("district");
-        String city = req.getParameter("city");
+            // Chuyển đổi dateOfBirth thành java.sql.Date
+            java.sql.Date dateOfBirth = java.sql.Date.valueOf(dateOfBirthStr);
 
-        // Đưa dữ liệu vào DTO
+            // Tạo các DTO
+            CustomerDTO customerDTO = new CustomerDTO();
+            customerDTO.setUserID(userID);
+            customerDTO.setFullName(fullName);
+            customerDTO.setPhone(phone);
+            customerDTO.setDateOfBirth(dateOfBirth);
 
-        AddressDTO addressDTO = new AddressDTO();
-        //addressDTO.getAddressID(userID);
-        addressDTO.setHouseNumber(houseNumber);
-        addressDTO.setStreetName(streetName);
-        addressDTO.setDistrict(district);
-        addressDTO.setCity(city);
-        boolean customerUpdated = iCustomerService.updateCustomer(customerDTO);
-        boolean addressUpdated = iAddressService.updateAddress(addressDTO);
-        // Kiểm tra kết quả và phản hồi người dùng
-        if (customerUpdated && addressUpdated) {
-            resp.sendRedirect("informationCustomer.jsp?success=true");
-        } else {
-            resp.sendRedirect("informationCustomer.jsp?error=true");
+            AddressDTO addressDTO = new AddressDTO();
+            addressDTO.setHouseNumber(houseNumber);
+            addressDTO.setStreetName(streetName);
+            addressDTO.setDistrict(district);
+            addressDTO.setCity(city);
+
+            System.out.println("Received fullName: " + fullName);
+            System.out.println("Received phone: " + phone);
+            System.out.println("Received dateOfBirth: " + dateOfBirthStr);
+            System.out.println("Received userID: " + userID);
+            System.out.println("Received houseNumber: " + houseNumber);
+            System.out.println("Received streetName: " + streetName);
+            System.out.println("Received district: " + district);
+            System.out.println("Received city: " + city);
+
+            // Cập nhật dữ liệu
+            boolean customerUpdated = iCustomerService.updateCustomer(customerDTO);
+            boolean addressUpdated = iAddressService.updateAddress(addressDTO);
+
+            // Kiểm tra kết quả cập nhật và thực hiện chuyển hướng
+            if (customerUpdated || addressUpdated) {
+                // Gọi lại doGet để lấy thông tin mới
+                resp.sendRedirect("Information"); // Điều này sẽ gọi lại doGet
+                System.out.println("Cập nhật thành công");
+            } else {
+                // Nếu cập nhật thất bại, chuyển hướng về cùng trang
+                System.out.println("Cập nhật thất bại");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();  // In chi tiết lỗi ra console
+            System.out.println("Error in doPost: " + e.getMessage());
+            resp.sendRedirect("/view/customer/informationCustomer.jsp");  // Chuyển hướng khi có lỗi
         }
     }
+
 }
