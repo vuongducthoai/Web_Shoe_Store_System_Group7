@@ -195,6 +195,7 @@ table {
     border: 1px solid #ccc;
     width: 100%;
     border-collapse: collapse;
+    max-height: 200px;
 }
 
 th, td {
@@ -213,6 +214,7 @@ th, td {
     max-width: 1000px;
     max-height: 480px;   */
     width: 100%;  /* Đảm bảo bảng chiếm toàn bộ chiều rộng */
+    max-height: 480px;
     overflow-y: auto;
     display: block;
 

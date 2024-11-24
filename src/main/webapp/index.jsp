@@ -126,14 +126,14 @@
     <div class="grid-wrapper">
         <c:forEach var="product" items="${productDTOList}">
             <div class="col- collection-item" data-item="" data-aos="zoom-in-up">
-                <figure><img src="./image/shoes2.png" alt=""></figure>
+                <figure><img src="${product.getBase64Image()}" alt=""></figure>
                 <div class="col-body">
 
                     <h3  class="heading-three">${product.productName}</h3>
-
+                    <h3  class="heading-four">${product.description}</h3>
                     <div class="col-footer">
-                        <p  class="shoe-price">${product.price}₫</p>
-                        <p  class="sub-heading">Đã bán :${product.quantity}</p>
+                        <p class="shoe-price">${product.price}₫</p>
+                        <p class="shoe-sold">Đã bán :${product.quantity}</p>
                     </div>
                 </div>
             </div>

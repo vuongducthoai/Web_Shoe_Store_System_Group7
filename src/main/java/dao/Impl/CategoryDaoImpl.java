@@ -32,14 +32,15 @@ public class CategoryDaoImpl implements ICategoryDao {
     }
 
     @Override
-    public void insert(Category category) {
+    public boolean insert(Category category) {
         EntityManager em = JpaConfig.getEmFactory().createEntityManager();
         EntityTransaction transaction = em.getTransaction();
 
         try {
             transaction.begin();
-            em.persist(category);
+            em.merge(category);
             transaction.commit();
+            return true;
         } catch (Exception e) {
             if (transaction.isActive()) {
                 transaction.rollback();
@@ -48,7 +49,35 @@ public class CategoryDaoImpl implements ICategoryDao {
         } finally {
             em.close();
         }
+        return false;
     }
+
+    public boolean remove(int categoryId) {
+        EntityManager em = JpaConfig.getEmFactory().createEntityManager();
+        EntityTransaction transaction = em.getTransaction();
+
+        try {
+            transaction.begin();
+            // Tìm đối tượng Category bằng ID
+            Category category = em.find(Category.class, categoryId);
+            if (category != null) {
+                em.remove(category);
+            } else {
+                return false;
+            }
+            transaction.commit();
+            return true;
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            em.close();
+        }
+        return false;
+    }
+
 
     @Override
     public List<Product> findAllProductByCategoryWithPagination(int id, int offset, int limit) {

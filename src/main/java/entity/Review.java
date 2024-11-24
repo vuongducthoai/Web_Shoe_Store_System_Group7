@@ -21,7 +21,7 @@ public class Review {
     private int ratingValue;
     private Date date;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "productID")
     private Product product;
 

@@ -1,11 +1,66 @@
 <!DOCTYPE html>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <html lang="en">
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chi Tiết Đơn Hàng</title>
+  <style>
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .overlay-content {
+      background: white;
+      padding: 20px;
+      border-radius: 5px;
+      text-align: center;
+      width: 400px;
+      position: relative;
+    }
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: red;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+    }
+    .overlay img {
+      max-width: 100%;
+      height: auto;
+      margin-bottom: 20px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+      text-align: left;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+  </style>
   <style>
     body {
       font-family: 'Arial', sans-serif;
@@ -203,12 +258,31 @@
     <!-- Hiển thị chi tiết các sản phẩm trong đơn hàng -->
     <div id="orderDetailContent" class="order-detail-content">
       <c:forEach var="item" items="${orderDetails.orderItems}">
-        <div class="order-detail-item" data-product-name="${item.productDTO.productName}">
-          <img src="https://th.bing.com/th/id/OIP.pl0SIxw_ezFPUpgrzWrjBgAAAA?w=383&h=383&rs=1&pid=ImgDetMain" alt="Product Image">
+        <div
+                class="order-detail-item"
+                data-order-item-id="${item.orderItemId}"
+                data-product-name="${item.productDTO.productName}"
+                data-product-image="${item.productDTO.getBase64Image()}"
+                data-product-color="${item.productDTO.color}"
+                data-product-size="${item.productDTO.size}"
+                data-product-quantity="${item.quantity}"
+                onclick="showForm(this)"
+        >
+          <img src="${item.productDTO.getBase64Image()}" alt="${item.productDTO.productName}" />
           <div>
             <p class="product-name">${item.productDTO.productName}</p>
             <p class="product-info">Phân loại: ${item.productDTO.color} - Size: ${item.productDTO.size}</p>
             <p class="product-info">Số lượng: x${item.quantity}</p>
+
+            <!-- Kiểm tra nếu reviewDTO không null -->
+            <c:if test="${not empty item.ProductDTO.reviewDTO}">
+              <p class="product-info"><b>Đánh giá chung:</b> ${item.ProductDTO.reviewDTO.comment}</p>
+              <p class="product-info"><b>Số sao:</b> ${item.ProductDTO.ratingValue}</p>
+            </c:if>
+            <!-- Nếu reviewDTO null -->
+            <c:if test="${empty item.ProductDTO.reviewDTO}">
+              <button class="btn-rate" onclick="showForm2(this)">Đánh giá chung</button>
+            </c:if>
           </div>
         </div>
       </c:forEach>
@@ -221,11 +295,45 @@
 
     <!-- Hiển thị tổng tiền của đơn hàng -->
     <div class="order-footer">
-      <p class="order-total">Tổng tiền: <span>${orderDetails.payment.amount}</span></p>
+      <p class="order-total">Tổng tiền:
+        <span><fmt:formatNumber value="${orderDetails.payment.amount}" groupingUsed="true"/> VND
+        </span></p>
       <c:if test="${orderDetails.orderStatus == 'COMPLETED'}">
         <button class="btn btn-rate">Đánh giá</button>
       </c:if>
       <button class="btn btn-contact">Liên hệ với shop</button>
+    </div>
+  </div>
+
+
+  <div id="productFormOverlay" class="overlay" style="display: none;">
+    <div class="overlay-content">
+      <button class="close-btn" onclick="closeForm()">X</button>
+      <h2>Thông tin sản phẩm</h2>
+      <form id="productForm">
+        <img id="formImage" src="" alt="Product Image" />
+        <div class="form-group">
+          <label for="formProductName">Tên sản phẩm:</label>
+          <input type="text" id="formProductName" name="productName" readonly />
+        </div>
+        <div class="form-group">
+          <label for="formProductColor">Phân loại:</label>
+          <input type="text" id="formProductColor" name="productColor" readonly />
+        </div>
+        <div class="form-group">
+          <label for="formProductSize">Size:</label>
+          <input type="text" id="formProductSize" name="productSize" readonly />
+        </div>
+        <div class="form-group">
+          <label for="formProductQuantity">Số lượng:</label>
+          <input type="text" id="formProductQuantity" name="productQuantity" readonly />
+        </div>
+        <div class="form-group">
+          <label for="formComment">Đánh giá:</label>
+          <textarea id="formComment" name="comment" placeholder="Viết đánh giá của bạn..."></textarea>
+        </div>
+        <button type="submit">Gửi đánh giá</button>
+      </form>
     </div>
   </div>
 </c:if>
@@ -251,6 +359,57 @@
         item.style.display = "none"; // Ẩn sản phẩm
       }
     });
+  }
+</script>
+<script>
+  function showForm2(element) {
+    // Lấy thông tin sản phẩm từ các thuộc tính data-*
+    const productName = element.getAttribute("data-product-name");
+    const productImage = element.getAttribute("data-product-image");
+    const productColor = element.getAttribute("data-product-color");
+    const productSize = element.getAttribute("data-product-size");
+    const productQuantity = element.getAttribute("data-product-quantity");
+
+    // Gán dữ liệu vào các trường của form
+    document.getElementById("formProductName").value = productName;
+    document.getElementById("formImage").src = productImage;
+    document.getElementById("formProductColor").value = productColor;
+    document.getElementById("formProductSize").value = productSize;
+    document.getElementById("formProductQuantity").value = productQuantity;
+
+    // Hiển thị overlay
+    document.getElementById("productFormOverlay").style.display = "flex";
+  }
+
+  function closeForm() {
+    // Ẩn overlay
+    document.getElementById("productFormOverlay").style.display = "none";
+  }
+
+  function showForm(element ) {
+    // Lấy thông tin sản phẩm từ các thuộc tính data-*
+    const productName = element.getAttribute("data-product-name");
+    const productImage = element.getAttribute("data-product-image");
+    const productColor = element.getAttribute("data-product-color");
+    const productSize = element.getAttribute("data-product-size");
+    const productQuantity = element.getAttribute("data-product-quantity");
+
+    // Gán dữ liệu vào các trường của form
+    document.getElementById("formProductName").value = productName;
+    document.getElementById("formImage").src = productImage;
+    document.getElementById("formProductColor").value = productColor;
+    document.getElementById("formProductSize").value = productSize;
+    document.getElementById("formProductQuantity").value = productQuantity;
+
+    // Hiển thị overlay
+    document.getElementById("productFormOverlay").style.display = "flex";
+    //   lay trang thai của button document.getElementById("productFormOverlay")
+
+  }
+
+  function closeForm() {
+    // Ẩn overlay
+    document.getElementById("productFormOverlay").style.display = "none";
   }
 </script>
 </body>

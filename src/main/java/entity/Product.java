@@ -31,8 +31,8 @@ public class Product {
     private boolean status;
     private String description;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Review> reviews;
+    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Review review;
 
     @OneToMany(mappedBy = "product") // tham chieu den "product" trong cardItem
     private List<CartItem> orders;
@@ -43,7 +43,7 @@ public class Product {
     private LocalDateTime createDate;
 
     @ManyToOne
-    @JoinColumn(name = "categoryID")
+    @JoinColumn(name = "categoryID", nullable = true)
     private Category category;
 
     @OneToMany(mappedBy = "product")

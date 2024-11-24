@@ -146,11 +146,16 @@ figure img{
     color: var(--primar-clr);
 }
 .heading-two{
-    font-size: 2.8rem;
+    font-size: 2.4rem;
     text-transform: capitalize;
 }
 .heading-three{
-    font-size: 1.4rem;
+    font-size: 1.6rem;
+    text-transform: capitalize;
+}
+
+.heading-four{
+    font-size: 1.2rem;
     text-transform: capitalize;
 }
 
@@ -237,12 +242,15 @@ section .main .main_content .main_text h1 span{
 }
 
 section .main .main_content .main_text p{
-    color: tomato;
-    width: 600px;
+    color: orange;
+    -webkit-background-clip: text;
+    width: 300px;
+    font-size: 25px;
+    font-weight: 800;
     text-align: justify;
-    line-height: 21px;
+    line-height: 35px;
     position: relative;
-    top: 85px;
+    top: 60px;
     left: 5%;
 }
 
@@ -250,7 +258,7 @@ section .main .main_content .main_image img{
     width: 450px;
     position: relative;
     left: -10%;
-    top: 150px;
+    top: 0;
 }
 
 section .main .social_icon{
@@ -427,6 +435,13 @@ section .main .button:hover i{
 .col-footer .shoe-price {
     color: red;
     font-size: 18px;
+    font-weight: 600;
+}
+
+.col-footer .shoe-sold{
+    color: black;
+    font-weight: 500;
+    font-size: 17px;
 }
 
 .col-footer .rating-icon {

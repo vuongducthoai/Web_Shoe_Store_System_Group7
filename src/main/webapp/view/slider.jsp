@@ -1,3 +1,5 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%--
   Created by IntelliJ IDEA.
   User: Asus
@@ -21,60 +23,37 @@
   <div class="main" id="Home">
     <div class="slider">
       <div class="slides-container">
-        <div class="slide">
-          <div class="main_content">
-            <div>
-              <div class="main_text">
-                <h1>NIKE<br><span>Collectiona</span></h1>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry...</p>
-                <button style="margin: 100px 0 0 50px;" class="btn btn-hero">pre-order now</button>
+        <c:forEach var="promotionProduct" items="${promotionProductDTOList}">
+          <c:set var="productName" value="${promotionProduct.product.productName}" />
+          <c:set var="nameParts" value="${fn:split(productName, ' ')}" />
+
+          <!-- Set individual parts based on array indices -->
+          <c:set var="namePart1" value="${nameParts[0]}" />
+          <c:set var="namePart2" value="${nameParts[1]}" />
+
+          <div class="slide">
+            <div class="main_content">
+              <div>
+                <div class="main_text">
+                  <h1>${namePart1}<br><span>${namePart2}</span></h1>
+                  <p>${promotionProduct.product.description}</p>
+                  <button style="margin: 100px 0 0 50px;" class="btn btn-hero">pre-order now</button>
+                </div>
+                <div style="margin-top: 100px;" class="hero-img-off" data-aos="zoom-in-up">
+                  <h3 class="heading-three">${promotionProduct.promotion.promotionName}</h3>
+                  <p>StartDate: ${promotionProduct.promotion.startDate}</p>
+                  <p>EndDate: ${promotionProduct.promotion.endDate}</p>
+                </div>
               </div>
-              <div style="margin-top: 200px;" class="hero-img-off" data-aos="zoom-in-up">
-                <h3 class="heading-three">get up to 50% OFF</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est inventore </p>
+              <div class="main_image">
+                <img src="../image/shoes3.png">
               </div>
-            </div>
-            <div class="main_image">
-              <img src="../image/shoes.png">
             </div>
           </div>
-        </div>
-        <div class="slide">
-          <div class="main_content">
-            <div>
-              <div class="main_text">
-                <h1>NIKE<br><span>Collectiona</span></h1>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry...</p>
-                <button style="margin: 100px 0 0 50px;" class="btn btn-hero">pre-order now</button>
-              </div>
-              <div style="margin-top: 200px;" class="hero-img-off" data-aos="zoom-in-up">
-                <h3 class="heading-three">get up to 50% OFF</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est inventore </p>
-              </div>
-            </div>
-            <div class="main_image">
-              <img src="../image/shoes.png">
-            </div>
-          </div>
-        </div>
-        <div class="slide">
-          <div class="main_content">
-            <div>
-              <div class="main_text">
-                <h1>NIKE<br><span>Collectiona</span></h1>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry...</p>
-                <button style="margin: 100px 0 0 50px;" class="btn btn-hero">pre-order now</button>
-              </div>
-              <div style="margin-top: 200px;" class="hero-img-off" data-aos="zoom-in-up">
-                <h3 class="heading-three">get up to 50% OFF</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est inventore </p>
-              </div>
-            </div>
-            <div class="main_image">
-              <img src="../image/shoes.png">
-            </div>
-          </div>
-        </div>
+        </c:forEach>
+
+
+
       </div>
     </div>
     <div class="slider-controls">

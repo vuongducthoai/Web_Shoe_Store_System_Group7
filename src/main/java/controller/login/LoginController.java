@@ -74,7 +74,8 @@ public class LoginController extends HttpServlet {
                 HttpSession session = req.getSession();
                 //Luu thong tin nguoi dung vao session
                 session.setAttribute("user", account);
-                req.getRequestDispatcher("/index.jsp").forward(req, resp);
+                resp.sendRedirect("/home");
+                return;
             } else {
                 req.setAttribute("loginSuccess" , true);
                 req.setAttribute("errorMessage", "Email hoặc Password không chính xác");
