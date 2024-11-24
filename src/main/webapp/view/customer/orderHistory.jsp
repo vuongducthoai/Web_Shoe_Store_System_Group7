@@ -204,6 +204,9 @@
     .order-footer {
       display: flex;
       justify-content: space-between;
+
+
+
       align-items: center;
     }
 
@@ -291,7 +294,7 @@
       <div class="order-content">
         <c:if test="${not empty order.orderItems}">
           <c:set var="firstItem" value="${order.orderItems[0]}" />
-          <img src="https://th.bing.com/th/id/OIP.pl0SIxw_ezFPUpgrzWrjBgAAAA?w=383&h=383&rs=1&pid=ImgDetMain" alt="Product Image">
+          <img src="${firstItem.productDTO.getBase64Image()}" alt="${firstItem.productDTO.productName}" />
           <div class="product-details">
             <p class="product-name">${firstItem.productDTO.productName}</p>
             <p class="product-variant">Phân loại hàng: ${firstItem.productDTO.color} - Size: ${firstItem.productDTO.size}</p>

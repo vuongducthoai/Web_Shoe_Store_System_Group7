@@ -62,7 +62,7 @@ public class ProductDTO {
     private CategoryDTO categoryDTO;
     private List<PromotionProductDTO> promotionProducts;
     private int quantity;
-    private List<ReviewDTO> reviewDTOList;
+    private ReviewDTO reviewDTO;
     public String getBase64Image() {
         if (image != null) {
             return "data:image/png;base64," + Base64.getEncoder().encodeToString(image);
