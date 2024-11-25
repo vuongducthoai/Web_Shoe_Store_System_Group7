@@ -14,7 +14,7 @@
 </head>
 <body>
 <header>
-    <%--<jsp:include page="./view/header.jsp"></jsp:include>--%>
+    <jsp:include page="./view/header.jsp"></jsp:include>
 </header>
 <main>
 
@@ -69,7 +69,7 @@
                             <span class="quantity">1</span>
                             <i class="fa-solid fa-plus" style="color:black; cursor:pointer;"></i>
                         </div>
-                        <button class="add-to-cart-btn flex-grow-1 bg-dark rounded-pill ms-5" style="color:white">Add To Cart</button>
+                        <button class="add-to-cart-btn flex-grow-1 rounded-pill ms-5" style="color:white; background-color: #FF5722; border: none;">Add To Cart</button>
 
                     </div>
                 </div>
@@ -229,7 +229,7 @@
 
 </main>
 <footer>
-    <%--<jsp:include page="./view/footer.jsp"></jsp:include>--%>
+    <jsp:include page="./view/footer.jsp"></jsp:include>
 </footer>
 <script>
     // Nhận dữ liệu từ backend
