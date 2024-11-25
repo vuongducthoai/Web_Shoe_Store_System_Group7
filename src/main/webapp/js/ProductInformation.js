@@ -63,6 +63,7 @@ const colorElements = document.querySelectorAll('.circle'); // Các nút màu
 const sizeElements = document.querySelectorAll('.size'); // Các nút size
 const quantityDisplay = document.getElementById('quantity-display'); // Nơi hiển thị số lượng
 var label = document.querySelector(".label-quantity-remain");
+var selectedQuantity = document.querySelector(".quantity");
 let selectedColor = null;
 let selectedSize = null;
 
@@ -128,6 +129,12 @@ addToCartBtn.onclick = function () {
         alert('Xin lỗi, sản phẩm bạn chọn đã hết hàng!');
         return;
     }
+
+    if(quantityDisplay < Number(selectedQuantity)) {
+        alert('Sản phẩm không đủ số lượng!');
+        return;
+    }
+
 
     // Nếu tất cả điều kiện đều hợp lệ
     alert('Sản phẩm đã được thêm vào giỏ hàng!');
