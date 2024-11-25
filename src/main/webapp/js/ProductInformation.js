@@ -1,3 +1,5 @@
+
+
 var images = document.querySelectorAll(".product-images-item")
 var imageFocus = document.querySelector(".product-image-focus")
 
@@ -120,24 +122,27 @@ addToCartBtn.onclick = function () {
 
     // Kiểm tra nếu người dùng chưa chọn sản phẩm (màu hoặc size)
     if (!selectedColor || !selectedSize) {
-        alert('Vui lòng chọn màu sắc và kích thước!');
+        showSuccessToast({ title: "Warning", message: "Vui lòng chọn màu sắc và kích thước.", type: "Warning" });
+
         return;
     }
 
-    // Kiểm tra nếu sản phẩm hết hàng
     if (Number(quantityDisplay) === 0) {
-        alert('Xin lỗi, sản phẩm bạn chọn đã hết hàng!');
+        showSuccessToast({ title: "Warning", message: "Sản phẩm bạn chọn đã hết hàng.", type: "Warning" });
+
         return;
     }
 
-    if(quantityDisplay < Number(selectedQuantity)) {
-        alert('Sản phẩm không đủ số lượng!');
+    if(quantityDisplay < Number(selectedQuantity.innerHTML)) {
+        showSuccessToast({ title: "Warning", message: "Sản phẩm không đủ số lượng.", type: "Warning" });
+
         return;
     }
 
 
     // Nếu tất cả điều kiện đều hợp lệ
-    alert('Sản phẩm đã được thêm vào giỏ hàng!');
+    showSuccessToast({ title: "Warning", message: "Thêm vào giỏ hàng thành công.", type: "Warning" });
+
 };
 
 
