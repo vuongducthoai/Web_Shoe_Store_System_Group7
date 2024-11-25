@@ -32,4 +32,7 @@ public class Review {
 
     @OneToOne(mappedBy = "review")
     private Response response;
+
+    @Lob
+    private byte[] image;
 }
