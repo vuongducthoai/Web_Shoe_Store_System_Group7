@@ -19,4 +19,5 @@ public class ReviewDTO {
     private String comment;
     private ResponseDTO response;
     private ProductDTO productDTO;
+    private byte[] image;
 }
