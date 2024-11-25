@@ -47,12 +47,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 productDiv.dataset.item = product.categoryDTO.categoryId;
                 fragment.appendChild(productDiv);
                 productDiv.innerHTML = `
-                        <figure><img src="${product.getBase64Image()}" alt="${product.productName}"></figure>
+                        <figure><img src="../image/shoes1.png" alt="${product.productName}"></figure>
                         <div class="col-body">
                             <h3 class="two">${product.productName}</h3>
                             <h3 class="heading-three">${product.description}</h3>
                             <div class="col-footer">
-                                <p class="shoe-price">$${product.price}₫</p>
+                                <p class="shoe-price">${product.price}₫</p>
                                 <p class="sub-heading">Đã bán: ${product.quantity}</p>
                                 <p class="rating-icon"><i class="fa-solid fa-star"></i> <span class="rating-num">4.9</span></p>
                             </div>
@@ -93,18 +93,18 @@ document.addEventListener("DOMContentLoaded", function () {
     // const defaultCategory = document.querySelector(".btn-col.active")?.getAttribute("data-btn") || "all"; // Lấy category mặc định
     // loadProducts(defaultCategory);
 
-    let ul = document.querySelector("ul");
-    let burger_icon = document.querySelector(".burger_icon");
-
-    burger_icon.addEventListener("click", () => {
-        if (burger_icon.classList.contains("fa-bars")) {
-            burger_icon.classList.add("fa-xmark");
-            burger_icon.classList.remove("fa-bars");
-            ul.classList.add("active");
-        } else {
-            burger_icon.classList.remove("fa-xmark");
-            burger_icon.classList.add("fa-bars");
-            ul.classList.remove("active");
-        }
-    });
+    // let ul = document.querySelector("ul");
+    // let burger_icon = document.querySelector(".burger_icon");
+    //
+    // burger_icon.addEventListener("click", () => {
+    //     if (burger_icon.classList.contains("fa-bars")) {
+    //         burger_icon.classList.add("fa-xmark");
+    //         burger_icon.classList.remove("fa-bars");
+    //         ul.classList.add("active");
+    //     } else {
+    //         burger_icon.classList.remove("fa-xmark");
+    //         burger_icon.classList.add("fa-bars");
+    //         ul.classList.remove("active");
+    //     }
+    // });
 });

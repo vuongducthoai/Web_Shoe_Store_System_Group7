@@ -23,7 +23,7 @@ import java.util.*;
 
 import java.io.IOException;
 
-@WebServlet("/home")
+@WebServlet(urlPatterns = {"/home", "/sign-in", "/sign-up"})
 public class HomeController extends HttpServlet {
     private final ICategoryService categoryService = new CategoryServiceImpl();
     private final IProductService productService = new ProductServiceImpl();
@@ -31,20 +31,28 @@ public class HomeController extends HttpServlet {
     private final IProductPromotion productPromotion = new ProductPromotionImpl();
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<CategoryDTO> categoryDTOList = categoryService.listCategory();
-        req.setAttribute("categoryDTOList", categoryDTOList);
-        List<ProductDTO> productDTOList = productService.findAllWithPagination(0 ,10);
-        req.setAttribute("productDTOList", productDTOList);
-        List<ReviewDTO> reviewDTOList = reviewService.getTop5Reviews();
-        req.setAttribute("reviewDTOList", reviewDTOList);
+        String path = req.getServletPath();
+        if(path.equals("/home")) {
+            List<CategoryDTO> categoryDTOList = categoryService.listCategory();
+            req.setAttribute("categoryDTOList", categoryDTOList);
+            List<ProductDTO> productDTOList = productService.findAllWithPagination(0 ,10);
+            req.setAttribute("productDTOList", productDTOList);
+            List<ReviewDTO> reviewDTOList = reviewService.getTop5Reviews();
+            req.setAttribute("reviewDTOList", reviewDTOList);
 
 //        LocalDate endDate= LocalDate.now();
 //        LocalDate startDate  = LocalDate.now().minusDays(7);
 
-        LocalDate startDate = LocalDate.parse("2022-01-06");
-        LocalDate endDate = LocalDate.parse("2023-11-25");
-        List<PromotionProductDTO> promotionProductDTOList = productPromotion.findTop5ProductPromotionNow(startDate, endDate);
-        req.setAttribute("promotionProductDTOList", promotionProductDTOList);
-        req.getRequestDispatcher("index.jsp").forward(req, resp);
+            LocalDate startDate = LocalDate.parse("2022-01-06");
+            LocalDate endDate = LocalDate.parse("2023-11-25");
+            List<PromotionProductDTO> promotionProductDTOList = productPromotion.findTop5ProductPromotionNow(startDate, endDate);
+            req.setAttribute("promotionProductDTOList", promotionProductDTOList);
+            req.getRequestDispatcher("index.jsp").forward(req, resp);
+        } else if(path.equals("/sign-in")) {
+            resp.sendRedirect("/view/login.jsp");
+        } else if(path.equals("/sign-up")) {
+            resp.sendRedirect("/view/Register.jsp");
+        }
+
     }
 }

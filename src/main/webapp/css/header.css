@@ -10,12 +10,6 @@ li{
     list-style-type: none;
     text-transform: capitalize;
 }
-a{
-    text-decoration: none;
-    color: #fff;
-    text-transform: capitalize;
-}
-
 
 .nav nav ul{
     display: flex;
@@ -95,4 +89,16 @@ section nav .icons i{
 
 section nav .icons i:hover{
     color: #c72092;
+}
+
+nav .icons a {
+    color: orangered !important;
+    font-size: 20px;
+    font-weight: 600;
+    margin-left: 5px;
+    display: inline-block;
+}
+
+nav .icons a:hover {
+    color: #c72092 !important;
 }

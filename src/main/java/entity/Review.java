@@ -32,5 +32,4 @@ public class Review {
 
     @OneToOne(mappedBy = "review")
     private Response response;
-
 }
