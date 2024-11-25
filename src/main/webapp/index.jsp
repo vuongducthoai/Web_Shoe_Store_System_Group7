@@ -126,7 +126,7 @@
     <div class="grid-wrapper">
         <c:forEach var="product" items="${productDTOList}">
             <div class="col- collection-item" data-item="" data-aos="zoom-in-up">
-                <figure><img src="${product.getBase64Image()}" alt=""></figure>
+                <figure><img src="./image/shoes3.png" alt=""></figure>
                 <div class="col-body">
 
                     <h3  class="heading-three">${product.productName}</h3>

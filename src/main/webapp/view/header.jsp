@@ -5,6 +5,7 @@
   Time: 10:17 AM
   To change this template use File | Settings | File Templates.
 --%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -31,11 +32,23 @@
         </ul>
 
         <div class="icons">
-
-            <i style="font-size: 30px;" class="fa-solid fa-cart-shopping"></i>
+            <i style="font-size: 30px; position: relative;" class="fa-solid fa-bell"><span style="position: absolute;left: 20px; top: -10px;font-size: 18px; color: red">3</span></i>
+            <i style="font-size: 30px; margin-left: 20px; position: relative;" class="fa-solid fa-cart-shopping"><span style="position: absolute;left: 35px; top: -10px;font-size: 18px; color: red">3</span></i>
             <i style="font-size: 30px; margin-left: 20px;" class="fa-solid fa-user"></i>
-        </div>
 
+
+            <c:choose>
+                <c:when test="${sessionScope.user == null}">
+                    <a class="sign-in" href="/sign-in">Đăng nhập</a>
+                    <span style="font-size: 20px; font-weight: 900;">|</span>
+                    <a class="sign-up" href="/sign-up">Đăng ký</a>
+                </c:when>
+                <c:otherwise>
+                    <a class="sign-out" href="/logout">Đăng xuất</a>
+                </c:otherwise>
+            </c:choose>
+
+        </div>
     </nav>
 </section>
 </body>
