@@ -51,4 +51,22 @@ public class ResponseDAOImpl implements IResponseDAO {
         }
     }
 
+    public boolean deleteResponse(int responseID) {
+        try(EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager()){
+            EntityTransaction transaction = entityManager.getTransaction();
+            try{
+                transaction.begin();
+                Response response = entityManager.find(Response.class, responseID);
+                if(response == null) return false;
+                entityManager.remove(response);
+                transaction.commit();
+                return true;
+            }catch(Exception e){
+                e.printStackTrace();
+                if(transaction.isActive()) transaction.rollback();
+                return false;
+            }
+        }
+    }
+
 }

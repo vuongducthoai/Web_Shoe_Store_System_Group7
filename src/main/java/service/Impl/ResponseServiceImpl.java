@@ -33,4 +33,5 @@ public class ResponseServiceImpl implements IResponseService {
         }
         return false;
     }
+    public boolean deleteResponse(int responseID) {return responseDAO.deleteResponse(responseID);}
 }

@@ -140,10 +140,40 @@ addToCartBtn.onclick = function () {
     }
 
 
-    // Nếu tất cả điều kiện đều hợp lệ
-    showSuccessToast({ title: "Warning", message: "Thêm vào giỏ hàng thành công.", type: "Warning" });
+    var matchedProduct = productDetails.find(item=>
+        item.color === selectedColor &&
+        item.size === selectedSize
+    );
+
+    if(!matchedProduct) {
+        alert("Không tìm thấy sản phẩm")
+        return;
+    }
+    var productID = matchedProduct.productId;
+    const form = document.createElement('form')
+    form.method = 'POST';
+    form.action = '${pageContext.request.contextPath}/cart/add';
+
+    const inputProductId = document.createElement('input')
+    inputProductId.type = 'hidden'
+    inputProductId.name = 'productID'
+    inputProductId.value =  productID;
+
+    const inputQuantity = document.createElement('input');
+    inputQuantity.type= 'hidden';
+    inputQuantity.name = 'quantity'
+    inputQuantity.value = selectedQuantity.innerHTML;
+
+    form.appendChild(inputProductId);
+    form.appendChild(inputQuantity);
+
+    document.body.appendChild(form);
+    alert("ID: " + productID.toString() + " so luong: " + selectedQuantity.innerHTML);
+    // form.submit();
 
 };
+
+
 
 
 
