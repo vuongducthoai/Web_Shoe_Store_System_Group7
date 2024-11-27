@@ -46,10 +46,14 @@ public class HomeController extends HttpServlet {
 //        LocalDate endDate= LocalDate.now();
 //    LocalDate startDate  = LocalDate.now().minusDays(7);
 
-            LocalDate startDate = LocalDate.parse("2022-01-06");
-            LocalDate endDate = LocalDate.parse("2023-11-25");
-          // List<PromotionProductDTO> promotionProductDTOList = productPromotion.findTop5ProductPromotionNow(startDate, endDate);
-//           req.setAttribute("promotionProductDTOList", promotionProductDTOList);
+//
+//            LocalDate startDate = LocalDate.parse("2022-01-06");
+//            LocalDate endDate = LocalDate.parse("2023-11-25");
+            LocalDate startDate = LocalDate.parse("2023-05-30");
+            LocalDate endDate = LocalDate.parse("2023-06-29");
+           List<PromotionProductDTO> promotionProductDTOList = productPromotion.findTop5ProductPromotionNow(startDate, endDate);
+           req.setAttribute("promotionProductDTOList", promotionProductDTOList);
+
             req.getRequestDispatcher("./index.jsp").forward(req, resp);
         } else if(path.equals("/sign-in")) {
             resp.sendRedirect("/view/login.jsp");

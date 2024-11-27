@@ -5,82 +5,92 @@ import dao.IProductPromotion;
 import dto.ProductDTO;
 import dto.PromotionDTO;
 import dto.PromotionProductDTO;
-import entity.PromotionProduct;
 import enums.DiscountType;
-import enums.PromotionType;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
 public class ProductPromotionImpl implements IProductPromotion {
     @Override
     public List<PromotionProductDTO> findTop5ProductPromotionNow(LocalDate startDate, LocalDate endDate) {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
         List<PromotionProductDTO> promotionProductDTOList = new ArrayList<>();
+
         try {
-            // Native SQL query using positional parameters
-            String sql = "SELECT p.productName, pr.startDate, pr.endDate, p.description, p.image, pr.discountValue, pr.discountType, pr.promotionName " +
+            String sql = "SELECT p.productName, pr.startDate, pr.endDate, p.description, p.image, pr.discountValue, pr.discountType, pr.promotionName, p.price " +
                     "FROM PromotionProduct pp " +
                     "INNER JOIN Promotion pr ON pp.promotionID = pr.promotionID " +
                     "INNER JOIN Product p ON pp.productID = p.productID " +
-                    "WHERE pr.isActive = ?1 " +
-                    "AND p.status = ?2 " +
-                    "AND pr.promotionType = ?3 " +
-                    "AND pr.startDate <= ?4 " +
-                    "AND pr.endDate >= ?5 " +
-                    "ORDER BY pr.startDate DESC";
+                    "WHERE pr.isActive = 1 " +
+                    "AND p.status = 1 " +
+                    "AND pr.promotionType = 'VOUCHER_PRODUCT' " +
+                    "AND pr.startDate <= '" + startDate +
+                    "' AND pr.endDate >=  '" + endDate +
+                    "' ORDER BY pr.startDate DESC";
 
-            // Create the native SQL query
             Query query = entityManager.createNativeQuery(sql);
+            query.setMaxResults(5); // Set to 5 if that's the correct limit
 
-            // Set positional parameters
-            query.setParameter(1, 1);
-            query.setParameter(2, 1);
-            query.setParameter(3, PromotionType.VOUCHER_PRODUCT);
-            query.setParameter(4, Date.valueOf(startDate));
-            query.setParameter(5, Date.valueOf(endDate));
-
-            // Limit the result to top 5 products
-            query.setMaxResults(7);
-
-            // Execute the query and get results
             List<Object[]> results = query.getResultList();
+            System.out.println(results.size());
             for (Object[] row : results) {
                 String productName = (String) row[0];
-                LocalDate startDate1 = (LocalDate) row[1];
-                LocalDate endDate1 = (LocalDate) row[2];
+                Timestamp startTimestamp = (Timestamp) row[1];  // Cast to Timestamp
+                Timestamp endTimestamp = (Timestamp) row[2];    // Cast to Timestamp
+
+                Date startDate1 = new Date(startTimestamp.getTime());
+                Date endDate1 = new Date(endTimestamp.getTime());
+                System.out.println("Start Date: " + startDate1);
+                System.out.println("End Date: " + endDate1);
+
                 String description = (String) row[3];
+                byte[] image = (byte[]) row[4];
+                double discountValue = (double) row[5];
+                String discountType = (String) row[6];
+                String promotionName = (String) row[7];
+                double price = (double) row[8];
 
+                PromotionProductDTO promotionProductDTO = new PromotionProductDTO();
+                PromotionDTO promotionDTO = new PromotionDTO();
+                promotionDTO.setPromotionName(promotionName);
+                promotionDTO.setDiscountValue(discountValue);
 
-//                PromotionProductDTO promotionProductDTO = new PromotionProductDTO();
-//
-//                PromotionDTO promotionDTO = new PromotionDTO();
-//                promotionDTO.setPromotionName(promotionProduct.getPromotion().getPromotionName());
-//                promotionDTO.setDiscountValue(promotionProduct.getPromotion().getDiscountValue());
-//                promotionDTO.setDiscountType(promotionProduct.getPromotion().getDiscountType());
-//                promotionDTO.setEndDate(promotionProduct.getPromotion().getEndDate());
-//                promotionDTO.setStartDate(promotionProduct.getPromotion().getStartDate());
-//                promotionProductDTO.setPromotion(promotionDTO);
-//
-//                ProductDTO productDTO = new ProductDTO();
-//                productDTO.setProductName(promotionProduct.getProduct().getProductName());
-//                if(promotionProduct.getPromotion().getDiscountType().equals(DiscountType.VND)){
-//                    productDTO.setPrice(promotionProduct.getProduct().getPrice() - promotionProduct.getPromotion().getDiscountValue());
-//                } else {
-//                    productDTO.setPrice(promotionProduct.getProduct().getPrice()*promotionProduct.getPromotion().getDiscountValue());
-//                }
-//                productDTO.setImage(promotionProduct.getProduct().getImage());
-//                productDTO.setDescription(promotionProduct.getProduct().getDescription());
-//                promotionProductDTO.setProduct(productDTO);
-//                promotionProductDTOList.add(promotionProductDTO);
+                DiscountType discountTypeEnum = DiscountType.valueOf(discountType);
+                if (DiscountType.Percentage == discountTypeEnum) {
+                    promotionDTO.setDiscountType(DiscountType.Percentage);
+                } else {
+                    promotionDTO.setDiscountType(DiscountType.VND);
+                }
+
+                promotionDTO.setEndDate(endDate1);
+                promotionDTO.setStartDate(startDate1);
+                promotionProductDTO.setPromotion(promotionDTO);
+
+                // Ensure productDTO is initialized before usage
+                ProductDTO productDTO = new ProductDTO();
+                productDTO.setProductName(productName);
+                productDTO.setImage(image);
+                productDTO.setDescription(description);
+                productDTO.setPrice(price);
+
+                if (promotionDTO.getDiscountType().equals(DiscountType.VND)) {
+                    productDTO.setPrice(productDTO.getPrice() - promotionDTO.getDiscountValue());
+                } else {
+                    productDTO.setPrice(productDTO.getPrice() * promotionDTO.getDiscountValue());
+                }
+
+                promotionProductDTO.setProduct(productDTO);
+                promotionProductDTOList.add(promotionProductDTO);
             }
-
         } catch (Exception e) {
-            e.printStackTrace();
+            // Log the exception or handle it as needed
+            System.out.println( e.getMessage());
+
         } finally {
             entityManager.close();
         }

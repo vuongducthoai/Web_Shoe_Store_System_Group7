@@ -39,24 +39,6 @@ public class CategoryServiceImpl implements ICategoryService {
 
     @Override
     public List<ProductDTO> findAllProductByCategoryWithPagination(int categoryId, int offset, int limit) {
-        List<Product> categoryList = categoryDao.findAllProductByCategoryWithPagination(categoryId, offset, limit);
-        List<ProductDTO> productDTOList = new ArrayList<>();
-        for (Product product : categoryList) {
-            ProductDTO productDTO = new ProductDTO();
-            Category category = product.getCategory();
-            CategoryDTO categoryDTO = new CategoryDTO();
-            category.setCategoryID(product.getProductID());
-            categoryDTO.setCategoryId(category.getCategoryID());
-            productDTO.setCategoryDTO(categoryDTO);
-            productDTO.setProductId(product.getProductID());
-            productDTO.setProductName(product.getProductName());
-            productDTO.setCreateDate(product.getCreateDate());
-            productDTO.setQuantity(productService.countProductName(productDTO.getProductName()));
-            productDTO.setDescription(product.getDescription());
-            productDTO.setPrice(product.getPrice());
-            productDTO.setImage(product.getImage());
-            productDTOList.add(productDTO);
-        }
-        return productDTOList;
+        return categoryDao.findAllProductByCategoryWithPagination(categoryId, offset, limit);
     }
 }
