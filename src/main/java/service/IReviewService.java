@@ -1,6 +1,5 @@
 package service;
 
-import dto.ProductDTO;
 import dto.ReviewDTO;
 
 import java.util.List;

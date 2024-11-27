@@ -34,7 +34,6 @@ public class HomeController extends HttpServlet {
         String path = req.getServletPath();
         if(path.equals("/home")) {
             List<CategoryDTO> categoryDTOList = categoryService.listCategory();
-            System.out.println("123");
             req.setAttribute("categoryDTOList", categoryDTOList);
             List<ProductDTO> productDTOList = productService.findAllWithPagination(0 ,8);
             req.setAttribute("productDTOList", productDTOList);
@@ -42,12 +41,15 @@ public class HomeController extends HttpServlet {
             List<ReviewDTO> reviewDTOList = reviewService.getTop5Reviews();
             req.setAttribute("reviewDTOList", reviewDTOList);
 
+
+
 //        LocalDate endDate= LocalDate.now();
 //    LocalDate startDate  = LocalDate.now().minusDays(7);
 
             LocalDate startDate = LocalDate.parse("2022-01-06");
             LocalDate endDate = LocalDate.parse("2023-11-25");
-           List<PromotionProductDTO> promotionProductDTOList = productPromotion.findTop5ProductPromotionNow(startDate, endDate);            req.setAttribute("promotionProductDTOList", promotionProductDTOList);
+          // List<PromotionProductDTO> promotionProductDTOList = productPromotion.findTop5ProductPromotionNow(startDate, endDate);
+//           req.setAttribute("promotionProductDTOList", promotionProductDTOList);
             req.getRequestDispatcher("./index.jsp").forward(req, resp);
         } else if(path.equals("/sign-in")) {
             resp.sendRedirect("/view/login.jsp");
