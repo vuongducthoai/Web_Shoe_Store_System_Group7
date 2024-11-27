@@ -16,32 +16,14 @@ import java.util.List;
 import java.util.Map;
 
 public class ProductServiceImpl implements IProductService {
+
     private ProductDAOImpl productDAO = new ProductDAOImpl();
     private IReviewDAO reviewDAO = new ReviewDAOImpl();
     private IReviewService reviewService = new ReviewServiceImpl();
 
     @Override
     public List<ProductDTO> findAllWithPagination(int offset, int limit) {
-        List<Product> categoryList = productDAO.findAllWithPagination(offset, limit);
-        List<ProductDTO> productDTOList = new ArrayList<>();
-        for (Product product : categoryList) {
-            ProductDTO productDTO = new ProductDTO();
-            Category category = product.getCategory();
-            CategoryDTO categoryDTO = new CategoryDTO();
-            category.setCategoryID(product.getProductID());
-            categoryDTO.setCategoryId(category.getCategoryID());
-            productDTO.setCategoryDTO(categoryDTO);
-            productDTO.setProductId(product.getProductID());
-            productDTO.setProductName(product.getProductName());
-            productDTO.setDescription(product.getDescription());
-            productDTO.setCreateDate(product.getCreateDate());
-            productDTO.setPrice(product.getPrice());
-            productDTO.setImage(product.getImage());
-            productDTO.setQuantity(productDAO.countProductName(product.getProductName()));
-            System.out.println("abc: " + productDTO.getQuantity());
-            System.out.println(productDTO.getQuantity());
-            productDTOList.add(productDTO);
-        }
+        List<ProductDTO> productDTOList = productDAO.findAllWithPagination(offset, limit);
         return productDTOList;
     }
 
