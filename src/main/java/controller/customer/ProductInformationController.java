@@ -112,60 +112,88 @@ public class ProductInformationController extends HttpServlet {
     public void destroy() {
     }
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String action = "";
+        action = req.getParameter("action").trim();
+        System.out.println("Action là: " + action);
+        String productName = req.getParameter("productName").trim();
 
-
-
-        try{
-            String productName = req.getParameter("productName").trim();
-            if (productName == null || productName.trim().isEmpty()) {
-                req.setAttribute("error", "Tên sản phẩm không được cung cấp.");
-                req.getRequestDispatcher("/errorNULL.jsp").forward(req, resp);
+        if(action.equals("deleteResponse")){
+            try{
+                String responseIDStr = req.getParameter("responseID");
+                if(responseIDStr == null || responseIDStr.trim().isEmpty()) {
+                    System.out.println("responseID is null or empty.");
+                    return;
+                }
+                if(responseService.deleteResponse(Integer.parseInt(responseIDStr))){
+                    String redirectURL = req.getContextPath() + "/product/details?productName=" + productName;
+                    resp.sendRedirect(redirectURL);
+                }
+            }catch (Exception e) {
+                System.out.println(e.getMessage());
+                e.printStackTrace();
+                req.setAttribute("error", "Có lỗi xảy ra: " + e.getMessage());
+                req.getRequestDispatcher("/errorCatchDelete.jsp").forward(req, resp);
                 return;
             }
 
-            String reviewIDStr = req.getParameter("reviewID");
-            String responseContent = req.getParameter("responseContent");
-            String responseIDStr = req.getParameter("ResponseID");
-
-            int reviewID=0;
-            if (reviewIDStr != null && !reviewIDStr.trim().isEmpty()) {
-                reviewID = Integer.parseInt(reviewIDStr);
-            }
-
-
-            int responseID = Integer.parseInt(responseIDStr);
-
-
-
-            ReviewDTO reviewDTO = new ReviewDTO();
-            reviewDTO.setReviewID(reviewID);
-
-            UserDTO userDTO = new UserDTO();
-            userDTO.setUserID(48);
-
-            ResponseDTO response = new ResponseDTO();
-            response.setResponseID(responseID);
-            response.setContent(responseContent);
-            response.setReview(reviewDTO);
-            response.setAdmin(userDTO);
-            Date currentDate = new Date();
-            response.setTimeStamp(currentDate);
-
-
-            if(responseService.addResponse(response)) {
-                String redirectURL = req.getContextPath() + "/product/details?productName=" + productName;
-                resp.sendRedirect(redirectURL);
-            }else  {
-                req.getRequestDispatcher("/errorAddFalse.jsp").forward(req, resp);
-                return;
-            }
-        }catch (Exception e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-            req.setAttribute("error", "Có lỗi xảy ra: " + e.getMessage());
-            req.getRequestDispatcher("/errorCatch.jsp").forward(req, resp);
-            return;
         }
+
+
+
+
+        else if (action.equals("updateResponse")){
+            try{
+                if (productName == null || productName.trim().isEmpty()) {
+                    req.setAttribute("error", "Tên sản phẩm không được cung cấp.");
+                    req.getRequestDispatcher("/errorNULL.jsp").forward(req, resp);
+                    return;
+                }
+
+                String reviewIDStr = req.getParameter("reviewID");
+                String responseContent = req.getParameter("responseContent");
+                String responseIDStr = req.getParameter("ResponseID");
+
+                int reviewID=0;
+                if (reviewIDStr != null && !reviewIDStr.trim().isEmpty()) {
+                    reviewID = Integer.parseInt(reviewIDStr);
+                }
+
+
+                int responseID = Integer.parseInt(responseIDStr);
+
+
+
+                ReviewDTO reviewDTO = new ReviewDTO();
+                reviewDTO.setReviewID(reviewID);
+
+                UserDTO userDTO = new UserDTO();
+                userDTO.setUserID(48);
+
+                ResponseDTO response = new ResponseDTO();
+                response.setResponseID(responseID);
+                response.setContent(responseContent);
+                response.setReview(reviewDTO);
+                response.setAdmin(userDTO);
+                Date currentDate = new Date();
+                response.setTimeStamp(currentDate);
+
+
+                if(responseService.addResponse(response)) {
+                    String redirectURL = req.getContextPath() + "/product/details?productName=" + productName;
+                    resp.sendRedirect(redirectURL);
+                }else  {
+                    req.getRequestDispatcher("/errorAddFalse.jsp").forward(req, resp);
+                    return;
+                }
+            }catch (Exception e) {
+                System.out.println(e.getMessage());
+                e.printStackTrace();
+                req.setAttribute("error", "Có lỗi xảy ra: " + e.getMessage());
+                req.getRequestDispatcher("/errorCatch.jsp").forward(req, resp);
+                return;
+            }
+        }
+
 
         //doGet(req, resp);
     }

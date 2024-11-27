@@ -1,20 +1,12 @@
 package dao.Impl;
 import JpaConfig.JpaConfig;
 import dao.IReviewDAO;
-import dto.CustomerDTO;
-import dto.ResponseDTO;
-import dto.ReviewDTO;
-
-import entity.Customer;
-import entity.Product;
-import entity.Review;
-
-import dto.UserDTO;
+import dto.*;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ReviewDAOImpl implements IReviewDAO {
     @Override
@@ -27,7 +19,7 @@ public class ReviewDAOImpl implements IReviewDAO {
                     .map(String::valueOf)
                     .reduce((id1, id2) -> id1 + "," + id2)
                     .orElse("");
-            String sql = "SELECT  u.fullName, r.comment, r.ratingValue, r.date, res.adminID, adminUser.fullName, res.content, res.timeStamp, r.reviewID, res.responseID " +
+            String sql = "SELECT  u.fullName, r.comment, r.ratingValue, r.date, res.adminID, adminUser.fullName, res.content, res.timeStamp, r.reviewID, res.responseID,r.image " +
                     "FROM Review r " +
                     "JOIN Product p ON r.productID = p.productID " +
                     "JOIN User u ON r.customerID = u.userID " +
@@ -73,7 +65,7 @@ public class ReviewDAOImpl implements IReviewDAO {
                 dto.setDate((Date) row[3]);
                 dto.setRatingValue((Integer) row[2]);
                 dto.setCustomer(customer);
-
+                dto.setImage((byte[]) row[10]);
                 dto.setResponse(response);
                 reviewDTOs.add(dto);
             }
@@ -85,67 +77,65 @@ public class ReviewDAOImpl implements IReviewDAO {
 
 
     @Override
-    public List<Review> getTop5Reviews() {
+    public List<ReviewDTO> getTop5Reviews() {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
-        List<Review> uniqueReviews = new ArrayList<>();
+        List<ReviewDTO> uniqueReviews = new ArrayList<>();
         try {
             // Native SQL Query
-            String sql = "SELECT DISTINCT r.reviewID, r.comment, r.ratingValue, r.date, " +
-                    "c.userID, u.fullName, p.productID, p.productName, p.size " +
-                    "FROM Review r " +
-                    "JOIN Customer c ON r.customerID = c.userID " +
-                    "JOIN User u ON c.userID = u.userID " +  // Tham chiếu đúng bảng User
-                    "JOIN Product p ON r.productID = p.productID " +
-                    "ORDER BY r.ratingValue DESC";
+            String sql = "WITH RankedReviews AS (\n" +
+                    "    SELECT u.userID,\n" +
+                    "           r.comment,\n" +
+                    "           r.ratingValue,\n" +
+                    "           r.date,\n" +
+                    "           u.fullName,\n" +
+                    "           p.productName,\n" +
+                    "           p.size,\n" +
+                    "           ROW_NUMBER() OVER (PARTITION BY u.userID ORDER BY r.date DESC) AS rn\n" +
+                    "    FROM Review r\n" +
+                    "    INNER JOIN Product p ON r.productID = p.productID\n" +
+                    "    INNER JOIN User u ON r.customerID = u.userID\n" +
+                    ")\n" +
+                    "SELECT userID,\n" +
+                    "       comment,\n" +
+                    "       ratingValue,\n" +
+                    "       date,\n" +
+                    "       fullName,\n" +
+                    "       productName,\n" +
+                    "       size\n" +
+                    "FROM RankedReviews\n" +
+                    "WHERE rn = 1\n" +
+                    "ORDER BY userID;\n";
 
-            // Execute the query
-            List<Object[]> results = entityManager.createNativeQuery(sql).getResultList();
+            Query query = entityManager.createNativeQuery(sql);
 
-            // Use a LinkedHashMap to ensure unique customers (by userID)
-            Map<Integer, Review> uniqueReviewMap = new LinkedHashMap<>();
+            query.setMaxResults(7);
+
+            // Execute the query and get the results
+            List<Object[]> results = query.getResultList();
 
             for (Object[] row : results) {
-                // Map result row to Review, Customer, and Product
-                int reviewID = (int) row[0];
                 String comment = (String) row[1];
                 int ratingValue = (int) row[2];
                 Date date = (Date) row[3];
+                String fullName = (String) row[4];
+                String productName = (String) row[5];
+                int size = (int) row[6];
 
-                int customerID = (int) row[4];
-                String fullName = (String) row[5];
+                CustomerDTO customerDTO = new CustomerDTO();
+                customerDTO.setFullName(fullName);
 
-                int productID = (int) row[6];
-                String productName = (String) row[7];
-                int size = (int)row[8];
+                ProductDTO productDTO = new ProductDTO();
+                productDTO.setProductName(productName);
+                productDTO.setSize(size);
 
-                // Create Customer object
-                Customer customer = new Customer();
-                customer.setUserID(customerID);
-                customer.setFullName(fullName);
+                ReviewDTO reviewDTO = new ReviewDTO();
+                reviewDTO.setComment(comment);
+                reviewDTO.setRatingValue(ratingValue);
+                reviewDTO.setDate(date);
+                reviewDTO.setCustomer(customerDTO);
+                reviewDTO.setProductDTO(productDTO);
 
-                // Create Product object
-                Product product = new Product();
-                product.setProductID(productID);
-                product.setProductName(productName);
-                product.setSize(size);
-
-                // Create Review object
-                Review review = new Review();
-                review.setReviewID(reviewID);
-                review.setComment(comment);
-                review.setRatingValue(ratingValue);
-                review.setDate(date);
-                review.setCustomer(customer);
-                review.setProduct(product);
-
-                // Add review to the map (keyed by customer ID to ensure uniqueness)
-                uniqueReviewMap.putIfAbsent(customerID, review);
-            }
-
-            // Convert to list and limit to top 5
-            uniqueReviews = new ArrayList<>(uniqueReviewMap.values());
-            if (uniqueReviews.size() > 5) {
-                uniqueReviews = uniqueReviews.subList(0, 5);
+                uniqueReviews.add(reviewDTO);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -154,5 +144,6 @@ public class ReviewDAOImpl implements IReviewDAO {
         }
         return uniqueReviews;
     }
+
 
 }

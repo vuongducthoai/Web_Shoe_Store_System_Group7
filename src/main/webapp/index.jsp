@@ -139,13 +139,14 @@
             </div>
         </c:forEach>
     </div>
-    <button style="margin-top: 20px; background-color: #baba14;" id="load-more-btn" class="btn">Load More</button>
+    <button style="margin-top: 20px; background-color: #baba14;" id="load-more-btns" class="btn">Load More</button>
 </section>
 <!-- customer review -->
 <jsp:include page="view/customer/review.jsp"></jsp:include>
 <script src="./js/toastMessage.js"></script>
 <%--Footer--%>
 <jsp:include page="./view/footer.jsp"></jsp:include>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="./js/index.js"></script>
 <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
 <script>

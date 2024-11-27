@@ -2,57 +2,64 @@ package dao.Impl;
 
 import JpaConfig.JpaConfig;
 import dao.IProductDAO;
-import dto.AddressDTO;
 import dto.CategoryDTO;
 import dto.ProductDTO;
 import entity.*;
-import dto.ProductDTO;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.Query;
-import jakarta.persistence.TypedQuery;
+import jakarta.persistence.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static util.ConvertImageStringToByteArray.convertBase64ToByteArray;
+
+
 public class ProductDAOImpl implements IProductDAO {
 
     @Override
-    public List<Product> findAllWithPagination(int offset, int limit) {
+    public List<ProductDTO> findAllWithPagination(int offset, int limit) {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        List<ProductDTO> productDTOList = new ArrayList<>();
         try {
-            // JPQL để lấy tất cả các sản phẩm
-            String query = "SELECT p FROM Product p";
-            TypedQuery<Product> typedQuery  = entityManager.createQuery(query, Product.class);
-
-            //Tang gioi hạn để láy thêm dữ liệu (gấp 3 limit)
-            int fetchSize = limit * 2;
+           //Native SQL Query
+            String sql = "SELECT p.productName, MAX(p.price), SUBSTRING_INDEX(GROUP_CONCAT(TO_BASE64(p.image)), ',', 1), " +
+                    "MIN(p.description), COUNT(p.productName) " +
+                    "FROM Product p GROUP BY p.productName";
+            Query query = entityManager.createQuery(sql);
 
             // Phân trang
-            typedQuery.setFirstResult(offset);
-            typedQuery.setMaxResults(fetchSize);
+            query.setFirstResult(offset);
+            query.setMaxResults(limit);
 
             // Thực thi truy vấn
-            List<Product> products = typedQuery.getResultList();
+            List<Object[]> results = query.getResultList();
 
-            // Loại bỏ các sản phẩm trùng tên (giữ lại 1 sản phẩm cho mỗi tên)
-            Map<String, Product> uniqueProductsMap = new LinkedHashMap<>();
-            for (Product product : products) {
-                uniqueProductsMap.putIfAbsent(product.getProductName(), product);
+            for(Object[] result : results) {
+                ProductDTO productDTO = new ProductDTO();
+                String productName = (String) result[0];
+                System.out.println(productName);
+                double price = (double) result[1];
+                String imageString = (String) result[2];
+                String description = (String) result[3];
+                int quantity = ((Long) result[4]).intValue();
+
+                byte[] image = convertBase64ToByteArray(imageString);
+
+                productDTO.setProductName(productName);
+                productDTO.setPrice(price);
+                productDTO.setDescription(description);
+                productDTO.setImage(image);
+                productDTO.setQuantity(quantity);
+                productDTOList.add(productDTO);
             }
-
-            List<Product> uniqueProducts = new ArrayList<>(uniqueProductsMap.values());
-            return uniqueProducts.size() > limit ? uniqueProducts.subList(0, limit) // lay dung so luong
-                                : uniqueProducts;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             entityManager.close();
         }
-        return null;
+        return productDTOList;
     }
+
+
 
     @Override
     public int countProductName(String name) {

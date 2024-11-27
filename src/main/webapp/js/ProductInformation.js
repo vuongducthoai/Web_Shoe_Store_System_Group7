@@ -1,3 +1,5 @@
+
+
 var images = document.querySelectorAll(".product-images-item")
 var imageFocus = document.querySelector(".product-image-focus")
 
@@ -120,25 +122,59 @@ addToCartBtn.onclick = function () {
 
     // Kiểm tra nếu người dùng chưa chọn sản phẩm (màu hoặc size)
     if (!selectedColor || !selectedSize) {
-        alert('Vui lòng chọn màu sắc và kích thước!');
+        showSuccessToast({ title: "Warning", message: "Vui lòng chọn màu sắc và kích thước.", type: "Warning" });
+
         return;
     }
 
-    // Kiểm tra nếu sản phẩm hết hàng
     if (Number(quantityDisplay) === 0) {
-        alert('Xin lỗi, sản phẩm bạn chọn đã hết hàng!');
+        showSuccessToast({ title: "Warning", message: "Sản phẩm bạn chọn đã hết hàng.", type: "Warning" });
+
         return;
     }
 
     if(quantityDisplay < Number(selectedQuantity.innerHTML)) {
-        alert('Sản phẩm không đủ số lượng!');
+
+        showSuccessToast({ title: "Warning", message: "Sản phẩm không đủ số lượng.", type: "Warning" });
+
         return;
     }
 
 
-    // Nếu tất cả điều kiện đều hợp lệ
-    alert('Sản phẩm đã được thêm vào giỏ hàng!');
+    var matchedProduct = productDetails.find(item=>
+        item.color === selectedColor &&
+        item.size === selectedSize
+    );
+
+    if(!matchedProduct) {
+        alert("Không tìm thấy sản phẩm")
+        return;
+    }
+    var productID = matchedProduct.productId;
+    const form = document.createElement('form')
+    form.method = 'POST';
+    form.action = '${pageContext.request.contextPath}/cart/add';
+
+    const inputProductId = document.createElement('input')
+    inputProductId.type = 'hidden'
+    inputProductId.name = 'productID'
+    inputProductId.value =  productID;
+
+    const inputQuantity = document.createElement('input');
+    inputQuantity.type= 'hidden';
+    inputQuantity.name = 'quantity'
+    inputQuantity.value = selectedQuantity.innerHTML;
+
+    form.appendChild(inputProductId);
+    form.appendChild(inputQuantity);
+
+    document.body.appendChild(form);
+    alert("ID: " + productID.toString() + " so luong: " + selectedQuantity.innerHTML);
+    // form.submit();
+
 };
+
+
 
 
 

@@ -6,7 +6,7 @@ import entity.Product;
 import java.util.List;
 
 public interface IProductDAO {
-    List<Product> findAllWithPagination(int offset, int limit);
+    List<ProductDTO> findAllWithPagination(int offset, int limit);
 
     int countProductName(String name);
     boolean AddProduct(Product product);
