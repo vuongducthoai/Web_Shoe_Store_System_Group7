@@ -130,7 +130,7 @@ addToCartBtn.onclick = function () {
         return;
     }
 
-    if(quantityDisplay < Number(selectedQuantity)) {
+    if(quantityDisplay < Number(selectedQuantity.innerHTML)) {
         alert('Sản phẩm không đủ số lượng!');
         return;
     }

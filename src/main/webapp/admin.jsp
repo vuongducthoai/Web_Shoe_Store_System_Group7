@@ -191,7 +191,7 @@
                     </div>
                     </form>
 
-<%--                    <%--  Nút sửa sản phẩm--%>
+                    <%--  Nút sửa sản phẩm--%>
                     <form action="ProductController" method="post" enctype="multipart/form-data">
                     <div class="product-management-form" id="edit-product-management-form">
                         <h3>Sửa sản phẩm</h3>
@@ -212,6 +212,8 @@
                             <button class="loadImageBtn">Load Image</button>
                             <input type="file" name="edit-productImage" class="imageInput" style="display: none;" accept="image/*">
                             <button class="cancelBtn">Cancel Image</button>
+                            <!-- Lưu ảnh cũ vào hidden input -->
+                            <input type="hidden" name="currentImageURL" value="${product.getBase64Image()}">
                         </div>
 
                         <label for="product-color">Màu sắc</label>
@@ -262,7 +264,15 @@
                                 <tr>
                                     <td>${category.categoryId}</td>
                                     <td>${category.categoryName}</td>
-                                    <td><a href="ProductInCategory.jsp" class="view-info-btn">Xem</a></td>
+                                    <td>
+                                        <form action="CategoryController" method="post" style="display:inline;">
+                                            <input type="hidden" name="submitAction" value="viewProducts">
+                                            <input type="hidden" name="categoryId" value="${category.categoryId}">
+                                            <input type="hidden" name="categoryName" value="${category.categoryName}">
+                                            <input type="submit" class="view-info-btn" value="Xem">
+                                        </form>
+                                    </td>
+
                                 </tr>
                             </c:forEach>
 
