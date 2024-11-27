@@ -134,6 +134,7 @@ addToCartBtn.onclick = function () {
     }
 
     if(quantityDisplay < Number(selectedQuantity.innerHTML)) {
+
         showSuccessToast({ title: "Warning", message: "Sản phẩm không đủ số lượng.", type: "Warning" });
 
         return;

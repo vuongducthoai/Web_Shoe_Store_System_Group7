@@ -27,6 +27,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Locale;
 
@@ -52,7 +53,7 @@ public class productController extends HttpServlet {
         List<CategoryDTO> categoryDTOList = categoryDao.categoryDTOList();
         if (categoryDTOList == null || categoryDTOList.isEmpty()) {
             // Nếu không có sản phẩm, in ra thông báo lỗi
-            System.out.println("Error: No products found or retrieval failed.");
+            System.out.println("Error: No categorys found or retrieval failed.");
         }
         else {
             // Duyệt qua danh sách và in ra thông tin từng đối tượng
@@ -137,7 +138,6 @@ public class productController extends HttpServlet {
 
 
         Product product = new Product();
-
         product.setProductName(productName);
         product.setPrice(productPrice);
         product.setImage(imageBytes);
@@ -197,6 +197,12 @@ public class productController extends HttpServlet {
                     outputStream.write(buffer, 0, bytesRead);
                 }
                 imageBytes = outputStream.toByteArray(); // Chuyển đổi ảnh thành mảng byte
+            }
+        }
+        else {
+            ProductDTO existingProduct = productDAO.getProductByID(productID); // Lấy sản phẩm hiện tại từ database
+            if (existingProduct != null) {
+                imageBytes = existingProduct.getImage(); // Gán lại ảnh cũ
             }
         }
 

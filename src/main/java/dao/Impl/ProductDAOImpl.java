@@ -147,7 +147,7 @@ public class ProductDAOImpl implements IProductDAO {
                     );
                 }
 
-                System.out.println(categoryDTO.getCategoryName());
+               
 
                 // Tạo đối tượng ProductDTO
                 ProductDTO dto = new ProductDTO(
@@ -171,6 +171,72 @@ public class ProductDAOImpl implements IProductDAO {
             entityManager.close();
         }
     }
+
+    public ProductDTO getProductByID(int id) {
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        ProductDTO productDTO = null;
+
+        try {
+            // Truy vấn sản phẩm theo ID
+            Product product = entityManager.createQuery(
+                            "SELECT p FROM Product p WHERE p.id = :id", Product.class)
+                    .setParameter("id", id)
+                    .getSingleResult();  // Sử dụng getSingleResult để chỉ lấy một kết quả duy nhất
+
+            // Chuyển đổi từ Product sang ProductDTO
+            productDTO = new ProductDTO();
+            productDTO.setProductId(product.getProductID());
+            productDTO.setProductName(product.getProductName());
+            productDTO.setPrice(product.getPrice());
+            productDTO.setDescription(product.getDescription());
+            productDTO.setImage(product.getImage());
+        } catch (Exception e) {
+            // Trường hợp không tìm thấy sản phẩm với id
+            e.printStackTrace();
+            return null;
+        } finally {
+            entityManager.close();
+        }
+
+        return productDTO;
+    }
+
+    public List<ProductDTO> findListProductByCategoryID(int id) {
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        try {
+            // Truy vấn các sản phẩm có tên chứa từ khóa
+            List<Product> products = entityManager.createQuery(
+                            "SELECT p FROM Product p WHERE p.category.categoryID = :id", Product.class)
+                    .setParameter("id", id) // Tìm kiếm gần đúng
+                    .getResultList();
+
+            return products.stream()
+                    .map(product -> new ProductDTO(
+                            product.getProductID(),
+                            product.getProductName(),
+                            product.getPrice(),
+                            product.getImage(),
+                            product.getColor(),
+                            product.getSize(),
+                            product.isStatus(),
+                            product.getDescription(),
+                            null, // cartItemDTOList
+                            null, // orderItemDTOList
+                            new CategoryDTO(product.getCategory().getCategoryID(), null, null), // categoryDTO
+                            null  // promotionDTO
+                    ))
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            entityManager.close();
+        }
+    }
+
+
+
+
     @Override
     public List<ProductDTO> findByName(String name) {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();

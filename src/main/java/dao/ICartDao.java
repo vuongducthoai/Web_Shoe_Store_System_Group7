@@ -17,4 +17,6 @@ public interface ICartDao {
     AddressDTO getAddressUser(int idUser);
     boolean deleteCartItem(int cartItemId);
     boolean AddItemWithQuantity(int idProduct,int userId,int quantity);
+    int CountQuantity(ProductDTO productDTO);
+    int CountQuantityCart(int UserID);
 }
