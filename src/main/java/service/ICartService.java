@@ -17,4 +17,5 @@ public interface ICartService {
     boolean deleteCartItem(int cartItemId);
     double CalculateDiscount(List<CartItemDTO> cartItem,int idUser);
     boolean AddItemWithQuantity(int idProduct,int userId,int quantity);
+    int CountQuantityCartItem(int idUSer);
 }

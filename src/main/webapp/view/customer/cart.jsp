@@ -38,7 +38,7 @@
         .cart-title {
             font-weight: bold;
             font-size: 2rem;
-            margin: 2rem 0;
+            margin: 7rem 0 2rem 0;
         }
         .cart-item {
             border: 1px solid #e0e0e0;
@@ -47,8 +47,8 @@
             margin-bottom: 0.5rem;
         }
         .cart-item img {
-            width: 120px;
-            height: 120px;
+            width: 150px;
+            height: 150px;
             border-radius: 10px;
         }
         .order-summary {
@@ -107,16 +107,6 @@
 <div id="custom-toast"></div>
 <jsp:include page="../../view/header.jsp"></jsp:include>
 <div class="container" style="margin: 69px;">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item">
-                    Home
-            </li>
-            <li aria-current="page" class="breadcrumb-item active">
-                Cart
-            </li>
-        </ol>
-    </nav>
     <h2 class="cart-title">
         YOUR CART
     </h2>
@@ -124,11 +114,11 @@
         <div class="col-md-8">
             <c:forEach var="cart" items="${CartList}">
                 <div class="cart-item d-flex align-items-center">
-                    <img class="border border-dark" alt="Gradient Graphic T-shirt" height="120" src="${cart.productDTO.getBase64Image()}" width="120"/>
+                    <img class="border border-dark" alt="Gradient Graphic T-shirt" height="150" src="${cart.productDTO.getBase64Image()}" width="150"/>
                     <div class="ms-3">
-                        <h5>
+                        <h4>
                             ${cart.productDTO.productName}
-                        </h5>
+                        </h4>
                         <p>
                             Size: ${cart.productDTO.size}
                             <br/>
@@ -137,6 +127,9 @@
                             <div class="border rounded ms-2"
                                  style="background-color: ${cart.productDTO.color}; width: 30px; height: 30px;"></div>
                         </div>
+                        </p>
+                        <p class="text-muted">
+                            Stock Left: ${cart.productDTO.quantity}
                         </p>
                         <p class="fw-bold">
                             <fmt:formatNumber value="${cart.productDTO.price}" groupingUsed="true"/> VND

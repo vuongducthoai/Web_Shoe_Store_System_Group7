@@ -167,6 +167,7 @@ public class CartDaoImpl implements ICartDao {
             return true;
         }
         catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -207,6 +208,40 @@ public class CartDaoImpl implements ICartDao {
             return false;
         }
     }
+
+    @Override
+    public int CountQuantity(ProductDTO productDTO) {
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        try{
+            long count = (long) entityManager.createQuery("select count (p) from Product p where" +
+                    " p.productName like :name and p.color like :color and " +
+                    "p.size = :size and p.status = true")
+                    .setParameter("name",productDTO.getProductName())
+                    .setParameter("color",productDTO.getColor())
+                    .setParameter("size",productDTO.getSize())
+                    .getSingleResult();
+            return (int) count;
+        }
+        catch (Exception e){
+            return 0;
+        }
+    }
+
+    @Override
+    public int CountQuantityCart(int UserID) {
+        try{
+            EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+            long count = (long) entityManager.createQuery("select sum (p.quantity) from CartItem p " +
+                            "where p.cart.customer.userID=:id")
+                    .setParameter("id",UserID)
+                    .getSingleResult();
+            return (int) count;
+        }
+        catch (Exception e){
+            return 0;
+        }
+    }
+
     public boolean canAdd(int idProduct,int userId){
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
         Customer customer = entityManager.find(Customer.class, Integer.valueOf(userId));
@@ -304,4 +339,5 @@ public class CartDaoImpl implements ICartDao {
             return false;
         }
     }
+
 }
