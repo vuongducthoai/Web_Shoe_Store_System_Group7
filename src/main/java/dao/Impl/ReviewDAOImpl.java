@@ -19,7 +19,7 @@ public class ReviewDAOImpl implements IReviewDAO {
                     .map(String::valueOf)
                     .reduce((id1, id2) -> id1 + "," + id2)
                     .orElse("");
-            String sql = "SELECT  u.fullName, r.comment, r.ratingValue, r.date, res.adminID, adminUser.fullName, res.content, res.timeStamp, r.reviewID, res.responseID " +
+            String sql = "SELECT  u.fullName, r.comment, r.ratingValue, r.date, res.adminID, adminUser.fullName, res.content, res.timeStamp, r.reviewID, res.responseID,r.image " +
                     "FROM Review r " +
                     "JOIN Product p ON r.productID = p.productID " +
                     "JOIN User u ON r.customerID = u.userID " +
@@ -65,7 +65,7 @@ public class ReviewDAOImpl implements IReviewDAO {
                 dto.setDate((Date) row[3]);
                 dto.setRatingValue((Integer) row[2]);
                 dto.setCustomer(customer);
-
+                dto.setImage((byte[]) row[10]);
                 dto.setResponse(response);
                 reviewDTOs.add(dto);
             }

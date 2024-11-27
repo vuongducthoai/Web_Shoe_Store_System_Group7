@@ -262,7 +262,7 @@
                                 <tr>
                                     <td>${category.categoryId}</td>
                                     <td>${category.categoryName}</td>
-                                    <td><a href="ThongTinSanPham.html" class="view-info-btn">Xem</a></td>
+                                    <td><a href="ProductInCategory.jsp" class="view-info-btn">Xem</a></td>
                                 </tr>
                             </c:forEach>
 

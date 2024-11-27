@@ -1,3 +1,5 @@
+
+
 var images = document.querySelectorAll(".product-images-item")
 var imageFocus = document.querySelector(".product-image-focus")
 
@@ -63,6 +65,7 @@ const colorElements = document.querySelectorAll('.circle'); // Các nút màu
 const sizeElements = document.querySelectorAll('.size'); // Các nút size
 const quantityDisplay = document.getElementById('quantity-display'); // Nơi hiển thị số lượng
 var label = document.querySelector(".label-quantity-remain");
+var selectedQuantity = document.querySelector(".quantity");
 let selectedColor = null;
 let selectedSize = null;
 
@@ -119,19 +122,58 @@ addToCartBtn.onclick = function () {
 
     // Kiểm tra nếu người dùng chưa chọn sản phẩm (màu hoặc size)
     if (!selectedColor || !selectedSize) {
-        alert('Vui lòng chọn màu sắc và kích thước!');
+        showSuccessToast({ title: "Warning", message: "Vui lòng chọn màu sắc và kích thước.", type: "Warning" });
+
         return;
     }
 
-    // Kiểm tra nếu sản phẩm hết hàng
     if (Number(quantityDisplay) === 0) {
-        alert('Xin lỗi, sản phẩm bạn chọn đã hết hàng!');
+        showSuccessToast({ title: "Warning", message: "Sản phẩm bạn chọn đã hết hàng.", type: "Warning" });
+
         return;
     }
 
-    // Nếu tất cả điều kiện đều hợp lệ
-    alert('Sản phẩm đã được thêm vào giỏ hàng!');
+    if(quantityDisplay < Number(selectedQuantity.innerHTML)) {
+        showSuccessToast({ title: "Warning", message: "Sản phẩm không đủ số lượng.", type: "Warning" });
+
+        return;
+    }
+
+
+    var matchedProduct = productDetails.find(item=>
+        item.color === selectedColor &&
+        item.size === selectedSize
+    );
+
+    if(!matchedProduct) {
+        alert("Không tìm thấy sản phẩm")
+        return;
+    }
+    var productID = matchedProduct.productId;
+    const form = document.createElement('form')
+    form.method = 'POST';
+    form.action = '${pageContext.request.contextPath}/cart/add';
+
+    const inputProductId = document.createElement('input')
+    inputProductId.type = 'hidden'
+    inputProductId.name = 'productID'
+    inputProductId.value =  productID;
+
+    const inputQuantity = document.createElement('input');
+    inputQuantity.type= 'hidden';
+    inputQuantity.name = 'quantity'
+    inputQuantity.value = selectedQuantity.innerHTML;
+
+    form.appendChild(inputProductId);
+    form.appendChild(inputQuantity);
+
+    document.body.appendChild(form);
+    alert("ID: " + productID.toString() + " so luong: " + selectedQuantity.innerHTML);
+    // form.submit();
+
 };
+
+
 
 
 
