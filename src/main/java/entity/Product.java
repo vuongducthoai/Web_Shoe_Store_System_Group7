@@ -31,13 +31,13 @@ public class Product {
     private boolean status;
     private String description;
 
-    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Review review;
 
     @OneToMany(mappedBy = "product") // tham chieu den "product" trong cardItem
     private List<CartItem> orders;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<OrderItem> orderItems;
 
     private LocalDateTime createDate;
@@ -46,6 +46,6 @@ public class Product {
     @JoinColumn(name = "categoryID", nullable = true)
     private Category category;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<PromotionProduct> promotionProducts;
 }

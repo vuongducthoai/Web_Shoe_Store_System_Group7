@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     const buttons = document.querySelectorAll(".btn-col");
-    const loadMoreBtn = document.querySelector("#load-more-btn");
+    const loadMoreBtn = document.querySelector("#load-more-btns");
     const productItems = document.querySelector(".grid-wrapper");
     let offset = 8;
     const limit = 8;
@@ -20,46 +20,52 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     const cache = new Map();
+
+    // Sử dụng jQuery AJAX thay vì fetch
     function loadProducts(category) {
         const cacheKey = `${category}-${offset}-${limit}`;
-        if(cache.has(cacheKey)) {
+        if (cache.has(cacheKey)) {
             renderProducts(cache.get(cacheKey));
             return;
         }
-        fetch(`/loadProducts?category=${category}&offset=${offset}&limit=${limit}`)
-            .then(response => response.json())
-            .then(data => {
+
+        $.ajax({
+            url: `/loadProducts?category=${category}&offset=${offset}&limit=${limit}`,
+            method: 'GET',
+            dataType: 'json', // Nhận dữ liệu ở định dạng JSON
+            success: function (data) {
                 cache.set(cacheKey, data);
                 renderProducts(data);
-            })
-            .catch(error => console.error("Error loading products:", error));
+            },
+            error: function (error) {
+                console.error("Error loading products:", error);
+            }
+        });
     }
 
-    function renderProducts(data){
+    function renderProducts(data) {
         if (data.length > 0) {
             loadMoreBtn.style.display = "block";
 
-            // Sử dụng DocumentFragment để batch cập nhật DOM
             const fragment = document.createDocumentFragment();
             data.forEach(product => {
                 const productDiv = document.createElement("div");
                 productDiv.className = "col- collection-item";
-                productDiv.dataset.item = product.categoryDTO.categoryId;
                 fragment.appendChild(productDiv);
                 productDiv.innerHTML = `
-                        <figure><img src="../image/shoes1.png" alt="${product.productName}"></figure>
-                        <div class="col-body">
-                            <h3 class="two">${product.productName}</h3>
-                            <h3 class="heading-three">${product.description}</h3>
-                            <div class="col-footer">
-                                <p class="shoe-price">${product.price}₫</p>
-                                <p class="sub-heading">Đã bán: ${product.quantity}</p>
-                                <p class="rating-icon"><i class="fa-solid fa-star"></i> <span class="rating-num">4.9</span></p>
-                            </div>
+                    <figure><img src="../image/shoes1.png" alt="${product.productName}"></figure>
+                    <div class="col-body">
+                        <h3 class="two">${product.productName}</h3>
+                        <h3 class="heading-three">${product.description}</h3>
+                        <div class="col-footer">
+                            <p class="shoe-price">${product.price}₫</p>
+                            <p class="sub-heading">Đã bán: ${product.quantity}</p>
+                            <p class="rating-icon"><i class="fa-solid fa-star"></i> <span class="rating-num">4.9</span></p>
                         </div>
-                    `;
+                    </div>
+                `;
             });
-            productItems.appendChild(fragment); // Chỉ cập nhật DOM một lần
+            productItems.appendChild(fragment);
             offset += limit;
         } else {
             loadMoreBtn.style.display = "none";
@@ -71,7 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-
+    // Debounce function để giảm tần suất gọi loadProducts
     function debounce(func, delay) {
         let timer;
         return function (...args) {
@@ -80,31 +86,12 @@ document.addEventListener("DOMContentLoaded", function () {
         };
     }
 
-    // Lắng nghe sự kiện click của nút "Load More"
+    // Lắng nghe sự kiện click của nút "Load More" với debounce
     if (loadMoreBtn) {
-        console.log("123")
-        loadMoreBtn.addEventListener("click", debounce(function() {
+        // Gắn sự kiện chỉ một lần khi trang tải
+        loadMoreBtn.addEventListener("click", debounce(function () {
             const category = document.querySelector(".btn-col.active").getAttribute("data-btn");
             loadProducts(category);
-        }, 300));
+        }, 500)); // Điều chỉnh thời gian debounce nếu cần thiết
     }
-
-    // // Tải sản phẩm khi trang lần đầu tiên được tải
-    // const defaultCategory = document.querySelector(".btn-col.active")?.getAttribute("data-btn") || "all"; // Lấy category mặc định
-    // loadProducts(defaultCategory);
-
-    // let ul = document.querySelector("ul");
-    // let burger_icon = document.querySelector(".burger_icon");
-    //
-    // burger_icon.addEventListener("click", () => {
-    //     if (burger_icon.classList.contains("fa-bars")) {
-    //         burger_icon.classList.add("fa-xmark");
-    //         burger_icon.classList.remove("fa-bars");
-    //         ul.classList.add("active");
-    //     } else {
-    //         burger_icon.classList.remove("fa-xmark");
-    //         burger_icon.classList.add("fa-bars");
-    //         ul.classList.remove("active");
-    //     }
-    // });
 });

@@ -132,7 +132,7 @@ figure img{
     align-items: center;
     width: 1280px;
     padding: var(--section-heading-pad);
-    z-index: 100;
+    z-index: 50;
 }
 .section-heading .sub-heading{
     color: var(--primar-clr-light);
