@@ -23,8 +23,12 @@ public class ProductDAOImpl implements IProductDAO {
            //Native SQL Query
             String sql = "SELECT p.productName, MAX(p.price), SUBSTRING_INDEX(GROUP_CONCAT(TO_BASE64(p.image)), ',', 1), " +
                     "MIN(p.description), COUNT(p.productName) " +
-                    "FROM Product p GROUP BY p.productName";
-            Query query = entityManager.createQuery(sql);
+                    "FROM Product p " +
+                    "WHERE p.status = 1 " +
+                    "GROUP BY p.productName";
+
+            Query query = entityManager.createNativeQuery(sql);
+
 
             // Phân trang
             query.setFirstResult(offset);
@@ -235,8 +239,5 @@ public class ProductDAOImpl implements IProductDAO {
             entityManager.close();
         }
     }
-
-
-
 }
 

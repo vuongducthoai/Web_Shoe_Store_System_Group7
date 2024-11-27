@@ -3,16 +3,17 @@ package dao.Impl;
 import JpaConfig.JpaConfig;
 import dao.ICategoryDao;
 import dto.CategoryDTO;
+import dto.ProductDTO;
 import entity.Category;
-import entity.Product;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
+
+import static util.ConvertImageStringToByteArray.convertBase64ToByteArray;
 
 public class CategoryDaoImpl implements ICategoryDao {
 
@@ -80,36 +81,51 @@ public class CategoryDaoImpl implements ICategoryDao {
 
 
     @Override
-    public List<Product> findAllProductByCategoryWithPagination(int id, int offset, int limit) {
+    public List<ProductDTO> findAllProductByCategoryWithPagination(int categoryId, int offset, int limit) {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
-        List<Product> productList = null;
-
+        List<ProductDTO> productDTOList = new ArrayList<>();
         try {
-            String jpql = "SELECT p FROM Product p WHERE p.category.categoryID = :id";
+            //Native SQL Query
+            String sql = "SELECT p.productName, MAX(p.price), SUBSTRING_INDEX(GROUP_CONCAT(TO_BASE64(p.image)), ',', 1), " +
+                    "MIN(p.description), COUNT(p.productName) " +
+                    "FROM Product p " +
+                    "WHERE p.status = 1 " +
+                    " AND p.categoryID = " + categoryId +
+                    " GROUP BY p.productName";
 
-            TypedQuery<Product> typedQuery  = entityManager.createQuery(jpql, Product.class);
+            Query query = entityManager.createNativeQuery(sql);
 
-            typedQuery.setParameter("id", id);
 
-            typedQuery.setFirstResult(offset);
-            typedQuery.setMaxResults(limit);
+            // Phân trang
+            query.setFirstResult(offset);
+            query.setMaxResults(limit);
 
-            List<Product> products = typedQuery.getResultList();
+            // Thực thi truy vấn
+            List<Object[]> results = query.getResultList();
 
-            Map<String, Product> uniqueProductsMap = new LinkedHashMap<>();
-            for (Product product : products) {
-                uniqueProductsMap.putIfAbsent(product.getProductName(), product);
+            for(Object[] result : results) {
+                ProductDTO productDTO = new ProductDTO();
+                String productName = (String) result[0];
+                double price = (double) result[1];
+                String imageString = (String) result[2];
+                String description = (String) result[3];
+                int quantity = ((Long) result[4]).intValue();
+
+                byte[] image = convertBase64ToByteArray(imageString);
+
+                productDTO.setProductName(productName);
+                productDTO.setPrice(price);
+                productDTO.setDescription(description);
+                productDTO.setImage(image);
+                productDTO.setQuantity(quantity);
+                productDTOList.add(productDTO);
             }
-
-            return new ArrayList<>(uniqueProductsMap.values());
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             entityManager.close();
         }
-
-        return productList;
-
+        return productDTOList;
     }
 
     public List<CategoryDTO> categoryDTOList() {
@@ -138,9 +154,5 @@ public class CategoryDaoImpl implements ICategoryDao {
         finally {
             entityManager.close();
         }
-
-
     }
-
-
 }
