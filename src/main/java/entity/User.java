@@ -22,13 +22,10 @@ public class User {
     private String phone;
     private boolean active;
 
-    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
-    private Chat chat;
-
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "accountID")
     private Account account;
 
-    @OneToMany(mappedBy = "admin")
-    private List<Response> responses;
+    @OneToMany(mappedBy = "user")
+    private List<Notify> notifyList;
 }
