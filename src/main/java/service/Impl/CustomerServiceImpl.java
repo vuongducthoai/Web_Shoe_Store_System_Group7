@@ -11,6 +11,7 @@ import service.ICustomerService;
 import util.PasswordHashingSHA;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 public class CustomerServiceImpl implements ICustomerService {
     private ICustomerDAO customerDAO = new CustomerDAOImpl();
@@ -150,5 +151,9 @@ public class CustomerServiceImpl implements ICustomerService {
             System.out.println("Error in service updateCustomer: " + e.getMessage());
             return false;
         }
+    }
+    @Override
+    public List<CustomerDTO> GetAllCustomer(){
+        return customerDAO.GetAllCustomer();
     }
 }
