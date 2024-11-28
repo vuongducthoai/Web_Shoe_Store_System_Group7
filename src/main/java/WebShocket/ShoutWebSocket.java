@@ -1,5 +1,6 @@
 package WebShocket;
 
+import dto.CustomerDTO;
 import dto.MessageDTO;
 import dto.UserDTO;
 import entity.Chat;
@@ -7,7 +8,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import service.ICustomerService;
 import service.IMessageService;
+import service.Impl.CustomerServiceImpl;
 import service.Impl.MessageService;
 import jakarta.websocket.*;
 import jakarta.websocket.server.ServerEndpoint;
@@ -24,7 +27,8 @@ import java.util.concurrent.CopyOnWriteArraySet;
 @ServerEndpoint("/chat")
 public class ShoutWebSocket {
 
-    private static final IMessageService messageService = new MessageService();  // Use the MessageServiceImpl
+    private static final IMessageService messageService = new MessageService();
+    private static final ICustomerService customerService = new CustomerServiceImpl();// Use the MessageServiceImpl
     private static Set<Session> clients = new CopyOnWriteArraySet<>();
     private static ConcurrentHashMap<Integer, List<MessageDTO>> messageCache = new ConcurrentHashMap<>();
 
@@ -42,7 +46,7 @@ public class ShoutWebSocket {
     @OnMessage
     public void onMessage(String messageContent, Session session) {
         try {
-            // Lấy Chat từ session
+            // Retrieve Chat object from session
             Chat chat = (Chat) session.getUserProperties().get("chat");
 
             // Handle userId connection
@@ -51,33 +55,39 @@ public class ShoutWebSocket {
                 session.getUserProperties().put("userId", userId);
                 System.out.println("User connected with userId: " + userId);
 
-                int chatId = 1; // Assuming static chatId
-                if (!messageCache.containsKey(chatId)) {
-                    messageCache.put(chatId, messageService.getRecentMessages(chatId));
-                }
+                // If the user is admin (userId = "1"), fetch and send customer list
+                if ("1".equals(userId)) {
+                    List<CustomerDTO> customerList = customerService.GetAllCustomer(); // Assuming this method fetches customers
+                    StringBuilder customerListHtml = new StringBuilder();
 
-                // Lấy Chat từ messageCache nếu có
-                List<MessageDTO> cachedMessages = messageCache.get(chatId);
-                if (cachedMessages != null && !cachedMessages.isEmpty()) {
-                    chat = cachedMessages.get(0).getChat(); // Lấy Chat từ tin nhắn đầu tiên
-                    session.getUserProperties().put("chat", chat); // Lưu Chat vào session
-                }
+                    // Build the HTML to send back to the admin
+                    for (CustomerDTO customer : customerList) {
+                        customerListHtml.append("<div class='customer-item'>")
+                                .append(customer.getFullName())
+                                .append("</div>");
+                    }
 
-                sendCachedMessages(chatId, session);
-                return;
+                    // Send the customer list to the admin
+                    session.getBasicRemote().sendText(customerListHtml.toString());
+                }
+                int chatId=1;
+                messageService.getRecentMessages()
             }
-            // Kiểm tra userId và chat
+
+            // Retrieve userId from session properties
             String userId = (String) session.getUserProperties().get("userId");
             if (userId == null) {
                 session.getBasicRemote().sendText("Error: You need to connect first with a valid userId.");
                 return;
             }
+
+            // Check if chat is initialized
             if (chat == null) {
                 session.getBasicRemote().sendText("Error: Chat not initialized.");
                 return;
             }
 
-            // Handle load more messages
+            // Handle "loadMoreMessages" request
             if (messageContent.equals("loadMoreMessages")) {
                 List<MessageDTO> lastMessages = messageCache.get(chat.getChatID());
                 Timestamp lastMessageTimestamp = lastMessages.get(lastMessages.size() - 1).getDate();
@@ -92,22 +102,25 @@ public class ShoutWebSocket {
                 return;
             }
 
-                // Handle normal message sending
-                MessageDTO messageDTO = new MessageDTO();
-                messageDTO.setChat(chat); // Gán Chat từ session
-                messageDTO.setUserId(Integer.parseInt(userId));
-                messageDTO.setContent(messageContent);
-                messageDTO.setDate(new Timestamp(System.currentTimeMillis()));
+            // Handle normal message sending
+            MessageDTO messageDTO = new MessageDTO();
+            messageDTO.setChat(chat); // Assign the Chat object from session
+            messageDTO.setUserId(Integer.parseInt(userId));
+            messageDTO.setContent(messageContent);
+            messageDTO.setDate(new Timestamp(System.currentTimeMillis()));
 
-                messageCache.computeIfAbsent(chat.getChatID(), k -> new CopyOnWriteArrayList<>()).add(0, messageDTO);
-                messageService.saveMessage(messageDTO);
+            // Cache the message and save it
+            messageCache.computeIfAbsent(chat.getChatID(), k -> new CopyOnWriteArrayList<>()).add(0, messageDTO);
+            messageService.saveMessage(messageDTO);
 
-                broadcastMessages(chat.getChatID());
+            // Broadcast new messages to all clients
+            broadcastMessages(chat.getChatID());
 
         } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
     }
+
 
     @OnClose
     public void onClose(Session session) {
