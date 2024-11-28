@@ -6,12 +6,15 @@ import entity.Product;
 import java.util.List;
 
 public interface IProductDAO {
-    List<Product> findAllWithPagination(int offset, int limit);
+    List<ProductDTO> findAllWithPagination(int offset, int limit);
 
     int countProductName(String name);
     boolean AddProduct(Product product);
     boolean UpdateProduct(Product product);
     List<ProductDTO> getListProductDTO();
+    ProductDTO getProductByID(int id);
     List<ProductDTO> findByName(String name);
-    List<Product> findRandomProducts(int offset, int limit, String CurrentProductName);
+    List<Product> findRandomProducts(String CurrentProductName, int CID);
+    List<ProductDTO> findListProductByCategoryID(int id);
+
 }

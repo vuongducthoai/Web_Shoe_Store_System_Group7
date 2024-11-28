@@ -52,6 +52,7 @@ public class CartServiceImpl implements ICartService {
                 cartItemDTO.getProductDTO().setSize(item.getProduct().getSize());
                 cartItemDTO.getProductDTO().setStatus(item.getProduct().isStatus());
                 cartItemDTO.getProductDTO().setDescription(item.getProduct().getDescription());
+                cartItemDTO.getProductDTO().setQuantity(cartDao.CountQuantity(cartItemDTO.getProductDTO()));
                 cartItemDTO.setQuantity(item.getQuantity());
                 cartItemDTO.setCartItemId(item.getCartItemId());
                 listDTO.add(cartItemDTO);
@@ -67,6 +68,7 @@ public class CartServiceImpl implements ICartService {
 
     public boolean AddItem(int idProduct,int userId){
         if (cartDao.canAdd(idProduct, userId)) {
+            System.out.println("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK");
             return cartDao.AddItem(idProduct, userId);
         }
         else return false;
@@ -77,6 +79,12 @@ public class CartServiceImpl implements ICartService {
         }
         else return false;
     }
+
+    @Override
+    public int CountQuantityCartItem(int idUSer) {
+        return cartDao.CountQuantityCart(idUSer);
+    }
+
     public double Total_Cart(List<CartItemDTO> cartItem){
         double total = 0;
         for (CartItemDTO cartItemDTO : cartItem) {

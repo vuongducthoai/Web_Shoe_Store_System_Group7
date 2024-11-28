@@ -21,7 +21,7 @@ public class Review {
     private int ratingValue;
     private Date date;
 
-    @ManyToOne
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "productID")
     private Product product;
 
@@ -33,4 +33,6 @@ public class Review {
     @OneToOne(mappedBy = "review")
     private Response response;
 
+    @Lob
+    private byte[] image;
 }

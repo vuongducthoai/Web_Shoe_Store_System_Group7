@@ -3,16 +3,17 @@ package dao.Impl;
 import JpaConfig.JpaConfig;
 import dao.ICategoryDao;
 import dto.CategoryDTO;
+import dto.ProductDTO;
 import entity.Category;
-import entity.Product;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
+
+import static util.ConvertImageStringToByteArray.convertBase64ToByteArray;
 
 public class CategoryDaoImpl implements ICategoryDao {
 
@@ -32,14 +33,15 @@ public class CategoryDaoImpl implements ICategoryDao {
     }
 
     @Override
-    public void insert(Category category) {
+    public boolean insert(Category category) {
         EntityManager em = JpaConfig.getEmFactory().createEntityManager();
         EntityTransaction transaction = em.getTransaction();
 
         try {
             transaction.begin();
-            em.persist(category);
+            em.merge(category);
             transaction.commit();
+            return true;
         } catch (Exception e) {
             if (transaction.isActive()) {
                 transaction.rollback();
@@ -48,39 +50,82 @@ public class CategoryDaoImpl implements ICategoryDao {
         } finally {
             em.close();
         }
+        return false;
     }
 
-    @Override
-    public List<Product> findAllProductByCategoryWithPagination(int id, int offset, int limit) {
-        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
-        List<Product> productList = null;
+    public boolean remove(int categoryId) {
+        EntityManager em = JpaConfig.getEmFactory().createEntityManager();
+        EntityTransaction transaction = em.getTransaction();
 
         try {
-            String jpql = "SELECT p FROM Product p WHERE p.category.categoryID = :id";
-
-            TypedQuery<Product> typedQuery  = entityManager.createQuery(jpql, Product.class);
-
-            typedQuery.setParameter("id", id);
-
-            typedQuery.setFirstResult(offset);
-            typedQuery.setMaxResults(limit);
-
-            List<Product> products = typedQuery.getResultList();
-
-            Map<String, Product> uniqueProductsMap = new LinkedHashMap<>();
-            for (Product product : products) {
-                uniqueProductsMap.putIfAbsent(product.getProductName(), product);
+            transaction.begin();
+            // Tìm đối tượng Category bằng ID
+            Category category = em.find(Category.class, categoryId);
+            if (category != null) {
+                em.remove(category);
+            } else {
+                return false;
             }
+            transaction.commit();
+            return true;
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            em.close();
+        }
+        return false;
+    }
 
-            return new ArrayList<>(uniqueProductsMap.values());
+
+    @Override
+    public List<ProductDTO> findAllProductByCategoryWithPagination(int categoryId, int offset, int limit) {
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        List<ProductDTO> productDTOList = new ArrayList<>();
+        try {
+            //Native SQL Query
+            String sql = "SELECT p.productName, MAX(p.price), SUBSTRING_INDEX(GROUP_CONCAT(TO_BASE64(p.image)), ',', 1), " +
+                    "MIN(p.description), COUNT(p.productName) " +
+                    "FROM Product p " +
+                    "WHERE p.status = 1 " +
+                    " AND p.categoryID = " + categoryId +
+                    " GROUP BY p.productName";
+
+            Query query = entityManager.createNativeQuery(sql);
+
+
+            // Phân trang
+            query.setFirstResult(offset);
+            query.setMaxResults(limit);
+
+            // Thực thi truy vấn
+            List<Object[]> results = query.getResultList();
+
+            for(Object[] result : results) {
+                ProductDTO productDTO = new ProductDTO();
+                String productName = (String) result[0];
+                double price = (double) result[1];
+                String imageString = (String) result[2];
+                String description = (String) result[3];
+                int quantity = ((Long) result[4]).intValue();
+
+                byte[] image = convertBase64ToByteArray(imageString);
+
+                productDTO.setProductName(productName);
+                productDTO.setPrice(price);
+                productDTO.setDescription(description);
+                productDTO.setImage(image);
+                productDTO.setQuantity(quantity);
+                productDTOList.add(productDTO);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             entityManager.close();
         }
-
-        return productList;
-
+        return productDTOList;
     }
 
     public List<CategoryDTO> categoryDTOList() {
@@ -109,9 +154,5 @@ public class CategoryDaoImpl implements ICategoryDao {
         finally {
             entityManager.close();
         }
-
-
     }
-
-
 }

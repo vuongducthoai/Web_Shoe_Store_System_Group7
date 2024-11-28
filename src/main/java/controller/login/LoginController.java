@@ -26,13 +26,13 @@ public class LoginController extends HttpServlet {
         resp.setContentType("text/html;charset=UTF-8");
         AccountDTO accountDTO = new AccountDTO();
         String path = req.getServletPath();
-        if("/login".equals(path)) {
+        if("/login".equals(path)) { // Login Google
             String code = req.getParameter("code");
             GoogleAuth gg = new GoogleAuth();
             String accessToken = gg.getToken(code);
             accountDTO = gg.getUserInfoFromGoogle(accessToken);
             accountService.InsertAccount(accountDTO);
-        } else if("/loginFacebook".equals(path)) {
+        } else if("/loginFacebook".equals(path)) {  //Login Facebook
             String code = req.getParameter("code");
             FacebookAuth facebookLogin = new FacebookAuth();
             String accessToken = facebookLogin.getToken(code);
@@ -45,21 +45,22 @@ public class LoginController extends HttpServlet {
         //Luu thong tin nguoi dung vao session
         req.setAttribute("loginSuccess" , true);
         session.setAttribute("user", accountDTO);
-        req.getRequestDispatcher("/index.jsp").forward(req, resp);
+        System.out.println("1233332...");
+        resp.sendRedirect("/home");
     }
 
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        AccountDTO accountDTO = new AccountDTO();
+        AccountDTO account = new AccountDTO();
         String path = req.getServletPath();
-        if("/view/loginEmail".equals(path)) {
+        if("/view/loginEmail".equals(path)) { //Login Email/Password
             String email = req.getParameter("email");
             String password = req.getParameter("password");
             String captchaResponse = req.getParameter("g-recaptcha-response");
 
-            accountDTO.setEmail(email);
-            accountDTO.setPassword(password);
+            account.setEmail(email);
+            account.setPassword(password);
 
             boolean isCaptchaValid = validateCaptcha(captchaResponse);
             if(!isCaptchaValid) {
@@ -68,13 +69,13 @@ public class LoginController extends HttpServlet {
                 return;
             }
 
-            if(accountService.findAccountForLogin(accountDTO)){
-                AccountDTO account = accountService.findAccountByEmail(email);
+            if(accountService.findAccountForLogin(account)){
+                AccountDTO accountDTO = accountService.findAccountByEmail(email);
                 //Tao mot session moi hoac lay session hien co
                 HttpSession session = req.getSession();
                 //Luu thong tin nguoi dung vao session
-                session.setAttribute("user", account);
-                req.getRequestDispatcher("/index.jsp").forward(req, resp);
+                session.setAttribute("user", accountDTO);
+                resp.sendRedirect("/home");
             } else {
                 req.setAttribute("loginSuccess" , true);
                 req.setAttribute("errorMessage", "Email hoặc Password không chính xác");
@@ -119,6 +120,5 @@ public class LoginController extends HttpServlet {
             e.printStackTrace();
             return false;
         }
-
     }
 }

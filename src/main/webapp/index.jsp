@@ -126,26 +126,27 @@
     <div class="grid-wrapper">
         <c:forEach var="product" items="${productDTOList}">
             <div class="col- collection-item" data-item="" data-aos="zoom-in-up">
-                <figure><img src="./image/shoes2.png" alt=""></figure>
+                <figure><img src="./image/shoes3.png" alt=""></figure>
                 <div class="col-body">
 
                     <h3  class="heading-three">${product.productName}</h3>
-
+                    <h3  class="heading-four">${product.description}</h3>
                     <div class="col-footer">
-                        <p  class="shoe-price">${product.price}₫</p>
-                        <p  class="sub-heading">Đã bán :${product.quantity}</p>
+                        <p class="shoe-price">${product.price}₫</p>
+                        <p class="shoe-sold">Đã bán :${product.quantity}</p>
                     </div>
                 </div>
             </div>
         </c:forEach>
     </div>
-    <button style="margin-top: 20px; background-color: #baba14;" id="load-more-btn" class="btn">Load More</button>
+    <button style="margin-top: 20px; background-color: #baba14;" id="load-more-btns" class="btn">Load More</button>
 </section>
 <!-- customer review -->
 <jsp:include page="view/customer/review.jsp"></jsp:include>
 <script src="./js/toastMessage.js"></script>
 <%--Footer--%>
 <jsp:include page="./view/footer.jsp"></jsp:include>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="./js/index.js"></script>
 <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
 <script>

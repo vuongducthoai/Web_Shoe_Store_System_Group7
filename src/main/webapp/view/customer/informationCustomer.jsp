@@ -28,8 +28,19 @@
         </div>
         <div class="content">
             <h2>Edit Your Profile</h2>
+
+            <!-- Messages -->
+            <div>
+                <c:if test="${param.success eq 'true'}">
+                    <div class="success-message">Profile updated successfully!</div>
+                </c:if>
+                <c:if test="${param.error eq 'true'}">
+                    <div class="error-message">An error occurred while updating the profile. Please try again.</div>
+                </c:if>
+            </div>
+
             <!-- Form -->
-            <form action="<c:url value='/Information' />" method="post">
+            <form action="Information" method="post">
                 <!-- Hidden field for userID -->
                 <input type="hidden" name="userID" value="<c:out value='${userID}' />">
 
@@ -83,20 +94,6 @@
                     <button type="submit" class="save-btn">Save Changes</button>
                 </div>
             </form>
-
-            <!-- Messages -->
-            <div>
-                <c:if test="${not empty successMessage}">
-                    <div class="success-message">
-                        <c:out value="${successMessage}" />
-                    </div>
-                </c:if>
-                <c:if test="${not empty errorMessage}">
-                    <div class="error-message">
-                        <c:out value="${errorMessage}" />
-                    </div>
-                </c:if>
-            </div>
         </div>
     </div>
 </div>

@@ -19,20 +19,32 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import service.IAccountService;
 import service.ICartService;
+import service.Impl.AccountServiceImpl;
 import service.Impl.CartServiceImpl;
 
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Objects;
 
-@WebServlet(urlPatterns = {"/Cart","/Cart/Add","/Cart/Remove","/Cart/Delete_Item","/Cart/Add_TWP"})
+@WebServlet(urlPatterns = {"/Cart","/Cart/Add","/Cart/Remove","/Cart/Delete_Item","/TWP_ACCOUNT","/Count"})
 public class CartController extends HttpServlet {
     ICartService iCartService = new CartServiceImpl();
+    private IAccountService accountService = new AccountServiceImpl();
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getServletPath();
+        if (Objects.equals(path, "/TWP_ACCOUNT")){
+            AccountDTO account = accountService.findAccountByEmail("thoai1234@gmail.com");
+            //Tao mot session moi hoac lay session hien co
+            HttpSession session = req.getSession();
+            //Luu thong tin nguoi dung vao session
+            session.setAttribute("user", account);
+            return;
+        }
         HttpSession session = req.getSession();
         AccountDTO accountDTO = (AccountDTO) session.getAttribute("user");
         if (accountDTO==null || accountDTO.getUser()==null||!accountDTO.getUser().isActive()){
@@ -59,6 +71,11 @@ public class CartController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getServletPath();
+        switch (path){
+            case "/Count":
+                Count(req, resp);
+                break;
+        }
         HttpSession session = req.getSession();
         AccountDTO accountDTO = (AccountDTO) session.getAttribute("user");
         if (accountDTO==null || accountDTO.getUser()==null||!accountDTO.getUser().isActive()){
@@ -82,6 +99,24 @@ public class CartController extends HttpServlet {
             default:
                 break;
         }
+    }
+    public void Count(HttpServletRequest req,HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+        HttpSession session = req.getSession();
+        AccountDTO accountDTO = (AccountDTO) session.getAttribute("user");
+        if (accountDTO==null || accountDTO.getUser()==null||!accountDTO.getUser().isActive()){
+            JSONObject json = new JSONObject();
+            json.put("quantityItemCart",0);
+            resp.getWriter().println(json.toString());
+            return;
+        }
+        int idUser = accountDTO.getUser().getUserID();
+        int quantity = iCartService.CountQuantityCartItem(idUser);
+        JSONObject json = new JSONObject();
+        json.put("quantityItemCart",quantity);
+        resp.getWriter().println(json.toString());
+
     }
     public void Load_Cart_View(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
@@ -116,6 +151,7 @@ public class CartController extends HttpServlet {
         HttpSession session = req.getSession();
         AccountDTO accountDTO = (AccountDTO) session.getAttribute("user");
         int idUser = accountDTO.getUser().getUserID();
+        System.out.println(idUser);
         Cart_Add(req,resp,idUser,idProduct,"Product added to cart successfully","This product cannot be added anymore.");
         Load_Cart_View(req,resp);
         req.getRequestDispatcher("/view/customer/cart.jsp").forward(req, resp);

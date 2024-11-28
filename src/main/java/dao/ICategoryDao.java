@@ -1,6 +1,7 @@
 package dao;
 
 import dto.CategoryDTO;
+import dto.ProductDTO;
 import entity.Category;
 import entity.Product;
 
@@ -11,7 +12,7 @@ public interface ICategoryDao {
     List<Category> categoryList();
     List<CategoryDTO> categoryDTOList();
 
-    void insert(Category category);
-
-    List<Product> findAllProductByCategoryWithPagination(int id, int offset, int limit);
+    boolean insert(Category category);
+    boolean remove(int categoryId);
+    List<ProductDTO> findAllProductByCategoryWithPagination(int id, int offset, int limit);
 }

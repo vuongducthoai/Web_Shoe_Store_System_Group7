@@ -8,7 +8,9 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" 
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -20,7 +22,30 @@
 
     <!-- bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
 
+        /* Cố định độ rộng cho các cột */
+        .table th:nth-child(1), .table td:nth-child(1) {
+        }
+        .table th:nth-child(2), .table td:nth-child(2) {
+            min-width: 165px; /* Cột Tên Khách Hàng */
+        }
+        .table th:nth-child(3), .table td:nth-child(3) {
+            min-width: 240px; /* Cột Email */
+        }
+        .table th:nth-child(4), .table td:nth-child(4) {
+            min-width: 130px; /* Cột Mật khẩu */
+        }
+        .table th:nth-child(5), .table td:nth-child(5) {
+            min-width: 120px;/* Cột Số điện thoại */
+        }
+        .table th:nth-child(6), .table td:nth-child(6) {
+            min-width: 100px; /* Cột Trạng thái */
+        }
+        .table th:nth-child(7), .table td:nth-child(7) {
+            min-width: 150px; /* Cột Hành động */
+        }
+    </style>
 
 
 </head>
@@ -64,7 +89,7 @@
 
 
             <!-- chức năng quản lý sản Phẩm -->
-            <div class="product-management" id="product-management">
+            <div class="product-management" id="product-management" >
                 <div class="product-management-header">
                     <div class="title">Quản lý sản phẩm</div>
                     <div class="table-container">
@@ -125,11 +150,9 @@
                     </div>
 
                     <!-- nút thêm sản phẩm -->
-                    <form action="ProductController" method="post">
+                    <form action="ProductController" method="post" enctype="multipart/form-data">
                     <div class="product-management-form" id="add-product-management-form">
                         <h3>Thêm sản phẩm mới</h3>
-                        <label for="product-id">ID</label>
-                        <input type="text" id="add-product-id" name="productId" placeholder="Nhập ID sản phẩm">
 
                         <label for="product-name">Tên sản phẩm</label>
                         <input type="text" id="product-name" name="productName" placeholder="Nhập tên sản phẩm">
@@ -137,23 +160,19 @@
                         <label for="add-product-price">Giá</label>
                         <input type="text" id="add-product-price" name="productPrice" placeholder="Nhập giá sản phẩm">
 
-                        <!-- <label for="product-image">Hình ảnh (URL)</label>
-                        <input type="text" id="product-image" placeholder="Nhập URL hình ảnh"> -->
-
-                        <div class="LoadImageContent">
-                            <label >Hình ảnh</label>
-                            <div class="picturebox">
-                                <img class="imageDisplay" src="" alt="No image" />
-                            </div>
-                            <button class="loadImageBtn">Load Image</button>
-                            <input type="file" name="productImage" class="imageInput" style="display: none;" accept="image/*">
-                            <button class="cancelBtn">Cancel Image</button>
-                        </div>
-
                         <label for="add-product-color">Màu sắc</label>
                         <input type="text" id="add-product-color" name="productColor" placeholder="Nhập màu sắc sản phẩm">
 
                         <label for="product-size">Size</label>
+                        <div class="LoadImageContent">
+                        <label >Hình ảnh</label>
+                        <div class="picturebox">
+                            <img id="add-product-imageDisplay" class="imageDisplay" src="" alt="No image" />
+                        </div>
+                        <button class="loadImageBtn">Load Image</button>
+                        <input type="file" name="productImage" class="imageInput" style="display: none;" accept="image/*">
+                        <button class="cancelBtn">Cancel Image</button>
+                        </div>
                         <input type="text" id="product-size" name="productSize" placeholder="Nhập size sản phẩm">
 
                         <label for="add-product-category">Danh mục</label>
@@ -172,37 +191,39 @@
                     </div>
                     </form>
 
-<%--                    Nút sửa sản phẩm--%>
-                    <form action="ProductController" method="post">
+                    <%--  Nút sửa sản phẩm--%>
+                    <form action="ProductController" method="post" enctype="multipart/form-data">
                     <div class="product-management-form" id="edit-product-management-form">
                         <h3>Sửa sản phẩm</h3>
-                        <label for="product-id">ID</label>
-                        <input type="text" id="product-id" placeholder="Nhập ID sản phẩm">
+                        <label for="edit-product-id">ID</label>
+                        <input type="text" id="edit-product-id" name="edit-productID" placeholder="Nhập ID sản phẩm">
 
                         <label for="product-name">Tên sản phẩm</label>
-                        <input type="text" id="edit-product-name" placeholder="Nhập tên sản phẩm">
+                        <input type="text" id="edit-product-name" name="edit-productName" placeholder="Nhập tên sản phẩm">
 
                         <label for="edit-product-price">Giá</label>
-                        <input type="text" id="edit-product-price" placeholder="Nhập giá sản phẩm">
+                        <input type="text" id="edit-product-price" name="edit-productPrice"  placeholder="Nhập giá sản phẩm">
 
                         <div class="LoadImageContent">
                             <label >Hình ảnh</label>
                             <div class="picturebox">
-                                <img class="imageDisplay" src="" alt="No image" />
+                                <img id="edit-product-imageDisplay" class="imageDisplay" src="" alt="No image" />
                             </div>
                             <button class="loadImageBtn">Load Image</button>
-                            <input type="file" class="imageInput" style="display: none;" accept="image/*">
+                            <input type="file" name="edit-productImage" class="imageInput" style="display: none;" accept="image/*">
                             <button class="cancelBtn">Cancel Image</button>
+                            <!-- Lưu ảnh cũ vào hidden input -->
+                            <input type="hidden" name="currentImageURL" value="${product.getBase64Image()}">
                         </div>
 
                         <label for="product-color">Màu sắc</label>
-                        <input type="text" id="product-color" placeholder="Nhập màu sắc sản phẩm">
+                        <input type="text" id="product-color" name="edit-productColor" placeholder="Nhập màu sắc sản phẩm">
 
                         <label for="product-size">Size</label>
-                        <input type="text" id="edit-product-size" placeholder="Nhập size sản phẩm">
+                        <input type="text" id="edit-product-size" name="edit-productSize" placeholder="Nhập size sản phẩm">
 
                         <label for="edit-product-category">Danh mục</label>
-                        <select id="edit-product-category" name="CategoryName">
+                        <select id="edit-product-category" name="edit-CategoryName">
                             <c:forEach var="category" items="${CategoryList}">
                                 <option value="${category.getCategoryName()}">
                                         ${category.getCategoryName()}
@@ -211,22 +232,22 @@
                         </select>
 
                         <label for="edit-product-description">Mô tả</label>
-                        <input type="text" id="edit-product-description" placeholder="Nhập mô tả sản phẩm">
+                        <input type="text" id="edit-product-description" name="edit-productDescription" placeholder="Nhập mô tả sản phẩm">
 
-                        <button class="action-btn">Sửa sản phẩm</button>
+                        <button class="action-btn" name="submitAction" value="edit-product">Sửa sản phẩm</button>
                     </div>
                     </form>
 
                     <%-- Nút xóa sản phẩm--%>
                     <div class="product-management-form" id="delete-product-management-form">
                         <h3>Xóa sản phẩm</h3>
-                        <label for="product-id">ID</label>
+
                         <input type="text" id="delete-product-id" placeholder="Nhập ID sản phẩm">
                         <button class="action-btn">Xóa sản phẩm</button>
                     </div>
                 </div>
             </div>
-            <!-- kết thúc quản lý khách hàng -->
+            <!-- kết thúc quản lý sản phẩm -->
 
             <!-- Quản lý danh mục sản phẩm -->
             <div class="category-management" id="category-management">
@@ -238,18 +259,22 @@
                                 <th>ID</th>
                                 <th>Tên danh mục</th>
                                 <th>Sản phẩm trong danh mục</th>
+                            </tr>
+                            <c:forEach var="category" items="${categoryList}">
+                                <tr>
+                                    <td>${category.categoryId}</td>
+                                    <td>${category.categoryName}</td>
+                                    <td>
+                                        <form action="CategoryController" method="post" style="display:inline;">
+                                            <input type="hidden" name="submitAction" value="viewProducts">
+                                            <input type="hidden" name="categoryId" value="${category.categoryId}">
+                                            <input type="hidden" name="categoryName" value="${category.categoryName}">
+                                            <input type="submit" class="view-info-btn" value="Xem">
+                                        </form>
+                                    </td>
 
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>Nam</td>
-                                <td><a href="ThongTinSanPham.html" class="view-info-btn">Xem</a></td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Nữ</td>
-                                <td><a href="ThongTinSanPham.html" class="view-info-btn">Xem</a></td>
-                            </tr>
+                                </tr>
+                            </c:forEach>
 
                         </table>
                     </div>
@@ -261,78 +286,92 @@
 
                     </div>
 
-                    <!-- nút thêm sản phẩm -->
+                    <!-- nút thêm danh mục sản phẩm -->
+                    <form action="CategoryController" method="post" >
                     <div class="category-management-form" id="add-category-management-form">
                         <h3>Thêm danh mục mới</h3>
-                        <label for="add-category-id">ID</label>
-                        <input type="text" id="add-category-id" placeholder="Nhập ID danh mục">
 
                         <label for="add-category-name">Tên danh mục</label>
-                        <input type="text" id="add-category-name" placeholder="Nhập tên danh mục">
+                        <input type="text" id="add-category-name" name="add-categoryName" placeholder="Nhập tên danh mục">
 
 
-                        <button class="action-btn">Thêm danh mục</button>
-
+                        <button class="action-btn" name="submitAction" value="add-category">Thêm danh mục</button>
                     </div>
-                    <%-- sửa--%>
+                    </form>
+
+
+                    <%-- sửa danh mục sản phẩm--%>
+                    <form action="CategoryController" method="post" >
                     <div class="category-management-form" id="edit-category-management-form">
                         <h3>Sửa danh mục</h3>
                         <label for="edit-category-id">ID</label>
-                        <input type="text" id="edit-category-id" placeholder="Nhập ID danh mục">
+                        <input type="text" id="edit-category-id" name="edit-categoryID" placeholder="Nhập ID danh mục">
 
                         <label for="edit-category-name">Tên danh mục</label>
-                        <input type="text" id="edit-category-name" placeholder="Nhập tên danh mục">
-                        <button class="action-btn">Sửa danh mục</button>
-
-
+                        <input type="text" id="edit-category-name" name="edit-categoryName" placeholder="Nhập tên danh mục">
+                        <button class="action-btn" name="submitAction" value="edit-category">Sửa danh mục</button>
                     </div>
+                    </form>
+
+                    <%--nút xóa danh mục sản phẩm--%>
+                    <form action="CategoryController" method="post" >
                     <div class="category-management-form" id="delete-category-management-form">
                         <h3>Xóa danh mục</h3>
                         <label for="delete-category-id">ID</label>
-                        <input type="text" id="delete-category-id" placeholder="Nhập ID danh mục">
-                        <button class="action-btn">Xóa danh mục</button>
+                        <input type="text" id="delete-category-id" name="delete-categoryID" placeholder="Nhập ID danh mục">
+                        <button class="action-btn" name="submitAction" value="delete-category">Xóa danh mục</button>
                     </div>
+                    </form>
                 </div>
             </div>
             <!-- Kết thúc quản lý danh mục sản phẩm -->
 
-            <!-- Quản lý tài khoản khách hàng  -->
-            <div class="account-management" id="account-management">
+            <!-- Bắt đầu quản lý tài khoản -->
+            <div class="account-management" id="account-management" style="display: none;">
                 <div class="title">Quản lý tài khoản khách hàng</div>
-                <input type="text" id="name-custommer" placeholder="Nhập họ tên khách hàng">
-                <button class="action-btn">Tìm</button>
+                <input type="text" id="search-input" placeholder="Tìm kiếm theo tên khách hàng" >
+                <button class="action-btn" onclick="searchCustomer()">Tìm</button>
                 <div class="table-container">
                     <table class="table table-bordered table-hover">
-                        <tr class="row-dark">
+                        <thead>
+                        <tr>
                             <th>ID</th>
                             <th>Tên Khách Hàng</th>
                             <th>Email</th>
                             <th>Mật khẩu</th>
                             <th>Số điện thoại</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
                         </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Luc</td>
-                            <td>lelamluc1234@gmail.com</td>
-                            <td>12345</td>
-                            <td>0947332839</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Luc2</td>
-                            <td>lela31mluc1234@gmail.com</td>
-                            <td>12345</td>
-                            <td>0947332839</td>
-                        </tr>
+                        </thead>
+                        <tbody id="account-table-body">
+                        <c:forEach var="account" items="${accounts}">
+                            <tr
+                                <%--ghi nhớ dữ liệu full của 3 cột--%>
+                                data-account-name="${account.user.fullName}"
+                                data-account-email="${account.email}"
+                                data-account-password="${account.password}">
+
+                                <td>${account.accountID}</td>
+                                <td>${fn:substring(account.user.fullName, 0, 17)}<c:if test="${fn:length(account.user.fullName) > 17}">...</c:if></td>
+                                <td>${fn:substring(account.email, 0, 25)}<c:if test="${fn:length(account.email) > 25}">...</c:if></td>
+                                <td>${fn:substring(account.password, 0, 10)}<c:if test="${fn:length(account.password) > 10}">...</c:if></td>
+                                <td>${account.user.phone}</td>
+                                <td class="status">${account.user.active ? 'Hoạt động' : 'Bị chặn'}</td>
+                                <td><button class="btn btn-primary btn-history" data-customer-id="${account.accountID}">Xem lịch sử</button></td>
+                            </tr>
+                        </c:forEach>
+                        </tbody>
+
                     </table>
                 </div>
                 <br>
                 <div class="account-management-actions">
                     <button class="action-btn" id="btn-account-management-actions-view">Xem thông tin chi tiết khách hàng</button>
                     <button class="action-btn" id="btn-account-management-actions-edit">Sửa thông tin khách hàng</button>
-                    <button class="action-btn" id="btn-account-management-actions-delete">Chặn khách hàng</button>
+                    <button class="action-btn" id="btn-account-management-actions-block">Chặn khách hàng</button>
+                    <button class="action-btn" id="btn-account-management-actions-unblock">Bỏ chặn khách hàng</button>
                 </div>
-
                 <!-- xem thông tin khách hàng  -->
                 <div class="account-management-form" id="view-account-management-form">
                     <h3>Thông tin chi tiết</h3>
@@ -351,32 +390,72 @@
                     <label for="view-account-phone">SĐT</label>
                     <input type="text" id="view-account-phone">
 
-                    <label for="account-buy">Lịch sử mua hàng</label>
-                    <input type="text" id="account-buy">
                 </div>
 
                 <!-- sửa thông tin khách hàng  -->
-                <div class="account-management-form" id="edit-account-management-form">
-                    <h3>Sửa thông tin khách hàng</h3>
-                    <label for="edit-account-id">ID</label>
-                    <input type="text" id="edit-account-id">
+                <form action="${pageContext.request.contextPath}/AccountController" method="POST">
+                    <div class="account-management-form" id="edit-account-management-form">
+                        <h3>Sửa thông tin khách hàng</h3>
+                        <input type="hidden" name="action" value="update">
+                        <label for="edit-account-id-display">ID</label>
+                        <input type="text" id="edit-account-id-display" name="accountID" readonly> <!-- ID chỉ để xem -->
+                        <label for="edit-account-name">Họ Tên</label>
+                        <input type="text" name="fullName" id="edit-account-name">
+                        <label for="edit-account-email">Email</label>
+                        <input type="text" name="email" id="edit-account-email">
 
-                    <label for="edit-account-name">Họ Tên</label>
-                    <input type="text" id="edit-account-name">
+                        <label for="edit-account-pass">Mật Khẩu</label>
+                        <input type="text" name="password" id="edit-account-pass">
 
-                    <label for="edit-account-email">Email</label>
-                    <input type="text" id="edit-account-email">
+                        <label for="edit-account-phone">SĐT</label>
+                        <input type="text" name="phone" id="edit-account-phone">
 
-                    <label for="edit-account-pass">Mật Khẩu</label>
-                    <input type="text" id="edit-account-pass">
+                        <button class="action-btn" type="submit">Sửa thông tin</button>
 
-                    <label for="edit-account-phone">SĐT</label>
-                    <input type="text" id="edit-account-phone">
+                    </div>
+                </form>
+                <!-- chặn khách hàng  -->
 
-                    <button class="action-btn">Sửa thông tin</button>
+                <form action="${pageContext.request.contextPath}/AccountController" method="POST">
+                    <div class="account-management-form" id="block-account-management-form">
+                        <h3>Chặn tài khoản khách hàng</h3>
+                        <input type="hidden" name="action" value="block">
+                        <label for="block-account-id">ID</label>
+                        <input type="text" id="block-account-id" name="accountID" readonly>
+                        <button class="action-btn" type="submit">Chặn</button>
+                    </div>
+                </form>
+
+                <!--bỏ chặn khách hàng  -->
+                <form action="${pageContext.request.contextPath}/AccountController" method="POST">
+                    <div class="account-management-form" id="unBlock-account-management-form">
+                        <h3> Bỏ chặn tài khoản khách hàng</h3>
+                        <input type="hidden" name="action" value="unblock">
+                        <label for="unBlock-account-id">ID</label>
+                        <input type="text" id="unBlock-account-id" name="accountID" readonly>
+                        <button class="action-btn" type="submit">Bỏ chặn</button>
+                    </div>
+                </form>
+                <!-- Popup lịch sử đơn hàng -->
+                <div class="order-history-popup" id="order-history-popup" style="display: none;">
+                    <h3>Lịch sử đơn hàng</h3>
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>ID đơn hàng</th>
+                            <th>Ngày mua</th>
+                            <th>Sản phẩm</th>
+                            <th>Tổng tiền</th>
+                        </tr>
+                        </thead>
+                        <tbody id="order-history-content">
+                        <!-- Nội dung sẽ được cập nhật bằng JavaScript -->
+                        </tbody>
+                    </table>
+                    <button class="btn btn-secondary" id="close-history-popup">Đóng</button>
                 </div>
             </div>
-            <!-- kết thúc quản lý tài khoản khách hàng -->
+
 
             <!-- chức năng quản lý đơn hàng -->
             <div class="order-management" id="order-management">
@@ -698,18 +777,37 @@
 
         var viewInfor = document.querySelector("#view-account-management-form");
         var editInfor = document.querySelector("#edit-account-management-form");
+        var blockInfor = document.querySelector("#block-account-management-form");
+        var unBlockInfor = document.querySelector("#unBlock-account-management-form");
 
 
         document.getElementById("btn-account-management-actions-view").addEventListener("click", function(event) {
             viewInfor.style.display="flex";
             editInfor.style.display="none";
+            blockInfor.style.display="none";
+            unBlockInfor.style.display="none";
 
         });
         document.getElementById("btn-account-management-actions-edit").addEventListener("click", function(event) {
             viewInfor.style.display="none";
             editInfor.style.display="flex";
+            blockInfor.style.display="none";
+            unBlockInfor.style.display="none";
 
         });
+        document.getElementById("btn-account-management-actions-block").addEventListener("click", function(event) {
+            viewInfor.style.display="none";
+            editInfor.style.display="none";
+            blockInfor.style.display="flex";
+            unBlockInfor.style.display="none";
+        });
+        document.getElementById("btn-account-management-actions-unblock").addEventListener("click", function(event) {
+            viewInfor.style.display="none";
+            editInfor.style.display="none";
+            blockInfor.style.display="none";
+            unBlockInfor.style.display="flex";
+        });
+
     });
 
     // Lắng nghe sự kiện khi người dùng click vào "Quản lý đơn hàng"
@@ -812,6 +910,152 @@
 
     });
 
+    function searchCustomer() {
+        // Lấy giá trị tìm kiếm từ input
+        var input = document.getElementById("search-input").value.toLowerCase();
+        var table = document.getElementById("account-table-body");
+        var rows = table.getElementsByTagName("tr");
+
+        // Duyệt qua tất cả các hàng trong bảng và ẩn những hàng không khớp với từ khóa
+        for (var i = 0; i < rows.length; i++) {
+            var cells = rows[i].getElementsByTagName("td");
+            var match = false;
+
+            // Kiểm tra trong mỗi cột, nếu cột nào có dữ liệu khớp với từ khóa tìm kiếm, hiển thị hàng
+            for (var j = 0; j < cells.length; j++) {
+                if (cells[j].textContent.toLowerCase().includes(input)) {
+                    match = true;
+                    break;
+                }
+            }
+
+            // Nếu có từ khóa trùng, hiển thị hàng, ngược lại ẩn hàng
+            if (match) {
+                rows[i].style.display = "";
+            } else {
+                rows[i].style.display = "none";
+            }
+        }
+    }
+
+    // xem chi tiết account
+    document.addEventListener('DOMContentLoaded', function () {
+        const tableBody = document.getElementById('account-table-body');
+        const detailForm = document.getElementById('view-account-management-form');
+
+        // Các trường chi tiết
+        const inputID = document.getElementById('view-account-id');
+        const inputName = document.getElementById('view-account-name');
+        const inputEmail = document.getElementById('view-account-email');
+        const inputPassword = document.getElementById('view-account-pass');
+        const inputPhone = document.getElementById('view-account-phone');
+
+        // Gắn sự kiện dblclick cho từng dòng trong bảng
+        tableBody.addEventListener('dblclick', function (event) {
+            const targetRow = event.target.closest('tr'); // Tìm hàng chứa phần tử được nhấp đúp
+            if (targetRow) {
+                // Lấy dữ liệu từ các cột
+                const accountID = targetRow.cells[0].innerText.trim();
+                const fullName = targetRow.getAttribute('data-account-name');
+                const email = targetRow.getAttribute('data-account-email');
+
+                const password = targetRow.getAttribute('data-account-password');
+                const phone = targetRow.cells[4].innerText.trim();
+
+                // Điền dữ liệu vào form
+                inputID.value = accountID;
+                inputName.value = fullName;
+                inputEmail.value = email;
+                inputPassword.value = password;
+                inputPhone.value = phone;
+                inputHistory.value = history;
+
+                // Hiển thị form nếu chưa hiển thị
+            }
+        });
+    });
+    // sửa account
+    document.addEventListener('DOMContentLoaded', function () {
+        const tableBody = document.getElementById('account-table-body');
+        const detailForm = document.getElementById('view-account-management-form');
+
+        // Các trường chi tiết
+        const inputID = document.getElementById('edit-account-id-display');
+        const inputName = document.getElementById('edit-account-name');
+        const inputEmail = document.getElementById('edit-account-email');
+        const inputPassword = document.getElementById('edit-account-pass');
+        const inputPhone = document.getElementById('edit-account-phone');
+
+        // Gắn sự kiện dblclick cho từng dòng trong bảng
+        tableBody.addEventListener('dblclick', function (event) {
+            const targetRow = event.target.closest('tr'); // Tìm hàng chứa phần tử được nhấp đúp
+            if (targetRow) {
+                // Lấy dữ liệu từ các cột
+                const accountID = targetRow.cells[0].innerText.trim();
+                const fullName = targetRow.getAttribute('data-account-name');
+                const email = targetRow.getAttribute('data-account-email');
+
+                const password = targetRow.getAttribute('data-account-password');
+                const phone = targetRow.cells[4].innerText.trim();
+
+                // Điền dữ liệu vào form
+                inputID.value = accountID;
+                inputName.value = fullName;
+                inputEmail.value = email;
+                inputPassword.value = password;
+                inputPhone.value = phone;
+                inputHistory.value = history;
+
+                // Hiển thị form nếu chưa hiển thị
+            }
+        });
+    });
+    // blockAccount
+    document.addEventListener('DOMContentLoaded', function () {
+        const tableBody = document.getElementById('account-table-body');
+        const detailForm = document.getElementById('view-account-management-form');
+
+        // Các trường chi tiết
+        const inputID = document.getElementById('block-account-id');
+
+        // Gắn sự kiện dblclick cho từng dòng trong bảng
+        tableBody.addEventListener('dblclick', function (event) {
+            const targetRow = event.target.closest('tr'); // Tìm hàng chứa phần tử được nhấp đúp
+            if (targetRow) {
+                // Lấy dữ liệu từ các cột
+                const accountID = targetRow.cells[0].innerText.trim();
+
+                // Điền dữ liệu vào form
+                inputID.value = accountID;
+
+                // Hiển thị form nếu chưa hiển thị
+            }
+        });
+    });
+    // unblock
+    document.addEventListener('DOMContentLoaded', function () {
+        const tableBody = document.getElementById('account-table-body');
+        const detailForm = document.getElementById('view-account-management-form');
+
+        // Các trường chi tiết
+        const inputID = document.getElementById('unBlock-account-id');
+
+        // Gắn sự kiện dblclick cho từng dòng trong bảng
+        tableBody.addEventListener('dblclick', function (event) {
+            const targetRow = event.target.closest('tr'); // Tìm hàng chứa phần tử được nhấp đúp
+            if (targetRow) {
+                // Lấy dữ liệu từ các cột
+                const accountID = targetRow.cells[0].innerText.trim();
+
+                // Điền dữ liệu vào form
+                inputID.value = accountID;
+
+                // Hiển thị form nếu chưa hiển thị
+            }
+        });
+    });
+
+
 
     function editProduct(button) {
         event.preventDefault();
@@ -826,13 +1070,14 @@
         var categoryName = button.getAttribute('data-category-name');
 
         // Điền thông tin vào form sửa sản phẩm
-        document.getElementById('product-id').value = productId;
+        console.log('imgURL:', imgURL); // Kiểm tra giá trị imgURL
+        document.getElementById('edit-product-id').value = productId;
         document.getElementById('edit-product-name').value = productName;
         document.getElementById('edit-product-price').value = productPrice;
         document.getElementById('product-color').value = productColor;
         document.getElementById('edit-product-size').value = productSize;
         document.getElementById('edit-product-description').value = productDescription;
-        document.querySelector('.imageDisplay').src = imgURL;
+        document.getElementById('edit-product-imageDisplay').src = imgURL;
         // Điền thông tin danh mục vào dropdown
         var categorySelect = document.getElementById('edit-product-category');
         for (var i = 0; i < categorySelect.options.length; i++) {
