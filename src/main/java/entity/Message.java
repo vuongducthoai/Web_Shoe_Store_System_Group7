@@ -31,4 +31,7 @@ public class Message {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "date", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private Date date;
+
+    @Column(nullable = false, columnDefinition = "BIT DEFAULT 0")
+    private boolean isRead; // New field to track if the message has been read
 }

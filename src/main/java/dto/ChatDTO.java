@@ -1,5 +1,6 @@
 package dto;
 
+import entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,6 @@ import java.util.*;
 @AllArgsConstructor
 public class ChatDTO {
     private int chatId;
-    private CustomerDTO customer;
-    private List<MessageDTO> messages;
+    private User user;
+    private String createdDate;
 }

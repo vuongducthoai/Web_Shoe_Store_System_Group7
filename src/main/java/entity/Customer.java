@@ -1,10 +1,8 @@
 package entity;
 
-import jakarta.persistence.*;
-
 import java.util.Date;
 import java.util.List;
-
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,10 +31,11 @@ public class Customer extends User {
 
     private int loyalty;
 
+    @OneToOne(mappedBy = "customer",cascade = CascadeType.ALL)
+    private Chat chat;
 
     @OneToMany(mappedBy = "customer")
     private List<Review> reviewList;
 
-    @OneToMany(mappedBy = "customer")
-    private List<Notify> notifyList;
+
 }

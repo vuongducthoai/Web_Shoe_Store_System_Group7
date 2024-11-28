@@ -6,6 +6,7 @@ import dto.ProductDTO;
 import dto.PromotionDTO;
 import dto.PromotionProductDTO;
 import enums.DiscountType;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 
@@ -90,11 +91,11 @@ public class ProductPromotionImpl implements IProductPromotion {
         } catch (Exception e) {
             // Log the exception or handle it as needed
             System.out.println( e.getMessage());
+
         } finally {
             entityManager.close();
         }
         return promotionProductDTOList;
     }
-
 
 }

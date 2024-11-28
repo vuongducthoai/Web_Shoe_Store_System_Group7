@@ -22,8 +22,8 @@ public class Response {
     private String content;
 
     @ManyToOne
-    @JoinColumn(name="adminID")
-    private User admin;
+    @JoinColumn(name="userID")
+    private Admin admin;
 
     @OneToOne
     @JoinColumn(name ="reviewID")
