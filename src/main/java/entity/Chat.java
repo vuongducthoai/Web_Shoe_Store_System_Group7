@@ -21,7 +21,7 @@ public class Chat {
 
     @OneToOne
     @JoinColumn(name = "userID")
-    private User user;
+    private Customer customer;
 
     @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL)
     private List<Message> messages;
