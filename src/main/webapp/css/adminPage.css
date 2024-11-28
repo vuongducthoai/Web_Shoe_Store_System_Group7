@@ -687,3 +687,109 @@ th, td {
 .promotion-management{
     display: none;
 }
+
+
+
+
+
+/* Quản lý biến thể */
+.product-management-form input[type="text"] {
+    background-color: #f9f9f9;
+}
+
+.product-management-form input[type="file"] {
+    padding: 5px;
+}
+
+.product-management-form select {
+    height: 40px;
+}
+
+
+
+/* Khu vực biến thể */
+#color-container {
+    margin-top: 20px;
+}
+
+/* Màu sắc */
+.color-block {
+    background-color: #f9f9f9;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.color-block input {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+#color-container .remove-color-btn {
+    background-color: #ff4d4d;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+#color-container .remove-color-btn:hover {
+    background-color: #e60000;
+}
+
+/* Size */
+.size-container {
+    margin-bottom: 15px;
+}
+
+.size-block {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.size-block input {
+    width: 45%;
+}
+
+.size-block button {
+    background-color: red;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.size-container input[type="text"] {
+    width: 240px   !important;
+    padding: 5px;
+    margin-right: 5px;
+}
+
+.size-block button:hover {
+    opacity: 0.6;
+}
+
+/* Thêm màu sắc */
+#add-color-btn {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 10px;
+    width: 300px;
+    margin-bottom: 50px;
+}
+
+#add-color-btn:hover {
+    background-color: #218838;
+}
