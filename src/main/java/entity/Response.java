@@ -22,7 +22,7 @@ public class Response {
     private String content;
 
     @ManyToOne
-    @JoinColumn(name="userID")
+    @JoinColumn(name="userID" )
     private Admin admin;
 
     @OneToOne

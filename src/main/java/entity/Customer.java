@@ -34,7 +34,7 @@ public class Customer extends User {
     @OneToOne(mappedBy = "customer",cascade = CascadeType.ALL)
     private Chat chat;
 
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer",fetch = FetchType.LAZY)
     private List<Review> reviewList;
 
 

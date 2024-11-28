@@ -10,5 +10,5 @@ public interface IMessageService {
     int getOrCreateChatId(int userId) throws SQLException;
     public void saveMessage(MessageDTO message) throws SQLException;
     List<MessageDTO> getMessages(int chatId, Timestamp lastMessageTimestamp) throws SQLException;
-    public List<MessageDTO> getRecentMessages(int chatId) throws SQLException;
+    List<MessageDTO> getRecentMessages(int chatId) throws SQLException;
 }

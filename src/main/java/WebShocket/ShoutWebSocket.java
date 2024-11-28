@@ -66,7 +66,6 @@ public class ShoutWebSocket {
                 sendCachedMessages(chatId, session);
                 return;
             }
-
             // Kiểm tra userId và chat
             String userId = (String) session.getUserProperties().get("userId");
             if (userId == null) {
@@ -90,7 +89,9 @@ public class ShoutWebSocket {
                     messageCache.get(chat.getChatID()).addAll(moreMessages);
                     sendCachedMessages(chat.getChatID(), session);
                 }
-            } else {
+                return;
+            }
+
                 // Handle normal message sending
                 MessageDTO messageDTO = new MessageDTO();
                 messageDTO.setChat(chat); // Gán Chat từ session
@@ -102,7 +103,7 @@ public class ShoutWebSocket {
                 messageService.saveMessage(messageDTO);
 
                 broadcastMessages(chat.getChatID());
-            }
+
         } catch (SQLException | IOException e) {
             e.printStackTrace();
         }

@@ -15,4 +15,9 @@ public class ChatDTO {
     private int chatId;
     private User user;
     private String createdDate;
+
+    public ChatDTO(int chatId, String createdDate) {
+        this.chatId = chatId;
+        this.createdDate = createdDate;
+    }
 }
