@@ -104,7 +104,6 @@
                                 <th>size</th>
                                 <th>Danh mục</th>
                                 <th>Mô tả</th>
-                                <th>Trạng thái</th>
                                 <th>Hành động</th>
                             </tr>
                             <c:forEach var="product" items="${products}">
@@ -124,7 +123,6 @@
                                     </td>
 
                                     <td>${product.description}</td>
-                                    <td>${product.status}</td>
                                     <td>
                                         <a href="#" class="btn-edit"
                                            data-product-id="${product.productId}"
@@ -194,7 +192,7 @@
                         <button type="button" id="add-color-btn">Thêm biến thể</button>
 
 
-                        <button class="action-btn" name="submitAction" value="add-product">Thêm sản phẩm</button>
+                        <button class="action-btn" name="submitAction" value="add-product" onclick="submitFormWithBlockCount()">Thêm sản phẩm</button>
                     </div>
                     </form>
 
@@ -302,7 +300,7 @@
                         <input type="text" id="add-category-name" name="add-categoryName" placeholder="Nhập tên danh mục">
 
 
-                        <button class="action-btn" name="submitAction" value="add-category">Thêm danh mục</button>
+                        <button class="action-btn" name="submitAction" value="add-category" >Thêm danh mục</button>
                     </div>
                     </form>
 
