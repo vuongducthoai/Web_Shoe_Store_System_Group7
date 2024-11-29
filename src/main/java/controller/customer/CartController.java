@@ -24,13 +24,14 @@ import service.ICartService;
 import service.Impl.AccountServiceImpl;
 import service.Impl.CartServiceImpl;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
 
-@WebServlet(urlPatterns = {"/Cart","/Cart/Add","/Cart/Remove","/Cart/Delete_Item","/TWP_ACCOUNT","/Count"})
+@WebServlet(urlPatterns = {"/Cart","/Cart/Add","/Cart/Remove","/Cart/Delete_Item","/TWP_ACCOUNT","/Count","/AddCartQuantity"})
 public class CartController extends HttpServlet {
     ICartService iCartService = new CartServiceImpl();
     private IAccountService accountService = new AccountServiceImpl();
@@ -74,6 +75,9 @@ public class CartController extends HttpServlet {
         switch (path){
             case "/Count":
                 Count(req, resp);
+                break;
+            case "/AddCartQuantity":
+                Cart_Add_Quantity(req,resp);
                 break;
         }
         HttpSession session = req.getSession();
@@ -152,7 +156,7 @@ public class CartController extends HttpServlet {
         AccountDTO accountDTO = (AccountDTO) session.getAttribute("user");
         int idUser = accountDTO.getUser().getUserID();
         System.out.println(idUser);
-        Cart_Add(req,resp,idUser,idProduct,"Product added to cart successfully","This product cannot be added anymore.");
+        Cart_Add(req,resp,idUser,idProduct,"Thêm hàng thành công","Không đủ hàng trong kho");
         Load_Cart_View(req,resp);
         req.getRequestDispatcher("/view/customer/cart.jsp").forward(req, resp);
     }
@@ -173,14 +177,49 @@ public class CartController extends HttpServlet {
             req.setAttribute("message",messageError);
         }
     }
-    public void Cart_Add_Quantity(HttpServletRequest req, HttpServletResponse resp,int userId,int idProduct,int quantity,String messageSuccess,String messageError) throws ServletException, IOException {
-        if (iCartService.AddItemWithQuantity(idProduct,userId,quantity)) {
-            req.setAttribute("errCode",0);
-            req.setAttribute("message",messageSuccess);
+    public void Cart_Add_Quantity(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+        JSONObject json = new JSONObject();
+        int idProduct;
+        int quantity;
+        try {
+            BufferedReader reader = req.getReader();
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+            System.out.println(sb.toString());
+            JSONObject json1 = new JSONObject(sb.toString());
+            idProduct = json1.getInt("idProduct");
+            quantity = json1.getInt("quantity");
+        }catch (NumberFormatException e){
+            json.put("errCode",1);
+            json.put("message","Có vấn đề khi thêm hàng");
+            resp.getWriter().println(json.toString());
+            return;
+        }
+        HttpSession session = req.getSession();
+        AccountDTO accountDTO = (AccountDTO) session.getAttribute("user");
+        if (accountDTO==null || accountDTO.getUser()==null||!accountDTO.getUser().isActive()){
+            json.put("errCode",2);
+            json.put("message","Không có quyền truy cập");
+            resp.getWriter().println(json.toString());
+            return;
+        }
+        int idUser = accountDTO.getUser().getUserID();
+        if (iCartService.AddItemWithQuantity(idProduct,idUser,quantity)) {
+            json.put("errCode",0);
+            json.put("message","Thêm thành công");
+            resp.getWriter().println(json.toString());
+            return;
         }
         else {
-            req.setAttribute("errCode",1);
-            req.setAttribute("message",messageError);
+            json.put("errCode",1);
+            json.put("message","Không đủ hàng trong kho");
+            resp.getWriter().println(json.toString());
+            return;
         }
     }
     private void Delete_Cart_Item(HttpServletRequest req, HttpServletResponse resp, String redirect) throws ServletException, IOException {

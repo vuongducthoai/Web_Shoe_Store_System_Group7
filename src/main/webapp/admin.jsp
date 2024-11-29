@@ -153,26 +153,12 @@
                     <div class="product-management-form" id="add-product-management-form">
                         <h3>Thêm sản phẩm mới</h3>
 
-                        <label for="product-name">Tên sản phẩm</label>
-                        <input type="text" id="product-name" name="productName" placeholder="Nhập tên sản phẩm">
+                        <label for="add-product-name">Tên sản phẩm</label>
+                        <input type="text" id="add-product-name" name="productName" placeholder="Nhập tên sản phẩm">
 
                         <label for="add-product-price">Giá</label>
                         <input type="text" id="add-product-price" name="productPrice" placeholder="Nhập giá sản phẩm">
 
-<%--                        <label for="add-product-color">Màu sắc</label>--%>
-<%--                        <input type="text" id="add-product-color" name="productColor" placeholder="Nhập màu sắc sản phẩm">--%>
-
-<%--                        <label for="product-size">Size</label>--%>
-<%--                        <div class="LoadImageContent">--%>
-<%--                        <label >Hình ảnh</label>--%>
-<%--                        <div class="picturebox">--%>
-<%--                            <img id="add-product-imageDisplay" class="imageDisplay" src="" alt="No image" />--%>
-<%--                        </div>--%>
-<%--                        <button class="loadImageBtn">Load Image</button>--%>
-<%--                        <input type="file" name="productImage" class="imageInput" style="display: none;" accept="image/*">--%>
-<%--                        <button class="cancelBtn">Cancel Image</button>--%>
-<%--                        </div>--%>
-<%--                        <input type="text" id="product-size" name="productSize" placeholder="Nhập size sản phẩm">--%>
 
                         <label for="add-product-category">Danh mục</label>
                         <select id="add-product-category" name="CategoryName">
@@ -192,7 +178,7 @@
                         <button type="button" id="add-color-btn">Thêm biến thể</button>
 
 
-                        <button class="action-btn" name="submitAction" value="add-product" onclick="submitFormWithBlockCount()">Thêm sản phẩm</button>
+                        <button class="action-btn" name="submitAction" value="add-product" >Thêm sản phẩm</button>
                     </div>
                     </form>
 
@@ -203,7 +189,7 @@
                         <label for="edit-product-id">ID</label>
                         <input type="text" id="edit-product-id" name="edit-productID" placeholder="Nhập ID sản phẩm">
 
-                        <label for="product-name">Tên sản phẩm</label>
+                        <label for="edit-product-name">Tên sản phẩm</label>
                         <input type="text" id="edit-product-name" name="edit-productName" placeholder="Nhập tên sản phẩm">
 
                         <label for="edit-product-price">Giá</label>
