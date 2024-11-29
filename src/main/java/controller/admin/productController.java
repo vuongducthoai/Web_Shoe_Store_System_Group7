@@ -1,5 +1,6 @@
 package controller.admin;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import dao.ICategoryDao;
@@ -18,14 +19,12 @@ import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import service.ICartService;
 import service.Impl.CartServiceImpl;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -93,80 +92,7 @@ public class productController extends HttpServlet {
 
     }
 
-    //    protected void addProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    //
-    //        String productName = req.getParameter("productName");
-    //        double productPrice = Double.parseDouble(req.getParameter("productPrice"));
-    //
-    //
-    //        String productColor = req.getParameter("productColor");
-    //        int productSize = Integer.parseInt(req.getParameter("productSize"));
-    //        String categoryName = req.getParameter("CategoryName");
-    //        String productDescription = req.getParameter("productDescription");
-    //
-    //        List<CategoryDTO> categoryDTOList = categoryDao.categoryDTOList();
-    //        Category selectedCategory = null;
-    //        for (CategoryDTO category : categoryDTOList) {
-    //            if (category.getCategoryName().equals(categoryName)) {
-    //                selectedCategory = new Category(); // Khởi tạo đối tượng Category
-    //                selectedCategory.setCategoryID(category.getCategoryId());
-    //                selectedCategory.setCategoryName(category.getCategoryName());
-    //                break;
-    //            }
-    //        }
-    //        Part filePart = req.getPart("productImage"); // "productImage" là tên của input file
-    //        byte[] imageBytes = null;
-    //
-    //        if (filePart != null && filePart.getSize() > 0) {
-    //            try (InputStream inputStream = filePart.getInputStream();
-    //                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-    //                byte[] buffer = new byte[1024];
-    //                int bytesRead;
-    //                while ((bytesRead = inputStream.read(buffer)) != -1) {
-    //                    outputStream.write(buffer, 0, bytesRead);
-    //                }
-    //                imageBytes = outputStream.toByteArray(); // Chuyển đổi ảnh thành mảng byte
-    //            }
-    //        }
-    //
-    //        // Debug - Kiểm tra ảnh
-    //        System.out.println("Image uploaded: " + (imageBytes != null ? "Yes" : "No"));
-    //        System.out.println("Product Name: " + req.getParameter("productName"));
-    //        System.out.println("Product Price: " + req.getParameter("productPrice"));
-    //        System.out.println("Product Color: " + req.getParameter("productColor"));
-    //        System.out.println("Product Size: " + req.getParameter("productSize"));
-    //        System.out.println("Category Name: " + req.getParameter("CategoryName"));
-    //        System.out.println("Product Description: " + req.getParameter("productDescription"));
-    //
-    //
-    //
-    //        Product product = new Product();
-    //        product.setProductName(productName);
-    //        product.setPrice(productPrice);
-    //        product.setImage(imageBytes);
-    //        product.setColor(productColor);
-    //        product.setSize(productSize);
-    //        product.setCategory(selectedCategory);
-    //        product.setDescription(productDescription);
-    //        product.setCreateDate(LocalDateTime.now());
-    //        product.setStatus(true);
-    //
-    //        try
-    //        {
-    //            if  (productDAO.AddProduct(product))
-    //            {
-    //               System.out.println("Add successful");
-    //                resp.sendRedirect(req.getContextPath() + "/ProductController");
-    //            }
-    //            else{
-    //                System.out.println("Add fail");
-    //            }
-    //        }
-    //        catch (Exception e) {
-    //            e.printStackTrace();
-    //        }
-    //
-    //    }
+
 
     protected void addProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String productName = req.getParameter("productName");
@@ -184,10 +110,19 @@ public class productController extends HttpServlet {
             }
         }
 
-        // Lặp qua các biến thể màu
-        for (int i = 1; i <= 1; i++) {
+
+
+        int i = 1; // Khởi tạo chỉ số vòng lặp
+        while (true) {
+            // Lấy tên màu từ request
             String colorName = req.getParameter("color-name-" + i);
 
+            // Nếu không nhận được giá trị colorName thì thoát khỏi vòng lặp
+            if (colorName == null || colorName.isEmpty()) {
+                break; // Thoát vòng lặp nếu không có colorName
+            }
+
+            // Lấy phần ảnh (file) từ request
             Part filePart = req.getPart("image-color-" + i);
             byte[] imageBytes = null;
 
@@ -200,9 +135,13 @@ public class productController extends HttpServlet {
                         outputStream.write(buffer, 0, bytesRead);
                     }
                     imageBytes = outputStream.toByteArray();
+                } catch (IOException e) {
+                    // Xử lý lỗi nếu có
+                    e.printStackTrace();
                 }
             }
 
+            // Lấy các giá trị size và quantity từ request
             String[] sizes = req.getParameterValues("size-" + i + "[]");
             String[] quantities = req.getParameterValues("quantity-" + i + "[]");
 
@@ -211,19 +150,18 @@ public class productController extends HttpServlet {
                 for (int j = 0; j < sizes.length; j++) {
                     System.out.println("Size: " + sizes[j] + ", Quantity: " + quantities[j]);
                 }
-            }
 
-            if (sizes != null && quantities != null) {
+                // Lặp qua các giá trị size và quantity
                 for (int j = 0; j < sizes.length; j++) {
                     int size = Integer.parseInt(sizes[j]);
                     int quantity = Integer.parseInt(quantities[j]);
 
                     for (int k = 0; k < quantity; k++) {
                         Product product = new Product();
-                        product.setProductName(productName);
-                        product.setDescription(productDescription);
-                        product.setCategory(selectedCategory);
-                        product.setPrice(productPrice);
+                        product.setProductName(productName); // Tham số này bạn cần định nghĩa
+                        product.setDescription(productDescription); // Tham số này bạn cần định nghĩa
+                        product.setCategory(selectedCategory); // Tham số này bạn cần định nghĩa
+                        product.setPrice(productPrice); // Tham số này bạn cần định nghĩa
                         product.setColor(colorName);
                         product.setSize(size);
                         product.setImage(imageBytes);
@@ -231,11 +169,14 @@ public class productController extends HttpServlet {
                         product.setStatus(true);
 
                         productDAO.AddProduct(product);
-
                     }
                 }
             }
+
+            // Tăng giá trị chỉ số i lên để tiếp tục vòng lặp
+            i++;
         }
+
         resp.sendRedirect(req.getContextPath() + "/ProductController");
     }
 

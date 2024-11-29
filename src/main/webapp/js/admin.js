@@ -533,35 +533,5 @@
         return document.querySelectorAll('.color-block').length;
     }
 
-    function submitFormWithBlockCount() {
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = '${pageContext.request.contextPath}/ProductController'; // Đổi thành servlet của bạn
 
-        // Tạo input ẩn để lưu số lượng block
-        const inputBlockCount = document.createElement('input');
-        inputBlockCount.type = 'hidden';
-        inputBlockCount.name = 'blockCount';
-        inputBlockCount.value = '1'; // Lấy giá trị từ hàm
-
-        // Tạo input ẩn để truyền giá trị nút
-        const inputAction = document.createElement('input');
-        inputAction.type = 'hidden';
-        inputAction.name = 'submitAction';
-        inputAction.value = 'add-product';
-
-        // Thêm các input vào form
-        form.appendChild(inputBlockCount);
-        form.appendChild(inputAction);
-
-        // Thêm form vào body và gửi đi
-        document.body.appendChild(form);
-
-        // Debug alert
-        alert("Số lượng block: " + getColorBlockCount());
-        alert("Form Action:"+ form.action);
-
-        // Gửi form
-        form.submit();
-    }
 
