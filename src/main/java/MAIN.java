@@ -1,3 +1,4 @@
+import JpaConfig.JpaConfig;
 import dao.Impl.UserDAOImpl;
 import entity.User;
 
@@ -16,7 +17,7 @@ public class MAIN {
 //        }
 
         UserDAOImpl userDAO = new UserDAOImpl();
-        User user1 = userDAO.getUserByAccountId(1);
-        System.out.println(user1.getFullName());
+        User user1 = userDAO.getUserByAccountId(107);
+        System.out.println(user1.getUserID());
     }
 }
