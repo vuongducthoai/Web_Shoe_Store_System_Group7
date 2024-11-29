@@ -248,9 +248,13 @@ public class ProductDAOImpl implements IProductDAO {
         try {
             // Truy vấn các sản phẩm có tên chứa từ khóa
             List<Product> products = entityManager.createQuery(
-                            "SELECT p FROM Product p WHERE p.productName = :name", Product.class)
-                    .setParameter("name", name) // Tìm kiếm gần đúng
+                            "SELECT p FROM Product p LEFT JOIN FETCH p.category WHERE p.productName = :name", Product.class)
+                    .setParameter("name", name)  // Tìm kiếm sản phẩm theo tên
                     .getResultList();
+
+
+
+
 
             if(products == null || products.isEmpty()) System.out.print("Products null");
             else{
