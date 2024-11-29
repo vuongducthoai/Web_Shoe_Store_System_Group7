@@ -1,5 +1,6 @@
 package dto;
 
+import entity.Admin;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,6 @@ public class ResponseDTO {
     private int responseID;
     private Date timeStamp;
     private String content;
-    private UserDTO admin;
+    private AdminDTO admin;
     private ReviewDTO review;
 }

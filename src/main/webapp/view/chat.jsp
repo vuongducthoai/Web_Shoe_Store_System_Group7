@@ -218,17 +218,20 @@
       userId = prompt("Enter your User ID:");
       socket.send("userId:" + userId);
 
-      if (userId === "1") {
-        // Hiển thị danh sách khách hàng
-        document.getElementById("customerList").style.display = "block";
-        socket.send("getCustomerList")
-        loadCustomerList();
-      }
     };
 
     socket.onmessage = function(event) {
       var messageList = document.getElementById("messageList");
-      if (event.data === "noMoreMessages") {
+
+      // If it's a customer list message
+      if (event.data.includes("customer-item")) {
+        var customerList = document.getElementById("customerList");
+        customerList.innerHTML = event.data; // Insert the customer list HTML
+
+        // Display the customer list if it's the admin
+        document.getElementById("customerList").style.display = "block";
+
+      } else if (event.data === "noMoreMessages") {
         var noMoreMessageDiv = document.createElement("div");
         noMoreMessageDiv.classList.add("no-more-msg");
         noMoreMessageDiv.innerText = "Bạn đã xem hết tin nhắn!";
@@ -243,6 +246,13 @@
         }
       }
     };
+
+// Handle admin connection
+    if (userId === "1") {
+      // Display customer list
+      document.getElementById("customerList").style.display = "block";
+      socket.send("getCustomerList"); // Request customer list from server
+    }
 
     socket.onclose = function() {
       console.log("WebSocket connection closed.");

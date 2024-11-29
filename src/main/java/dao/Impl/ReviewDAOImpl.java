@@ -37,7 +37,7 @@ public class ReviewDAOImpl implements IReviewDAO {
                 CustomerDTO customer = new CustomerDTO();
                 customer.setFullName((String) row[0]);
 
-                UserDTO admin = new UserDTO();
+                AdminDTO admin = new AdminDTO();
                 if (row[4] != null) {
                     admin.setUserID((Integer) row[4]);
                 }

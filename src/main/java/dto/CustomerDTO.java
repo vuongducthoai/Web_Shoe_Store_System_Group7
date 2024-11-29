@@ -1,5 +1,6 @@
 package dto;
 
+import entity.Chat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,9 +25,12 @@ public class CustomerDTO extends UserDTO {
     private List<NotifyDTO> notifyDTOList;
 
 
-    public CustomerDTO(int userID, String fullName, String phone, ChatDTO chatDTO) {
+    public CustomerDTO(int userID, String fullName, String phone, Chat chat) {
         super(userID, fullName, phone);
-        this.chatDTO = chatDTO;
+        if (chat != null) {
+            // Chuyển đổi từ Chat thành ChatDTO
+            this.chatDTO = new ChatDTO(chat.getChatID(), chat.getCreatedDate());
+        }
     }
 
     public CustomerDTO(int userID, String fullName, String phone, boolean active, Date dateOfBirth, int loyalty) {

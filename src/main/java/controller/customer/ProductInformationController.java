@@ -3,10 +3,7 @@ package controller.customer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.gson.Gson;
-import dto.ProductDTO;
-import dto.ResponseDTO;
-import dto.ReviewDTO;
-import dto.UserDTO;
+import dto.*;
 import entity.Product;
 import entity.Response;
 import jakarta.servlet.ServletException;
@@ -166,14 +163,14 @@ public class ProductInformationController extends HttpServlet {
                 ReviewDTO reviewDTO = new ReviewDTO();
                 reviewDTO.setReviewID(reviewID);
 
-                UserDTO userDTO = new UserDTO();
-                userDTO.setUserID(48);
+                AdminDTO adminDTO = new AdminDTO();
+                adminDTO.setUserID(48);
 
                 ResponseDTO response = new ResponseDTO();
                 response.setResponseID(responseID);
                 response.setContent(responseContent);
                 response.setReview(reviewDTO);
-                response.setAdmin(userDTO);
+                response.setAdmin(adminDTO);
                 Date currentDate = new Date();
                 response.setTimeStamp(currentDate);
 

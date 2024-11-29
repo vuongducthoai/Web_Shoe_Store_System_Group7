@@ -31,7 +31,7 @@ public class Product {
     private boolean status;
     private String description;
 
-    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Review review;
 
     @OneToMany(mappedBy = "product") // tham chieu den "product" trong cardItem

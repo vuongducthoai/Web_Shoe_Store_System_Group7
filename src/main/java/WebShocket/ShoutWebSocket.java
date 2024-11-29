@@ -1,5 +1,6 @@
 package WebShocket;
 
+import dto.CustomerDTO;
 import dto.MessageDTO;
 import dto.UserDTO;
 import entity.Chat;
@@ -7,7 +8,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import service.ICustomerService;
 import service.IMessageService;
+import service.Impl.CustomerServiceImpl;
 import service.Impl.MessageService;
 import jakarta.websocket.*;
 import jakarta.websocket.server.ServerEndpoint;
@@ -24,7 +27,8 @@ import java.util.concurrent.CopyOnWriteArraySet;
 @ServerEndpoint("/chat")
 public class ShoutWebSocket {
 
-    private static final IMessageService messageService = new MessageService();  // Use the MessageServiceImpl
+    private static final IMessageService messageService = new MessageService();
+    private static final ICustomerService customerService = new CustomerServiceImpl();// Use the MessageServiceImpl
     private static Set<Session> clients = new CopyOnWriteArraySet<>();
     private static ConcurrentHashMap<Integer, List<MessageDTO>> messageCache = new ConcurrentHashMap<>();
 
@@ -42,72 +46,103 @@ public class ShoutWebSocket {
     @OnMessage
     public void onMessage(String messageContent, Session session) {
         try {
-            // Lấy Chat từ session
-            Chat chat = (Chat) session.getUserProperties().get("chat");
 
-            // Handle userId connection
             if (messageContent.startsWith("userId:")) {
-                String userId = messageContent.split(":")[1].trim();
+                Chat chat;
+                String userId;
+
+                userId = messageContent.split(":")[1].trim();
                 session.getUserProperties().put("userId", userId);
                 System.out.println("User connected with userId: " + userId);
+                if (userId == "") {
+                    session.getBasicRemote().sendText("Error: You need to connect first with a valid userId.");
+                    return;
+                }
+                int chatId = 1; // Gán chatId cố định, ví dụ chatId = 1
+                // Lấy danh sách tin nhắn gần đây từ cache hoặc service
+                List<MessageDTO> recentMessages = messageService.getRecentMessages(chatId);
+                if (recentMessages != null && !recentMessages.isEmpty()) {
+                    // Lưu tin nhắn vào cache
+                    messageCache.computeIfAbsent(chatId, k -> new CopyOnWriteArrayList<>()).addAll(recentMessages);
 
-                int chatId = 1; // Assuming static chatId
-                if (!messageCache.containsKey(chatId)) {
-                    messageCache.put(chatId, messageService.getRecentMessages(chatId));
+                    // Lấy đối tượng Chat từ tin nhắn đầu tiên trong danh sách tin nhắn
+                    chat = recentMessages.get(0).getChat();
+                    session.getUserProperties().put("chat", chat);  // Lưu Chat vào session
+
+                    sendCachedMessages(chatId, session);  // Gửi tin nhắn từ cache
+                } else {
+                    session.getBasicRemote().sendText("No previous messages.");
                 }
 
-                // Lấy Chat từ messageCache nếu có
-                List<MessageDTO> cachedMessages = messageCache.get(chatId);
-                if (cachedMessages != null && !cachedMessages.isEmpty()) {
-                    chat = cachedMessages.get(0).getChat(); // Lấy Chat từ tin nhắn đầu tiên
-                    session.getUserProperties().put("chat", chat); // Lưu Chat vào session
+                // Nếu user là admin (userId = "1"), gửi danh sách khách hàng
+                if ("1".equals(userId)) {
+                    List<CustomerDTO> customerList = customerService.GetAllCustomer(); // Giả sử có phương thức để lấy khách hàng
+                    StringBuilder customerListHtml = new StringBuilder();
+                    for (CustomerDTO customer : customerList) {
+                        customerListHtml.append("<div class='customer-item'>")
+                                .append(customer.getFullName())
+                                .append("</div>");
+                    }
+                    // Gửi danh sách khách hàng cho admin
+                    session.getBasicRemote().sendText(customerListHtml.toString());
                 }
 
-                sendCachedMessages(chatId, session);
                 return;
             }
-            // Kiểm tra userId và chat
+
+            // Kiểm tra nếu chat chưa được khởi tạo
+            if (session.getUserProperties().get("chat") == null) {
+                session.getBasicRemote().sendText("Error: Chat not initialized.");
+                return;
+            }
+            Chat chat = (Chat) session.getUserProperties().get("chat");
             String userId = (String) session.getUserProperties().get("userId");
-            if (userId == null) {
-                session.getBasicRemote().sendText("Error: You need to connect first with a valid userId.");
-                return;
-            }
             if (chat == null) {
                 session.getBasicRemote().sendText("Error: Chat not initialized.");
                 return;
             }
-
-            // Handle load more messages
+            // Xử lý yêu cầu "loadMoreMessages" để tải thêm tin nhắn
             if (messageContent.equals("loadMoreMessages")) {
                 List<MessageDTO> lastMessages = messageCache.get(chat.getChatID());
+                if (lastMessages == null || lastMessages.isEmpty()) {
+                    session.getBasicRemote().sendText("No messages available.");
+                    return;
+                }
+
+                // Lấy thời gian của tin nhắn cuối cùng trong cache
                 Timestamp lastMessageTimestamp = lastMessages.get(lastMessages.size() - 1).getDate();
 
+                // Lấy thêm tin nhắn từ service
                 List<MessageDTO> moreMessages = messageService.getMessages(chat.getChatID(), lastMessageTimestamp);
                 if (moreMessages.isEmpty()) {
                     session.getBasicRemote().sendText("noMoreMessages");
                 } else {
+                    // Thêm tin nhắn mới vào cache và gửi lại
                     messageCache.get(chat.getChatID()).addAll(moreMessages);
                     sendCachedMessages(chat.getChatID(), session);
                 }
                 return;
             }
 
-                // Handle normal message sending
-                MessageDTO messageDTO = new MessageDTO();
-                messageDTO.setChat(chat); // Gán Chat từ session
-                messageDTO.setUserId(Integer.parseInt(userId));
-                messageDTO.setContent(messageContent);
-                messageDTO.setDate(new Timestamp(System.currentTimeMillis()));
+            // Xử lý gửi tin nhắn bình thường
+            MessageDTO messageDTO = new MessageDTO();
+            messageDTO.setChat(chat);  // Gán đối tượng Chat từ session
+            messageDTO.setUserId(Integer.parseInt(userId));
+            messageDTO.setContent(messageContent);
+            messageDTO.setDate(new Timestamp(System.currentTimeMillis()));
 
-                messageCache.computeIfAbsent(chat.getChatID(), k -> new CopyOnWriteArrayList<>()).add(0, messageDTO);
-                messageService.saveMessage(messageDTO);
+            // Lưu tin nhắn vào cache và database
+            messageCache.computeIfAbsent(chat.getChatID(), k -> new CopyOnWriteArrayList<>()).add(0, messageDTO);
+            messageService.saveMessage(messageDTO);
 
-                broadcastMessages(chat.getChatID());
+            // Phát sóng tin nhắn mới tới tất cả người dùng trong chat
+            broadcastMessages(chat.getChatID());
 
         } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
     }
+
 
     @OnClose
     public void onClose(Session session) {
