@@ -247,6 +247,11 @@ public class ProductDAOImpl implements IProductDAO {
                     .setParameter("name", name) // Tìm kiếm gần đúng
                     .getResultList();
 
+            if(products == null || products.isEmpty()) System.out.print("Products null");
+            else{
+                System.out.print("Products: " + products.size());
+            }
+
 
             return products.stream()
                     .map(product -> new ProductDTO(
