@@ -30,7 +30,7 @@ public class Review {
     private Customer customer;
     private String comment;
 
-    @OneToOne(mappedBy = "review")
+    @OneToOne(mappedBy = "review", fetch = FetchType.LAZY)
     private Response response;
 
     @Lob
