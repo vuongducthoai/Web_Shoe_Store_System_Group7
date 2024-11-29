@@ -16,7 +16,7 @@ public class CategoryDaoImpl implements ICategoryDao {
             try {
                 // Truy vấn tất cả danh mục và sản phẩm liên quan
                 List<Category> categories = entityManager.createQuery(
-                    "SELECT c FROM Category c LEFT JOIN FETCH c.products", Category.class)
+                                "SELECT c FROM Category c LEFT JOIN FETCH c.products", Category.class)
                     .getResultList();
 
                 // Ánh xạ từ Category sang CategoryDTO
@@ -25,7 +25,7 @@ public class CategoryDaoImpl implements ICategoryDao {
                         category.getCategoryID(),
                         category.getCategoryName(),
                         category.getProducts().stream()
-                            .map(product -> product.productToDTO())  // Sử dụng phương thức riêng cho việc ánh xạ sản phẩm
+                            .map(Product::toDTO)  // Sử dụng phương thức riêng cho việc ánh xạ sản phẩm
                             .collect(Collectors.toList())
                     ))
                     .collect(Collectors.toList());

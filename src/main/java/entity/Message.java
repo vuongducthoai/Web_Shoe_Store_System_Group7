@@ -19,11 +19,19 @@ public class Message {
     private int messageID;
 
     @ManyToOne
-    @JoinColumn(name = "chatID", nullable = false)
+    @JoinColumn(name = "chatID", nullable = false) // Foreign key to Chat
     private Chat chat;
 
-    private String content;
-    private Date timeStamp;
+    @Column(nullable = false)
+    private int userID; // Reference to the sender's ID (either Admin or Customer)
 
-    private boolean isRead;
+    @Column(nullable = false)
+    private String content;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "date", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
+    private Date date;
+
+    @Column(nullable = false, columnDefinition = "BIT DEFAULT 0")
+    private boolean isRead; // New field to track if the message has been read
 }

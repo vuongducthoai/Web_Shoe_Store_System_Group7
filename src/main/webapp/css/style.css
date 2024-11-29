@@ -1,68 +1,93 @@
-/* Đảm bảo các phần tử nằm trong flexbox để dễ dàng căn chỉnh */
-body {
+.suggestions-list {
+    list-style: none;
     margin: 0;
-    font-family: Arial, sans-serif;
+    padding: 0;
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Header và các phần tử bên trong */
-header .container {
+.suggestion-item {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    max-width: 100%;
-    padding: 0 20px;
+    gap: 10px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
 
-/* Màn hình nhỏ */
-@media (max-width: 768px) {
-    header .container {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    /* Đảm bảo các nút và input không quá rộng */
-    header .flex {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 10px;
-    }
-
-    header .text-2xl {
-        font-size: 1.5rem;
-    }
-
-    /* Điều chỉnh sidebar */
-    aside {
-        width: 100%;
-        margin-right: 0;
-    }
-
-    /* Cấu trúc danh sách sản phẩm */
-    #product-container {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    }
+.suggestion-item img {
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    object-fit: cover;
 }
 
-/* Màn hình lớn */
-@media (min-width: 768px) {
-    header .flex {
-        justify-content: flex-end;
-    }
-
-    #product-container {
-        grid-template-columns: repeat(3, 1fr);
-    }
+.suggestion-item span {
+    font-size: 14px;
+    color: #333;
 }
 
-/* Mọi phần tử sản phẩm */
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Cột tự động thay đổi kích thước */
-    gap: 16px;
+.suggestion-item:hover {
+    background-color: #f0f0f0;
 }
 
-/* Button thanh menu dropdown sẽ không tràn ra ngoài */
+
+
+.promotion-item:hover {
+    transform: translateY(-3px); /* Hiệu ứng nổi khi hover */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); /* Thêm shadow */
+}
+
+
+.promotion-item a:hover {
+    color: #2196F3;
+}
+
+
+.promotion-item {
+    cursor: pointer; /* Thêm cursor pointer cho cả li khi hover */
+}
+
+.promotion-item a {
+    transition: color 0.3s ease-in-out;
+    display: block; /* Đảm bảo rằng thẻ <a> bao quanh toàn bộ <li> */
+    width: 100%; /* Đảm bảo <a> chiếm toàn bộ chiều rộng của <li> */
+    height: 100%; /* Đảm bảo <a> chiếm toàn bộ chiều cao của <li> */
+}
+
+
+#category-list {
+    list-style-type: none; /* Tắt dấu chấm đầu dòng */
+    padding: 0;
+    margin: 0;
+}
+
+.category-item {
+    display: block;  /* Đảm bảo mỗi mục nằm trong một hàng riêng biệt */
+    margin-bottom: 10px; /* Thêm khoảng cách giữa các mục */
+}
+
+.category-btn {
+    text-decoration: none;
+    color: #4a5568; /* Màu text */
+    font-size: 1.1rem; /* Kích thước chữ */
+    display: block; /* Đảm bảo toàn bộ vùng của liên kết có thể click */
+}
+
+.category-btn:hover {
+    color: #2d3748; /* Màu khi hover */
+}
+
+
 #dropdownMenu {
     max-width: 200px;
     overflow-x: auto;
@@ -83,14 +108,14 @@ header .container {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.range-slide {
+.custom-slider___1 {
     position: relative;
     margin: 40px auto;
     height: 4px;
     width: 100%;
 }
 
-.slide {
+.custom-slider___1 .slide {
     position: absolute;
     top: 0;
     height: 12px;
@@ -99,7 +124,7 @@ header .container {
     right: 9px;
 }
 
-.line {
+.custom-slider___1 .line {
     position: absolute;
     left: 0;
     right: 0;
@@ -108,7 +133,7 @@ header .container {
     background-color: #2196F3;
 }
 
-.thumb {
+.custom-slider___1 .thumb {
     position: absolute;
     z-index: 2;
     text-align: left;
@@ -122,7 +147,7 @@ header .container {
     margin-left: -9px;
 }
 
-input {
+.custom-slider___1 input {
     -webkit-appearance: none;
     appearance: none;
     position: absolute;
@@ -135,7 +160,7 @@ input {
     margin: 0;
 }
 
-input::-webkit-slider-thumb {
+.custom-slider___1 input::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
     pointer-events: all;
@@ -144,6 +169,7 @@ input::-webkit-slider-thumb {
     width: 18px;
     height: 18px;
 }
+
 
 .category-btn {
     padding: 8px;

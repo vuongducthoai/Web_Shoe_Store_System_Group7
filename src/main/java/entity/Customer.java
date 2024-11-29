@@ -1,10 +1,8 @@
 package entity;
 
-import jakarta.persistence.*;
-
 import java.util.Date;
 import java.util.List;
-
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,27 +18,23 @@ public class Customer extends User {
     @Temporal(TemporalType.DATE)
     private Date dateOfBirth;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "addressID")
     private Address address;
 
-    @OneToOne
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Cart cart;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Order> orders;
 
     private int loyalty;
-    private boolean active;
 
-
-    @OneToMany(mappedBy = "customer")
-    private List<Review> reviewList;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "chatID")
+    @OneToOne(mappedBy = "customer",cascade = CascadeType.ALL)
     private Chat chat;
 
-    @OneToMany(mappedBy = "customer")
-    private List<Notify> notifyList;
+    @OneToMany(mappedBy = "customer",fetch = FetchType.LAZY)
+    private List<Review> reviewList;
+
 }

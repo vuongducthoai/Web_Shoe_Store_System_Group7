@@ -21,28 +21,33 @@ public class Review {
     private int reviewID;
     private int ratingValue;
     private Date date;
-    private String comment;
 
-    @ManyToOne
-    @JoinColumn(name = "customerID")
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "productID")
+    private Product product;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userID")
     private Customer customer;
+
+    private String comment;
 
     @OneToOne(mappedBy = "review")
     private Response response;
 
-    @ManyToOne
-    @JoinColumn(name = "productID")
-    private Product product;
+    @Lob
+    private byte[] image;
 
-    public ReviewDTO reviewToDTO() {
+    public ReviewDTO toDTO() {
         return new ReviewDTO(
-            reviewID,
-            ratingValue,
-            date,
-            comment,
-            null,
-            null,
-            null
+                this.reviewID,
+                this.ratingValue,
+                this.date,
+                null,
+                this.comment,
+                null,
+                null,
+                this.image
         );
     }
 }

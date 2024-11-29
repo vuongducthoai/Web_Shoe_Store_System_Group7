@@ -20,12 +20,12 @@ public class User {
 
     private String fullName;
     private String phone;
+    private boolean active;
 
-
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true) // Neu user bi xoa thi tham chieu den account bi bo
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "accountID")
     private Account account;
 
-    @OneToMany(mappedBy = "admin")
-    private List<Response> responses;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Notify> notifyList;
 }

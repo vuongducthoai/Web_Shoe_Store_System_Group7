@@ -22,6 +22,6 @@ public class Notify {
     private String content;
 
     @ManyToOne
-    @JoinColumn(name = "customerID", nullable = false)
-    private Customer customer;
+    @JoinColumn(name = "userID", nullable = false)
+    private User user;
 }

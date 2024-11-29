@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +19,6 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 public class Product {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int productID;
@@ -34,42 +34,42 @@ public class Product {
     private boolean status;
     private String description;
 
-    @OneToMany(mappedBy = "product")
+    @OneToOne(mappedBy = "product")
+    private Review review;
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY) // tham chieu den "product" trong cardItem
     private List<CartItem> orders;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<OrderItem> orderItems;
 
+    private LocalDateTime createDate;
+
     @ManyToOne
-    @JoinColumn(name = "categoryID")
+    @JoinColumn(name = "categoryID", nullable = true)
     private Category category;
 
-    @ManyToOne
-    @JoinColumn(name = "promotionID")
-    private Promotion promotion;
-
-    @OneToMany(mappedBy = "product")
-    private List<Review> reviews;
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    private List<PromotionProduct> promotionProducts;
 
     // Phương thức ánh xạ từ Product sang ProductDTO
-    public ProductDTO productToDTO() {
+    public ProductDTO toDTO() {
         return new ProductDTO(
-            this.productID,
-            this.productName,
-            this.price,
-            this.image,
-            this.color,
-            this.size,
-            this.status,
-            this.description,
-            null,
-            null,
-            Optional.ofNullable(this.category).map(category -> category.categoryToDTO()).orElse(null),
-            Optional.ofNullable(this.promotion).map(promotion -> promotion.promotionToDTO()).orElse(null),
-            this.reviews == null ? null : this.reviews.stream()
-                    .map(review -> review.reviewToDTO())
-                    .collect(Collectors.toList()),
-            this.image == null ? "" : Base64.getEncoder().encodeToString(this.image)
+                this.productID,
+                this.productName,
+                this.price,
+                this.image,
+                this.color,
+                this.size,
+                this.status,
+                this.description,
+                this.createDate,
+                null, null, null,
+                this.promotionProducts != null ? this.promotionProducts.stream()
+                        .map(PromotionProduct::toDTO)
+                        .collect(Collectors.toList()) : null,
+                this.review != null ? this.review.toDTO() : null,
+                image == null ? null : "data:image/png;base64," + Base64.getEncoder().encodeToString(image)
         );
     }
 }

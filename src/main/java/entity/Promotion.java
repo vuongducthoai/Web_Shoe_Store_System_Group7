@@ -1,19 +1,17 @@
 package entity;
 
-import dto.CategoryDTO;
-import dto.ProductDTO;
 import dto.PromotionDTO;
+import enums.DiscountType;
+import enums.PromotionType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Base64;
 import java.util.List;
 
 import java.util.Date;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -28,24 +26,32 @@ public class Promotion {
     private Date startDate;
     private Date endDate;
 
+    @OneToMany(mappedBy = "promotion")
+    private List<PromotionProduct> promotionProducts;
+
     private double discountValue;
-    private String discountType; // "percentage", "free-shipping", ...
+
+    @Enumerated(EnumType.STRING)
+    private DiscountType discountType; // "percentage", , ...
+
     private int minimumLoyalty;
     private boolean isActive;
-    @OneToMany(mappedBy = "promotion")
-    private List<Product> applicableProducts ;
 
-    public PromotionDTO promotionToDTO() {
+    @Enumerated(EnumType.STRING)
+    private PromotionType promotionType;
+
+    public PromotionDTO toDTO() {
         return new PromotionDTO(
-            this.promotionID,
-            this.promotionName,
-            this.startDate,
-            this.endDate,
-            null,
-            this.discountValue,
-            this.discountType,
-            this.minimumLoyalty,
-            this.isActive
+                this.promotionID,
+                this.promotionName,
+                this.startDate,
+                this.endDate,
+                null,
+                this.discountValue,
+                this.discountType,
+                this.minimumLoyalty,
+                this.isActive,
+                promotionType
         );
     }
 }
