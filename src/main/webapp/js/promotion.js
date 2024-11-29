@@ -199,6 +199,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const today = new Date().toISOString().split('T')[0]; // Lấy ngày hiện tại theo định dạng yyyy-mm-dd
     document.getElementById('start-date').setAttribute('min', today);
     document.getElementById('end-date').setAttribute('min', today);
+
+    document.getElementById('start-date').addEventListener('change', validateDates);
+    document.getElementById('end-date').addEventListener('change', validateDates);
 });
 document.getElementById('delete-button').addEventListener('click', function (event) {
     const startDate = document.getElementById('view-start-date').value;
@@ -220,3 +223,13 @@ document.getElementById('delete-button').addEventListener('click', function (eve
         }
     }
 });
+
+function validateDates() {
+    const startDate = document.getElementById('start-date').value;
+    const endDate = document.getElementById('end-date').value;
+
+    if (startDate && endDate && startDate >= endDate) {
+        alert('Start date must be before end date.');
+        document.getElementById('end-date').value = ''; // Reset end date
+    }
+}
