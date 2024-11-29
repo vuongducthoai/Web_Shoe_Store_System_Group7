@@ -7,8 +7,6 @@ import java.util.List;
 
 public interface IProductDAO {
     List<ProductDTO> findAllWithPagination(int offset, int limit);
-
-    int countProductName(String name);
     boolean AddProduct(Product product);
     boolean UpdateProduct(Product product);
     List<ProductDTO> getListProductDTO();

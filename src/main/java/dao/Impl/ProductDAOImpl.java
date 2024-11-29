@@ -64,20 +64,6 @@ public class ProductDAOImpl implements IProductDAO {
     }
 
 
-    @Override
-    public int countProductName(String name) {
-        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
-        try {
-            String query = "SELECT COUNT(p) FROM Product p WHERE p.productName = :productName AND p.status = false";
-            TypedQuery<Long> typedQuery = entityManager.createQuery(query, Long.class);
-            typedQuery.setParameter("productName", name);
-            Long result = typedQuery.getSingleResult();
-            return result.intValue();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return 0;
-    }
 
 
     public boolean AddProduct(Product product) {

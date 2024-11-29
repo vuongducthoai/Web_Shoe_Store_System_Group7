@@ -42,8 +42,8 @@ public class CustomerServiceImpl implements ICustomerService {
             cart.setCustomer(customer);
 
             Chat chat = new Chat();
+            chat.setCustomer(customer);
             customer.setChat(chat);
-
             // Set Address
             Address address = new Address();
             address.setHouseNumber(customerDTO.getAddressDTO().getHouseNumber());

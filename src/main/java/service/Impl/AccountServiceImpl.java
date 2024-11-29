@@ -36,9 +36,10 @@ public class AccountServiceImpl implements IAccountService {
              */
             Chat chat = new Chat();
             customer.setChat(chat);
+            chat.setCustomer(customer);
 
 
-            /*
+           /*
                 Address
              */
             Address address = new Address();
@@ -50,6 +51,7 @@ public class AccountServiceImpl implements IAccountService {
             account.setAuthProvider(accountDTO.getAuthProvider());
             account.setRole(accountDTO.getRole());
             account.setEmail(accountDTO.getEmail());
+
             customer.setAccount(account);
 
             return iCustomerDAO.insertCustomer(customer);
@@ -60,7 +62,7 @@ public class AccountServiceImpl implements IAccountService {
     }
 
     @Override
-    public boolean findAccountForLogin(AccountDTO accountDTO) {
+    public AccountDTO findAccountForLogin(AccountDTO accountDTO) {
         String password = accountDTO.getPassword();
         PasswordHashingSHA passwordHashingSHA = new PasswordHashingSHA();
         String passwordHash = null;
@@ -69,13 +71,8 @@ public class AccountServiceImpl implements IAccountService {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
-        Account account = new Account();
-        account.setEmail(accountDTO.getEmail());
-        account.setPassword(passwordHash);
-        if (iAccountDAO.findAccountForLogin(account)) {
-            return true;
-        }
-        return false;
+        accountDTO.setPassword(passwordHash);
+        return iAccountDAO.findAccountForLogin(accountDTO);
     }
 
     @Override
@@ -95,6 +92,7 @@ public class AccountServiceImpl implements IAccountService {
         }
         return null;
     }
+
     @Override
     public AccountDTO findAccoutByProvide(String provideID, AuthProvider authProvider) {
         Account account = iAccountDAO.findAccoutByProvide(provideID, authProvider);
