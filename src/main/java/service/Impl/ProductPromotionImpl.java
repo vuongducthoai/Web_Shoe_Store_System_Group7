@@ -12,4 +12,7 @@ public class ProductPromotionImpl implements IProductPromotion {
     public List<PromotionProductDTO> findTop5ProductPromotionNow(LocalDate startDate, LocalDate endDate) {
         return productPromotion.findTop5ProductPromotionNow(startDate, endDate);
     }
+    public  PromotionProductDTO promotioOnProductInfo (String productName){
+        return productPromotion.promotioOnProductInfo(productName);
+    }
 }

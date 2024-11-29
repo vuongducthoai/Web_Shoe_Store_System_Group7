@@ -98,4 +98,52 @@ public class ProductPromotionImpl implements IProductPromotion {
         return promotionProductDTOList;
     }
 
+
+    public PromotionProductDTO promotioOnProductInfo(String productName){
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        List<PromotionProductDTO> promotionProductDTOList = new ArrayList<>();
+        try{
+            String sql ="select * from PromotionProduct "+
+            "inner join Promotion on Promotion.promotionID = PromotionProduct.promotionID "+
+            "inner join Product on Product.productID = PromotionProduct.productID "+
+            "where Promotion.isActive = 1 "+
+            "and Promotion.promotionType = 'VOUCHER_PRODUCT' "+
+            "and Promotion.minimumLoyalty = 0 "+
+            "and Promotion.startDate < NOW() "+
+            "and Product.productName = ?";
+            Query query = entityManager.createNativeQuery(sql);
+            query.setParameter(1, productName);
+            List<Object[]> results = query.getResultList();
+            System.out.println("Result: " + results.size());
+            for (Object[] row : results) {
+
+                String discountType = (String) row[4];
+                double discountValue = (Double) row[5];
+                Date endDate = (Date) row[6];
+                String promotionName = (String) row[9];
+
+                PromotionProductDTO promotionProductDTO = new PromotionProductDTO();
+
+                PromotionDTO promotionDTO = new PromotionDTO();
+                promotionDTO.setPromotionName(promotionName);
+                promotionDTO.setDiscountValue(discountValue);
+                DiscountType discountTypeEnum = DiscountType.valueOf(discountType);
+                promotionDTO.setDiscountType(discountTypeEnum);
+                promotionDTO.setEndDate(endDate);
+                promotionProductDTO.setPromotion(promotionDTO);
+
+                promotionProductDTOList.add(promotionProductDTO);
+
+            }
+        }catch(Exception e){
+            System.out.println( e.getMessage());
+        }
+        finally{
+            entityManager.close();
+        }
+        if(promotionProductDTOList.size() > 0)
+            return promotionProductDTOList.get(0);
+        return null;
+    }
+
 }
