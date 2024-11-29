@@ -59,3 +59,23 @@ let quantity = document.querySelector(".inpQuantity");
 let AddItemQuantity=()=>{
     AddItemWithQuantity(productID.value,quantity.value)
 }
+
+function ChangeSelect() {
+    const selectElement = document.querySelector('select[name="voucher"]');
+    const selectedValue = selectElement.value;
+
+    // Tạo form và gửi request đến servlet
+    const form = document.createElement('form');
+    form.method = 'POST';  // Hoặc 'POST' nếu cần
+    form.action = '/Cart'; // URL của servlet
+
+    // Thêm dữ liệu lựa chọn vào form
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'idPr';
+    input.value = selectedValue;
+    form.appendChild(input);
+
+    document.body.appendChild(form);
+    form.submit();
+}

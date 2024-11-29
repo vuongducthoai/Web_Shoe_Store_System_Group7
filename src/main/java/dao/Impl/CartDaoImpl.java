@@ -10,6 +10,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -239,6 +240,26 @@ public class CartDaoImpl implements ICartDao {
         }
         catch (Exception e){
             return 0;
+        }
+    }
+
+    @Override
+    public List<Promotion> GetAllPromotionByLoayti(int idUser) {
+        try{
+            EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+            int loyalty = (int) entityManager.createQuery("select c.loyalty from Customer c where c.userID = :userId")
+                    .setParameter("userId",idUser).getSingleResult();
+            Date date = Date.from(Instant.now());
+            List<Promotion> list = entityManager.createQuery("select pr from Promotion pr where " +
+                    "pr.minimumLoyalty<= :loyalty and pr.startDate <= :date and pr.endDate>= :date " +
+                            "and pr.promotionType = :type and pr.isActive = true order by pr.minimumLoyalty desc",Promotion.class)
+                    .setParameter("loyalty",loyalty)
+                    .setParameter("date",date).
+                    setParameter("type",PromotionType.VOUCHER_ORDER).getResultList();
+            return list;
+        }
+        catch (Exception e){
+            return List.of();
         }
     }
 
