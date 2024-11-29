@@ -18,7 +18,7 @@ public class Customer extends User {
     @Temporal(TemporalType.DATE)
     private Date dateOfBirth;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "addressID")
     private Address address;
 
@@ -34,6 +34,7 @@ public class Customer extends User {
     @OneToOne(mappedBy = "customer",cascade = CascadeType.ALL)
     private Chat chat;
 
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer",fetch = FetchType.LAZY)
     private List<Review> reviewList;
+
 }

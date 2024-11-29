@@ -88,10 +88,10 @@ public class ProductDAOImpl implements IProductDAO {
             transaction.begin();
 
             // Kiểm tra và lấy category từ DB
-            if (product.getCategory() != null) {
-                Category managedCategory = entityManager.find(Category.class, product.getCategory().getCategoryID());
-                product.setCategory(managedCategory); // Gán lại category đã được quản lý
-            }
+//            if (product.getCategory() != null) {
+//                Category managedCategory = entityManager.find(Category.class, product.getCategory().getCategoryID());
+//                product.setCategory(managedCategory); // Gán lại category đã được quản lý
+//            }
 
             entityManager.merge(product); // Hoặc entityManager.merge(product);
             transaction.commit();
@@ -129,47 +129,52 @@ public class ProductDAOImpl implements IProductDAO {
 
     public List<ProductDTO> getListProductDTO(){
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        List<ProductDTO> productDTOList = new ArrayList<>();
         try {
-            String hql = "SELECT p FROM Product p";
-            TypedQuery<Product> query = entityManager.createQuery(hql, Product.class);
-            List<Product> products = query.getResultList();
+            String sql = "SELECT p.productId, p.productName, p.color, p.description, p.image, p.price, p.size, c.categoryID, c.categoryName " +
+                    "     FROM Product p INNER JOIN Category c ON p.categoryID= c.categoryID " +
+                    "      WHERE p.status = 1 order by p.productID";
 
-            // Chuyển đổi từ Product sang ProductDTO
-            List<ProductDTO> productDTOs = new ArrayList<>();
-            for (Product product : products) {
-                // Kiểm tra nếu category không null
-                CategoryDTO categoryDTO = null;
-                if (product.getCategory() != null) {
-                    categoryDTO = new CategoryDTO(
-                            product.getCategory().getCategoryID(), // ID của Category
-                            product.getCategory().getCategoryName() // Tên của Category
 
-                    );
+            Query query = entityManager.createNativeQuery(sql);
+            List<Object[]> results = query.getResultList();
+
+
+            for(Object[] result : results) {
+                ProductDTO productDTO = new ProductDTO();
+                int productID = (int) result[0];
+                String productName = (String) result[1];
+                String Color = (String) result[2];
+                String productDescription = (String) result[3];
+                byte[] image = (byte[]) result[4];
+               // byte[] image = convertBase64ToByteArray(imageString);
+                double price = (double) result[5];
+                int size = (int) result[6];
+                int categoryID = result[7] != null ? (int) result[7] : 0;
+                String categoryName = result[8] != null ? (String) result[8] : "";
+                if (categoryID != 0)
+                {
+                    CategoryDTO categoryDTO = new CategoryDTO();
+                    categoryDTO.setCategoryId(categoryID);
+                    categoryDTO.setCategoryName(categoryName);
+                    productDTO.setCategoryDTO(categoryDTO);
                 }
+                productDTO.setProductId(productID);
+                productDTO.setProductName(productName);
+                productDTO.setPrice(price);
+                productDTO.setDescription(productDescription);
+                productDTO.setImage(image);
+                productDTO.setColor(Color);
+                productDTO.setSize(size);
+                productDTOList.add(productDTO);
 
-               
-
-                // Tạo đối tượng ProductDTO
-                ProductDTO dto = new ProductDTO(
-                        product.getProductID(),
-                        product.getProductName(),
-                        product.getPrice(),
-                        product.getImage(),
-                        product.getColor(),
-                        product.getSize(),
-                        categoryDTO, // Truyền đối tượng CategoryDTO vào đây
-                        product.getDescription(),
-                        product.isStatus()
-                );
-                productDTOs.add(dto); // Thêm vào danh sách
             }
-            return productDTOs;
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
         } finally {
             entityManager.close();
         }
+        return productDTOList;
     }
 
     public ProductDTO getProductByID(int id) {
@@ -246,6 +251,11 @@ public class ProductDAOImpl implements IProductDAO {
                             "SELECT p FROM Product p WHERE p.productName = :name", Product.class)
                     .setParameter("name", name) // Tìm kiếm gần đúng
                     .getResultList();
+
+            if(products == null || products.isEmpty()) System.out.print("Products null");
+            else{
+                System.out.print("Products: " + products.size());
+            }
 
 
             return products.stream()

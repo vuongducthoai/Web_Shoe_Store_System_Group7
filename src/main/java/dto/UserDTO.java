@@ -17,4 +17,13 @@ public class UserDTO {
     private boolean active;
     private AccountDTO account;
     private List<ResponseDTO> responseDTOList;
+
+    public UserDTO(int userID, String fullName, String phone) {
+        this.userID = userID;
+        this.fullName = fullName;
+        this.phone = phone;
+    }
+
 }
+
+

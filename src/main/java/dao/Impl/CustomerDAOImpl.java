@@ -3,11 +3,14 @@ package dao.Impl;
 import JpaConfig.JpaConfig;
 import dao.ICustomerDAO;
 import dto.CustomerDTO;
+import dto.ChatDTO;
 import entity.Account;
 import entity.Customer;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.NoResultException;
+
+import java.util.List;
 
 public class CustomerDAOImpl implements ICustomerDAO {
 
@@ -100,4 +103,28 @@ public class CustomerDAOImpl implements ICustomerDAO {
             entityManager.close();
         }
     }
+
+    @Override
+    public List<CustomerDTO> GetAllCustomer() {
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        try {
+            // Query to fetch specific fields and map to CustomerDTO and ChatDTO
+            String jpql = "SELECT new dto.CustomerDTO(c.userID, c.fullName, c.phone, c.chat)" +
+                    "FROM Customer c " +
+                    "JOIN c.chat chat"; // Ensure chat is fetched via JOIN if necessary
+
+            // Execute the query to get the results and map them directly to CustomerDTO
+            List<CustomerDTO> customerDTOList = entityManager.createQuery(jpql, CustomerDTO.class)
+                    .getResultList();
+
+            return customerDTOList;
+        } catch (Exception e) {
+            System.out.println("Error fetching customers: " + e.getMessage());
+            return null;
+        } finally {
+            entityManager.close();
+        }
+    }
+
+
 }
