@@ -31,13 +31,17 @@ public class LoginController extends HttpServlet {
             GoogleAuth gg = new GoogleAuth();
             String accessToken = gg.getToken(code);
             accountDTO = gg.getUserInfoFromGoogle(accessToken);
-            accountService.InsertAccount(accountDTO);
+            if(accountService.findAccountByEmail(accountDTO.getEmail()) == null) { // Neu tai khoản chua ton tai
+                accountService.InsertAccount(accountDTO);
+            }
         } else if("/loginFacebook".equals(path)) {  //Login Facebook
             String code = req.getParameter("code");
             FacebookAuth facebookLogin = new FacebookAuth();
             String accessToken = facebookLogin.getToken(code);
             accountDTO = facebookLogin.getUserInforFromFacebook(accessToken);
-            accountService.InsertAccount(accountDTO);
+            if(accountService.findAccountByEmail(accountDTO.getEmail()) == null) { // Neu tai khoản chua ton tai
+                accountService.InsertAccount(accountDTO);
+            }
         }
         //Tao mot session moi hoac lay session hien co
         accountDTO = accountService.findAccoutByProvide(accountDTO.getProviderID(),accountDTO.getAuthProvider());

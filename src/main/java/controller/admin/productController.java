@@ -318,7 +318,5 @@ public class productController extends HttpServlet {
         catch (Exception e) {
             e.printStackTrace();
         }
-
     }
-
 }
