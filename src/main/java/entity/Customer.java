@@ -36,6 +36,4 @@ public class Customer extends User {
 
     @OneToMany(mappedBy = "customer")
     private List<Review> reviewList;
-
-
 }
