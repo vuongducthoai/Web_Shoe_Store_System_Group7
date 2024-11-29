@@ -93,7 +93,7 @@ public class ReviewDAOImpl implements IReviewDAO {
                     "           ROW_NUMBER() OVER (PARTITION BY u.userID ORDER BY r.date DESC) AS rn\n" +
                     "    FROM Review r\n" +
                     "    INNER JOIN Product p ON r.productID = p.productID\n" +
-                    "    INNER JOIN User u ON r.customerID = u.userID\n" +
+                    "    INNER JOIN User u ON r.userID = u.userID\n" +
                     ")\n" +
                     "SELECT userID,\n" +
                     "       comment,\n" +
@@ -144,6 +144,4 @@ public class ReviewDAOImpl implements IReviewDAO {
         }
         return uniqueReviews;
     }
-
-
 }

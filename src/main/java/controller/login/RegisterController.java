@@ -10,7 +10,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import service.IAccountService;
 import service.ICustomerService;
+import service.Impl.AccountServiceImpl;
 import service.Impl.CustomerServiceImpl;
 
 import java.io.IOException;
@@ -21,6 +23,7 @@ import java.util.Date;
 @WebServlet("/view/register")
 public class RegisterController extends HttpServlet {
     private ICustomerService customerService = new CustomerServiceImpl();
+    private IAccountService accountService = new AccountServiceImpl();
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
             String fullName = req.getParameter("fullName");

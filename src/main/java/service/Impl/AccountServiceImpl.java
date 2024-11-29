@@ -1,11 +1,12 @@
 package service.Impl;
 
 import dao.IAccountDAO;
+import dao.ICustomerDAO;
 import dao.Impl.AccountDaoImpl;
+import dao.Impl.CustomerDAOImpl;
 import dto.AccountDTO;
 import dto.UserDTO;
-import entity.Account;
-import entity.User;
+import entity.*;
 import enums.AuthProvider;
 import service.IAccountService;
 import util.PasswordHashingSHA;
@@ -14,28 +15,48 @@ import java.security.NoSuchAlgorithmException;
 
 public class AccountServiceImpl implements IAccountService {
     private IAccountDAO iAccountDAO = new AccountDaoImpl();
-
+    private ICustomerDAO iCustomerDAO = new CustomerDAOImpl();
     @Override
     public boolean InsertAccount(AccountDTO accountDTO) {
-        /*
-            Account
-         */
-        Account account = new Account();
-        account.setEmail(accountDTO.getEmail());
-        account.setProviderID(accountDTO.getProviderID());
-        account.setAuthProvider(accountDTO.getAuthProvider());
-        account.setRole(accountDTO.getRole());
+        try {
+            /*
+                Customer
+             */
+            Customer customer = new Customer();
+            customer.setFullName(accountDTO.getUser().getFullName());
 
-        /*
-        User
-         */
-        User user = new User();
-        user.setFullName(accountDTO.getUser().getFullName());
-        user.setPhone(accountDTO.getUser().getPhone());
-        user.setAccount(account);
+            /*
+               Cart
+             */
+            Cart cart = new Cart();
+            customer.setCart(cart);
+            cart.setCustomer(customer);
+            /*
+                Chat
+             */
+            Chat chat = new Chat();
+            customer.setChat(chat);
 
-        account.setUser(user);
-        return iAccountDAO.InsertAccount(account);
+
+            /*
+                Address
+             */
+            Address address = new Address();
+            customer.setAddress(address);
+
+
+            Account account = new Account();
+            account.setProviderID(accountDTO.getProviderID());
+            account.setAuthProvider(accountDTO.getAuthProvider());
+            account.setRole(accountDTO.getRole());
+            account.setEmail(accountDTO.getEmail());
+            customer.setAccount(account);
+
+            return iCustomerDAO.insertCustomer(customer);
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return false;
     }
 
     @Override
