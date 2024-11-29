@@ -16,6 +16,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Admin extends User {
-    @OneToMany(mappedBy = "admin")
+    @OneToMany(mappedBy = "admin", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Response> responses;
 }
