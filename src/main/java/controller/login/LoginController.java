@@ -45,7 +45,6 @@ public class LoginController extends HttpServlet {
         //Luu thong tin nguoi dung vao session
         req.setAttribute("loginSuccess" , true);
         session.setAttribute("user", accountDTO);
-        System.out.println("1233332...");
         resp.sendRedirect("/home");
     }
 

@@ -37,6 +37,7 @@
                 <span class="quantityItemCart" style="position: absolute;left: 35px; top: -10px;font-size: 18px; color: red">
                     0
                 </span></i>
+            
             <i style="font-size: 30px; margin-left: 20px;" class="fa-solid fa-user"></i>
 
 

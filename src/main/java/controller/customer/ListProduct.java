@@ -35,7 +35,6 @@ public class ListProduct extends HttpServlet {
 
             List<ProductDTO> productDTOList;
             if ("all".equalsIgnoreCase(category)) {
-                System.out.println("Vuong Duc Thoai");
                 productDTOList = iProductService.findAllWithPagination(offset, limit);
             } else {
                 try {
