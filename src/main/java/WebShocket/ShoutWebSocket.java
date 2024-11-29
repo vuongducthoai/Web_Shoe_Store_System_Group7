@@ -46,74 +46,96 @@ public class ShoutWebSocket {
     @OnMessage
     public void onMessage(String messageContent, Session session) {
         try {
-            // Retrieve Chat object from session
-            Chat chat = (Chat) session.getUserProperties().get("chat");
 
-            // Handle userId connection
             if (messageContent.startsWith("userId:")) {
-                String userId = messageContent.split(":")[1].trim();
+                Chat chat;
+                String userId;
+
+                userId = messageContent.split(":")[1].trim();
                 session.getUserProperties().put("userId", userId);
                 System.out.println("User connected with userId: " + userId);
+                if (userId == "") {
+                    session.getBasicRemote().sendText("Error: You need to connect first with a valid userId.");
+                    return;
+                }
+                int chatId = 1; // Gán chatId cố định, ví dụ chatId = 1
+                // Lấy danh sách tin nhắn gần đây từ cache hoặc service
+                List<MessageDTO> recentMessages = messageService.getRecentMessages(chatId);
+                if (recentMessages != null && !recentMessages.isEmpty()) {
+                    // Lưu tin nhắn vào cache
+                    messageCache.computeIfAbsent(chatId, k -> new CopyOnWriteArrayList<>()).addAll(recentMessages);
 
-                // If the user is admin (userId = "1"), fetch and send customer list
+                    // Lấy đối tượng Chat từ tin nhắn đầu tiên trong danh sách tin nhắn
+                    chat = recentMessages.get(0).getChat();
+                    session.getUserProperties().put("chat", chat);  // Lưu Chat vào session
+
+                    sendCachedMessages(chatId, session);  // Gửi tin nhắn từ cache
+                } else {
+                    session.getBasicRemote().sendText("No previous messages.");
+                }
+
+                // Nếu user là admin (userId = "1"), gửi danh sách khách hàng
                 if ("1".equals(userId)) {
-                    List<CustomerDTO> customerList = customerService.GetAllCustomer(); // Assuming this method fetches customers
+                    List<CustomerDTO> customerList = customerService.GetAllCustomer(); // Giả sử có phương thức để lấy khách hàng
                     StringBuilder customerListHtml = new StringBuilder();
-
-                    // Build the HTML to send back to the admin
                     for (CustomerDTO customer : customerList) {
                         customerListHtml.append("<div class='customer-item'>")
                                 .append(customer.getFullName())
                                 .append("</div>");
                     }
-
-                    // Send the customer list to the admin
+                    // Gửi danh sách khách hàng cho admin
                     session.getBasicRemote().sendText(customerListHtml.toString());
                 }
-                int chatId=1;
-                messageService.getRecentMessages()
-            }
 
-            // Retrieve userId from session properties
-            String userId = (String) session.getUserProperties().get("userId");
-            if (userId == null) {
-                session.getBasicRemote().sendText("Error: You need to connect first with a valid userId.");
                 return;
             }
 
-            // Check if chat is initialized
+            // Kiểm tra nếu chat chưa được khởi tạo
+            if (session.getUserProperties().get("chat") == null) {
+                session.getBasicRemote().sendText("Error: Chat not initialized.");
+                return;
+            }
+            Chat chat = (Chat) session.getUserProperties().get("chat");
+            String userId = (String) session.getUserProperties().get("userId");
             if (chat == null) {
                 session.getBasicRemote().sendText("Error: Chat not initialized.");
                 return;
             }
-
-            // Handle "loadMoreMessages" request
+            // Xử lý yêu cầu "loadMoreMessages" để tải thêm tin nhắn
             if (messageContent.equals("loadMoreMessages")) {
                 List<MessageDTO> lastMessages = messageCache.get(chat.getChatID());
+                if (lastMessages == null || lastMessages.isEmpty()) {
+                    session.getBasicRemote().sendText("No messages available.");
+                    return;
+                }
+
+                // Lấy thời gian của tin nhắn cuối cùng trong cache
                 Timestamp lastMessageTimestamp = lastMessages.get(lastMessages.size() - 1).getDate();
 
+                // Lấy thêm tin nhắn từ service
                 List<MessageDTO> moreMessages = messageService.getMessages(chat.getChatID(), lastMessageTimestamp);
                 if (moreMessages.isEmpty()) {
                     session.getBasicRemote().sendText("noMoreMessages");
                 } else {
+                    // Thêm tin nhắn mới vào cache và gửi lại
                     messageCache.get(chat.getChatID()).addAll(moreMessages);
                     sendCachedMessages(chat.getChatID(), session);
                 }
                 return;
             }
 
-            // Handle normal message sending
+            // Xử lý gửi tin nhắn bình thường
             MessageDTO messageDTO = new MessageDTO();
-            messageDTO.setChat(chat); // Assign the Chat object from session
+            messageDTO.setChat(chat);  // Gán đối tượng Chat từ session
             messageDTO.setUserId(Integer.parseInt(userId));
             messageDTO.setContent(messageContent);
             messageDTO.setDate(new Timestamp(System.currentTimeMillis()));
 
-            // Cache the message and save it
+            // Lưu tin nhắn vào cache và database
             messageCache.computeIfAbsent(chat.getChatID(), k -> new CopyOnWriteArrayList<>()).add(0, messageDTO);
             messageService.saveMessage(messageDTO);
 
-            // Broadcast new messages to all clients
+            // Phát sóng tin nhắn mới tới tất cả người dùng trong chat
             broadcastMessages(chat.getChatID());
 
         } catch (SQLException | IOException e) {
