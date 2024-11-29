@@ -88,10 +88,10 @@ public class ProductDAOImpl implements IProductDAO {
             transaction.begin();
 
             // Kiểm tra và lấy category từ DB
-            if (product.getCategory() != null) {
-                Category managedCategory = entityManager.find(Category.class, product.getCategory().getCategoryID());
-                product.setCategory(managedCategory); // Gán lại category đã được quản lý
-            }
+//            if (product.getCategory() != null) {
+//                Category managedCategory = entityManager.find(Category.class, product.getCategory().getCategoryID());
+//                product.setCategory(managedCategory); // Gán lại category đã được quản lý
+//            }
 
             entityManager.merge(product); // Hoặc entityManager.merge(product);
             transaction.commit();
@@ -132,8 +132,8 @@ public class ProductDAOImpl implements IProductDAO {
         List<ProductDTO> productDTOList = new ArrayList<>();
         try {
             String sql = "SELECT p.productId, p.productName, p.color, p.description, p.image, p.price, p.size, c.categoryID, c.categoryName " +
-                    "FROM Product p INNER JOIN Category c " +
-                    "WHERE p.status = 1";
+                    "     FROM Product p INNER JOIN Category c ON p.categoryID= c.categoryID " +
+                    "      WHERE p.status = 1 order by p.productID";
 
 
             Query query = entityManager.createNativeQuery(sql);

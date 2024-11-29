@@ -183,14 +183,6 @@ public class productController extends HttpServlet {
                 break;
             }
         }
-//        int count=0;
-//       String countStr = req.getParameter("blockCount");
-//        if (countStr != null) {
-//            count = Integer.parseInt(countStr);
-//        }
-//        else{
-//            System.out.println("Error: No block count found.");
-//        }
 
         // Lặp qua các biến thể màu
         for (int i = 1; i <= 1; i++) {
@@ -215,6 +207,13 @@ public class productController extends HttpServlet {
             String[] quantities = req.getParameterValues("quantity-" + i + "[]");
 
             if (sizes != null && quantities != null) {
+                // Kiểm tra nếu cả hai mảng đều không rỗng
+                for (int j = 0; j < sizes.length; j++) {
+                    System.out.println("Size: " + sizes[j] + ", Quantity: " + quantities[j]);
+                }
+            }
+
+            if (sizes != null && quantities != null) {
                 for (int j = 0; j < sizes.length; j++) {
                     int size = Integer.parseInt(sizes[j]);
                     int quantity = Integer.parseInt(quantities[j]);
@@ -231,23 +230,13 @@ public class productController extends HttpServlet {
                         product.setCreateDate(LocalDateTime.now());
                         product.setStatus(true);
 
-                        try {
-                            if (productDAO.AddProduct(product)) {
-                                System.out.println("Add successful");
-                                resp.sendRedirect(req.getContextPath() + "/ProductController");
-                            } else {
-                                System.out.println("Add failed");
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        finally {
-                            resp.sendRedirect(req.getContextPath() + "/ProductController");
-                        }
+                        productDAO.AddProduct(product);
+
                     }
                 }
             }
         }
+        resp.sendRedirect(req.getContextPath() + "/ProductController");
     }
 
     protected void updateProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
