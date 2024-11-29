@@ -1,10 +1,6 @@
 package service;
 
-import dto.CartDTO;
 import dto.CartItemDTO;
-import entity.Cart;
-import entity.CartItem;
-import entity.Customer;
 
 import java.util.List;
 
@@ -16,4 +12,5 @@ public interface ICartService {
     double FeeShip(int idUser);
     boolean deleteCartItem(int cartItemId);
     double CalculateDiscount(List<CartItemDTO> cartItem,int idUser);
+
 }

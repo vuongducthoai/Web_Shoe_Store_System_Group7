@@ -2,17 +2,11 @@ package dao.Impl;
 
 import JpaConfig.JpaConfig;
 import dao.IProductDAO;
-import dto.AddressDTO;
 import dto.CategoryDTO;
-import dto.ProductDTO;
-import entity.Cart;
-import entity.CartItem;
-import entity.Customer;
 import dto.ProductDTO;
 import entity.Product;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 
 import java.util.*;
@@ -114,7 +108,7 @@ public class ProductDAOImpl implements IProductDAO {
     public List<ProductDTO> getListProductDTO(){
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
         try {
-            String hql = "SELECT p FROM Product p";
+            String hql = "SELECT p FROM Product p WHERE p.status = true";
             TypedQuery<Product> query = entityManager.createQuery(hql, Product.class);
             List<Product> products = query.getResultList();
 
@@ -158,7 +152,7 @@ public class ProductDAOImpl implements IProductDAO {
         try {
             // Truy vấn các sản phẩm có tên chứa từ khóa
             List<Product> products = entityManager.createQuery(
-                            "SELECT p FROM Product p WHERE p.productName = :name", Product.class)
+                            "SELECT p FROM Product p WHERE p.productName = :name AND p.status=true ", Product.class)
                     .setParameter("name", name) // Tìm kiếm gần đúng
                     .getResultList();
 
@@ -210,6 +204,26 @@ public class ProductDAOImpl implements IProductDAO {
         Collections.shuffle(filteredProducts);
         return filteredProducts.subList(0, 4);
     }
+    public List<String> getProductNamesForPromotion(int promotionId) {
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        try {
+            // Câu truy vấn JPQL để lấy productName của các sản phẩm liên kết với promotionId
+            List<String> productNames = entityManager.createQuery(
+                            "SELECT DISTINCT  p.productName " +
+                                    "FROM Product p " +
+                                    "JOIN PromotionProduct pp ON p.productID = pp.product.productID "+
+                                    "WHERE pp.promotion.promotionID = :promotionId  " , String.class)  // Sử dụng promotionId đúng
+
+                    .setParameter("promotionId", promotionId)  // Truyền promotionId
+                    .getResultList();  // Thực thi truy vấn và lấy danh sách tên sản phẩm
+
+            return productNames;  // Trả về danh sách các tên sản phẩm
+        } catch (Exception e) {
+            e.printStackTrace();  // Xử lý lỗi nếu có
+        }
+        return new ArrayList<>();  // Trả về danh sách rỗng nếu có lỗi
+    }
+
 
 }
 

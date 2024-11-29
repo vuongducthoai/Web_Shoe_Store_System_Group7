@@ -1,5 +1,6 @@
 package dto;
 
+import entity.Promotion;
 import enums.DiscountType;
 import enums.PromotionType;
 import lombok.AllArgsConstructor;
@@ -25,4 +26,24 @@ public class PromotionDTO {
     private int minimumLoyalty;
     private boolean isActive;
     private PromotionType promotionType;
+
+    public PromotionDTO(int promotionId, String promotionName, Date startDate, Date endDate, double discountValue, DiscountType discountType, int minimumLoyalty, PromotionType promotionType, boolean isActive) {
+        this.promotionId = promotionId;
+        this.promotionName = promotionName;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.discountValue = discountValue;
+        this.discountType = discountType;
+        this.minimumLoyalty = minimumLoyalty;
+        this.promotionType = promotionType;
+        this.isActive = isActive;
+
+    }
+    public PromotionDTO(int promotionId ,Date startDate, Date endDate, boolean isActive )
+    {
+            this.promotionId = promotionId;
+            this.startDate = startDate;
+            this.endDate = endDate;
+            this.isActive = isActive;
+    }
 }

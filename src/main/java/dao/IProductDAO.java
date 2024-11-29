@@ -1,7 +1,5 @@
 package dao;
 
-import dto.AddressDTO;
-
 import dto.ProductDTO;
 import entity.Product;
 
@@ -16,4 +14,5 @@ public interface IProductDAO {
     List<ProductDTO> getListProductDTO();
     List<ProductDTO> findByName(String name);
     List<Product> findRandomProducts(int offset, int limit, String CurrentProductName);
+    List<String> getProductNamesForPromotion(int promotionId);
 }

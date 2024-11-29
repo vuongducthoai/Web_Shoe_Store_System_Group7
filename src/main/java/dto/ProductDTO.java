@@ -46,6 +46,14 @@ public class ProductDTO {
         this.productName = productName;
         this.categoryDTO = categoryDTO;
     }
+    public ProductDTO(String productName)
+    {
+        this.productName=productName;
+    }
+    public ProductDTO(int productId )
+    {
+        this.productId = productId;
+    }
 
     private int productId;
     private String productName;
