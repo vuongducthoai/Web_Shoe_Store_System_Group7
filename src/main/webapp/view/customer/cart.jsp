@@ -17,8 +17,6 @@
     </title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/toastMessage.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
     <style>
         body {
@@ -105,10 +103,15 @@
 </head>
 <body>
 <div id="custom-toast"></div>
-<jsp:include page="../../view/header.jsp"></jsp:include>
+<header>
+    <jsp:include page="../../view/header.jsp"></jsp:include>
+</header>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<main>
 <div class="container" style="margin: 69px;">
     <h2 class="cart-title">
-        YOUR CART
+        GIỎ HÀNG
     </h2>
     <div class="row">
         <div class="col-md-8">
@@ -120,16 +123,16 @@
                             ${cart.productDTO.productName}
                         </h4>
                         <p>
-                            Size: ${cart.productDTO.size}
+                            Kích cỡ: ${cart.productDTO.size}
                             <br/>
                         <div class="d-flex align-items-center">
-                            <span>Color:</span>
+                            <span>Màu sắc:</span>
                             <div class="border rounded ms-2"
                                  style="background-color: ${cart.productDTO.color}; width: 30px; height: 30px;"></div>
                         </div>
                         </p>
                         <p class="text-muted">
-                            Stock Left: ${cart.productDTO.quantity}
+                            Số lượng còn lại: ${cart.productDTO.quantity}
                         </p>
                         <p class="fw-bold">
                             <fmt:formatNumber value="${cart.productDTO.price}" groupingUsed="true"/> VND
@@ -167,29 +170,29 @@
         <div class="col-md-4">
             <div class="order-summary">
                 <h5>
-                    Order Summary
+                    Tổng quan đơn hàng
                 </h5>
                 <p>
-                    Subtotal
+                    Tạm tính
                     <span class="float-end">
                         <fmt:formatNumber value="${total}" groupingUsed="true"/> VND
                     </span>
                 </p>
                 <p>
-                    Discount
+                    Giảm giá
                     <span class="float-end text-danger">
                         -<fmt:formatNumber value="${discount}" groupingUsed="true"/> VND
                     </span>
                 </p>
                 <p>
-                    Delivery Fee
+                    Phí giao hàng
                     <span class="float-end">
                         <fmt:formatNumber value="${feeShip}" groupingUsed="true"/> VND
                     </span>
                 </p>
                 <hr/>
                 <p class="total">
-                    Total
+                    Tổng
                     <span class="float-end">
                         <fmt:formatNumber value="${Sum}" groupingUsed="true"/> VND
                     </span>
@@ -198,24 +201,28 @@
                     <input type="text" name="cartItem" value="${JsonCart}" hidden="hidden">
                     <input type="text" name="Total" value="${Sum}" hidden="hidden">
                     <button class="btn btn-dark w-100">
-                        Go to Checkout
+                        Tiến hành thanh toán
                         <i class="fas fa-arrow-right">
                         </i>
                     </button>
                 </form>
-                <form action="/Cart/Add" method="post">
-                    <input type="text" value="17" name="idProduct"/>
-                    <button class="btn btn-dark w-100">
+<%--                <form action="/Cart/Add" method="post">--%>
+                    <input type="text" value="17" name="idProduct" class = "inputID"/>
+                    <input type="text" value="17" name="idProduct" class = "inpQuantity"/>
+                    <button class="btn btn-dark w-100" onclick="AddItemQuantity()">
                         TWP
                         <i class="fas fa-arrow-right">
                         </i>
                     </button>
-                </form>
+<%--                </form>--%>
             </div>
         </div>
     </div>
 </div>
+</main>
+<footer>
 <jsp:include page="../../view/footer.jsp"></jsp:include>
+</footer>
 <script src="${pageContext.request.contextPath}/js/cart.js"></script>
 <script>
     var errCode = "${errCode}";

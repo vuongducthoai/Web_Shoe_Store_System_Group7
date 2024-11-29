@@ -35,9 +35,9 @@
             <div class="card">
                 <div class="card-body">
                     <i class="fas fa-check-circle success-icon"></i>
-                    <h1 class="card-title mt-3">Payment Successful!</h1>
-                    <p class="card-text">Thank you for your purchase. Your order has been processed successfully.</p>
-                    <a href="/" class="btn btn-primary mt-3">Go to Home</a>
+                    <h1 class="card-title mt-3">Giao dịch thành công!</h1>
+                    <p class="card-text">Cảm ơn bạn đã mua hàng. Đơn hàng của bạn đã được xử lý thành công.</p>
+                    <a href="/" class="btn btn-primary mt-3">Quay về trang chủ</a>
                 </div>
             </div>
         </div>

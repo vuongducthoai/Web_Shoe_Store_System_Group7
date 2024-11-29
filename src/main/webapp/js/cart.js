@@ -2,7 +2,7 @@ function showError(errCode,message)
 {
     if (errCode == 1) {
         custom_toast({
-            title: "We are very sorry for not satisfying you",
+            title: "Chúng tôi rất xin lỗi vì sự bất tiện",
             message: message,
             type: "error",
             duration: 6000
@@ -52,4 +52,10 @@ function custom_toast({ title = "", message = "", type = "success", duration = 1
         `;
         main.appendChild(toast);
     }
+}
+
+let productID = document.querySelector(".inputID");
+let quantity = document.querySelector(".inpQuantity");
+let AddItemQuantity=()=>{
+    AddItemWithQuantity(productID.value,quantity.value)
 }
