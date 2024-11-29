@@ -437,10 +437,14 @@
         <div class="size-container" id="size-container-${colorId}"></div>
         <button type="button" class="add-size-btn" data-color="${colorId}">Thêm Size</button>
 
-        <button type="button" class="remove-color-btn">Xóa Màu</button>
+        <button type="button" class="remove-color-btn">Xóa biến thể</button>
     `;
 
         colorContainer.appendChild(colorBlock);
+        console.log(colorContainer.innerHTML);
+        console.log(`Số lượng color-block hiện tại: `+getColorBlockCount());
+
+
 
         const addSizeBtn = colorBlock.querySelector('.add-size-btn');
         const sizeContainer = colorBlock.querySelector('.size-container');
@@ -459,6 +463,8 @@
                 sizeContainer.removeChild(sizeBlock);
             });
         });
+
+
 
         // Load Image Logic
         const loadImageBtn = colorBlock.querySelector('.loadImageBtn');
@@ -491,6 +497,7 @@
         removeColorBtn.addEventListener('click', () => {
             colorContainer.removeChild(colorBlock);
             updateColorIds();
+            console.log(`Số lượng color-block hiện tại: ` + getColorBlockCount());
         });
     });
 
@@ -520,3 +527,41 @@
             block.setAttribute('data-color-id', colorId); // Cập nhật lại thuộc tính data-color-id
         });
     }
+
+
+    function getColorBlockCount() {
+        return document.querySelectorAll('.color-block').length;
+    }
+
+    function submitFormWithBlockCount() {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '${pageContext.request.contextPath}/ProductController'; // Đổi thành servlet của bạn
+
+        // Tạo input ẩn để lưu số lượng block
+        const inputBlockCount = document.createElement('input');
+        inputBlockCount.type = 'hidden';
+        inputBlockCount.name = 'blockCount';
+        inputBlockCount.value = '1'; // Lấy giá trị từ hàm
+
+        // Tạo input ẩn để truyền giá trị nút
+        const inputAction = document.createElement('input');
+        inputAction.type = 'hidden';
+        inputAction.name = 'submitAction';
+        inputAction.value = 'add-product';
+
+        // Thêm các input vào form
+        form.appendChild(inputBlockCount);
+        form.appendChild(inputAction);
+
+        // Thêm form vào body và gửi đi
+        document.body.appendChild(form);
+
+        // Debug alert
+        alert("Số lượng block: " + getColorBlockCount());
+        alert("Form Action:"+ form.action);
+
+        // Gửi form
+        form.submit();
+    }
+
