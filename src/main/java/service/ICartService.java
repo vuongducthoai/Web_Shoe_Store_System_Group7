@@ -2,6 +2,7 @@ package service;
 
 import dto.CartDTO;
 import dto.CartItemDTO;
+import dto.PromotionDTO;
 import entity.Cart;
 import entity.CartItem;
 import entity.Customer;
@@ -15,7 +16,8 @@ public interface ICartService {
     double Total_Cart(List<CartItemDTO> cartItem);
     double FeeShip(int idUser);
     boolean deleteCartItem(int cartItemId);
-    double CalculateDiscount(List<CartItemDTO> cartItem,int idUser);
+    double CalculateDiscount(List<CartItemDTO> cartItem,int idUser,int idPromotion);
     boolean AddItemWithQuantity(int idProduct,int userId,int quantity);
     int CountQuantityCartItem(int idUSer);
+    List<PromotionDTO> GetAllPromotionByLoayti(int idUser);
 }

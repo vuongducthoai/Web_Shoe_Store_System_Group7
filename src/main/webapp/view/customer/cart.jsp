@@ -99,6 +99,10 @@
             color: #000;
             border: none;
         }
+        .custom-bg {
+            background-color: rgba(255, 255, 255, 0.9); /* Trắng pha chút trong suốt */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Thêm chút bóng đen nhẹ */
+        }
     </style>
 </head>
 <body>
@@ -116,7 +120,7 @@
     <div class="row">
         <div class="col-md-8">
             <c:forEach var="cart" items="${CartList}">
-                <div class="cart-item d-flex align-items-center">
+                <div class="cart-item d-flex align-items-center custom-bg">
                     <img class="border border-dark" alt="Gradient Graphic T-shirt" height="150" src="${cart.productDTO.getBase64Image()}" width="150"/>
                     <div class="ms-3">
                         <h4>
@@ -141,6 +145,7 @@
                     <div class="ms-auto d-flex align-items-center">
                         <form action="/Cart/Remove" method="post">
                             <input type="text" value="${cart.cartItemId}" name="cartItemId" hidden="hidden"/>
+                            <input type="text" value="${idPr}" name="idPr" hidden="hidden"/>
                             <button class="btn btn-outline-secondary">
                                 -
                             </button>
@@ -150,12 +155,14 @@
                        </span>
                         <form action="/Cart/Add" method="post">
                             <input type="text" value="${cart.productDTO.productId}" name="idProduct" hidden="hidden"/>
+                            <input type="text" value="${idPr}" name="idPr" hidden="hidden"/>
                             <button class="btn btn-outline-secondary">
                                 +
                             </button>
                         </form>
                         <form action="/Cart/Delete_Item" method="post">
                             <input type="text" value="${cart.cartItemId}" name="cartItemId" hidden="hidden">
+                            <input type="text" value="${idPr}" name="idPr" hidden="hidden"/>
                             <button type="submit" class="btn btn-outline-danger ms-3">
                                 <i class="fas fa-trash">
                                 </i>
@@ -189,6 +196,26 @@
                     <span class="float-end">
                         <fmt:formatNumber value="${feeShip}" groupingUsed="true"/> VND
                     </span>
+                </p>
+                <p class="d-flex align-items-center" >
+                    <span class="me-2" style="white-space: nowrap;">Mã giảm giá</span>
+                    <select name="voucher" class="form-select" aria-label="Voucher select" onchange="ChangeSelect()">
+                        <option value="-1">Chọn mã giảm giá</option>
+                        <c:forEach var="item" items="${promotion}">
+                            <option value="${item.promotionId}"
+                                    <c:if test="${item.promotionId == idPr}">selected</c:if>
+                            >${item.promotionName} -
+                                <c:choose>
+                                    <c:when test="${item.discountType=='VND'}">
+                                        <fmt:formatNumber value="${item.discountValue}" groupingUsed="true"/>VND
+                                    </c:when>
+                                    <c:otherwise>
+                                        ${item.discountValue}%
+                                    </c:otherwise>
+                                </c:choose>
+                            </option>
+                        </c:forEach>
+                    </select>
                 </p>
                 <hr/>
                 <p class="total">

@@ -121,6 +121,12 @@ public class OrderImpl implements IOrderDao {
                 orderEnty.setPayment(payment);
                 orderEnty.setOrderItems(orderItems);
                 payment.setOrder(orderEnty);
+                Double loyatiDouble = (Double) entityManager.createQuery("select sum(o.payment.amount)/1000 from Order o where " +
+                                "o.customer = :customer")
+                        .setParameter("customer",customer)
+                        .getSingleResult();
+                long loyati = Math.round(loyatiDouble);
+                customer.setLoyalty((int)loyati);
             }
             transaction.commit();
         } catch (Exception e) {
@@ -128,6 +134,7 @@ public class OrderImpl implements IOrderDao {
             transaction.rollback();
             return false;
         }
+
         return true;
     }
     public boolean CanCreateOrder(List<CartItemDTO> cartItem){
