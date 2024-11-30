@@ -1,10 +1,7 @@
 package controller.customer;
 
 import ThirdParty.Momo.Momo;
-import dto.AccountDTO;
-import dto.AddressDTO;
-import dto.CartItemDTO;
-import dto.ProductDTO;
+import dto.*;
 import enums.RoleType;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -39,13 +36,13 @@ public class MomoController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getServletPath();
         HttpSession session = req.getSession();
-        AccountDTO accountDTO = (AccountDTO) session.getAttribute("user");
-        if (accountDTO==null || accountDTO.getUser()==null||!accountDTO.getUser().isActive()){
+        UserDTO userDTO = (UserDTO) session.getAttribute("user");
+        if (userDTO==null ||!userDTO.isActive()){
             session.invalidate();
             resp.sendRedirect("/view/login.jsp");
             return;
         }
-        if (accountDTO.getRole()== RoleType.ADMIN){
+        if (userDTO.getAccount().getRole()== RoleType.ADMIN){
             return;
         }
         switch (path) {
@@ -61,13 +58,13 @@ public class MomoController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getServletPath();
         HttpSession session = req.getSession();
-        AccountDTO accountDTO = (AccountDTO) session.getAttribute("user");
-        if (accountDTO==null || accountDTO.getUser()==null||!accountDTO.getUser().isActive()){
+        UserDTO userDTO = (UserDTO) session.getAttribute("user");
+        if (userDTO==null || !userDTO.isActive()){
             session.invalidate();
             resp.sendRedirect("/view/login.jsp");
             return;
         }
-        if (accountDTO.getRole()== RoleType.ADMIN){
+        if (userDTO.getAccount().getRole()== RoleType.ADMIN){
             return;
         }
         switch (path) {
@@ -81,8 +78,8 @@ public class MomoController extends HttpServlet {
 
     protected void Callback(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        AccountDTO accountDTO = (AccountDTO) session.getAttribute("user");
-        int idUser = accountDTO.getUser().getUserID();
+        UserDTO userDTO = (UserDTO) session.getAttribute("user");
+        int idUser = userDTO.getUserID();
         AddressDTO addressDTO = addressService.getAddressByID(idUser);
         String orderId = req.getParameter("orderId");
         String requestId = req.getParameter("requestId");
@@ -127,8 +124,8 @@ public class MomoController extends HttpServlet {
 
     protected void Momo_pay(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        AccountDTO accountDTO = (AccountDTO) session.getAttribute("user");
-        int idUser = accountDTO.getUser().getUserID();
+        UserDTO userDTO = (UserDTO) session.getAttribute("user");
+        int idUser = userDTO.getUserID();
         AddressDTO addressDTO = addressService.getAddressByID(idUser);
         if (addressDTO== null){
             req.setAttribute("errCode",1);

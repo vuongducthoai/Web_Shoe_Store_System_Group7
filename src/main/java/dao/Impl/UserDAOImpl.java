@@ -16,7 +16,7 @@ public class UserDAOImpl implements IUserDAO {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
         User user = null;
         try {
-            String sql = "SELECT u.userID, a.role FROM User u " +
+            String sql = "SELECT u.userID, a.role,u.active FROM User u " +
                     "INNER JOIN Account a ON u.accountID = a.accountID " +
                     "WHERE u.accountID = ?1";
 
@@ -27,16 +27,13 @@ public class UserDAOImpl implements IUserDAO {
 
             int userId = (int) result[0];
             String role = (String) result[1];
-
+            Boolean active =(Boolean) result[2];
+            RoleType role1 = RoleType.valueOf(role);
             user = new User();
             user.setUserID(userId);
-
+            user.setActive(active);
             Account account = new Account();
-            if(RoleType.CUSTOMER.equals(role)){
-                account.setRole(RoleType.CUSTOMER);
-            } else {
-                account.setRole(RoleType.ADMIN);
-            }
+            account.setRole(role1);
             user.setAccount(account);
         } catch (NoResultException e) {
             System.out.println("Không tìm thấy User với accountID: " + accountID);
