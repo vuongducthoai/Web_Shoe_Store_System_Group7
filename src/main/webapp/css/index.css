@@ -377,6 +377,50 @@ section .main .button:hover i{
 }
 
 /* our best collection */
+.product {
+    width: 250px;
+    background-color: #fefefe;
+    border: 1px solid #e6e6e6;
+    border-radius: 8px;
+    overflow: hidden;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Hình ảnh sản phẩm */
+.product-image img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    padding: 20px;
+}
+
+/* Chi tiết sản phẩm */
+.product-details {
+    padding: 10px;
+}
+
+.product_name {
+    font-size: 1rem;
+    color: #000;
+    text-transform: uppercase;
+    font-weight: 550;
+    margin-bottom: 5px;
+}
+
+.price {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.2rem;
+    color: #9E2548;
+    margin: 10px 0;
+}
+
 .collection .grid-wrapper{
     display: grid;
     grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
@@ -389,9 +433,15 @@ section .main .button:hover i{
     border: 1px solid #ccc;
     background-color: #fff;
     border-radius: 20px;
-    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .02);
-    transition: var(--transition-one);
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+
+.collection-item:hover {
+   cursor: pointer;
+}
+
 .collection .grid-wrapper figure{
     border-radius: 20px;
     border-bottom: 1px solid #ccc;
@@ -473,117 +523,3 @@ section .main .button:hover i{
 }
 
 
-/* responsive website code */
-@media screen and (max-width:600px){
-    .wrapper,
-    .grid-wrapper,
-    .section-heading{
-        flex-direction: column;
-        align-items: center;
-        max-width: 560px;
-        min-width: 340px;
-    }
-    .heading-one{
-        font-size: 2.6rem;
-    }
-    .heading-two{
-        font-size: 1.8rem;
-    }
-    .section-heading{
-        text-align: center;
-        align-items: center;
-    }
-    .collection .btn-section{
-        margin: var(--m-t-b);
-    }
-    .about .col-text{
-        align-items: center;
-        text-align: center;
-    }
-    .hero .col-text{
-        width: 100%;
-        flex: 1;
-        align-items: center;
-        text-align: center;
-
-    }
-    .hero .col-img{
-        flex: 1;
-    }
-    .arrival .btn{
-        width: 140px;
-        margin: var(--m-t-b);
-    }
-    form{
-        flex-direction: column;
-        gap: 10px;
-    }
-    .collection .btn-col{
-        margin-bottom: 5px;
-        width: 100px;
-    }
-    .nav{
-        max-width: 560px;
-        min-width: 340px;
-    }
-    header{
-        padding: 15px 10px;
-    }
-    .nav .nav-icon{
-        width: 100%;
-        justify-content: flex-end;
-        margin-right: 10px;
-        padding-right: 10px;
-    }
-    header .burger_icon{
-        display: block;
-    }
-    .nav nav ul{
-        position: absolute;
-        top: 155%;
-        right: -10px;
-        padding: 10px;
-        flex-direction: column;
-        width: 240px;
-        background-color: #d4d4d425;
-        display: none;
-        opacity: 0;
-    }
-    .nav nav ul.active{
-        display: flex;
-        opacity: 1;
-        animation: fadeIn .5s ease-in-out;
-    }
-    @keyframes fadeIn{
-        0%{
-            opacity: 0;
-            transform: translateY(-2px);
-        }
-        100%{
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    .nav nav ul a:hover{
-        color: var(--first-gra-clr);
-    }
-    .clr-two{
-        width: 200px;
-        height: 200px;
-    }
-    .hero .hero-img-off{
-        left: 10px;
-    }
-
-    footer .wrapper{
-        align-items: center;
-        justify-content: center;
-        gap: 40px;
-    }
-    footer .col{
-        width: 100%;
-        text-align: center;
-        align-self: center;
-        justify-self: center;
-    }
-}

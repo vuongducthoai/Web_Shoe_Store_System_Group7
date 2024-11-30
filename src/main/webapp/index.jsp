@@ -32,8 +32,7 @@
 <section class="container arrival">
     <div class="section-heading">
         <div class="heading">
-            <h2 class="heading-two">new <span>arrival</span> </h2>
-            <p class="sub-heading">our new collection</p>
+            <h2 class="heading-two">Sản phẩm<span>Khuyến Mãi</span> </h2>
         </div>
     </div>
     <div class="wrapper">
@@ -125,16 +124,18 @@
     <!-- section wrapper and col -->
     <div class="grid-wrapper">
         <c:forEach var="product" items="${productDTOList}">
-            <div class="col- collection-item" data-item="" data-aos="zoom-in-up">
-                <figure><img src="./image/shoes3.png" alt=""></figure>
-                <div class="col-body">
-
-                    <h3  class="heading-three">${product.productName}</h3>
-                    <h3  class="heading-four">${product.description}</h3>
+            <div class="product">
+                <div class="product-image">
+                    <figure><img src="./image/shoes3.png" alt="Foundation"></figure>
+                </div>
+                <div class="product-details">
+                    <p class="product_name">${product.productName}</p>
+                    <p class="product_desc">${product.description}</p>
                     <div class="col-footer">
-                        <p class="shoe-price">${product.price}₫</p>
-                        <p class="shoe-sold">Đã bán :${product.quantity}</p>
+                        <p class="shoe-price">${product.price}₫</p
+                        <p class="shoe-sold">Đã bán :${product.quantity}
                     </div>
+
                 </div>
             </div>
         </c:forEach>
