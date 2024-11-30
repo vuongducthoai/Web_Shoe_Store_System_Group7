@@ -24,6 +24,7 @@
 <body class="bg-white text-gray-800">
     <div id="categoryListJson" style="display: none;">${categoryListJson}</div>
     <div id="jsonProductNames" style="display: none;">${jsonProductNames}</div>
+    <div id="soldQuantityMapJson" style="display: none;">${soldQuantityMapJson}</div>
     <div id="contextPath" data-contextPath="${pageContext.request.contextPath}"></div>
     <div id="selectedSize" selectedSize="${selectedSize}"></div>
     <div id="selectedColor" selectedColor="${selectedColor}"></div>

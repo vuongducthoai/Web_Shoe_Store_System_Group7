@@ -98,18 +98,26 @@ public class ListProductController extends HttpServlet {
         int currentPage = Integer.parseInt(pageParam);
         int productsPerPage = 6;
         int startIndex = (currentPage - 1) * productsPerPage;
-        int totalSize = filteredProducts.size();
+        int totalSize = (int)filteredProducts.stream().filter(ProductDTO::isStatus).count();
         int endIndex = Math.min(startIndex + productsPerPage, totalSize);
         int totalPages = (int) Math.ceil((double) totalSize / productsPerPage);
 
         // Lấy danh sách sản phẩm cho trang hiện tại
-        List<ProductDTO> paginatedProducts = filteredProducts.subList(startIndex, endIndex);
+        List<ProductDTO> paginatedProducts = new ArrayList<>();
+
+        if (startIndex >= 0 && endIndex <= filteredProducts.stream().filter(ProductDTO::isStatus).count() && startIndex < endIndex) {
+            paginatedProducts = filteredProducts.stream().filter(ProductDTO::isStatus).toList().subList(startIndex, endIndex);
+        }
 
         // Chuyển đổi danh sách sản phẩm sang JSON
         Gson gson = new Gson();
         String jsonCategoryList = gson.toJson(paginatedProducts);
         String jsonProductNames = gson.toJson(productNames);
+        Map<String, Integer> soldQuantityMap = getSoldQuantities(filteredProducts);
+        // Chuyển đổi soldQuantityMap thành JSON String để truyền cho JSP
+        String soldQuantityMapJson = new Gson().toJson(soldQuantityMap);
 
+        req.setAttribute("soldQuantityMapJson", soldQuantityMapJson);
         // Gửi các thuộc tính vào request
         req.setAttribute("productsPerPage", productsPerPage);
         req.setAttribute("minSize", totalSize != 0 ? 1 : 0);
@@ -137,6 +145,25 @@ public class ListProductController extends HttpServlet {
 
         RequestDispatcher rq = req.getRequestDispatcher("/view/customer/filter-product.jsp");
         rq.forward(req, resp);
+    }
+
+    public Map<String, Integer> getSoldQuantities(List<ProductDTO> products) {
+        Map<String, Integer> soldQuantityMap = new HashMap<>();
+
+        for (ProductDTO product : products) {
+            String productName = product.getProductName();
+
+            if (!soldQuantityMap.containsKey(productName)) {
+                soldQuantityMap.put(productName, 0);
+            }
+
+            // Giả sử product.getStatus() trả về true nếu chưa bán và false nếu đã bán
+            if (!product.isStatus()) {
+                soldQuantityMap.put(productName, soldQuantityMap.get(productName) + 1);
+            }
+        }
+
+        return soldQuantityMap;
     }
 
     private Map<String, Object> getProductInfo(List<CategoryDTO> cartItemDTOList) {

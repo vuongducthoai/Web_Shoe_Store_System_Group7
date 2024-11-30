@@ -355,22 +355,21 @@ function apply(page = 1) {
 }
 
 const categoryListJson = document.getElementById('categoryListJson').textContent;
-
-
-// Chuyển chuỗi JSON thành đối tượng JavaScript
 const categoryList = JSON.parse(categoryListJson);
 
+const soldQuantityMapJson = document.getElementById('soldQuantityMapJson').textContent;
+const soldQuantityMap = JSON.parse(soldQuantityMapJson);
 
 // Tìm phần tử <span> bằng ID
 const spanElement = document.getElementById("dynamicSpan");
 var totalSize = parseInt(document.getElementById("totalSize").getAttribute("totalSize"));
 
-// Cập nhật nội dung của <span>
 if (categoryList.length === 0) {
-    spanElement.textContent = "Không có sản phẩm trong danh mục này";
+    spanElement.textContent = "Hiện tại chưa có sản phẩm nào trong danh mục này hoặc các sản phẩm đều đã hết hàng";
 } else {
-    spanElement.textContent = "Hiển thị 1-" + categoryList.length + " trong số " + totalSize + " sản phẩm";
+    spanElement.textContent = "Hiển thị 1-" + categoryList.filter(product => product.status === true).length + " trong số " + totalSize + " sản phẩm";
 }
+
 
     
 // Hàm render sản phẩm
@@ -378,30 +377,13 @@ function renderProductList(products) {
     const container = document.getElementById('product-container'); // Lấy container
     container.innerHTML = ''; // Xóa nội dung cũ
     const MAX_STARS = 5; // Số sao tối đa
-
-    const soldQuantityMap = {}; // Đối tượng để lưu trữ số lượng bán cho mỗi sản phẩm
     let promotionMessage = '';
-    // Duyệt qua các sản phẩm
-    products.forEach(product => {
-        const productName = product.productName; // Lấy tên sản phẩm
-
-        // Cập nhật số lượng bán cho sản phẩm trong map
-        if (soldQuantityMap[productName]) {
-            if (product.status === false) {
-                soldQuantityMap[productName] += 1;
-            }
-        } else {
-            if (product.status === false) {
-                soldQuantityMap[productName] = 1;
-            }
-            else {
-                soldQuantityMap[productName] = 0;
-            }
-        }
-    });
 
     // Lặp qua từng sản phẩm và tạo HTML
     products.forEach(product => {
+        if (product.status === false){
+            return;
+        }
         const averageRating = calculateAverageRating(products, product.productName);
 
         // Kiểm tra xem trung bình có phải là số nguyên không
@@ -449,11 +431,11 @@ function renderProductList(products) {
                     if (promotion.discountType === 'Percentage') {
                         // Tính giá giảm theo phần trăm
                         discountedPrice = originalPrice - (originalPrice * (discount / 100));
-                        discountText = `-${formatCurrency(discount)}%`;
+                        discountText = `-${discount}%`;
                     } else if (promotion.discountType === 'VND') {
                         // Tính giá giảm theo tiền tệ (giảm trực tiếp)
                         discountedPrice = originalPrice - discount;
-                        discountText = `-${discount} VNĐ`;
+                        discountText = `-${formatCurrency(discount)}`;
                     }
 
                     // Tính thời gian còn lại
@@ -715,5 +697,3 @@ function calculateAverageRating(productList, productName) {
 
     return averageRating;
 }
-
-
