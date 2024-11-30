@@ -20,7 +20,7 @@ public class ProductDAOImpl implements IProductDAO {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
         List<ProductDTO> productDTOList = new ArrayList<>();
         try {
-           //Native SQL Query
+            //Native SQL Query
             String sql = "SELECT p.productName, MAX(p.price), SUBSTRING_INDEX(GROUP_CONCAT(TO_BASE64(p.image)), ',', 1), " +
                     "MIN(p.description), COUNT(p.productName) " +
                     "FROM Product p " +
@@ -37,7 +37,7 @@ public class ProductDAOImpl implements IProductDAO {
             // Thực thi truy vấn
             List<Object[]> results = query.getResultList();
 
-            for(Object[] result : results) {
+            for (Object[] result : results) {
                 ProductDTO productDTO = new ProductDTO();
                 String productName = (String) result[0];
                 System.out.println(productName);
@@ -65,17 +65,12 @@ public class ProductDAOImpl implements IProductDAO {
 
 
 
+
     public boolean AddProduct(Product product) {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-
-            // Kiểm tra và lấy category từ DB
-//            if (product.getCategory() != null) {
-//                Category managedCategory = entityManager.find(Category.class, product.getCategory().getCategoryID());
-//                product.setCategory(managedCategory); // Gán lại category đã được quản lý
-//            }
 
             entityManager.merge(product); // Hoặc entityManager.merge(product);
             transaction.commit();
@@ -100,8 +95,8 @@ public class ProductDAOImpl implements IProductDAO {
             entityManager.merge(product);
             transaction.commit();
             return true;
-        } catch (Exception e){
-            if(transaction.isActive()){
+        } catch (Exception e) {
+            if (transaction.isActive()) {
                 transaction.rollback();
             }
             e.printStackTrace();
@@ -111,7 +106,7 @@ public class ProductDAOImpl implements IProductDAO {
         return false;
     }
 
-    public List<ProductDTO> getListProductDTO(){
+    public List<ProductDTO> getListProductDTO() {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
         List<ProductDTO> productDTOList = new ArrayList<>();
         try {
@@ -124,20 +119,19 @@ public class ProductDAOImpl implements IProductDAO {
             List<Object[]> results = query.getResultList();
 
 
-            for(Object[] result : results) {
+            for (Object[] result : results) {
                 ProductDTO productDTO = new ProductDTO();
                 int productID = (int) result[0];
                 String productName = (String) result[1];
                 String Color = (String) result[2];
                 String productDescription = (String) result[3];
                 byte[] image = (byte[]) result[4];
-               // byte[] image = convertBase64ToByteArray(imageString);
+                // byte[] image = convertBase64ToByteArray(imageString);
                 double price = (double) result[5];
                 int size = (int) result[6];
                 int categoryID = result[7] != null ? (int) result[7] : 0;
                 String categoryName = result[8] != null ? (String) result[8] : "";
-                if (categoryID != 0)
-                {
+                if (categoryID != 0) {
                     CategoryDTO categoryDTO = new CategoryDTO();
                     categoryDTO.setCategoryId(categoryID);
                     categoryDTO.setCategoryName(categoryName);
@@ -221,49 +215,108 @@ public class ProductDAOImpl implements IProductDAO {
         } finally {
             entityManager.close();
         }
+
     }
 
+    public List<ProductDTO> getListProductByName(String name) {
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        List<ProductDTO> productDTOList = new ArrayList<>();
+        try {
+            String sql = "SELECT p.productId, p.productName, p.color, p.description, p.image, p.price, p.size, c.categoryID, c.categoryName " +
+                    "FROM Product p " +
+                    "INNER JOIN Category c ON p.categoryID = c.categoryID " +
+                    "WHERE p.productName = ? and p.status=1"; // Sử dụng tham số cho productName
+
+            Query query = entityManager.createNativeQuery(sql);
+            query.setParameter(1, name);
+            List<Object[]> results = query.getResultList();
 
 
+            for (Object[] result : results) {
+                ProductDTO productDTO = new ProductDTO();
+                int productID = (int) result[0];
+                String productName = (String) result[1];
+                String Color = (String) result[2];
+                String productDescription = (String) result[3];
+                byte[] image = (byte[]) result[4];
+                // byte[] image = convertBase64ToByteArray(imageString);
+                double price = (double) result[5];
+                int size = (int) result[6];
+                int categoryID = result[7] != null ? (int) result[7] : 0;
+                String categoryName = result[8] != null ? (String) result[8] : "";
+                if (categoryID != 0) {
+                    CategoryDTO categoryDTO = new CategoryDTO();
+                    categoryDTO.setCategoryId(categoryID);
+                    categoryDTO.setCategoryName(categoryName);
+                    productDTO.setCategoryDTO(categoryDTO);
+                }
+                productDTO.setProductId(productID);
+                productDTO.setProductName(productName);
+                productDTO.setPrice(price);
+                productDTO.setDescription(productDescription);
+                productDTO.setImage(image);
+                productDTO.setColor(Color);
+                productDTO.setSize(size);
+                productDTOList.add(productDTO);
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+        return productDTOList;
+    }
 
     @Override
     public List<ProductDTO> findByName(String name) {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        List<ProductDTO> productDTOList = new ArrayList<>();
         try {
-            // Truy vấn các sản phẩm có tên chứa từ khóa
-            List<Product> products = entityManager.createQuery(
-                            "SELECT p FROM Product p WHERE p.productName = :name", Product.class)
-                    .setParameter("name", name) // Tìm kiếm gần đúng
-                    .getResultList();
+            String sql = "SELECT p.productId, p.productName, p.color, p.description, p.image, p.price, p.size, c.categoryID, c.categoryName " +
+                    "FROM Product p " +
+                    "INNER JOIN Category c ON p.categoryID = c.categoryID " +
+                    "WHERE p.productName = ?"; // Sử dụng tham số cho productName
 
-            if(products == null || products.isEmpty()) System.out.print("Products null");
-            else{
-                System.out.print("Products: " + products.size());
+            Query query = entityManager.createNativeQuery(sql);
+            query.setParameter(1, name);
+            List<Object[]> results = query.getResultList();
+
+
+            for (Object[] result : results) {
+                ProductDTO productDTO = new ProductDTO();
+                int productID = (int) result[0];
+                String productName = (String) result[1];
+                String Color = (String) result[2];
+                String productDescription = (String) result[3];
+                byte[] image = (byte[]) result[4];
+                // byte[] image = convertBase64ToByteArray(imageString);
+                double price = (double) result[5];
+                int size = (int) result[6];
+                int categoryID = result[7] != null ? (int) result[7] : 0;
+                String categoryName = result[8] != null ? (String) result[8] : "";
+                if (categoryID != 0) {
+                    CategoryDTO categoryDTO = new CategoryDTO();
+                    categoryDTO.setCategoryId(categoryID);
+                    categoryDTO.setCategoryName(categoryName);
+                    productDTO.setCategoryDTO(categoryDTO);
+                }
+                productDTO.setProductId(productID);
+                productDTO.setProductName(productName);
+                productDTO.setPrice(price);
+                productDTO.setDescription(productDescription);
+                productDTO.setImage(image);
+                productDTO.setColor(Color);
+                productDTO.setSize(size);
+                productDTOList.add(productDTO);
+
             }
-
-
-            return products.stream()
-                    .map(product -> new ProductDTO(
-                            product.getProductID(),
-                            product.getProductName(),
-                            product.getPrice(),
-                            product.getImage(),
-                            product.getColor(),
-                            product.getSize(),
-                            product.isStatus(),
-                            product.getDescription(),
-                            null, // cartItemDTOList
-                            null, // orderItemDTOList
-                            new CategoryDTO(product.getCategory().getCategoryID(), null, null), // categoryDTO
-                            null  // promotionDTO
-                    ))
-                    .collect(Collectors.toList());
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
         } finally {
             entityManager.close();
         }
+        return productDTOList;
     }
 
 
@@ -271,7 +324,7 @@ public class ProductDAOImpl implements IProductDAO {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
         try {
             // JPQL truy vấn các sản phẩm cùng CategoryID nhưng khác tên
-            String jpql = "SELECT p FROM Product p WHERE p.category.categoryID = :categoryID " +
+            String jpql = "SELECT DISTINCT p FROM Product p WHERE p.category.categoryID = :categoryID " +
                     "AND p.productName <> :currentProductName";
 
             TypedQuery<Product> query = entityManager.createQuery(jpql, Product.class);

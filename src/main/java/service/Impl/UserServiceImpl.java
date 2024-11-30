@@ -17,6 +17,7 @@ public class UserServiceImpl implements IUserService {
         if(user != null) {
             UserDTO userDTO = new UserDTO();
             userDTO.setUserID(user.getUserID());
+            userDTO.setActive(user.isActive());
             AccountDTO account = new AccountDTO();
             account.setRole(user.getAccount().getRole());
             userDTO.setAccount(account);

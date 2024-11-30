@@ -706,9 +706,9 @@ th, td {
 }
 
 
-
 /* Khu vực biến thể */
-#color-container {
+#color-container,
+#color-container-edit {
     margin-top: 20px;
 }
 
@@ -726,7 +726,8 @@ th, td {
     margin-bottom: 10px;
 }
 
-#color-container .remove-color-btn {
+#color-container .remove-color-btn,
+#color-container-edit .remove-color-btnEdit{
     background-color: #ff4d4d;
     color: white;
     padding: 8px 15px;
@@ -736,7 +737,8 @@ th, td {
     font-size: 14px;
 }
 
-#color-container .remove-color-btn:hover {
+#color-container .remove-color-btn:hover,
+#color-container-edit .remove-color-btnEdit:hover {
     background-color: #e60000;
 }
 
@@ -777,7 +779,8 @@ th, td {
 }
 
 /* Thêm màu sắc */
-#add-color-btn {
+#add-color-btn,
+#add-color-btnEdit{
     background-color: #28a745;
     color: white;
     padding: 10px 15px;
@@ -790,6 +793,7 @@ th, td {
     margin-bottom: 50px;
 }
 
-#add-color-btn:hover {
+#add-color-btn:hover,
+#add-color-btnEdit:hover{
     background-color: #218838;
 }
