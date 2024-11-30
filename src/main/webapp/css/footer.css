@@ -3,16 +3,13 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'poppins';
-    text-transform: capitalize;
     text-decoration: none;
 }
 li{
     list-style-type: none;
-    text-transform: capitalize;
 }
 a{
     text-decoration: none;
-    text-transform: capitalize;
 }
 
 /*Footer*/

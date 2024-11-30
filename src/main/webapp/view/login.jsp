@@ -16,6 +16,10 @@
     margin-bottom: 15px;
   }
 
+  input{
+    text-transform: none;
+  }
+
   .captcha-message {
     display: none;
     color: red;
@@ -61,13 +65,13 @@
               <div class="row gy-3 overflow-hidden">
                 <div class="col-12">
                   <div class="form-floating mb-2">
-                    <input type="email" class="form-control" name="email" id="email" placeholder="name@example.com" required>
+                    <input style="text-transform: none" type="email" class="form-control" name="email" id="email" placeholder="name@example.com" required>
                     <label for="email" class="form-label">Email</label>
                   </div>
                 </div>
                 <div class="col-12">
                   <div class="form-floating mb-2">
-                    <input type="password" class="form-control" name="password" id="password" placeholder="Mật khẩu" required>
+                    <input style="text-transform: none" type="password" class="form-control" name="password" id="password" placeholder="Mật khẩu" required>
                     <label for="password" class="form-label">Password</label>
                   </div>
                 </div>
