@@ -15,4 +15,5 @@ public interface IProductDAO {
     List<ProductDTO> findByName(String name);
     List<Product> findRandomProducts(int offset, int limit, String CurrentProductName);
     List<String> getProductNamesForPromotion(int promotionId);
+    long getInventoryQuantity();
 }

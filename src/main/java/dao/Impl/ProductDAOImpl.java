@@ -7,6 +7,7 @@ import dto.ProductDTO;
 import entity.Product;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 
 import java.util.*;
@@ -223,6 +224,30 @@ public class ProductDAOImpl implements IProductDAO {
         }
         return new ArrayList<>();  // Trả về danh sách rỗng nếu có lỗi
     }
+    public long getInventoryQuantity() {
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        try {
+            // Sử dụng câu truy vấn bạn cung cấp
+            String query = "SELECT COUNT(*) AS quantity FROM Product p WHERE p.status = true ";
+
+            // Tạo truy vấn
+            Query nativeQuery = entityManager.createNativeQuery(query);
+
+            // Lấy kết quả
+            Object result = nativeQuery.getSingleResult();
+
+            // Chuyển kết quả về kiểu long
+            if (result != null) {
+                return ((Number) result).longValue();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            entityManager.close(); // Đảm bảo EntityManager được đóng để tránh rò rỉ tài nguyên
+        }
+        return 0L; // Trả về 0 nếu không có kết quả
+    }
+
 
 
 }
