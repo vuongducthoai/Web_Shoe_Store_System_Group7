@@ -14,6 +14,7 @@ import dto.ProductDTO;
 import entity.Category;
 import entity.Product;
 import enums.RoleType;
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -28,10 +29,8 @@ import java.io.*;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @WebServlet(urlPatterns = {"/ProductController"})
 @MultipartConfig(
@@ -44,6 +43,11 @@ public class productController extends HttpServlet {
     ICategoryDao categoryDao   = new CategoryDaoImpl();
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+       LoadListproduct(req, resp);
+    }
+
+
+    protected void LoadListproduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<ProductDTO> products = productDAO.getListProductDTO();
         if (products == null || products.isEmpty()) {
             // Nếu không có sản phẩm, in ra thông báo lỗi
@@ -71,7 +75,6 @@ public class productController extends HttpServlet {
 
     }
 
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("submitAction");
@@ -80,6 +83,9 @@ public class productController extends HttpServlet {
             switch (action) {
                 case "add-product":
                     addProduct(req, resp);
+                    break;
+                case "showInfo":
+                    showInfo(req, resp);
                     break;
                case "edit-product":
                     updateProduct(req, resp);
@@ -179,6 +185,74 @@ public class productController extends HttpServlet {
 
         resp.sendRedirect(req.getContextPath() + "/ProductController");
     }
+
+
+        protected void showInfo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+            String productName = request.getParameter("productName");
+            List<ProductDTO> products = productDAO.getListProductByName(productName);
+
+            if (products == null || products.isEmpty()) {
+                request.setAttribute("error", "Không tìm thấy sản phẩm nào!");
+                request.getRequestDispatcher("error.jsp").forward(request, response);
+                return;
+            }
+
+            ProductDTO firstProduct = products.get(0);
+            request.setAttribute("productName", firstProduct.getProductName());
+            request.setAttribute("productPrice", firstProduct.getPrice());
+            request.setAttribute("productCategory", firstProduct.getCategoryDTO().getCategoryName());
+            request.setAttribute("productDescription", firstProduct.getDescription());
+
+
+            // Lấy danh sách màu sắc duy nhất
+            List<String> colors = products.stream()
+                    .map(ProductDTO::getColor)
+                    .distinct()
+                    .collect(Collectors.toList());
+
+            // Map chứa thông tin size và tổng quantity cho từng màu
+            Map<String, Map<Integer, Integer>> sizeQuantityMap = new HashMap<>();
+
+            for (String color : colors) {
+                // Lọc sản phẩm theo màu
+                List<ProductDTO> productsForColor = products.stream()
+                        .filter(product -> product.getColor().equals(color))
+                        .collect(Collectors.toList());
+
+                // Tính tổng quantity theo size
+                Map<Integer, Integer> sizeQuantity = productsForColor.stream()
+                        .collect(Collectors.groupingBy(
+                                ProductDTO::getSize,          // Nhóm theo size
+                                Collectors.collectingAndThen(
+                                        Collectors.counting(),   // Đếm số lượng sản phẩm cho mỗi size
+                                        Long::intValue            // Chuyển đổi từ long sang int
+                                )
+                        ));
+
+                sizeQuantityMap.put(color, sizeQuantity);
+
+            }
+
+            // Lấy hình ảnh cho từng màu
+            Map<String, String> colorImageMap = new HashMap<>();
+            for (String color : colors) {
+                products.stream()
+                        .filter(product -> product.getColor().equals(color))
+                        .findFirst()
+                        .ifPresent(product -> colorImageMap.put(color, product.getBase64Image()));
+            }
+
+            // Set dữ liệu vào request
+            request.setAttribute("colors", colors);
+            request.setAttribute("colorImageMap", colorImageMap);
+            request.setAttribute("sizeQuantityMap", sizeQuantityMap);
+
+            // Chuyển tiếp đến JSP
+            LoadListproduct(request, response);
+            //request.getRequestDispatcher("admin.jsp").forward(request, response);
+        }
+
+
 
     protected void updateProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int productID = Integer.parseInt(req.getParameter("edit-productID"));

@@ -86,12 +86,6 @@ public class ProductDAOImpl implements IProductDAO {
         try {
             transaction.begin();
 
-            // Kiểm tra và lấy category từ DB
-//            if (product.getCategory() != null) {
-//                Category managedCategory = entityManager.find(Category.class, product.getCategory().getCategoryID());
-//                product.setCategory(managedCategory); // Gán lại category đã được quản lý
-//            }
-
             entityManager.merge(product); // Hoặc entityManager.merge(product);
             transaction.commit();
             return true;
@@ -238,6 +232,55 @@ public class ProductDAOImpl implements IProductDAO {
 
     }
 
+    public List<ProductDTO> getListProductByName(String name) {
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        List<ProductDTO> productDTOList = new ArrayList<>();
+        try {
+            String sql = "SELECT p.productId, p.productName, p.color, p.description, p.image, p.price, p.size, c.categoryID, c.categoryName " +
+                    "FROM Product p " +
+                    "INNER JOIN Category c ON p.categoryID = c.categoryID " +
+                    "WHERE p.productName = ? and p.status=1"; // Sử dụng tham số cho productName
+
+            Query query = entityManager.createNativeQuery(sql);
+            query.setParameter(1, name);
+            List<Object[]> results = query.getResultList();
+
+
+            for (Object[] result : results) {
+                ProductDTO productDTO = new ProductDTO();
+                int productID = (int) result[0];
+                String productName = (String) result[1];
+                String Color = (String) result[2];
+                String productDescription = (String) result[3];
+                byte[] image = (byte[]) result[4];
+                // byte[] image = convertBase64ToByteArray(imageString);
+                double price = (double) result[5];
+                int size = (int) result[6];
+                int categoryID = result[7] != null ? (int) result[7] : 0;
+                String categoryName = result[8] != null ? (String) result[8] : "";
+                if (categoryID != 0) {
+                    CategoryDTO categoryDTO = new CategoryDTO();
+                    categoryDTO.setCategoryId(categoryID);
+                    categoryDTO.setCategoryName(categoryName);
+                    productDTO.setCategoryDTO(categoryDTO);
+                }
+                productDTO.setProductId(productID);
+                productDTO.setProductName(productName);
+                productDTO.setPrice(price);
+                productDTO.setDescription(productDescription);
+                productDTO.setImage(image);
+                productDTO.setColor(Color);
+                productDTO.setSize(size);
+                productDTOList.add(productDTO);
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+        return productDTOList;
+    }
 
     @Override
     public List<ProductDTO> findByName(String name) {
