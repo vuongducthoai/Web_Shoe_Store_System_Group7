@@ -18,7 +18,6 @@ public class ResponseDAOImpl implements IResponseDAO {
             try {
                 transaction.begin();
 
-                // Kiểm tra dữ liệu hợp lệ
                 if (response.getContent() == null || response.getContent().trim().isEmpty()) {
                     System.err.println("Response content is empty");
                     return false;

@@ -295,7 +295,7 @@ public class ProductDAOImpl implements IProductDAO {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
         try {
             // JPQL truy vấn các sản phẩm cùng CategoryID nhưng khác tên
-            String jpql = "SELECT p FROM Product p WHERE p.category.categoryID = :categoryID " +
+            String jpql = "SELECT DISTINCT p FROM Product p WHERE p.category.categoryID = :categoryID " +
                     "AND p.productName <> :currentProductName";
 
             TypedQuery<Product> query = entityManager.createQuery(jpql, Product.class);
