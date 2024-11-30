@@ -176,7 +176,7 @@ public class ProductInformationController extends HttpServlet {
                 reviewDTO.setReviewID(reviewID);
 
                 AdminDTO adminDTO = new AdminDTO();
-                adminDTO.setUserID(48);
+                adminDTO.setUserID(8);
 
                 ResponseDTO response = new ResponseDTO();
                 response.setResponseID(responseID);
