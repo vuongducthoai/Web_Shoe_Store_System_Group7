@@ -15,7 +15,7 @@ public class NotifyDTO {
     private int notifyId;
     private String content;
     private Date timeStamp;
-    private CustomerDTO customerDTO;
+    private int customerId;
 
 
 }

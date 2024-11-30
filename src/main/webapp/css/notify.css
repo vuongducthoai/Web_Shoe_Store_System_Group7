@@ -1,0 +1,92 @@
+/* Thanh thông báo nổi */
+.notification-banner {
+    background-color: #4CAF50; /* Màu xanh lá cây nhẹ nhàng, dễ chịu */
+    color: white;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Thêm bóng cho thanh thông báo */
+    font-family: 'Roboto', sans-serif;
+    transition: top 0.3s;
+    border-bottom: 3px solid #388E3C; /* Thêm đường viền dưới để nổi bật */
+}
+
+/* Khu vực thông báo */
+.notifications {
+    margin-top: 100px; /* Tạo khoảng trống từ trên */
+    padding: 30px;
+    font-family: 'Arial', sans-serif;
+    background-color: #fafafa; /* Màu nền sáng và nhẹ nhàng */
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Tiêu đề khu vực thông báo */
+.notifications h2 {
+    text-align: center;
+    font-size: 26px;
+    color: #FC8F54;
+    margin-bottom: 20px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 600;
+}
+
+/* Phần tử thông báo */
+.notification-item {
+    border: 1px solid #e1e1e1;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    background-color: #E9EED9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hiệu ứng hover cho phần tử thông báo */
+.notification-item:hover {
+    transform: translateY(-7px); /* Nâng phần tử lên khi hover */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Phần nội dung thông báo */
+.notification-item p {
+    font-size: 16px;
+    color: #555; /* Màu xám nhẹ cho nội dung */
+    line-height: 1.5;
+    margin-top: 10px;
+}
+
+/* Ngày tháng hiển thị dưới thông báo */
+.notification-item p strong {
+    color: #333; /* Màu xám đậm cho tiêu đề ngày */
+}
+
+/* Định dạng cho các thẻ h3 trong thông báo */
+.notification-item h3 {
+    font-size: 22px;
+    color: #89A8B2; /* Màu xám vừa phải cho tiêu đề nhỏ */
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+/* Hiệu ứng bóng và độ mờ */
+.notifications {
+    opacity: 0.95;
+    transition: opacity 0.3s ease;
+}
+
+.notifications:hover {
+    opacity: 1;
+}
+
+/* Tạo hiệu ứng mờ cho thanh thông báo */
+#notification-banner {
+    transition: top 0.3s ease, opacity 0.3s ease;
+}

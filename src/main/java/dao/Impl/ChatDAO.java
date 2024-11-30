@@ -14,14 +14,12 @@ import java.util.Date;
 public class ChatDAO implements IChatDAO {
 
     @Override
-    public int getOrCreateChatId(int userId) {
+    public Chat getOrCreateChat(int userId) {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
-        int chatId = -1;
-
+        Chat chat = null;
         try {
             transaction.begin();
-
             // Tìm User với userId
             Customer customer = entityManager.find(Customer.class, userId);
             if (customer == null) {
@@ -38,7 +36,7 @@ public class ChatDAO implements IChatDAO {
 
             if (existingChat != null) {
                 // Chat đã tồn tại
-                chatId = existingChat.getChatID();
+                chat = existingChat;
             } else {
                 // Tạo mới Chat
                 Chat newChat = new Chat();
@@ -47,7 +45,7 @@ public class ChatDAO implements IChatDAO {
 
                 entityManager.persist(newChat); // Lưu vào database
                 transaction.commit(); // Lưu thay đổi
-                chatId = newChat.getChatID(); // Lấy ID của Chat vừa tạo
+                chat = newChat; // Lấy đối tượng Chat vừa tạo
             }
         } catch (Exception e) {
             if (transaction.isActive()) {
@@ -58,6 +56,6 @@ public class ChatDAO implements IChatDAO {
             entityManager.close();
         }
 
-        return chatId;
+        return chat;
     }
 }
