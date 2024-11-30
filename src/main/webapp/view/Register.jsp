@@ -30,6 +30,9 @@
         display: none;
       }
 
+      input {
+        text-transform: none;
+      }
 
       .form-group select {
         margin-left: 12px;

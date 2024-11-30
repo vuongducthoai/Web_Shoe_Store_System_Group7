@@ -102,3 +102,35 @@ nav .icons a {
 nav .icons a:hover {
     color: #c72092 !important;
 }
+
+
+.user-icon {
+    position: relative; /* Ensure the dropdown menu is positioned relative to the icon */
+}
+
+.dropdown-menu {
+    display: none; /* Hide the dropdown by default */
+    position: absolute;
+    top: 100%; /* Position it right below the icon */
+    left: 20px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 200px;
+    z-index: 1; /* Ensure it appears on top */
+}
+
+.user-icon:hover .dropdown-menu {
+    display: block; /* Show the dropdown when hovering over the user icon */
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: #333;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f0f0f0; /* Add hover effect for links */
+}

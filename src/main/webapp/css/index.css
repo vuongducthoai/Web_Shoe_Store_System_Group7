@@ -5,15 +5,10 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'poppins';
-    text-transform: capitalize;
     text-decoration: none;
 }
 li{
     list-style-type: none;
-    text-transform: capitalize;
-}
-a{
-    text-transform: capitalize;
 }
 
 h1,h2,h3,h4,h5,h6,p,a{
@@ -140,21 +135,17 @@ figure img{
 
 .heading-one{
     font-size: 4rem;
-    text-transform: capitalize;
     color: var(--primar-clr);
 }
 .heading-two{
     font-size: 2.4rem;
-    text-transform: capitalize;
 }
 .heading-three{
     font-size: 1.6rem;
-    text-transform: capitalize;
 }
 
 .heading-four{
     font-size: 1.2rem;
-    text-transform: capitalize;
 }
 
 .heading-one span,
@@ -170,7 +161,6 @@ figure img{
     color: #fff;
     border-radius: var(--btn-radius);
     padding: var(--p-sm);
-    text-transform: capitalize;
     font-weight: 500;
     letter-spacing: 1px;
     transition: var(--transition-one);
