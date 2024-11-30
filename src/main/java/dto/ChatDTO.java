@@ -13,7 +13,7 @@ import java.util.*;
 @AllArgsConstructor
 public class ChatDTO {
     private int chatId;
-    private User user;
+    private CustomerDTO customer;
     private Date createdDate;
     private List<MessageDTO> messages;
 

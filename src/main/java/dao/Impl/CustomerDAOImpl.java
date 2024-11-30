@@ -109,9 +109,8 @@ public class CustomerDAOImpl implements ICustomerDAO {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
         try {
             // Query to fetch specific fields and map to CustomerDTO and ChatDTO
-            String jpql = "SELECT new dto.CustomerDTO(c.userID, c.fullName, c.phone, c.chat)" +
-                    "FROM Customer c " +
-                    "JOIN c.chat chat"; // Ensure chat is fetched via JOIN if necessary
+            String jpql = "SELECT new dto.CustomerDTO(c.userID, c.fullName, c.phone)" +
+                    "FROM Customer c "; // Ensure chat is fetched via JOIN if necessary
 
             // Execute the query to get the results and map them directly to CustomerDTO
             List<CustomerDTO> customerDTOList = entityManager.createQuery(jpql, CustomerDTO.class)
