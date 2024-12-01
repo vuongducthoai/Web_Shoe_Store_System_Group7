@@ -511,8 +511,7 @@
     const productDetails = JSON.parse('${productDetails}');
     console.log("Product Details:", productDetails);
 </script>
-<script src="${pageContext.request.contextPath}/js/toastMessage.js"></script>
-<script src="${pageContext.request.contextPath}/js/ItemCart.js"></script>
+<%--<script src="${pageContext.request.contextPath}/js/toastMessage.js"></script>--%>
 <script src="${pageContext.request.contextPath}/js/ProductInformation.js"></script>
 </body>
 </html>

@@ -18,10 +18,8 @@ images.forEach(image =>{
 var circles = document.querySelectorAll(".circle");
 circles.forEach(circle => {
     circle.onclick = () => {
-
+        console.log("akakakak")
         circles.forEach(c => c.style.border = "none");
-
-
         circle.style.border = "4px solid #ccc";
     };
 });
@@ -122,14 +120,22 @@ addToCartBtn.onclick = function () {
 
     // Kiểm tra nếu người dùng chưa chọn sản phẩm (màu hoặc size)
     if (!selectedColor || !selectedSize) {
-        showSuccessToast({ title: "Warning", message: "Vui lòng chọn màu sắc và kích thước.", type: "Warning" });
-
+        custom_toast({
+            title: "Chúng tôi rất xin lỗi vì sự bất tiện",
+            message: "Vui lòng chọn màu sắc và kích thước.",
+            type: "error",
+            duration: 6000
+        });
         return;
     }
 
     if (Number(quantityDisplay) === 0) {
-        showSuccessToast({ title: "Warning", message: "Sản phẩm bạn chọn đã hết hàng.", type: "Warning" });
-
+        custom_toast({
+            title: "Chúng tôi rất xin lỗi vì sự bất tiện",
+            message: "Sản phẩm bạn chọn đã hết hàng.",
+            type: "error",
+            duration: 6000
+        });
         return;
     }
 
