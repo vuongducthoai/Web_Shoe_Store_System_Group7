@@ -25,21 +25,19 @@ public class Paging extends HttpServlet {
         int index = 1;
         int num = productPromotion.countProductPromotion(startDate, endDate);
         int numpage = num / page;   //So luong trang
-        System.out.println("NumPage " + numpage);
         int num2 = num % page;
 
         if(num != 0 && num2 != 0){
             numpage++;
         }
 
-        System.out.println("index: " + index);
 
         try {
-            index = Integer.parseInt(req.getParameter("index"));
+            index = Integer.parseInt(req.getParameter("index")); // index = 2
         } catch (NumberFormatException e){
             e.printStackTrace();
         }
-        List<PromotionProductDTO> promotionProductDTOList = productPromotion.findTop8ProductPromotionNow(startDate, endDate, index, page);
+        List<PromotionProductDTO> promotionProductDTOList = productPromotion.findTop8ProductPromotionNow(startDate, endDate, index - 1, page);
         req.setAttribute("promotionProductDTOList", promotionProductDTOList);
         req.setAttribute("index", index);
         req.setAttribute("numpage", numpage);

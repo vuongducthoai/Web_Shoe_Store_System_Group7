@@ -21,11 +21,27 @@ public class ProductDAOImpl implements IProductDAO {
         List<ProductDTO> productDTOList = new ArrayList<>();
         try {
             //Native SQL Query
-            String sql = "SELECT p.productName, MAX(p.price), SUBSTRING_INDEX(GROUP_CONCAT(TO_BASE64(p.image)), ',', 1), " +
-                    "MIN(p.description), COUNT(p.productName) " +
-                    "FROM Product p " +
-                    "WHERE p.status = 1 " +
-                    "GROUP BY p.productName";
+            String sql = "WITH RankedProducts AS (\n" +
+                    "    SELECT \n" +
+                    "        p.productName, \n" +
+                    "        p.price, \n" +
+                    "        p.image,\n" +
+                    "        p.description,\n" +
+                    "        ROW_NUMBER() OVER (PARTITION BY p.productName ORDER BY p.price DESC) AS rn, \n" +
+                    "        COUNT(*) OVER (PARTITION BY p.productName) AS product_count \n" +
+                    "    FROM Product p \n" +
+                    "    WHERE p.status = 1\n" +
+                    ")\n" +
+                    "SELECT \n" +
+                    "    productName,\n" +
+                    "    MAX(price) AS max_price, \n" +
+                    "    (SELECT image \n" +
+                    "     FROM RankedProducts rp \n" +
+                    "     WHERE rp.productName = r.productName AND rp.rn = 1) AS image,\n" +
+                    "    MIN(description) AS min_description,\n" +
+                    "    product_count\n" +
+                    "FROM RankedProducts r\n" +
+                    "GROUP BY productName, product_count";
 
             Query query = entityManager.createNativeQuery(sql);
 
@@ -37,16 +53,13 @@ public class ProductDAOImpl implements IProductDAO {
             // Thực thi truy vấn
             List<Object[]> results = query.getResultList();
 
-            for (Object[] result : results) {
+            for (Object[] row : results) {
                 ProductDTO productDTO = new ProductDTO();
-                String productName = (String) result[0];
-                System.out.println(productName);
-                double price = (double) result[1];
-                String imageString = (String) result[2];
-                String description = (String) result[3];
-                int quantity = ((Long) result[4]).intValue();
-
-                byte[] image = convertBase64ToByteArray(imageString);
+                String productName = (String) row[0];
+                double price = (double) row[1];
+                byte[] image = (byte[]) row[2];
+                String description = (String) row[3];
+                int quantity = ((Long) row[4]).intValue();
 
                 productDTO.setProductName(productName);
                 productDTO.setPrice(price);
