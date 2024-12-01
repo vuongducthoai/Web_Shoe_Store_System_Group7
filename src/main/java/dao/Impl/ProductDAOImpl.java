@@ -1,6 +1,5 @@
 package dao.Impl;
 
-import JpaConfig.JpaConfig;
 import dao.IProductDAO;
 import dto.CategoryDTO;
 import dto.ProductDTO;

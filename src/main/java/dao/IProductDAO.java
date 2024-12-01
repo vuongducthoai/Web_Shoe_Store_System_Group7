@@ -15,5 +15,4 @@ public interface IProductDAO {
     List<Product> findRandomProducts(String CurrentProductName, int CID);
     List<ProductDTO> findListProductByCategoryID(int id);
     List<ProductDTO> getListProductByName(String name);
-
 }
