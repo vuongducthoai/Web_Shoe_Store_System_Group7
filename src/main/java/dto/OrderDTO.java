@@ -15,12 +15,11 @@ import java.util.Date;
 @Getter
 @Setter
 public class OrderDTO {
-    private int orderId;
+    private String orderId;
     private CustomerDTO customer;
     private List<OrderItemDTO> orderItems;
     private PaymentDTO payment;
     private String shippingAddress;
     private OrderStatus orderStatus;
     private Date orderDate;
-    private String status;
 }

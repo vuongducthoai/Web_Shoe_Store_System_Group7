@@ -1,0 +1,130 @@
+/* ============== Resest HTML TAGS ================= */
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'poppins';
+    text-transform: capitalize;
+    text-decoration: none;
+}
+
+/* ============================== */
+
+.hero {
+    width: 100%;
+    height: 100vh;
+    background-image: url(../image/bg1.png);
+    background-size: cover;
+    background-position: center;
+}
+section .main .main_content{
+    margin-top: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+section .main .main_content .main_text h1{
+    font-size: 90px;
+    line-height: 70px;
+    background: linear-gradient(to right, green,greenyellow);
+    -webkit-background-clip: text;
+    position: relative;
+    top: 45px;
+    left: 5%;
+}
+
+section .main .main_content .main_text h1 span{
+    font-size: 70px;
+    background: linear-gradient(to right, green,greenyellow);
+    -webkit-background-clip: text;
+}
+
+section .main .main_content .main_text p{
+    color: orange;
+    -webkit-background-clip: text;
+    width: 300px;
+    font-size: 25px;
+    font-weight: 800;
+    text-align: justify;
+    line-height: 35px;
+    position: relative;
+    top: 60px;
+    left: 5%;
+}
+
+section .main .main_content .main_image img{
+    width: 450px;
+    position: relative;
+    left: -10%;
+    top: 0;
+}
+
+
+.hero-img-off{
+    width: 260px;
+    padding: 20px 10px;
+    background-color: orange;
+    backdrop-filter: blur(10px);
+    word-break: break-all;
+    line-height: 1.8;
+    border-radius: 5px;
+    position: relative;
+    margin: 20px 0 0 40px;
+}
+
+.hero-img-off p{
+    font-size: 14px;
+    color: white;
+}
+
+.hero-img-off h3{
+    color: white;
+}
+
+
+.slider {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    height: 100vh;
+}
+
+.slides-container {
+    display: flex;
+    transition: transform 0.6s ease-in-out;
+    width: 100%;
+}
+
+.slide {
+    width: 100%;
+    flex-shrink: 0;
+}
+
+.slider-controls {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+}
+
+
+.slider-controls button {
+    width: 40px;
+    background: orange;
+    border: none;
+    color: #fff;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background 0.3s;
+}
+
+.slider-controls button:hover {
+    background: #ccc;
+    color: blue;
+}
+

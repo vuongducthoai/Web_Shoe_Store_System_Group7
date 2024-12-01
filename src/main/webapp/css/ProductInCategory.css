@@ -1,0 +1,298 @@
+/* Reset CSS */
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.row{
+    margin-left: -8px;
+    margin-right: -8px;
+    display:flex;
+    flex-wrap: wrap;
+}
+
+.row::after{
+    content:"";
+    display: block;
+    clear: both;
+}
+.col-third{
+    width: 33.33333%;
+    margin-top: 64px;
+}
+
+.col-half{
+    width: 50%;
+}
+
+.col-full{
+    width: 100%;
+}
+
+.col{
+    float: left;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+/* Phần header */
+
+.text-Name
+{
+    width: 200px;
+    padding: 5px;
+    margin: 10px;
+    border-radius: 4px;
+    position: relative;
+
+}
+
+#header {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 46.5px;
+    background-color: #000;
+    z-index: 1;
+}
+
+
+#header .search-btn
+{
+    float: left;
+    padding: 0 21px;
+    display: inline-block;
+}
+
+#header .search-btn:hover
+{
+    background-color: #f44336;
+    cursor: pointer;
+}
+
+#header .search-icon
+{
+    color: white;
+    font-size: 20px;
+    line-height: 46.5px;
+}
+
+
+
+/* Phần nội dung hình ảnh giày */
+.content-section
+{
+    width: 800px;
+    padding: 64px 0 112px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.section-heading
+{
+    text-align: center;
+    justify-content: center;
+}
+.text-black
+{
+    color:#000 !important;
+}
+
+
+
+.shoe-img{
+    width: 100%;
+    display: block;
+}
+
+.shoe-img:hover
+{
+    opacity: 0.6;
+}
+
+.shoe-body{
+    padding: 16px;
+    font-size: 15px;
+    background-color: #fff;
+}
+
+.shoe-name{
+    font-size: 15px;
+    font-weight: 600;
+
+}
+
+.shoe-price{
+    margin-top: 15px;
+    color:#757575;
+}
+
+.shoe-color{
+    margin-top: 15px;
+    line-height: 1.4;
+}
+
+.shoe-size{
+    margin-top: 15px;
+    line-height: 1.4;
+}
+
+.btn{
+    color: #fff;
+    background-color: #000;
+    text-decoration: none;
+    padding: 11px 16px;
+    display: inline-block;
+    margin-top: 15px;
+    border: none;
+}
+
+.btn:hover
+{
+    cursor: pointer;
+    color: #000;
+    background-color: #ccc;
+}
+
+/* Suggestions dropdown */
+.suggestions-list {
+    position: absolute;
+    top: calc(100% ); /* Hiển thị ngay bên dưới ô tìm kiếm */
+    left: 70px;
+    background-color: white;
+    border: 1px solid #ccc;
+    width: 200px; /* Đảm bảo bằng với ô tìm kiếm */
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 10;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.suggestion-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    white-space: nowrap; /* Ngăn dòng chữ xuống dòng */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.suggestion-item:hover {
+    background-color: #f0f0f0;
+}
+
+
+
+/* Reset CSS*/
+/** {*/
+/*    padding: 0;*/
+/*    margin: 0;*/
+/*    box-sizing: border-box;*/
+/*}*/
+
+/*.row {*/
+/*    margin-left: -8px;*/
+/*    margin-right: -8px;*/
+/*    display: flex;*/
+/*    flex-wrap: wrap;*/
+/*}*/
+
+/*.row::after {*/
+/*    content: "";*/
+/*    display: block;*/
+/*    clear: both;*/
+/*}*/
+
+/*.col-third {*/
+/*    width: 33.33333%;*/
+/*    margin-top: 64px;*/
+/*}*/
+
+/*.col-half {*/
+/*    width: 50%;*/
+/*}*/
+
+/*.col-full {*/
+/*    width: 100%;*/
+/*}*/
+
+/*.col {*/
+/*    float: left;*/
+/*    padding-left: 8px;*/
+/*    padding-right: 8px;*/
+/*}*/
+
+/*!* Header styles *!*/
+/*#header {*/
+/*    position: fixed;*/
+/*    left: 0;*/
+/*    right: 0;*/
+/*    top: 0;*/
+/*    height: 46.5px;*/
+/*    background-color: #000;*/
+/*    z-index: 1;*/
+/*    display: flex; !* Chuyển sang flex để căn chỉnh dễ dàng hơn *!*/
+/*    align-items: center; !* Căn giữa theo chiều dọc *!*/
+/*    padding: 0 16px; !* Tạo khoảng trống hai bên *!*/
+/*}*/
+
+/*#header .text-Name {*/
+/*    width: 200px;*/
+/*    padding: 5px;*/
+/*    margin: 0 10px; !* Căn lề không làm ảnh hưởng nút kính lúp *!*/
+/*    border-radius: 4px;*/
+/*    border: 1px solid #ccc; !* Thêm border để phân biệt *!*/
+/*    outline: none;*/
+/*}*/
+
+/*#header .search-btn {*/
+/*    display: flex;*/
+/*    align-items: center; !* Căn giữa nội dung *!*/
+/*    justify-content: center; !* Căn giữa nội dung *!*/
+/*    padding: 0 12px;*/
+/*    height: 36px;*/
+/*    background-color: #000;*/
+/*    border-radius: 4px;*/
+/*    transition: background-color 0.3s ease;*/
+/*}*/
+
+/*#header .search-btn:hover {*/
+/*    background-color: #f44336;*/
+/*    cursor: pointer;*/
+/*}*/
+
+/*#header .search-icon {*/
+/*    color: white;*/
+/*    font-size: 20px;*/
+/*    line-height: normal; !* Bỏ phụ thuộc vào chiều cao cố định *!*/
+/*}*/
+
+/* Suggestions dropdown*/
+/*.suggestions-list {*/
+/*    position: absolute;*/
+/*    top: calc(100% + 5px); !* Hiển thị ngay bên dưới ô tìm kiếm *!*/
+/*    left: 0;*/
+/*    background-color: white;*/
+/*    border: 1px solid #ccc;*/
+/*    width: 200px; !* Đảm bảo bằng với ô tìm kiếm *!*/
+/*    max-height: 200px;*/
+/*    overflow-y: auto;*/
+/*    z-index: 10;*/
+/*    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); !* Thêm shadow để đẹp hơn *!*/
+/*}*/
+
+/*.suggestion-item {*/
+/*    padding: 8px 12px;*/
+/*    cursor: pointer;*/
+/*    white-space: nowrap; !* Ngăn dòng chữ xuống dòng *!*/
+/*    overflow: hidden;*/
+/*    text-overflow: ellipsis;*/
+/*}*/
+
+/*.suggestion-item:hover {*/
+/*    background-color: #f0f0f0;*/
+/*}*/
+
+
+
+

@@ -19,4 +19,5 @@ public class PaymentDTO {
     private double amount;
     private Date paymentDate;
     private boolean status;
+    private String momoBillId;
 }
