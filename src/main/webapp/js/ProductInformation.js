@@ -153,7 +153,7 @@ addToCartBtn.onclick = function () {
     var productID = matchedProduct.productId;
     const form = document.createElement('form')
     form.method = 'POST';
-    form.action = '${pageContext.request.contextPath}/cart/add';
+    form.action = '${pageContext.request.contextPath}/AddCartQuantity';
 
     const inputProductId = document.createElement('input')
     inputProductId.type = 'hidden'
@@ -169,8 +169,9 @@ addToCartBtn.onclick = function () {
     form.appendChild(inputQuantity);
 
     document.body.appendChild(form);
-    alert("ID: " + productID.toString() + " so luong: " + selectedQuantity.innerHTML);
+    // alert("ID: " + productID.toString() + " so luong: " + selectedQuantity.innerHTML);
     // form.submit();
+    AddItemWithQuantity(productID.toString(), selectedQuantity.innerHTML);
 
 };
 
