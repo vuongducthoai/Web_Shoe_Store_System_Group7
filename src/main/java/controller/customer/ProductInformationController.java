@@ -41,7 +41,7 @@ public class ProductInformationController extends HttpServlet {
 
         // Lấy thông tin sản phẩm từ cơ sở dữ liệu
         List<ProductDTO> productDetails = productService.findByName(productName);
-
+        System.out.println(productDetails);
         if (productDetails == null || productDetails.isEmpty()) {
 //            req.setAttribute("error", "Không tìm thấy sản phẩm.");
 //            req.getRequestDispatcher("/error.jsp").forward(req, resp);
@@ -70,6 +70,7 @@ public class ProductInformationController extends HttpServlet {
             List<Integer> IDs = productDetails.stream()
                     .map(ProductDTO::getProductId)
                     .distinct().toList();
+            System.out.println(IDs.size());
             List<ReviewDTO> reviews = reviewService.getReviewsByProductID(IDs);
 
             PromotionProductDTO promotionProductDTO = new PromotionProductDTO();
