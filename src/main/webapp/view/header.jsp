@@ -143,6 +143,7 @@
 
         .dropdown-menu a {
             display: block;
+            display: block;
             padding: 10px;
             text-decoration: none;
             color: #333;
@@ -157,9 +158,9 @@
 <body>
 <section >
     <nav>
-        <div class="logo">
-            <h1>Shoe<span>Store</span></h1>
-        </div>
+        <a style="text-decoration: none" href="/home" class="logo">
+            <img src="../image/shoe.png">
+        </a>
 
         <ul>
             <li><a href="#Home">Trang Chủ</a></li>

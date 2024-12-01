@@ -21,7 +21,7 @@ p{
     color: var(--primar-clr-light);
 }
 body{
-    background-color: #e6e6e6;
+    background-color: #fff8f8;
 }
 ::-webkit-scrollbar{
     width: 16px;
@@ -373,7 +373,6 @@ section .main .button:hover i{
     border: 1px solid #e6e6e6;
     border-radius: 8px;
     overflow: hidden;
-    text-align: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -388,7 +387,6 @@ section .main .button:hover i{
     width: 100%;
     height: auto;
     object-fit: cover;
-    padding: 20px;
 }
 
 /* Chi tiết sản phẩm */
