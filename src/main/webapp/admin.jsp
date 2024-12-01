@@ -396,7 +396,8 @@
                                 <td>${fn:substring(account.password, 0, 10)}<c:if test="${fn:length(account.password) > 10}">...</c:if></td>
                                 <td>${account.user.phone}</td>
                                 <td class="status">${account.user.active ? 'Hoạt động' : 'Bị chặn'}</td>
-                                <td><button class="btn btn-primary btn-history" data-customer-id="${account.accountID}">Xem lịch sử</button></td>
+                                <td><button class="btn btn-primary btn-history" data-user-id="${account.user.userID}" onclick="viewHistory(this)">Xem lịch sử</button></td>
+
                             </tr>
                         </c:forEach>
                         </tbody>

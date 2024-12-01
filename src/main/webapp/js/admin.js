@@ -216,7 +216,14 @@ cancelBtns.forEach((btn, index) => {
     });
 });
 
-
+// hàm xử ly xem lich su don hang cua khach hang
+function viewHistory(button) {
+    // Lấy ID khách hàng từ thuộc tính data-customer-id
+    var customerId = button.getAttribute('data-user-id');
+    console.log("User ID: " + customerId);
+    // Gửi yêu cầu đến controller bằng cách chuyển hướng
+    window.location.href = '/JPAExample_war_exploded/customer/orders?id=' + customerId;
+}
 
 
 // Quản lý khuyến mãi
