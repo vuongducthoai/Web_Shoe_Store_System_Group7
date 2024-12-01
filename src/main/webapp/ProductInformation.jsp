@@ -17,7 +17,7 @@
 <header>
     <jsp:include page="./view/header.jsp"></jsp:include>
 </header>
-<main>
+<main style="margin-top: 100px;">
 
 
     <div class="container">
