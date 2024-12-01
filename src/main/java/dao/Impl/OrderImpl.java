@@ -56,7 +56,8 @@ public class OrderImpl implements IOrderDao {
                     //
                     item.setProductDTO(new ProductDTO());
                     item.getProductDTO().setProductName(productTWP.getProductName());
-                    item.getProductDTO().setImage(productTWP.getImage());
+                    item.getProductDTO().setSize(productTWP.getSize());
+                    item.getProductDTO().setColor(productTWP.getColor());
                     item.getProductDTO().setPrice(productTWP.getPrice());
                     List<CartItem> listCartItem = entityManager.createQuery("Select c " +
                                     "from CartItem c Where c.product.productName like :name " +
@@ -95,21 +96,24 @@ public class OrderImpl implements IOrderDao {
                             entityManager.remove(cartItem);
                         }
                     }
-                    //
-
-                    Product product = entityManager.createQuery(
-                                    "select p from Product p " +
-                                            "where p.color like :color and p.size = :size " +
-                                            "and p.productName like :name and p.status = false " +
-                                            "and p.id not in (select o.product.id from OrderItem o " +
-                                            "                 where o.product.color like :color and o.product.size = :size " +
-                                            "                 and o.product.productName like :name)",
-                                    Product.class)
-                            .setParameter("color", productTWP.getColor())
-                            .setParameter("size", productTWP.getSize())
-                            .setParameter("name", productTWP.getProductName())
-                            .setMaxResults(1)
-                            .getSingleResult();
+                    Product product;
+                    try {
+                        product = entityManager.createQuery(
+                                        "select p from Product p " +
+                                                "where p.color like :color and p.size = :size " +
+                                                "and p.productName like :name and p.status = false " +
+                                                "and p.id not in (select o.product.id from OrderItem o " +
+                                                "                 where o.product.color like :color and o.product.size = :size " +
+                                                "                 and o.product.productName like :name)",
+                                        Product.class)
+                                .setParameter("color", productTWP.getColor())
+                                .setParameter("size", productTWP.getSize())
+                                .setParameter("name", productTWP.getProductName())
+                                .setMaxResults(1)
+                                .getSingleResult();
+                    }catch(Exception e){
+                        product = listProduct.get(0);
+                    }
                     orderItem.setOrder(orderEnty);
                     orderItem.setProduct(product);
                     orderItem.setQuantity(item.getQuantity());
@@ -138,7 +142,7 @@ public class OrderImpl implements IOrderDao {
                 customer.setLoyalty((int)loyati);
                 String finalAddress = address;
                 List<String> resultList = entityManager.createQuery("select a.email from Account a where a.user.userID = :userID " +
-                                "and a.authProvider not like :auth")
+                                "and a.authProvider <> :auth")
                         .setParameter("userID", order.getCustomer().getUserID())
                         .setParameter("auth", AuthProvider.FACEBOOK)
                         .getResultList();
