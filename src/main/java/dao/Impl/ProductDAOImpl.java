@@ -276,7 +276,8 @@ public class ProductDAOImpl implements IProductDAO {
             String sql = "SELECT p.productId, p.productName, p.color, p.description, p.image, p.price, p.size, c.categoryID, c.categoryName " +
                     "FROM Product p " +
                     "INNER JOIN Category c ON p.categoryID = c.categoryID " +
-                    "WHERE p.productName = ?";
+                    "WHERE p.productName = ? " +
+                    "and p.status=true";
 
             Query query = entityManager.createNativeQuery(sql);
             query.setParameter(1, name);
