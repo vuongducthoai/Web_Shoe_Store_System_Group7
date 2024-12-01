@@ -10,10 +10,8 @@ import entity.Product;
 import service.IProductService;
 import service.IReviewService;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ProductServiceImpl implements IProductService {
 
@@ -30,8 +28,9 @@ public class ProductServiceImpl implements IProductService {
     public List<ProductDTO> findByName(String name) {
         return productDAO.findByName(name);
     }
-
-
+    public List<ProductDTO> findByNameProduct(String name) {
+        return productDAO.findByNameProduct(name);
+    }
     public Map<ProductDTO, Double> findRandomProducts(String currentProductName, int CID) {
         Map<ProductDTO, Double> result = new HashMap<>();
         List<Product> products = productDAO.findRandomProducts(currentProductName, CID);
@@ -53,5 +52,21 @@ public class ProductServiceImpl implements IProductService {
 
         return result;
 
+    }
+    public List<String> getDistinctProductNames() {
+        // Lấy danh sách tất cả sản phẩm từ repository
+        List<ProductDTO> products = productDAO.getListProductDTO();
+
+        // Dùng Set để loại bỏ các tên sản phẩm trùng lặp
+        Set<String> distinctProductNames = products.stream()
+                .map(ProductDTO::getProductName) // Lấy tên sản phẩm
+                .collect(Collectors.toSet()); // Dùng Set để loại bỏ trùng lặp
+
+
+        return new ArrayList<>(distinctProductNames);
+    }
+
+    public List<String> getListNameProductForPromotion(int promotionId) {
+        return productDAO.getProductNamesForPromotion(promotionId);
     }
 }

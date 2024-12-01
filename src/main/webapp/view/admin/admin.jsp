@@ -7,7 +7,7 @@
  To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/promotionStyle.css">
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
@@ -439,7 +439,7 @@
 
 
                 <!-- sửa thông tin khách hàng  -->
-                <form action="${pageContext.request.contextPath}/AccountController" method="POST">
+                <form action="${pageContext.request.contextPath}/Admin" method="POST">
                     <div class="account-management-form" id="edit-account-management-form">
                         <h3>Sửa thông tin khách hàng</h3>
                         <input type="hidden" name="action" value="update">
@@ -467,7 +467,7 @@
                 <!-- chặn khách hàng  -->
 
 
-                <form action="${pageContext.request.contextPath}/AccountController" method="POST">
+                <form action="${pageContext.request.contextPath}/Admin/account" method="POST">
                     <div class="account-management-form" id="block-account-management-form">
                         <h3>Chặn tài khoản khách hàng</h3>
                         <input type="hidden" name="action" value="block">
@@ -479,7 +479,7 @@
 
 
                 <!--bỏ chặn khách hàng  -->
-                <form action="${pageContext.request.contextPath}/AccountController" method="POST">
+                <form action="${pageContext.request.contextPath}/Admin/account" method="POST">
                     <div class="account-management-form" id="unBlock-account-management-form">
                         <h3> Bỏ chặn tài khoản khách hàng</h3>
                         <input type="hidden" name="action" value="unblock">
@@ -553,200 +553,17 @@
             <!-- kết thúc chức năng quản lý đơn hàng -->
 
 
-            <!-- chức năng quản lý khuyến mãi -->
             <div class="promotion-management" id="promotion-management">
-                <div class="title">Quản lý khuyến mãi</div>
-                <div class="button-group">
-                    <button type="button" onclick="showSection('promotions')">Promotion</button>
-                    <button type="button" onclick="showSection('vouchers')">Voucher</button>
-                </div>
-                <br>
-                <!-- promotion  -->
-                <div class="promotions-container" id="promotions-container" >
-                    <!-- Promotions Content -->
-                    <div class="promotions-content">
-                        <div class="promotions-items">
-                            <%
-                                int repeatCount = 20;
-                                for (int i = 0; i < repeatCount; i++) {
-                            %>
-                            <div class="promotions-item">
-                                <div class="item-info">
-                                    <img src="KM.png" alt="Sample Promotion 1" class="item-img">
-                                    <div class="item-details">
+                <jsp:include page="promotions.jsp" />
+                          <div>
 
-
-                                        <div class="item-title">Promotion Name: Birthday Sale</div>
-                                        <div>Applicable period: 2023-12-01 - 2023-12-31</div>
-                                        <div class="item-price">Discount: 10%</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="promotions-item">
-                                <div class="item-info">
-                                    <img src="KM.png" alt="Sample Promotion 1" class="item-img">
-                                    <div class="item-details">
-                                        <div class="item-title">Promotion Name: Summer Sale</div>
-                                        <div>Applicable period: 2023-12-01 - 2023-12-31</div>
-                                        <div class="item-price">Discount: 10%</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <% } %>
                         </div>
-                    </div>
-                </div>
-                <!-- voucher  -->
-                <div class="vouchers-container" id="vouchers-container" >
-                    <!-- Vouchers Content -->
-                    <div class="vouchers-items">
-                        <div class="voucher-item">
-                            <div class="item-info">
-                                <img src="Voucher.png" alt="Voucher 1" class="item-img">
-                                <div class="item-details">
-                                    <div class="item-title">Voucher 1</div>
-                                    <div>Voucher Code: WINTER20</div>
-                                    <div>Discount: 20%</div>
-                                    <div>Expiry: 2023-12-31</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="voucher-item">
-                            <div class="item-info">
-                                <img src="Voucher.png" alt="Voucher 2" class="item-img">
-                                <div class="item-details">
-                                    <div class="item-title">Voucher 2</div>
-                                    <div>Voucher Code: SUMMER15</div>
-                                    <div>Discount: 15%</div>
-                                    <div>Expiry: 2023-12-31</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Order Summary (This section remains unchanged) -->
-
-
-                <div class="order-summary">
-                    <div class="summary-title">Information</div>
-                    <div class="summary-item"><span>Subtotal</span> <span>$565</span></div>
-                    <div class="summary-item"><span>Discount (-20%)</span> <span>-$113</span></div>
-                    <div class="summary-item"><span>Delivery Fee</span> <span>$15</span></div>
-                    <div class="summary-total">Total: $467</div>
-
-
-                    <!-- Promo Code -->
-                    <div class="promo-code">
-                        <input type="text" class="promo-input" placeholder="Add promo code">
-                        <button class="apply-btn">Apply</button>
-                    </div>
-
-
-                    <!-- Checkout Button -->
-                    <button class="checkout-btn">Go to Checkout</button>
-                </div>
-                <button class="add-promotion-btn">Add Promotion</button>
-
-
-                <div class="overlay" id="overlay">
-                    <div id="add-promotion-form">
-                        <form>
-                            <!-- Promotion Name -->
-                            <div>
-                                <div class="form-group">
-                                    <label for="promotion-name">Promotion Name: </label>
-                                    <input type="text" id="promotion-name" name="promotion-name" required>
-                                </div>
-                            </div>
-
-
-                            <!-- Start Date and End Date -->
-                            <div>
-                                <div class="form-group">
-                                    <label for="start-date">Start Date: </label>
-                                    <input type="date" id="start-date" name="start-date" required>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="form-group">
-                                    <label for="end-date">End Date: </label>
-                                    <input type="date" id="end-date" name="end-date" required>
-                                </div>
-                            </div>
-
-
-                            <!-- Application Products -->
-                            <div class="dropdown">
-                                <!-- Button to show the dropdown menu -->
-                                <label for="start-date">Application Products: </label>
-                                <button type="button" class="dropdown-button" onclick="toggleDropdown()">Select Products</button>
-
-
-                                <!-- Dropdown menu with checkboxes -->
-                                <div class="dropdown-menu">
-                                    <label><input type="checkbox" value="product1"> Product 1</label>
-                                    <label><input type="checkbox" value="product2"> Product 2</label>
-                                    <label><input type="checkbox" value="product3"> Product 3</label>
-                                    <label><input type="checkbox" value="product4"> Product 4</label>
-                                    <label><input type="checkbox" value="product5"> Product 5</label>
-                                </div>
-                            </div>
-
-
-                            <!-- Submit Button to see selected items -->
-
-
-                            <!-- Display the selected items -->
-                            <div id="selected-products" style="margin-top: 20px;"></div>
-
-
-                            <!-- Promotion Type -->
-                            <div>
-                                <div class="form-group">
-                                    <label for="promotion-type">Promotion Type: </label>
-                                    <select id="promotion-type" name="promotion-type" required>
-                                        <option value="" disabled selected>Select Promotion Type</option>
-                                        <option value="voucher">Voucher</option>
-                                        <option value="promotion">Promotion</option>
-                                    </select>
-                                </div>
-                            </div>
-
-
-                            <!-- Discount Value and Unit -->
-                            <div>
-                                <div class="form-group">
-                                    <label for="discount-value">Discount Value: </label>
-                                    <input type="number" id="discount-value" name="discount-value" required>
-                                    <select id="discount-unit" name="discount-unit" required>
-                                        <option value="" disabled selected>Select Unit</option>
-                                        <option value="%">%</option>
-                                        <option value="VND">VND</option>
-                                    </select>
-                                </div>
-                            </div>
-
-
-                            <!-- Minimum Loyalty -->
-                            <div>
-                                <div class="form-group">
-                                    <label for="minimum-loyalty">Minimum Loyalty: </label>
-                                    <input type="number" id="minimum-loyalty" name="minimum-loyalty" required>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <button type="submit">Add</button>
-                                <button type="button" onclick="toggleForm()">Cancel</button>
-                            </div>
-                        </form>
-
-
-                    </div>
-                </div>
             </div>
         </section>
     </div>
 </div>
+
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/promotion.js" defer></script>
 <script src="${pageContext.request.contextPath}/js/admin.js"></script>
 </body>
 

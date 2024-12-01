@@ -225,7 +225,7 @@ public class ProductDAOImpl implements IProductDAO {
             String sql = "SELECT p.productId, p.productName, p.color, p.description, p.image, p.price, p.size, c.categoryID, c.categoryName " +
                     "FROM Product p " +
                     "INNER JOIN Category c ON p.categoryID = c.categoryID " +
-                    "WHERE p.productName = ?"; // Sử dụng tham số cho productName
+                    "WHERE p.productName = ? and p.status=1"; // Sử dụng tham số cho productName
 
             Query query = entityManager.createNativeQuery(sql);
             query.setParameter(1, name);
@@ -348,6 +348,82 @@ public class ProductDAOImpl implements IProductDAO {
             System.err.println("Error during findRandomProducts:");
             e.printStackTrace();
             return Collections.emptyList();
+        } finally {
+            entityManager.close();
+        }
+
+    }
+    public List<String> getProductNamesForPromotion(int promotionId) {
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        try {
+            // Câu truy vấn JPQL để lấy productName của các sản phẩm liên kết với promotionId
+            List<String> productNames = entityManager.createQuery(
+                            "SELECT DISTINCT  p.productName " +
+                                    "FROM Product p " +
+                                    "JOIN PromotionProduct pp ON p.productID = pp.product.productID "+
+                                    "WHERE pp.promotion.promotionID = :promotionId  " , String.class)  // Sử dụng promotionId đúng
+
+                    .setParameter("promotionId", promotionId)  // Truyền promotionId
+                    .getResultList();  // Thực thi truy vấn và lấy danh sách tên sản phẩm
+
+            return productNames;  // Trả về danh sách các tên sản phẩm
+        } catch (Exception e) {
+            e.printStackTrace();  // Xử lý lỗi nếu có
+        }
+        return new ArrayList<>();  // Trả về danh sách rỗng nếu có lỗi
+    }
+    public long getInventoryQuantity() {
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        try {
+            // Sử dụng câu truy vấn bạn cung cấp
+            String query = "SELECT COUNT(*) AS quantity FROM Product p WHERE p.status = true ";
+
+            // Tạo truy vấn
+            Query nativeQuery = entityManager.createNativeQuery(query);
+
+            // Lấy kết quả
+            Object result = nativeQuery.getSingleResult();
+
+            // Chuyển kết quả về kiểu long
+            if (result != null) {
+                return ((Number) result).longValue();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            entityManager.close(); // Đảm bảo EntityManager được đóng để tránh rò rỉ tài nguyên
+        }
+        return 0L; // Trả về 0 nếu không có kết quả
+    }
+    public List<ProductDTO> findByNameProduct(String name) {
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        try {
+            // Truy vấn các sản phẩm có tên chứa từ khóa
+            List<Product> products = entityManager.createQuery(
+                            "SELECT p FROM Product p WHERE p.productName = :name AND p.status=true ", Product.class)
+                    .setParameter("name", name) // Tìm kiếm gần đúng
+                    .getResultList();
+
+            // Chuyển đổi từ Product (Entity) sang ProductDTO
+            return products.stream()
+                    .map(product -> new ProductDTO(
+                            product.getProductID(),
+                            product.getProductName(),
+                            product.getPrice(),
+                            product.getImage(),
+                            product.getColor(),
+                            product.getSize(),
+                            product.isStatus(),
+                            product.getDescription(),
+                            null, // cartItemDTOList
+                            null, // orderItemDTOList
+                            null, // categoryDTO
+                            null  // promotionDTO
+                    ))
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         } finally {
             entityManager.close();
         }
