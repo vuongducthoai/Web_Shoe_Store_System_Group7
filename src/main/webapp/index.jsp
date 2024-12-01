@@ -135,30 +135,33 @@
 <jsp:include page="./view/slider.jsp"></jsp:include>
 <!-- arrival section-->
 <section class="container arrival">
-    <div class="section-heading">
+    <div class="section-heading" style="padding: 0; margin-bottom: 20px; color: orange">
         <div class="heading">
-            <h2 class="heading-two">Sản phẩm<span>Khuyến Mãi</span> </h2>
+            <h2 class="heading-two" style="color: orangered">FLASH SALE</h2>
         </div>
     </div>
-    <div class="wrapper" style="gap: 70px">
+    <div class="wrapper" style="flex-wrap: wrap">
         <c:forEach var="promotionProduct" items="${promotionProductDTOList}">
-            <div class="product" style="position: relative;">
-                <div class="product-image">
-                    <figure><img src="${promotionProduct.product.getBase64Image()}" alt="Foundation"></figure>
-                </div>
-                <div class="product-details">
-                    <p class="product_name">${promotionProduct.product.productName}</p>
-                    <p class="product_desc" style="margin-top: 5px">${promotionProduct.product.description}</p>
-                    <div class="col-footer" style="display: flex; align-items: center; justify-content: space-between; margin-top: 10px">
-                        <p class="shoe-price">${promotionProduct.product.sellingPrice}₫ <span style="color: #999; margin-left: 10px" class="shoe-price strike-through">${promotionProduct.product.price}₫</span>
+            <div class="product" style="position: relative; flex: 0 0 23%; max-width: 25%; cursor: pointer">
+                <form action="/product/details" method="GET">
+                    <input type="hidden" name="productName" value="${promotionProduct.product.productName}">
+                    <div class="product-image">
+                        <figure><img src="${promotionProduct.product.getBase64Image()}" alt="Foundation"></figure>
                     </div>
-                </div>
-                <div class="home-product-item_sale-off">
-                    <span class="home-product-item_sale-off-percent">${promotionProduct.promotion.discountValue}%</span>
-                    <span class="home-product-item_sale-off-label">GIẢM</span>
-                </div>
+                    <div class="product-details">
+                        <p class="product_name">${promotionProduct.product.productName}</p>
+                        <p class="product_desc" style="margin-top: 5px">${promotionProduct.product.description}</p>
+                        <div class="col-footer" style="display: flex; align-items: center; justify-content: space-between; margin-top: 10px">
+                            <p class="shoe-price">${promotionProduct.product.sellingPrice}₫ <span style="color: #999; margin-left: 10px" class="shoe-price strike-through">${promotionProduct.product.price}₫</span>
+                        </div>
+                    </div>
+                    <div class="home-product-item_sale-off">
+                        <span class="home-product-item_sale-off-percent">${promotionProduct.promotion.discountValue}%</span>
+                        <span class="home-product-item_sale-off-label">GIẢM</span>
+                    </div>
+                    <button type="submit" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0;"></button> <!-- Invisible button for clicking -->
+                </form>
             </div>
-
         </c:forEach>
     </div>
     <div>
@@ -203,14 +206,16 @@
                 </button>
             </c:forEach>
         </div>
-
     </div>
-    <!-- section wrapper and col -->
-    <div class="grid-wrapper">
+
+    <div class="wrapper wrapper1" style="flex-wrap: wrap">
         <c:forEach var="product" items="${productDTOList}">
-            <div class="product">
+
+            <div class="product" style="flex: 0 0 23%; max-width: 25%">
+                <form action="/product/details" method="GET">
+                    <input type="hidden" name="productName" value="${promotionProduct.product.productName}">
                 <div class="product-image">
-                    <figure><img src="./image/shoes3.png" alt="Foundation"></figure>
+                    <figure><img src="${product.getBase64Image()}" alt="Foundation"></figure>
                 </div>
                 <div class="product-details">
                     <p class="product_name">${product.productName}</p>
@@ -219,11 +224,13 @@
                         <p class="shoe-price">${product.price}₫</p
                         <p class="shoe-sold">Đã bán :${product.quantity}
                     </div>
-
                 </div>
+                </form>
             </div>
         </c:forEach>
     </div>
+
+
     <button style="margin-top: 30px; background-color: #baba14;" id="load-more-btns" class="btn">Xem thêm</button>
 </section>
 <!-- customer review -->
