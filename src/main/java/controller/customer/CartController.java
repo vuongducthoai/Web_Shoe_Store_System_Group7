@@ -43,12 +43,12 @@ public class CartController extends HttpServlet {
         if (Objects.equals(path, "/TWP_ACCOUNT")){
             AccountDTO account = accountService.findAccountByEmail("thoai1234@gmail.com");
             //Tao mot session moi hoac lay session hien co
-            HttpSession session = req.getSession(false);
+            HttpSession session = req.getSession();
             //Luu thong tin nguoi dung vao session
             session.setAttribute("user", account);
             return;
         }
-        HttpSession session = req.getSession(false);
+        HttpSession session = req.getSession();
         UserDTO userDTO = (UserDTO) session.getAttribute("user");
         if (userDTO==null ||!userDTO.isActive()){
             // Xóa session
@@ -85,7 +85,7 @@ public class CartController extends HttpServlet {
                 Cart_Add_Quantity(req,resp);
                 return;
         }
-        HttpSession session = req.getSession(false);
+        HttpSession session = req.getSession();
         UserDTO userDTO = (UserDTO) session.getAttribute("user");
         if (userDTO==null ||!userDTO.isActive()){
             // Xóa session
@@ -114,7 +114,7 @@ public class CartController extends HttpServlet {
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
         try {
-            HttpSession session = req.getSession(false);
+            HttpSession session = req.getSession();
             UserDTO userDTO = (UserDTO) session.getAttribute("user");
             if (userDTO == null || !userDTO.isActive()) {
                 JSONObject json = new JSONObject();
@@ -135,7 +135,7 @@ public class CartController extends HttpServlet {
         }
     }
     public void Load_Cart_View(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession session = req.getSession(false);
+        HttpSession session = req.getSession();
         UserDTO userDTO = (UserDTO) session.getAttribute("user");
         int idUser = userDTO.getUserID();
         int idPromotion = -1;
@@ -171,7 +171,7 @@ public class CartController extends HttpServlet {
 
     private void Add_Cart(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int idProduct = Integer.parseInt(req.getParameter("idProduct"));
-        HttpSession session = req.getSession(false);
+        HttpSession session = req.getSession();
         UserDTO userDTO = (UserDTO) session.getAttribute("user");
         int idUser = userDTO.getUserID();
         Cart_Add(req,resp,idUser,idProduct,"Thêm hàng thành công","Không đủ hàng trong kho");
@@ -219,7 +219,7 @@ public class CartController extends HttpServlet {
             resp.getWriter().println(json.toString());
             return;
         }
-        HttpSession session = req.getSession(false);
+        HttpSession session = req.getSession();
         UserDTO userDTO = (UserDTO) session.getAttribute("user");
         if (userDTO==null || !userDTO.isActive()){
             json.put("errCode",2);

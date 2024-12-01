@@ -121,7 +121,9 @@
         <div class="col-md-8">
             <c:forEach var="cart" items="${CartList}">
                 <div class="cart-item d-flex align-items-center custom-bg">
+                    <a href="/product/details?productName=${cart.productDTO.productName}">
                     <img class="border border-dark" alt="Gradient Graphic T-shirt" height="150" src="${cart.productDTO.getBase64Image()}" width="150"/>
+                    </a>
                     <div class="ms-3">
                         <h4>
                             ${cart.productDTO.productName}
