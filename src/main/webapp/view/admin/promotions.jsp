@@ -46,7 +46,7 @@
             <c:forEach var="promotion" items="${promotionDTOList}">
                 <c:if test="${promotion.promotionType == 'VOUCHER_PRODUCT'}">
                     <div class="promotions-item"
-                         onclick="updateOrderSummary('${promotion.promotionName}', 'Chương trình khuyến mãi','${promotion.startDate}', '${promotion.endDate}', '${promotion.discountValue} ${promotion.discountType == 'Percentage' ? '%' : 'VND'}','${promotion.promotionId}','${promotion.minimumLoyalty}')">
+                         onclick="updateOrderSummary('${promotion.promotionName}', 'Promotion','${promotion.startDate}', '${promotion.endDate}', '${promotion.discountValue} ${promotion.discountType == 'Percentage' ? '%' : 'VND'}','${promotion.promotionId}','${promotion.minimumLoyalty}')">
                         <div class="item-info">
                             <img src="${pageContext.request.contextPath}/image/promotion.jpg"  alt="Promotion Image" class="item-img">
                             <div class="item-details">
