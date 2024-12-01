@@ -273,7 +273,7 @@ public class ResetPassword {
                     "       Giảm giá:" +
                     "      </td>" +
                     "      <td class='value'>" +
-                    formatter.format(discount)+" đ" +
+                    "- "+ formatter.format(discount)+" đ" +
                     "      </td>" +
                     "     </tr>" +
                     "     <tr>" +
@@ -281,7 +281,7 @@ public class ResetPassword {
                     "       Phí vận chuyển:" +
                     "      </td>" +
                     "      <td class='value'>" +
-                    "-"+formatter.format(deliver)+" đ" +
+                    formatter.format(deliver)+" đ" +
                     "      </td>" +
                     "     </tr>" +
                     "     <tr>" +
