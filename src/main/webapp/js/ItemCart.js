@@ -1,5 +1,6 @@
 let quantityCart = document.querySelector(".quantityItemCart");
 let RenderQuantityCart = ()=>{
+    try{
     $.ajax({
         url:'/Count',
         method:"POST",
@@ -11,7 +12,10 @@ let RenderQuantityCart = ()=>{
         error: function (error) {
             console.error("Error loading products:", error);
         }
-    })
+    })}
+    catch (e) {
+        quantityCart.textContent = 0
+    }
 }
 let AddItemWithQuantity = (idProduct,Quantity)=>{
     console.log(idProduct+" ---- "+Quantity)

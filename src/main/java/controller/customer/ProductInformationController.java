@@ -84,7 +84,9 @@ public class ProductInformationController extends HttpServlet {
             }
 
             req.setAttribute("reviews", reviews);
-            req.setAttribute("averageRating", reviewService.averageRating(reviews));
+            double rate = reviewService.averageRating(reviews);
+            System.out.println(rate);
+            req.setAttribute("averageRating", rate);
 
 
             Map<ProductDTO, Double> RecommendProducts = productService.findRandomProducts(productName, productDetails.getFirst().getCategoryDTO().getCategoryId());
