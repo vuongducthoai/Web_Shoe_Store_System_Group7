@@ -69,7 +69,8 @@ public class Product {
                         .map(PromotionProduct::toDTO)
                         .collect(Collectors.toList()) : null,
                 this.review != null ? this.review.toDTO() : null,
-                image == null ? null : "data:image/png;base64," + Base64.getEncoder().encodeToString(image)
+                image == null ? null : "data:image/png;base64," + Base64.getEncoder().encodeToString(image),
+                0
         );
     }
 }

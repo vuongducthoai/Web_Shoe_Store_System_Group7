@@ -5,7 +5,7 @@ import dto.CategoryDTO;
 import dto.ProductDTO;
 import entity.*;
 import jakarta.persistence.*;
-
+import JpaConfig.JpaConfig;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -202,10 +202,14 @@ public class ProductDAOImpl implements IProductDAO {
                             product.getSize(),
                             product.isStatus(),
                             product.getDescription(),
+                            product.getCreateDate(),
                             null, // cartItemDTOList
                             null, // orderItemDTOList
                             new CategoryDTO(product.getCategory().getCategoryID(), null, null), // categoryDTO
-                            null  // promotionDTO
+                            null,  // promotionDTO
+                            null,
+                            null,
+                            0
                     ))
                     .collect(Collectors.toList());
         } catch (Exception e) {

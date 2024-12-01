@@ -19,7 +19,7 @@ public class AddressDaoImpl implements IAddressDAO {
         try {
             // Truy vấn addressID từ Customer dựa trên userID
             Integer addressID = entityManager.createQuery(
-                            "SELECT c.address.addressID FROM Customer c WHERE c.userID = :userID", Integer.class)
+                            "SELECT c.address.id FROM Customer c WHERE c.userID = :userID", Integer.class)
                     .setParameter("userID", userID)
                     .getSingleResult();
 
@@ -34,7 +34,7 @@ public class AddressDaoImpl implements IAddressDAO {
             if (addressEntity != null) {
                 // Chuyển đổi Address entity thành AddressDTO
                 AddressDTO addressDTO = new AddressDTO();
-                addressDTO.setAddressID(addressEntity.getAddressID());
+                addressDTO.setAddressID(addressEntity.getId());
                 addressDTO.setProvince(addressEntity.getProvince());
                 addressDTO.setCity(addressEntity.getCity());
                 addressDTO.setDistrict(addressEntity.getDistrict());
@@ -66,7 +66,7 @@ public class AddressDaoImpl implements IAddressDAO {
             transaction.begin();
 
             // Tìm Address trong cơ sở dữ liệu dựa trên AddressID
-            Address existingAddress = entityManager.find(Address.class, addressEntity.getAddressID());
+            Address existingAddress = entityManager.find(Address.class, addressEntity.getId());
 
             if (existingAddress != null) {
                 // Cập nhật các trường trong Address

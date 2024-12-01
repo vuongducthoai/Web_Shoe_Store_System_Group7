@@ -239,7 +239,7 @@ public class productController extends HttpServlet {
                 products.stream()
                         .filter(product -> product.getColor().equals(color))
                         .findFirst()
-                        .ifPresent(product -> colorImageMap.put(color, product.getBase64Image()));
+                        .ifPresent(product -> colorImageMap.put(color, product.getImageBase64()));
             }
 
             // Set dữ liệu vào request

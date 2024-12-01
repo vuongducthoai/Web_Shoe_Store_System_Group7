@@ -1,10 +1,10 @@
-import JpaConfig.JPAConfig;
+import JpaConfig.JpaConfig;
 import jakarta.persistence.EntityManager;
 
 public class MAIN {
     public static void main(String[] args) {
 
-        EntityManager em = JPAConfig.getEmFactory().createEntityManager();
+        EntityManager em = JpaConfig.getEmFactory().createEntityManager();
             em.close();
     }
 }

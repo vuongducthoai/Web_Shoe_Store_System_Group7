@@ -49,7 +49,7 @@ public class ProductInformationController extends HttpServlet {
             System.out.println("Không tìm thấy sản phẩm");
         } else {
             List<String> images = productDetails.stream()
-                    .map(ProductDTO::getBase64Image)
+                    .map(ProductDTO::getImageBase64)
                     .filter(image -> image != null)
                     .distinct()
                     .toList();

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface ICategoryService {
+    List<CategoryDTO> listCategory();
     List<CategoryDTO> findAllCategories();
     List<ProductDTO> filter(List<CategoryDTO> cartItemDTOList, String selectedCategory, Double filterMinPrice, Double filterMaxPrice, String selectedColor, String selectedSize, String selectedPromotion, String searchName);
     List<ProductDTO> distinctName(List<ProductDTO> products);

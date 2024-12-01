@@ -244,7 +244,7 @@ public class ResetPassword {
                 content +=
                         "     <tr>" +
                                 "      <td>" +
-                                "       <img  height='50' src='"+item.getProductDTO().getBase64Image()+"' width='50'/>" +
+                                "       <img  height='50' src='"+item.getProductDTO().getImageBase64()+"' width='50'/>" +
                                 item.getProductDTO().getProductName() +
                                 "      </td>" +
                                 "      <td>" +

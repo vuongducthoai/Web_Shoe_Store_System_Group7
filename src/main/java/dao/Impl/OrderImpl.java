@@ -17,6 +17,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -303,10 +304,14 @@ public class OrderImpl implements IOrderDao {
                             orderItem.getProduct().getSize(),
                             orderItem.getProduct().isStatus(),
                             orderItem.getProduct().getDescription(),
+                            orderItem.getProduct().getCreateDate(),
                             null, // Không cần danh sách CartItemDTO trong trường hợp này
                             null, // Không cần danh sách OrderItemDTO trong trường hợp này
                             null, // Không cần CategoryDTO
-                            null  // Không cần PromotionProductDTO
+                            null,  // Không cần PromotionProductDTO
+                            null,
+                            orderItem.getProduct().getImage() == null ? null : "data:image/png;base64," + Base64.getEncoder().encodeToString(orderItem.getProduct().getImage()),
+                            0
                     );
 
                     // Tạo OrderItemDTO
@@ -383,10 +388,14 @@ public class OrderImpl implements IOrderDao {
                             orderItem.getProduct().getSize(),
                             orderItem.getProduct().isStatus(),
                             orderItem.getProduct().getDescription(),
+                            orderItem.getProduct().getCreateDate(),
                             null, // Không cần danh sách CartItemDTO trong trường hợp này
                             null, // Không cần danh sách OrderItemDTO trong trường hợp này
                             null, // Không cần CategoryDTO
-                            null  // Không cần PromotionProductDTO
+                            null,  // Không cần PromotionProductDTO
+                            null,
+                            orderItem.getProduct().getImage() == null ? null : "data:image/png;base64," + Base64.getEncoder().encodeToString(orderItem.getProduct().getImage()),
+                            0
                     );
 
                     // Tạo OrderItemDTO

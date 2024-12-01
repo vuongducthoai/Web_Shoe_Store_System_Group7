@@ -10,4 +10,10 @@ import java.util.List;
 public interface ICategoryDao {
 
     List<CategoryDTO> findAllCategories();
+    List<Category> categoryList();
+    List<CategoryDTO> categoryDTOList();
+
+    boolean insert(Category category);
+    boolean remove(int categoryId);
+    List<ProductDTO> findAllProductByCategoryWithPagination(int id, int offset, int limit);
 }

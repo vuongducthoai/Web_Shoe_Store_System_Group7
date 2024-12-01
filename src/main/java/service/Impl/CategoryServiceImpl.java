@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import dto.*;
 import dao.ICategoryDao;
 import dao.Impl.CategoryDaoImpl;
+import entity.Category;
 import enums.DiscountType;
 import enums.PromotionType;
 import service.ICategoryService;
@@ -16,6 +17,18 @@ public class CategoryServiceImpl implements ICategoryService {
     ICategoryDao categoryDao = new CategoryDaoImpl();
 
     public List<CategoryDTO> findAllCategories() { return categoryDao.findAllCategories(); }
+
+    public List<CategoryDTO> listCategory() {
+        List<Category> list = categoryDao.categoryList();
+        List<CategoryDTO> categoryDTOList = new ArrayList<>();
+        for (Category category : list) {
+            CategoryDTO categoryDTO = new CategoryDTO();
+            categoryDTO.setCategoryId(category.getCategoryID());
+            categoryDTO.setCategoryName(category.getCategoryName());
+            categoryDTOList.add(categoryDTO);
+        }
+        return categoryDTOList;
+    }
 
     public List<ProductDTO> distinctName(List<ProductDTO> products) {
         return products.stream()

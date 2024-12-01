@@ -56,7 +56,7 @@ public class ChatController extends HttpServlet {
             RoleType role = RoleType.valueOf(roleParam);  // Chuyển đổi thành RoleType từ string
 
             // Tạo đối tượng Account và User
-            Account account = new Account(accountId, "admin@example.com", "password", null, "providerID", role, null, null);
+            Account account = new Account(accountId, "admin@example.com", "password", null, "providerID", role, null);
             User user = new User(userId, "Nguyễn Văn A", null, true, account, null);
 
             // Chuyển đổi đối tượng User thành JSON để truyền qua JSP

@@ -35,6 +35,7 @@ public class ProductDTO {
     private List<PromotionProductDTO> promotionProducts;
     private ReviewDTO reviewDTO;
     private String imageBase64;
+    private  int quantity;
 
     public double calculateDiscountedPrice() {
         if (promotionProducts != null && !promotionProducts.isEmpty()) {
