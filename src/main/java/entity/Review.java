@@ -1,5 +1,6 @@
 package entity;
 
+import dto.ReviewDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,4 +36,17 @@ public class Review {
 
     @Lob
     private byte[] image;
+
+    public ReviewDTO toDTO() {
+        return new ReviewDTO(
+                this.reviewID,
+                this.ratingValue,
+                this.date,
+                null,
+                this.comment,
+                null,
+                null,
+                this.image
+        );
+    }
 }
