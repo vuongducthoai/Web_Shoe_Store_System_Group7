@@ -5,6 +5,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,63 +72,61 @@ public class PaymentDAOImpl implements IPaymentDAO {
         try {
             // Tính năm hiện tại và năm 3 năm trước
             int currentYear = LocalDate.now().getYear();
-            int startYear = currentYear - 3; // Lấy năm 3 năm trước
-            int endYear = currentYear;       // Lấy năm hiện tại
+            int startYear = currentYear - 3; // Năm bắt đầu (cách đây 3 năm)
 
-            // JPQL câu truy vấn để lấy doanh thu của mỗi tháng trong 4 năm gần nhất
+            // JPQL câu truy vấn
             String jpql = "SELECT FUNCTION('YEAR', py.paymentDate) AS year, " +
                     "FUNCTION('MONTH', py.paymentDate) AS month, " +
                     "COALESCE(SUM(py.amount), 0) AS total " +
                     "FROM Payment py " +
                     "JOIN py.order o " +
                     "WHERE o.orderStatus = 'COMPLETED' " +
-                    "AND FUNCTION('YEAR', py.paymentDate) BETWEEN :startYear AND :endYear " +
+                    "AND FUNCTION('YEAR', py.paymentDate) BETWEEN :startYear AND :currentYear " +
                     "GROUP BY FUNCTION('YEAR', py.paymentDate), FUNCTION('MONTH', py.paymentDate) " +
                     "ORDER BY FUNCTION('YEAR', py.paymentDate), FUNCTION('MONTH', py.paymentDate)";
 
-
-            // Tạo truy vấn và truyền tham số
+            // Tạo truy vấn và gán tham số
             Query query = entityManager.createQuery(jpql);
             query.setParameter("startYear", startYear);
-            query.setParameter("endYear", endYear);
+            query.setParameter("currentYear", currentYear);
 
             // Lấy kết quả
             List<Object[]> resultList = query.getResultList();
 
-            // Tạo Map để lưu doanh thu theo năm và tháng
-            Map<Integer, Map<Integer, Long>> resultMap = new HashMap<>();
+            // Tạo Map lưu doanh thu theo năm và tháng
+            Map<Integer, Map<Integer, Long>> revenueMap = new HashMap<>();
 
-            // Lặp qua kết quả trả về và thêm vào Map
+            // Xử lý kết quả trả về
             for (Object[] result : resultList) {
-                int year = (int) result[0];
-                int month = (int) result[1];
-                long totalAmount = (long) result[2];
+                int year = ((Number) result[0]).intValue();
+                int month = ((Number) result[1]).intValue();
+                long totalAmount = ((Number) result[2]).longValue();
 
-                resultMap
+                // Thêm dữ liệu vào map
+                revenueMap
                         .computeIfAbsent(year, k -> new HashMap<>())
                         .put(month, totalAmount);
             }
 
-            // Đảm bảo rằng mỗi năm có đủ 12 tháng, nếu thiếu thì thêm tháng với doanh thu = 0
-            for (int year = startYear; year <= endYear; year++) {
-                Map<Integer, Long> monthlyData = resultMap.computeIfAbsent(year, k -> new HashMap<>());
+            // Đảm bảo rằng mỗi năm có đủ 12 tháng với doanh thu mặc định = 0
+            for (int year = startYear; year <= currentYear; year++) {
+                Map<Integer, Long> monthlyData = revenueMap.computeIfAbsent(year, k -> new HashMap<>());
                 for (int month = 1; month <= 12; month++) {
-                    monthlyData.putIfAbsent(month, 0L); // Nếu tháng không có doanh thu, gán = 0
+                    monthlyData.putIfAbsent(month, 0L);
                 }
             }
 
-            return resultMap;
+            return revenueMap;
         } catch (Exception e) {
-            // Xử lý lỗi (nếu có)
             e.printStackTrace();
-            return new HashMap<>(); // Trả về Map rỗng nếu có lỗi
+            return Collections.emptyMap(); // Trả về Map rỗng nếu xảy ra lỗi
         } finally {
-            // Đảm bảo EntityManager được đóng để tránh rò rỉ tài nguyên
             if (entityManager != null && entityManager.isOpen()) {
-                entityManager.close();
+                entityManager.close(); // Đóng EntityManager để tránh rò rỉ tài nguyên
             }
         }
     }
+
 
 
 

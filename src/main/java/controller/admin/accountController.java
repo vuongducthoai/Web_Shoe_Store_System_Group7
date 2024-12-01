@@ -19,10 +19,7 @@ import service.ICartService;
 import service.IProductPromotion;
 import service.IProductService;
 import service.IPromotionService;
-import service.Impl.CartServiceImpl;
-import service.Impl.ProductPromotionImpl;
-import service.Impl.ProductServiceImpl;
-import service.Impl.PromotionServiceImpl;
+import service.Impl.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,6 +27,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet(urlPatterns = {"/Admin" ,"/Admin/account"})
 public class accountController extends HttpServlet {
@@ -48,10 +46,35 @@ public class accountController extends HttpServlet {
         }
         List<PromotionDTO> promotionDTOList = promotionService.findAll();
         List<String> nameProductList = productService.getDistinctProductNames();
+        StatisticsServiceImpl statisticsService = new StatisticsServiceImpl();
 
+        long inventoryQuantity = statisticsService.InventoryQuantity();
+        long totalAmount = statisticsService.totalAmount();
+        long quantityCompleted=statisticsService.getQuantityCompleted();
+        long totalMoth= statisticsService.totalMoth();
+        Map<Integer, Map<Integer, Long>> totalRevenueForLastFourYears = statisticsService.totalRevenueForLastFourYears();
 
+        req.setAttribute("totalMoth", totalMoth);
+        req.setAttribute("inventoryQuantity", inventoryQuantity);
+        req.setAttribute("totalAmount", totalAmount);
+        req.setAttribute("quantityCompleted", quantityCompleted);
         req.setAttribute("promotionDTOList", promotionDTOList);
         req.setAttribute("nameProductList", nameProductList);
+
+
+
+        // Chuyển đổi dữ liệu Map thành JSON
+        Gson gson = new Gson();
+        String jsonResponse = gson.toJson(totalRevenueForLastFourYears);
+
+
+
+        System.out.println("JSON Response: " + jsonResponse);
+
+        // Thiết lập response
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+        resp.getWriter().write(jsonResponse);
 
         // Truyền danh sách tài khoản vào request
         req.setAttribute("accounts", accounts);

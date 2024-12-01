@@ -5,7 +5,7 @@
   <!-- Thẻ thông tin -->
   <div class="cards">
     <div class="card">
-      <h2>1200</h2>
+      <h2><%= request.getAttribute("quantityCompleted")%></h2>
       <p>Tổng số đơn hàng hoàn thành </p>
     </div>
     <div class="card">
@@ -14,10 +14,10 @@
     </div>
     <div class="card">
       <h2><%= request.getAttribute("totalAmount") %></h2>
-      <p>Doanh thu </p>
+      <p>Tổng doanh thu</p>
     </div>
     <div class="card">
-      <h2>150 triệu VNĐ</h2>
+      <h2><%= request.getAttribute("totalMoth") %></h2>
       <p>Doanh thu tháng này</p>
     </div>
   </div>

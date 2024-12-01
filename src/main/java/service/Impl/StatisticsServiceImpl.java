@@ -5,6 +5,8 @@ import dao.Impl.PaymentDAOImpl;
 import dao.Impl.ProductDAOImpl;
 import service.IStatisticsService;
 
+import java.util.Map;
+
 public class StatisticsServiceImpl implements IStatisticsService {
     private final PaymentDAOImpl paymentDAO = new PaymentDAOImpl();
     private final ProductDAOImpl productDAO = new ProductDAOImpl();
@@ -22,6 +24,14 @@ public class StatisticsServiceImpl implements IStatisticsService {
     }
     public long getQuantityCompleted(){
         return order.quantityOrderCompleted();
+    }
+    public long totalMoth()
+    {
+        return paymentDAO.totalMonth();
+    }
+    public Map<Integer, Map<Integer, Long>> totalRevenueForLastFourYears()
+    {
+        return  paymentDAO.totalRevenueForLastFourYears();
     }
 
 

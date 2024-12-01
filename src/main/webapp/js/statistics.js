@@ -1,6 +1,32 @@
 const ctx = document.getElementById('myChart').getContext('2d');
 const horizontalCtx = document.getElementById('horizontalChart').getContext('2d');
 
+
+
+fetch('/JPAExample_war_exploded/Admin')
+    .then(response => response.json())  // Chuyển response thành JSON
+    .then(data => {
+        const dataByYear = {};
+
+        // Chuyển đổi dữ liệu từ backend thành cấu trúc mà bạn cần
+        for (const [year, months] of Object.entries(data)) {
+            // Khởi tạo mảng cho từng năm
+            dataByYear[year] = Array(12).fill(0);
+
+            // Lặp qua các tháng và cập nhật giá trị
+            for (const [month, total] of Object.entries(months)) {
+                dataByYear[year][month - 1] = total; // Trừ 1 vì mảng bắt đầu từ 0
+            }
+        }
+
+        // Kiểm tra kết quả
+        console.log(dataByYear); // In ra kết quả trong console
+    })
+    .catch(error => {
+        console.error('Error fetching total revenue data:', error);
+    });
+
+
 // Dữ liệu cho các năm
 const dataByYear = {
     2024: [50, 80, 65, 90, 40, 95, 100, 85, 75, 60, 70, 80],
