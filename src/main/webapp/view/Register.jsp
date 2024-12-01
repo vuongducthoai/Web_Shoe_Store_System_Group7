@@ -215,7 +215,7 @@
                 <div class="col-12 col-md-6 mb-4">
 
                   <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                    <label class="form-label" for="password">Password</label><span class="require">*</span>
+                    <label class="form-label" for="password">Mật khẩu</label><span class="require">*</span>
                     <input type="password" name="password" id="password" class="form-control" />
                     <span id="password-error" class="error-message">Mật khẩu phải có ít nhất 6 kí tự</span>
                   </div>
@@ -238,7 +238,7 @@
                 <div class="col-12 col-md-6 mb-2">
                   <div data-mdb-input-init class="form-outline flex-fill mb-0">
 
-                    <label class="form-label" for="re-password">Confirmation Password</label><span class="require">*</span>
+                    <label class="form-label" for="re-password">Nhập lại mật khẩu</label><span class="require">*</span>
                     <input name="re-password" type="password" id="re-password" class="form-control" name="re-password" />
                     <span id="re-password-error" class="error-message">Xác nhận mật khẩu là bắt buộc</span>
                   </div>

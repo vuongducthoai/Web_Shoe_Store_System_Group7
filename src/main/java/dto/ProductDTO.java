@@ -51,6 +51,7 @@ public class ProductDTO {
     private int productId;
     private String productName;
     private double price;
+    private double sellingPrice;
     private byte[] image;
     private String color;
     private int size;
