@@ -90,7 +90,15 @@ public class ProductInformationController extends HttpServlet {
                 System.out.println("RecommendProducts is null or empty.");
                 return;
             }
-
+//            List<PromotionProductDTO> listRecommendProductPromotion = new ArrayList<>();
+//            for(ProductDTO productDTO : RecommendProducts.keySet()) {
+//                promotionProductDTO = new PromotionProductDTO();
+//                promotionProductDTO = productPromotion.promotioOnProductInfo(productDTO.getProductName());
+//                listRecommendProductPromotion.add(promotionProductDTO);
+//            }
+//            if(!listRecommendProductPromotion.isEmpty()) {
+//                req.setAttribute("recommendProductsPromotion", listRecommendProductPromotion);
+//            }else  System.out.println("RecommendProductsPromotion is null or empty.");
             req.setAttribute("RecommendProducts", RecommendProducts);
 
             req.setAttribute("role", 1);
@@ -101,7 +109,6 @@ public class ProductInformationController extends HttpServlet {
             req.setAttribute("price", productDetails.getFirst().getPrice());
             req.setAttribute("name", productDetails.getFirst().getProductName());
             req.setAttribute("description", productDetails.getFirst().getDescription());
-
 
 
             ObjectMapper objectMapper = new ObjectMapper();
