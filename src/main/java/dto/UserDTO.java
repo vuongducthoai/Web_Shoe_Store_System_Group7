@@ -1,4 +1,5 @@
 package dto;
+import enums.RoleType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,13 @@ public class UserDTO {
         this.userID = userID;
         this.fullName = fullName;
         this.phone = phone;
+    }
+    public UserDTO(int userID , int accountId, RoleType role)
+    {
+        this.account.setAccountID(accountId);
+        this.account.setRole(role);
+        this.userID = userID;
+        this.account = account;
     }
 
 }

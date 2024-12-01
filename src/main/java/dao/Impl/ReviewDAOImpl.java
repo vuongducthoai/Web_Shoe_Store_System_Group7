@@ -13,13 +13,16 @@ public class ReviewDAOImpl implements IReviewDAO {
     public List<ReviewDTO> getReviewsByProductID(List<Integer> productIDs) {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
         try {
-
-
+            if (productIDs.isEmpty()) {
+                return new ArrayList<>();
+            }
             String productIDsString = productIDs.stream()
                     .map(String::valueOf)
                     .reduce((id1, id2) -> id1 + "," + id2)
                     .orElse("");
-            String sql = "SELECT  u.fullName, r.comment, r.ratingValue, r.date, res.userID, adminUser.fullName, res.content, res.timeStamp, r.reviewID, res.responseID,r.image " +
+
+
+            String sql = "SELECT  u.fullName, r.comment, r.ratingValue, r.date, res.userID, adminUser.fullName, res.content, res.timeStamp, r.reviewID, res.responseID,r.image,p.status " +
                     "FROM Review r " +
                     "JOIN Product p ON r.productID = p.productID " +
                     "JOIN User u ON r.userID = u.userID " +

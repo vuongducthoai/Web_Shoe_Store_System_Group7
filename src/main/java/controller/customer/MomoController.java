@@ -1,10 +1,7 @@
 package controller.customer;
 
 import ThirdParty.Momo.Momo;
-import dto.AccountDTO;
-import dto.AddressDTO;
-import dto.CartItemDTO;
-import dto.ProductDTO;
+import dto.*;
 import enums.RoleType;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -39,13 +36,13 @@ public class MomoController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getServletPath();
         HttpSession session = req.getSession();
-        AccountDTO accountDTO = (AccountDTO) session.getAttribute("user");
-        if (accountDTO==null || accountDTO.getUser()==null||!accountDTO.getUser().isActive()){
+        UserDTO userDTO = (UserDTO) session.getAttribute("user");
+        if (userDTO==null ||!userDTO.isActive()){
             session.invalidate();
             resp.sendRedirect("/view/login.jsp");
             return;
         }
-        if (accountDTO.getRole()== RoleType.ADMIN){
+        if (userDTO.getAccount().getRole()== RoleType.ADMIN){
             return;
         }
         switch (path) {
@@ -61,13 +58,13 @@ public class MomoController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getServletPath();
         HttpSession session = req.getSession();
-        AccountDTO accountDTO = (AccountDTO) session.getAttribute("user");
-        if (accountDTO==null || accountDTO.getUser()==null||!accountDTO.getUser().isActive()){
+        UserDTO userDTO = (UserDTO) session.getAttribute("user");
+        if (userDTO==null || !userDTO.isActive()){
             session.invalidate();
             resp.sendRedirect("/view/login.jsp");
             return;
         }
-        if (accountDTO.getRole()== RoleType.ADMIN){
+        if (userDTO.getAccount().getRole()== RoleType.ADMIN){
             return;
         }
         switch (path) {
@@ -80,10 +77,6 @@ public class MomoController extends HttpServlet {
     }
 
     protected void Callback(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession session = req.getSession();
-        AccountDTO accountDTO = (AccountDTO) session.getAttribute("user");
-        int idUser = accountDTO.getUser().getUserID();
-        AddressDTO addressDTO = addressService.getAddressByID(idUser);
         String orderId = req.getParameter("orderId");
         String requestId = req.getParameter("requestId");
         String partnerCode = req.getParameter("partnerCode");
@@ -127,12 +120,12 @@ public class MomoController extends HttpServlet {
 
     protected void Momo_pay(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        AccountDTO accountDTO = (AccountDTO) session.getAttribute("user");
-        int idUser = accountDTO.getUser().getUserID();
+        UserDTO userDTO = (UserDTO) session.getAttribute("user");
+        int idUser = userDTO.getUserID();
         AddressDTO addressDTO = addressService.getAddressByID(idUser);
         if (addressDTO== null){
             req.setAttribute("errCode",1);
-            req.setAttribute("message","Unable to get shipping address, Please update personal information");
+            req.setAttribute("message","Không thể lấy được địa chỉ giao hàng, vui lòng cập nhật thông tin cá nhân");
             cartController.Load_Cart_View(req,resp);
             getServletContext().getRequestDispatcher("/view/customer/cart.jsp").forward(req, resp);
             return;
@@ -140,8 +133,12 @@ public class MomoController extends HttpServlet {
         String cartItemJson = req.getParameter("cartItem");
         String decodedCartJson = URLDecoder.decode(cartItemJson, StandardCharsets.UTF_8.toString());
         double Total = Double.parseDouble(req.getParameter("Total"));
+        double Discount = Double.parseDouble(req.getParameter("Discount"));
+        double FeeShip = Double.parseDouble(req.getParameter("feeShip"));
         JSONArray jsonArray = new JSONArray(decodedCartJson);
         int total = (int) Total;
+        int discount = (int) Discount;
+        int feeShip = (int) FeeShip;
         if (!jsonArray.isEmpty()) {
             List<CartItemDTO> items = new ArrayList<CartItemDTO>();
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -160,7 +157,7 @@ public class MomoController extends HttpServlet {
                 getServletContext().getRequestDispatcher("/view/customer/cart.jsp").forward(req, resp);
                 return;
             }
-            HttpResponse<String> response = momo.CallApi(items, idUser, total);
+            HttpResponse<String> response = momo.CallApi(items, idUser, total,discount,feeShip);
             System.out.println(response);
             if (response.statusCode() == 200) {
                 JSONObject jsonKQ = new JSONObject((response.body()));
@@ -168,14 +165,14 @@ public class MomoController extends HttpServlet {
                     resp.sendRedirect(jsonKQ.getString("shortLink"));
             } else {
                 req.setAttribute("errCode",1);
-                req.setAttribute("message","Payment method is error. Please try again later.");
+                req.setAttribute("message","Phương thức thanh toán đang bị lỗi. Vui lòng thử lại sau.");
                 cartController.Load_Cart_View(req,resp);
                 getServletContext().getRequestDispatcher("/view/customer/cart.jsp").forward(req, resp);
             }
         }
         else {
             req.setAttribute("errCode",1);
-            req.setAttribute("message","Must have items in cart");
+            req.setAttribute("message","Phải có mặt hàng trong giỏ hàng");
             cartController.Load_Cart_View(req,resp);
             getServletContext().getRequestDispatcher("/view/customer/cart.jsp").forward(req, resp);
         }

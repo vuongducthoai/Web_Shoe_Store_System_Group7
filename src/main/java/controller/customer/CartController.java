@@ -4,6 +4,7 @@ import JpaConfig.JpaConfig;
 import dto.AccountDTO;
 import dto.CartItemDTO;
 import dto.PromotionDTO;
+import dto.UserDTO;
 import entity.Cart;
 import entity.CartItem;
 import entity.Customer;
@@ -48,14 +49,14 @@ public class CartController extends HttpServlet {
             return;
         }
         HttpSession session = req.getSession();
-        AccountDTO accountDTO = (AccountDTO) session.getAttribute("user");
-        if (accountDTO==null || accountDTO.getUser()==null||!accountDTO.getUser().isActive()){
+        UserDTO userDTO = (UserDTO) session.getAttribute("user");
+        if (userDTO==null ||!userDTO.isActive()){
             // Xóa session
             session.invalidate();
             resp.sendRedirect("/view/login.jsp");
             return;
         }
-        if (accountDTO.getRole()== RoleType.ADMIN){
+        if (userDTO.getAccount().getRole()== RoleType.ADMIN){
             return;
         }
         switch (path){
@@ -76,22 +77,23 @@ public class CartController extends HttpServlet {
         switch (path){
             case "/Cart":
                 Cart_View(req, resp);
-                break;
+                return;
             case "/Count":
                 Count(req, resp);
-                break;
+                return;
             case "/AddCartQuantity":
                 Cart_Add_Quantity(req,resp);
-                break;
+                return;
         }
         HttpSession session = req.getSession();
-        AccountDTO accountDTO = (AccountDTO) session.getAttribute("user");
-        if (accountDTO==null || accountDTO.getUser()==null||!accountDTO.getUser().isActive()){
+        UserDTO userDTO = (UserDTO) session.getAttribute("user");
+        if (userDTO==null ||!userDTO.isActive()){
+            // Xóa session
             session.invalidate();
             resp.sendRedirect("/view/login.jsp");
             return;
         }
-        if (accountDTO.getRole()== RoleType.ADMIN){
+        if (userDTO.getAccount().getRole()== RoleType.ADMIN){
             return;
         }
         switch (path){
@@ -111,24 +113,31 @@ public class CartController extends HttpServlet {
     public void Count(HttpServletRequest req,HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
-        HttpSession session = req.getSession();
-        AccountDTO accountDTO = (AccountDTO) session.getAttribute("user");
-        if (accountDTO==null || accountDTO.getUser()==null||!accountDTO.getUser().isActive()){
+        try {
+            HttpSession session = req.getSession();
+            UserDTO userDTO = (UserDTO) session.getAttribute("user");
+            if (userDTO == null || !userDTO.isActive()) {
+                JSONObject json = new JSONObject();
+                json.put("quantityItemCart", 0);
+                resp.getWriter().println(json.toString());
+                return;
+            }
+            int idUser = userDTO.getUserID();
+            int quantity = iCartService.CountQuantityCartItem(idUser);
             JSONObject json = new JSONObject();
-            json.put("quantityItemCart",0);
+            json.put("quantityItemCart", quantity);
+            resp.getWriter().println(json.toString());
+        } catch (Exception e) {
+            JSONObject json = new JSONObject();
+            json.put("quantityItemCart", 0);
             resp.getWriter().println(json.toString());
             return;
         }
-        int idUser = accountDTO.getUser().getUserID();
-        int quantity = iCartService.CountQuantityCartItem(idUser);
-        JSONObject json = new JSONObject();
-        json.put("quantityItemCart",quantity);
-        resp.getWriter().println(json.toString());
     }
     public void Load_Cart_View(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        AccountDTO accountDTO = (AccountDTO) session.getAttribute("user");
-        int idUser = accountDTO.getUser().getUserID();
+        UserDTO userDTO = (UserDTO) session.getAttribute("user");
+        int idUser = userDTO.getUserID();
         int idPromotion = -1;
         try{
             idPromotion = Integer.parseInt(req.getParameter("idPr"));
@@ -163,8 +172,8 @@ public class CartController extends HttpServlet {
     private void Add_Cart(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int idProduct = Integer.parseInt(req.getParameter("idProduct"));
         HttpSession session = req.getSession();
-        AccountDTO accountDTO = (AccountDTO) session.getAttribute("user");
-        int idUser = accountDTO.getUser().getUserID();
+        UserDTO userDTO = (UserDTO) session.getAttribute("user");
+        int idUser = userDTO.getUserID();
         Cart_Add(req,resp,idUser,idProduct,"Thêm hàng thành công","Không đủ hàng trong kho");
         Load_Cart_View(req,resp);
         req.getRequestDispatcher("/view/customer/cart.jsp").forward(req, resp);
@@ -211,14 +220,14 @@ public class CartController extends HttpServlet {
             return;
         }
         HttpSession session = req.getSession();
-        AccountDTO accountDTO = (AccountDTO) session.getAttribute("user");
-        if (accountDTO==null || accountDTO.getUser()==null||!accountDTO.getUser().isActive()){
+        UserDTO userDTO = (UserDTO) session.getAttribute("user");
+        if (userDTO==null || !userDTO.isActive()){
             json.put("errCode",2);
             json.put("message","Không có quyền truy cập");
             resp.getWriter().println(json.toString());
             return;
         }
-        int idUser = accountDTO.getUser().getUserID();
+        int idUser = userDTO.getUserID();
         if (iCartService.AddItemWithQuantity(idProduct,idUser,quantity)) {
             json.put("errCode",0);
             json.put("message","Thêm thành công");

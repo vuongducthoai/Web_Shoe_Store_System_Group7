@@ -6,7 +6,9 @@ import dao.Impl.ReviewDAOImpl;
 import dto.ReviewDTO;
 import service.IReviewService;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.List;
+import java.util.Locale;
 
 public class ReviewServiceImpl implements IReviewService {
     private IReviewDAO reviewDAO = new ReviewDAOImpl();
@@ -32,7 +34,8 @@ public class ReviewServiceImpl implements IReviewService {
         }
 
         // Định dạng giá trị trung bình với 2 chữ số sau dấu thập phân
-        DecimalFormat df = new DecimalFormat("#.00");
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
+        DecimalFormat df = new DecimalFormat("#.00",symbols);
         return Double.parseDouble(df.format(avg));  // Trả về giá trị dưới dạng số double với 2 chữ số sau dấu thập phân
     }
 }

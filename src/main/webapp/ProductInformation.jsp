@@ -13,6 +13,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
 <body>
+<div id="custom-toast"></div>
 <header>
     <jsp:include page="./view/header.jsp"></jsp:include>
 </header>
@@ -30,6 +31,59 @@
                         </c:forEach>
                     </div>
                     <img src="${images[0]}" alt="" class="product-image-focus col-sm-9 img-fluid rounded-4">
+<%--                    <div id="demo" class="carousel slide" data-bs-ride="carousel">--%>
+<%--                        <!-- Indicators/dots -->--%>
+<%--                        <div class="carousel-indicators" id="carousel-indicators"></div>--%>
+
+<%--                        <!-- The slideshow/carousel -->--%>
+<%--                        <div class="carousel-inner" id="carousel-inner"></div>--%>
+
+<%--                        <!-- Left and right controls/icons -->--%>
+<%--                        <button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev">--%>
+<%--                            <span class="carousel-control-prev-icon"></span>--%>
+<%--                        </button>--%>
+<%--                        <button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next">--%>
+<%--                            <span class="carousel-control-next-icon"></span>--%>
+<%--                        </button>--%>
+<%--                    </div>--%>
+<%--                    <script>--%>
+<%--                        // Hàm để lấy danh sách ảnh từ servlet--%>
+<%--                        fetch('/product/details') // Thay URL_CỦA_SERVLET bằng đường dẫn thực tế tới servlet của bạn--%>
+<%--                            .then(response => response.json()) // Chuyển đổi phản hồi thành JSON--%>
+<%--                            .then(images => {--%>
+<%--                                // Lấy các phần tử carousel-inner và carousel-indicators--%>
+<%--                                const carouselInner = document.getElementById('carousel-inner');--%>
+<%--                                const carouselIndicators = document.getElementById('carousel-indicators');--%>
+
+<%--                                // Lặp qua danh sách ảnh và tạo các item và indicator cho carousel--%>
+<%--                                images.forEach((src, index) => {--%>
+<%--                                    // Tạo phần tử carousel-item--%>
+<%--                                    const carouselItem = document.createElement('div');--%>
+<%--                                    carouselItem.classList.add('carousel-item');--%>
+<%--                                    if (index === 0) carouselItem.classList.add('active'); // Đặt phần tử đầu tiên là active--%>
+
+<%--                                    const img = document.createElement('img');--%>
+<%--                                    img.src = src;--%>
+<%--                                    img.alt = `Slide ${index + 1}`;--%>
+<%--                                    img.classList.add('d-block');--%>
+<%--                                    img.style.width = "100%";--%>
+
+<%--                                    carouselItem.appendChild(img);--%>
+<%--                                    carouselInner.appendChild(carouselItem);--%>
+
+<%--                                    // Tạo phần tử indicator--%>
+<%--                                    const indicator = document.createElement('button');--%>
+<%--                                    indicator.type = "button";--%>
+<%--                                    indicator.setAttribute('data-bs-target', '#demo');--%>
+<%--                                    indicator.setAttribute('data-bs-slide-to', index);--%>
+<%--                                    if (index === 0) indicator.classList.add('active');--%>
+
+<%--                                    carouselIndicators.appendChild(indicator);--%>
+<%--                                });--%>
+<%--                            })--%>
+<%--                            .catch(error => console.error('Error loading images:', error));--%>
+
+<%--                    </script>--%>
                 </div>
 
 
@@ -436,6 +490,9 @@
 
                                 </div>
                                 <span class="current-price fw-bold fs-4">${recomendProduct.key.price}đ</span>
+<%--                                <span class="old-price fs-4 ms-4">$350</span>--%>
+<%--                                <span--%>
+<%--                                        class="product-badge badge bg-danger rounded-pill align-items-center ms-3">-40%</span>--%>
                             </div>
                         </div>
                     </a>
@@ -454,8 +511,7 @@
     const productDetails = JSON.parse('${productDetails}');
     console.log("Product Details:", productDetails);
 </script>
-<script src="${pageContext.request.contextPath}/js/toastMessage.js"></script>
+<%--<script src="${pageContext.request.contextPath}/js/toastMessage.js"></script>--%>
 <script src="${pageContext.request.contextPath}/js/ProductInformation.js"></script>
-
 </body>
 </html>

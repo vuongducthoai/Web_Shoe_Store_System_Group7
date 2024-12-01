@@ -33,27 +33,41 @@ public class HomeController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getServletPath();
         if(path.equals("/home")) {
+
+            //Load Category
             List<CategoryDTO> categoryDTOList = categoryService.listCategory();
             req.setAttribute("categoryDTOList", categoryDTOList);
+
+            //Load Product
             List<ProductDTO> productDTOList = productService.findAllWithPagination(0 ,8);
             req.setAttribute("productDTOList", productDTOList);
 
+
+            //Load Review
             List<ReviewDTO> reviewDTOList = reviewService.getTop5Reviews();
             req.setAttribute("reviewDTOList", reviewDTOList);
 
 
 
-//        LocalDate endDate= LocalDate.now();
-//    LocalDate startDate  = LocalDate.now().minusDays(7);
 
-//
-//            LocalDate startDate = LocalDate.parse("2022-01-06");
-//            LocalDate endDate = LocalDate.parse("2023-11-25");
-            LocalDate startDate = LocalDate.parse("2023-05-30");
-            LocalDate endDate = LocalDate.parse("2023-06-29");
-           List<PromotionProductDTO> promotionProductDTOList = productPromotion.findTop5ProductPromotionNow(startDate, endDate);
+            //Load Promotion
+            LocalDate startDate = LocalDate.parse("2024-01-20");
+            LocalDate endDate = LocalDate.parse("2025-12-30");
+            int limit = 8;
+            int index = 1;
+            int num = productPromotion.countProductPromotion(startDate, endDate);
+            int numpage = num / limit;   //So luong trang
+            int num2 = num % limit;
+
+            if(num != 0 && num2 != 0){
+                numpage++;
+            }
+
+
+
+           List<PromotionProductDTO> promotionProductDTOList = productPromotion.findTop8ProductPromotionNow(startDate, endDate, index - 1, limit);
            req.setAttribute("promotionProductDTOList", promotionProductDTOList);
-
+           req.setAttribute("numpage", numpage); // So luong trang
             req.getRequestDispatcher("./index.jsp").forward(req, resp);
         } else if(path.equals("/sign-in")) {
             resp.sendRedirect("/view/login.jsp");

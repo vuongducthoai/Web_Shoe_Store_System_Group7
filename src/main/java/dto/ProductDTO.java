@@ -51,6 +51,7 @@ public class ProductDTO {
     private int productId;
     private String productName;
     private double price;
+    private double sellingPrice;
     private byte[] image;
     private String color;
     private int size;
@@ -63,6 +64,7 @@ public class ProductDTO {
     private List<PromotionProductDTO> promotionProducts;
     private int quantity;
     private ReviewDTO reviewDTO;
+    private String imageBase64;
     public String getBase64Image() {
         if (image != null) {
             return "data:image/png;base64," + Base64.getEncoder().encodeToString(image);
