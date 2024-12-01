@@ -21,7 +21,7 @@ public class Paging extends HttpServlet {
         //Load Promotion
         LocalDate startDate = LocalDate.parse("2024-01-20");
         LocalDate endDate = LocalDate.parse("2025-12-30");
-        int page = 4;
+        int page = 8;
         int index = 1;
         int num = productPromotion.countProductPromotion(startDate, endDate);
         int numpage = num / page;   //So luong trang
@@ -32,6 +32,7 @@ public class Paging extends HttpServlet {
             numpage++;
         }
 
+        System.out.println("index: " + index);
 
         try {
             index = Integer.parseInt(req.getParameter("index"));

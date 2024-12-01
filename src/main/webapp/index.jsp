@@ -135,14 +135,14 @@
 <jsp:include page="./view/slider.jsp"></jsp:include>
 <!-- arrival section-->
 <section class="container arrival">
-    <div class="section-heading">
+    <div class="section-heading" style="padding: 0; margin-bottom: 20px; color: orange">
         <div class="heading">
-            <h2 class="heading-two">Sản phẩm<span>Khuyến Mãi</span> </h2>
+            <h2 class="heading-two" style="color: orangered">FLASH SALE</h2>
         </div>
     </div>
-    <div class="wrapper" style="gap: 70px">
+    <div class="wrapper" style="flex-wrap: wrap">
         <c:forEach var="promotionProduct" items="${promotionProductDTOList}">
-            <div class="product" style="position: relative;">
+            <div class="product" style="position: relative; flex: 0 0 23%; max-width: 25%">
                 <div class="product-image">
                     <figure><img src="${promotionProduct.product.getBase64Image()}" alt="Foundation"></figure>
                 </div>
