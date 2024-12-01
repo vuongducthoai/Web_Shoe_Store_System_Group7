@@ -36,40 +36,18 @@
     <div id="totalSize" totalSize="${totalSize}"></div>
     <div id="searchName" searchName="${searchName}"></div>
 
-    <header class="flex items-center justify-between p-4 border-b border-gray-200">
-        <div class="flex items-center space-x-4">
-            <div class="text-2xl font-bold">
-                SHOP.CO
-            </div>
-            <nav class="hidden md:flex space-x-4">
-                <a class="text-gray-600 hover:text-black" href="#">
-                    Shop
-                </a>
-                <a class="text-gray-600 hover:text-black" href="#">
-                    On Sale
-                </a>
-                <a class="text-gray-600 hover:text-black" href="#">
-                    New Arrivals
-                </a>
-                <a class="text-gray-600 hover:text-black" href="#">
-                    Brands
-                </a>
-            </nav>
-        </div>
-        <div class="flex items-center space-x-4 mb-6">
+    <header>
+        <jsp:include page="/view/header.jsp"></jsp:include>
+    </header>
+
+    <main class="container mx-auto px-4 py-0" style="margin-top: 40px;">
+        <div style="display: flex; justify-content: flex-end; padding: 8px 0;">
             <div class="relative">
                 <input class="border rounded-full px-4 py-2 w-64 pl-10" placeholder="Tìm kiếm sản phẩm..." type="text" />
                 <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"></i>
                 <ul id="suggestionsList" class="suggestions-list"></ul>
             </div>
-
-
-            <i class="fas fa-shopping-cart text-xl text-gray-700"></i>
-            <i class="fas fa-user-circle text-xl text-gray-700"></i>
         </div>
-    </header>
-
-    <main class="container mx-auto px-4 py-8">
         <div class="flex">
             <aside class="w-1/4 pr-8">
                 <c:if test="${not empty promotions}">
@@ -220,6 +198,9 @@
             </section>
         </div>
     </main>
+    <footer>
+        <jsp:include page="/view/footer.jsp"></jsp:include>
+    </footer>
 </body>
 
 </html>

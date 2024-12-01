@@ -35,6 +35,7 @@ public class ListProductController extends HttpServlet {
 
         if (cartItemDTOList == null) {
             cartItemDTOList = categoryService.findAllCategories();
+//            cartItemDTOList = new ArrayList<>();
         }
 
         // Lấy dữ liệu ban đầu
