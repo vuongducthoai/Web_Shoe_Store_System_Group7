@@ -5,10 +5,13 @@ import JpaConfig.JpaConfig;
 import dao.IOrderDao;
 import dto.*;
 import entity.*;
+import enums.AuthProvider;
 import enums.OrderStatus;
 import enums.PaymentMethod;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import service.GmailService;
+import service.Impl.GmailServiceImpl;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -16,10 +19,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class OrderImpl implements IOrderDao {
-    public boolean CreateOrder(OrderDTO order){
+    GmailService gmail_Service = new GmailServiceImpl();
+    public boolean CreateOrder(OrderDTO order,int amount, int discount, int feeShip,String orderId){
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
@@ -49,6 +54,10 @@ public class OrderImpl implements IOrderDao {
                     OrderItem orderItem = new OrderItem();
                     Product productTWP = entityManager.find(Product.class,item.getProductDTO().getProductId());
                     //
+                    item.setProductDTO(new ProductDTO());
+                    item.getProductDTO().setProductName(productTWP.getProductName());
+                    item.getProductDTO().setImage(productTWP.getImage());
+                    item.getProductDTO().setPrice(productTWP.getPrice());
                     List<CartItem> listCartItem = entityManager.createQuery("Select c " +
                                     "from CartItem c Where c.product.productName like :name " +
                                     "and c.product.color like :color and c.product.size = :size " +
@@ -127,6 +136,25 @@ public class OrderImpl implements IOrderDao {
                         .getSingleResult();
                 long loyati = Math.round(loyatiDouble);
                 customer.setLoyalty((int)loyati);
+                String finalAddress = address;
+                List<String> resultList = entityManager.createQuery("select a.email from Account a where a.user.userID = :userID " +
+                                "and a.authProvider not like :auth")
+                        .setParameter("userID", order.getCustomer().getUserID())
+                        .setParameter("auth", AuthProvider.FACEBOOK)
+                        .getResultList();
+
+                String gmail = resultList.isEmpty() ? null : resultList.get(0);
+                if (gmail.length()>0) {
+                    CompletableFuture.runAsync(() -> {
+                        try {
+                            // Gọi phương thức gửi email
+                            gmail_Service.sendGmailBill(order, amount, discount, feeShip, finalAddress,gmail,orderId);
+                        } catch (Exception e) {
+                            // Xử lý lỗi nếu cần
+                            e.printStackTrace();
+                        }
+                    });
+                }
             }
             transaction.commit();
         } catch (Exception e) {

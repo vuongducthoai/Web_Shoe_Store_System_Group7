@@ -227,6 +227,8 @@
                 <form action="/Momo_pay" method="post">
                     <input type="text" name="cartItem" value="${JsonCart}" hidden="hidden">
                     <input type="text" name="Total" value="${Sum}" hidden="hidden">
+                    <input type="text" name="Discount" value="${discount}" hidden="hidden">
+                    <input type="text" name="feeShip" value="${feeShip}" hidden="hidden">
                     <button class="btn btn-dark w-100">
                         Tiến hành thanh toán
                         <i class="fas fa-arrow-right">
