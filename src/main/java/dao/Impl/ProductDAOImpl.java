@@ -326,7 +326,7 @@ public class ProductDAOImpl implements IProductDAO {
         try {
             // JPQL truy vấn các sản phẩm cùng CategoryID nhưng khác tên
             String jpql = "SELECT DISTINCT p FROM Product p WHERE p.category.categoryID = :categoryID " +
-                    "AND p.productName <> :currentProductName";
+                    "AND p.productName <> :currentProductName and p.status = true";
 
             TypedQuery<Product> query = entityManager.createQuery(jpql, Product.class);
             query.setParameter("categoryID", categoryID);
