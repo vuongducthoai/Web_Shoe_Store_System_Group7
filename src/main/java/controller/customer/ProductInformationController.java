@@ -34,8 +34,9 @@ public class ProductInformationController extends HttpServlet {
     private IProductPromotion productPromotion = new ProductPromotionImpl();
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         String productName = req.getParameter("productName");
+        System.out.print("lllllllllll: " + productName);
         if (productName == null || productName.trim().isEmpty()) {
-            req.setAttribute("error", "Tên sản phẩm không hợp lệ.");
+            System.out.print("Ten sp khong hop le");
             return;
         }
 
