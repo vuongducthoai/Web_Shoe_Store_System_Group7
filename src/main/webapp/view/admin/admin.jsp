@@ -8,6 +8,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/promotionStyle.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/statistics.css">
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
@@ -92,6 +93,7 @@
                 <li><a href="#" id="account-management-btn">Quản lý tài khoản khách hàng</a></li>
                 <li><a href="#" id="order-management-btn">Quản lý đơn hàng</a></li>
                 <li><a href="#" id="promotion-management-btn">Quản lý khuyến mãi</a></li>
+                <li><a href="#" id="statistics-management-btn">Thống kê</a></li>
             </ul>
         </aside>
         <section class="main-panel" id="panel">
@@ -559,12 +561,17 @@
 
                         </div>
             </div>
+            <div class="statistics-management" id="statistics-management">
+                <div>   <jsp:include page="statistics.jsp" />  </div>
+            </div>
         </section>
     </div>
 </div>
 
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/promotion.js" defer></script>
 <script src="${pageContext.request.contextPath}/js/admin.js"></script>
+<script type="text/javascript"
+        src="${pageContext.request.contextPath}/js/statistics.js" defer></script>
 </body>
 
 

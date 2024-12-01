@@ -17,8 +17,8 @@ h1 {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 20%;
+    height: 20%;
     background-color: rgba(0, 0, 0, 0.5);
     justify-content: center;
     align-items: center;
@@ -49,6 +49,7 @@ h1 {
 }
 .modal-content.error {
     border-left: black;
+    width: 20%;
 }
 /* Container */
 .promotions-container, .vouchers-container {

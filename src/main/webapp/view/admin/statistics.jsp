@@ -1,15 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Biểu đồ và Thống kê</title>
-  <!-- Liên kết với file CSS -->
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/statistics.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <div class="container">
   <!-- Thẻ thông tin -->
@@ -32,7 +22,7 @@
     </div>
   </div>
 
-  <!-- Biểu đồ -->
+  <!-- Biểu đồ doanh thu -->
   <div class="charts">
     <div class="chart-container">
       <select id="year-select" onchange="updateChartData()">
@@ -43,14 +33,13 @@
       <canvas id="myChart"></canvas>
     </div>
 
+    <!-- Biểu đồ top 10 sản phẩm bán chạy -->
     <div class="horizontal-chart-container">
       <h3 style="text-align: center;">Top 10 Sản phẩm bán chạy</h3>
       <canvas id="horizontalChart"></canvas>
     </div>
   </div>
 </div>
-
-
 
 <div class="top-customers">
   <h3 style="text-align: center;">Top 10 Khách hàng tiềm năng nhất</h3>
@@ -68,10 +57,3 @@
     </tbody>
   </table>
 </div>
-
-<!-- Liên kết với file JavaScript -->
-<script type="text/javascript"
-        src="${pageContext.request.contextPath}/js/statistics.js" defer></script>
-
-</body>
-</html>

@@ -126,7 +126,6 @@ nav a.active::after, nav a:hover::after {
 
     /* padding-right: 100px; */
 }
-
 #manage-products-btn:hover,
 #manage-categrories-btn:hover,
 #account-management-btn:hover,
@@ -134,7 +133,7 @@ nav a.active::after, nav a:hover::after {
 #promotion-management-btn:hover {
     opacity: 0.4;
 }
-
+#statistics-management-btn,
 #manage-products-btn,
 #account-management-btn,
 #manage-categrories-btn,
@@ -145,7 +144,7 @@ nav a.active::after, nav a:hover::after {
 }
 
 .main-panel {
-    width: 75%; /* Chiếm phần còn lại của màn hình */
+    width: 120%; /* Chiếm phần còn lại của màn hình */
     padding: 20px;
     box-sizing: border-box;
     overflow-y: auto;
@@ -162,7 +161,9 @@ nav a.active::after, nav a:hover::after {
 .product-management{
     display: none;
 }
-
+.statistics-management{
+    display: none;
+}
 .title {
     font-size: 24px;
     font-weight: bold;

@@ -8,10 +8,11 @@ var categoryManagement = document.getElementById("category-management");
 var accountManagement = document.getElementById("account-management");
 var orderManagement =document.getElementById("order-management");
 var promotionManagement =document.getElementById("promotion-management")
+var statisticsManagement =document.getElementById("statistics-management")
 // Lắng nghe sự kiện khi người dùng click vào "Quản lý sản phẩm"
 document.getElementById("manage-products-btn").addEventListener("click", function (event) {
 
-
+    statisticsManagement.style.display="none";
     banner.style.display = "none";
     productManagement.style.display = "block";
     accountManagement.style.display = "none";
@@ -62,6 +63,7 @@ document.getElementById("manage-categrories-btn").addEventListener("click", func
     productManagement.style.display = "none";
     orderManagement.style.display="none";
     promotionManagement.style.display="none";
+    statisticsManagement.style.display="none";
 
 
 
@@ -110,6 +112,7 @@ document.getElementById("account-management-btn").addEventListener("click", func
     orderManagement.style.display="none";
     categoryManagement.style.display="none";
     promotionManagement.style.display="none";
+    statisticsManagement.style.display="none";
 
 
 
@@ -165,7 +168,7 @@ document.getElementById("order-management-btn").addEventListener("click", functi
     orderManagement.style.display="block";
     categoryManagement.style.display="none";
     promotionManagement.style.display="none";
-
+    statisticsManagement.style.display="none";
 
 
 
@@ -227,42 +230,6 @@ function viewHistory(button) {
 
 
 // Quản lý khuyến mãi
-function showSection(section) {
-    const promotionsContainer = document.getElementById('promotions-container');
-    const vouchersContainer = document.getElementById('vouchers-container');
-
-
-    if (section === 'promotions') {
-        promotionsContainer.style.display = 'block';
-        vouchersContainer.style.display = 'none';
-    } else {
-        promotionsContainer.style.display = 'none';
-        vouchersContainer.style.display = 'block';
-    }
-}
-showSection('promotions');
-function toggleForm() {
-    const overlay = document.getElementById('overlay');
-    overlay.style.display = overlay.style.display === 'flex' ? 'none' : 'flex';
-}
-
-
-// Thêm sự kiện cho nút Add Promotion
-document.querySelector('.add-promotion-btn').addEventListener('click', toggleForm);
-function toggleDropdown() {
-    const dropdownMenu = document.querySelector('.dropdown-menu');
-    dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
-}
-
-
-// Close the dropdown if clicked outside
-document.addEventListener('click', function(event) {
-    const dropdownButton = document.querySelector('.dropdown-button');
-    const dropdownMenu = document.querySelector('.dropdown-menu');
-    if (!dropdownButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
-        dropdownMenu.style.display = 'none';
-    }
-});
 
 
 // Function to handle form submission and display selected products
@@ -274,7 +241,20 @@ document.getElementById("promotion-management-btn").addEventListener("click", fu
     accountManagement.style.display ="none";
     orderManagement.style.display="none";
     categoryManagement.style.display="none";
+    statisticsManagement.style.display="none";
     promotionManagement.style.display="block";
+
+
+});
+document.getElementById("statistics-management-btn").addEventListener("click", function(event) {
+    banner.style.display = "none";
+    productManagement.style.display = "none";
+    accountManagement.style.display ="none";
+    orderManagement.style.display="none";
+    categoryManagement.style.display="none";
+    promotionManagement.style.display="none";
+    statisticsManagement.style.display="block";
+
 
 
 });
