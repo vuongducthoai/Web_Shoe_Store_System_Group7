@@ -4,10 +4,13 @@ import JpaConfig.JPAConfig;
 import dao.ICategoryDao;
 import dto.*;
 import entity.*;
+import enums.DiscountType;
+import enums.PromotionType;
 import jakarta.persistence.EntityManager;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class CategoryDaoImpl implements ICategoryDao {
     @Override
@@ -17,18 +20,18 @@ public class CategoryDaoImpl implements ICategoryDao {
                 // Truy vấn tất cả danh mục và sản phẩm liên quan
                 List<Category> categories = entityManager.createQuery(
                                 "SELECT c FROM Category c LEFT JOIN FETCH c.products", Category.class)
-                    .getResultList();
+                        .getResultList();
 
                 // Ánh xạ từ Category sang CategoryDTO
                 return categories.stream()
-                    .map(category -> new CategoryDTO(
-                        category.getCategoryID(),
-                        category.getCategoryName(),
-                        category.getProducts().stream()
-                            .map(Product::toDTO)  // Sử dụng phương thức riêng cho việc ánh xạ sản phẩm
-                            .collect(Collectors.toList())
-                    ))
-                    .collect(Collectors.toList());
+                        .map(category -> new CategoryDTO(
+                                category.getCategoryID(),
+                                category.getCategoryName(),
+                                category.getProducts().stream()
+                                        .map(Product::toDTO)  // Sử dụng phương thức riêng cho việc ánh xạ sản phẩm
+                                        .collect(Collectors.toList())
+                        ))
+                        .collect(Collectors.toList());
             } finally {
                 entityManager.close();
             }

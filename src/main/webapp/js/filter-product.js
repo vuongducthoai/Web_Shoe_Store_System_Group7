@@ -378,12 +378,21 @@ function renderProductList(products) {
     container.innerHTML = ''; // Xóa nội dung cũ
     const MAX_STARS = 5; // Số sao tối đa
     let promotionMessage = '';
+    const addedProductNames = new Set();
 
     // Lặp qua từng sản phẩm và tạo HTML
     products.forEach(product => {
         if (product.status === false){
             return;
         }
+        // Kiểm tra nếu tên sản phẩm đã có trong Set, thì bỏ qua
+        if (addedProductNames.has(product.productName)) {
+            return;
+        }
+
+        // Thêm tên sản phẩm vào Set để tránh trùng lặp
+        addedProductNames.add(product.productName);
+
         const averageRating = calculateAverageRating(products, product.productName);
 
         // Kiểm tra xem trung bình có phải là số nguyên không
@@ -459,7 +468,9 @@ function renderProductList(products) {
         const soldQuantity = soldQuantityMap[product.productName];
 
         const productHTML = `
-            <div class="bg-white p-4 rounded-lg shadow-sm mb-6 border border-gray-200">
+            <div class="bg-white p-4 rounded-lg shadow-sm mb-6 border border-gray-200"
+                 onmouseover="this.style.cursor='pointer';"
+                onclick="handleProductClick('${product.id}')">
 
                 <img alt="${product.productName}"
                      class="w-full h-64 object-cover mb-4" height="320"
@@ -493,6 +504,12 @@ function renderProductList(products) {
         `;
         container.insertAdjacentHTML('beforeend', productHTML); // Thêm HTML vào container
     });
+}
+
+function handleProductClick(productId) {
+    console.log(`Product clicked: ${productId}`);
+    // Thực hiện logic xử lý, ví dụ chuyển hướng hoặc hiển thị chi tiết sản phẩm
+    // window.location.href = `/product-detail?id=${productId}`;
 }
 
 // Gọi hàm render sau khi đã có danh sách sản phẩm
