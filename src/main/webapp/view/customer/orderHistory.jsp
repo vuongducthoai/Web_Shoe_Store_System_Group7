@@ -235,7 +235,7 @@
       const searchTerm = document.querySelector('.search-input').value.toLowerCase();
       const orders = document.querySelectorAll('.order-item');
       orders.forEach(order => {
-        // Lấy tên sản phẩm trong đơn hàng
+        // Lấy tên sản phẩm trong đơn hànzg
         const productName = order.querySelector('.product-name').innerText.toLowerCase();
 
         // Kiểm tra xem tên sản phẩm có chứa từ khóa tìm kiếm không
@@ -311,9 +311,6 @@
       <!-- Footer đơn hàng -->
       <div class="order-footer">
         <a href="orderDetails?id=${order.orderId}" class="btn btn-more">Xem chi tiết</a>
-        <c:if test="${order.orderStatus == 'COMPLETED'}">
-          <a href="rateOrder?id=${order.orderId}" class="btn btn-rate">Đánh giá</a>
-        </c:if>
       </div>
     </div>
   </c:forEach>
