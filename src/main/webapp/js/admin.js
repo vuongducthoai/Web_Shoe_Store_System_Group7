@@ -637,131 +637,254 @@ function getColorBlockCount() {
 }
 
 
-//thêm biến thể phần edit sản phẩm
- let colorCounterEdit = 1; // Đếm số lượng màu đã thêm trong chế độ Edit
+// //thêm biến thể phần edit sản phẩm
+//  let colorCounterEdit = 1; // Đếm số lượng màu đã thêm trong chế độ Edit
+//
+//  const addColorBtnEdit = document.getElementById('add-color-btnEdit');
+//  const colorContainerEdit = document.getElementById('color-container-edit');
+//
+//  // Lắng nghe sự kiện "click" trên colorContainerEdit
+//  colorContainerEdit.addEventListener('click', (event) => {
+//
+//      // Thêm Size
+//      if (event.target && event.target.classList.contains('add-size-btnEdit')) {
+//          const colorIdEdit = event.target.getAttribute('data-color');
+//          const sizeContainerEdit = document.getElementById(`size-container-${colorIdEdit}`);
+//          const sizeBlockEdit = document.createElement('div');
+//          sizeBlockEdit.classList.add('size-block');
+//          sizeBlockEdit.innerHTML = `
+//          <input type="text" name="size-${colorIdEdit}[]" placeholder="Nhập size">
+//          <input type="text" name="quantity-${colorIdEdit}[]" placeholder="Nhập số lượng">
+//          <button type="button" class="remove-size-btnEdit">Xóa Size</button>
+//      `;
+//          sizeContainerEdit.appendChild(sizeBlockEdit);
+//      }
+//
+//      // Xóa size
+//      if (event.target && event.target.classList.contains('remove-size-btnEdit')) {
+//          const sizeBlockEdit = event.target.closest('.size-block');
+//          sizeBlockEdit.parentElement.removeChild(sizeBlockEdit);
+//      }
+//
+//      // Xóa biến thể
+//      if (event.target && event.target.classList.contains('remove-color-btnEdit')) {
+//          const colorBlockEdit = event.target.closest('.color-block');
+//          colorContainerEdit.removeChild(colorBlockEdit);
+//          updateColorIdsEdit(); // Cập nhật lại ID màu sau khi xóa
+//      }
+//
+//      // Load hình ảnh
+//      if (event.target && event.target.classList.contains('loadImageBtnEdit')) {
+//          const colorBlockEdit = event.target.closest('.color-block');
+//          const imageInputEdit = colorBlockEdit.querySelector('.imageInput');
+//          imageInputEdit.click(); // Kích hoạt input file
+//      }
+//
+//      // Hủy hình ảnh
+//      if (event.target && event.target.classList.contains('cancelBtnEdit')) {
+//          const colorBlockEdit = event.target.closest('.color-block');
+//          const imageDisplayEdit = colorBlockEdit.querySelector('.imageDisplay');
+//          const imageInputEdit = colorBlockEdit.querySelector('.imageInput');
+//          imageDisplayEdit.src = '';
+//          imageInputEdit.value = ''; // Reset image
+//      }
+//  });
+//
+//  // Lắng nghe sự kiện "change" cho input file (load image)
+//  colorContainerEdit.addEventListener('change', (event) => {
+//      if (event.target && event.target.classList.contains('imageInput')) {
+//          const file = event.target.files[0];
+//          if (file) {
+//              const reader = new FileReader();
+//              reader.onload = (e) => {
+//                  const colorBlockEdit = event.target.closest('.color-block');
+//                  const imageDisplayEdit = colorBlockEdit.querySelector('.imageDisplay');
+//                  imageDisplayEdit.src = e.target.result;
+//              };
+//              reader.readAsDataURL(file);
+//          }
+//      }
+//  });
+//
+//  // Khi nhấn nút 'Thêm Biến thể' để thêm một màu mới
+//  addColorBtnEdit.addEventListener('click', () => {
+//      const colorIdEdit = getNextColorIdEdit();
+//      const colorBlockEdit = document.createElement('div');
+//      colorBlockEdit.classList.add('color-block');
+//      colorBlockEdit.setAttribute('data-color-id', colorIdEdit);
+//
+//      colorBlockEdit.innerHTML = `
+//      <h4>Màu ${colorIdEdit}</h4>
+//      <label for="color-name-${colorIdEdit}">Tên Màu:</label>
+//      <input type="text" name="color-name-${colorIdEdit}" id="color-name-${colorIdEdit}" placeholder="Nhập tên màu" required>
+//
+//      <label for="image-color-${colorIdEdit}">Hình ảnh:</label>
+//      <div class="LoadImageContent">
+//          <div class="picturebox">
+//              <img class="imageDisplay" src="" alt="No image" />
+//          </div>
+//          <button type="button" class="loadImageBtn">Load Image</button>
+//          <input type="file" name="image-color-${colorIdEdit}" class="imageInput" style="display: none;" accept="image/*">
+//          <button type="button" class="cancelBtn">Cancel Image</button>
+//      </div>
+//
+//      <label>Size và Số lượng:</label>
+//      <div class="size-container" id="size-container-${colorIdEdit}"></div>
+//      <button type="button" class="add-size-btnEdit" data-color="${colorIdEdit}">Thêm Size</button>
+//
+//      <button type="button" class="remove-color-btnEdit">Xóa biến thể</button>
+//  `;
+//
+//      colorContainerEdit.appendChild(colorBlockEdit);
+//  });
+//
+//
+//
+//
+//
+// // Hàm lấy số ID tiếp theo dựa trên màu hiện tại (Edit)
+//  function getNextColorIdEdit() {
+//      const colorBlocksEdit = colorContainerEdit.querySelectorAll('.color-block');
+//      return colorBlocksEdit.length + 1;
+//  }
+//
+//  // Cập nhật lại ID của các màu còn lại (Edit)
+//  function updateColorIdsEdit() {
+//      const colorBlocksEdit = colorContainerEdit.querySelectorAll('.color-block');
+//
+//      colorBlocksEdit.forEach((block, index) => {
+//          const colorIdEdit = index + 1;
+//          block.querySelector('h4').textContent = `Màu ${colorIdEdit}`;
+//          block.setAttribute('data-color-id', colorIdEdit);
+//          block.querySelector('label[for^="color-name"]').setAttribute('for', `color-name-${colorIdEdit}`);
+//          block.querySelector('input[name^="color-name"]').setAttribute('name', `color-name-${colorIdEdit}`);
+//          block.querySelector('input[name^="size-"]').setAttribute('name', `size-${colorIdEdit}[]`);
+//          block.querySelector('input[name^="quantity-"]').setAttribute('name', `quantity-${colorIdEdit}[]`);
+//      });
+//  }
+//
 
- const addColorBtnEdit = document.getElementById('add-color-btnEdit');
- const colorContainerEdit = document.getElementById('color-container-edit');
 
- // Lắng nghe sự kiện "click" trên colorContainerEdit
- colorContainerEdit.addEventListener('click', (event) => {
+let colorCounterEdit = 1; // Đếm số lượng màu đã thêm trong chế độ Edit
 
-     // Thêm Size
-     if (event.target && event.target.classList.contains('add-size-btnEdit')) {
-         const colorIdEdit = event.target.getAttribute('data-color');
-         const sizeContainerEdit = document.getElementById(`size-container-${colorIdEdit}`);
-         const sizeBlockEdit = document.createElement('div');
-         sizeBlockEdit.classList.add('size-block');
-         sizeBlockEdit.innerHTML = `
-         <input type="text" name="size-${colorIdEdit}[]" placeholder="Nhập size">
-         <input type="text" name="quantity-${colorIdEdit}[]" placeholder="Nhập số lượng">
-         <button type="button" class="remove-size-btnEdit">Xóa Size</button>
-     `;
-         sizeContainerEdit.appendChild(sizeBlockEdit);
-     }
+const addColorBtnEdit = document.getElementById('add-color-btnEdit');
+const colorContainerEdit = document.getElementById('color-container-edit');
 
-     // Xóa size
-     if (event.target && event.target.classList.contains('remove-size-btnEdit')) {
-         const sizeBlockEdit = event.target.closest('.size-block');
-         sizeBlockEdit.parentElement.removeChild(sizeBlockEdit);
-     }
+// Lắng nghe sự kiện "click" trên colorContainerEdit
+colorContainerEdit.addEventListener('click', (event) => {
 
-     // Xóa biến thể
-     if (event.target && event.target.classList.contains('remove-color-btnEdit')) {
-         const colorBlockEdit = event.target.closest('.color-block');
-         colorContainerEdit.removeChild(colorBlockEdit);
-         updateColorIdsEdit(); // Cập nhật lại ID màu sau khi xóa
-     }
+    // Thêm Size
+    if (event.target && event.target.classList.contains('add-size-btnEdit')) {
+        const colorIdEdit = event.target.getAttribute('data-color');
+        const sizeContainerEdit = document.getElementById(`size-container-${colorIdEdit}`);
+        const sizeBlockEdit = document.createElement('div');
+        sizeBlockEdit.classList.add('size-block');
+        sizeBlockEdit.innerHTML = `
+            <input type="text" name="size-${colorIdEdit}[]" placeholder="Nhập size">
+            <input type="text" name="quantity-${colorIdEdit}[]" placeholder="Nhập số lượng">
+            <button type="button" class="remove-size-btnEdit">Xóa Size</button>
+        `;
+        sizeContainerEdit.appendChild(sizeBlockEdit);
+    }
 
-     // Load hình ảnh
-     if (event.target && event.target.classList.contains('loadImageBtnEdit')) {
-         const colorBlockEdit = event.target.closest('.color-block');
-         const imageInputEdit = colorBlockEdit.querySelector('.imageInput');
-         imageInputEdit.click(); // Kích hoạt input file
-     }
+    // Xóa size
+    if (event.target && event.target.classList.contains('remove-size-btnEdit')) {
+        const sizeBlockEdit = event.target.closest('.size-block');
+        sizeBlockEdit.parentElement.removeChild(sizeBlockEdit);
+    }
 
-     // Hủy hình ảnh
-     if (event.target && event.target.classList.contains('cancelBtnEdit')) {
-         const colorBlockEdit = event.target.closest('.color-block');
-         const imageDisplayEdit = colorBlockEdit.querySelector('.imageDisplay');
-         const imageInputEdit = colorBlockEdit.querySelector('.imageInput');
-         imageDisplayEdit.src = '';
-         imageInputEdit.value = ''; // Reset image
-     }
- });
+    // Xóa biến thể
+    if (event.target && event.target.classList.contains('remove-color-btnEdit')) {
+        const colorBlockEdit = event.target.closest('.color-block');
+        colorContainerEdit.removeChild(colorBlockEdit);
+        updateColorIdsEdit(); // Cập nhật lại ID màu sau khi xóa
+    }
 
- // Lắng nghe sự kiện "change" cho input file (load image)
- colorContainerEdit.addEventListener('change', (event) => {
-     if (event.target && event.target.classList.contains('imageInput')) {
-         const file = event.target.files[0];
-         if (file) {
-             const reader = new FileReader();
-             reader.onload = (e) => {
-                 const colorBlockEdit = event.target.closest('.color-block');
-                 const imageDisplayEdit = colorBlockEdit.querySelector('.imageDisplay');
-                 imageDisplayEdit.src = e.target.result;
-             };
-             reader.readAsDataURL(file);
-         }
-     }
- });
+    // Load hình ảnh
+    if (event.target && event.target.classList.contains('loadImageBtnEdit')) {
+        const colorBlockEdit = event.target.closest('.color-block');
+        const imageInputEdit = colorBlockEdit.querySelector('.imageInput');
+        imageInputEdit.click(); // Kích hoạt input file
+    }
 
- // Khi nhấn nút 'Thêm Biến thể' để thêm một màu mới
- addColorBtnEdit.addEventListener('click', () => {
-     const colorIdEdit = getNextColorIdEdit();
-     const colorBlockEdit = document.createElement('div');
-     colorBlockEdit.classList.add('color-block');
-     colorBlockEdit.setAttribute('data-color-id', colorIdEdit);
+    // Hủy hình ảnh
+    if (event.target && event.target.classList.contains('cancelBtnEdit')) {
+        const colorBlockEdit = event.target.closest('.color-block');
+        const imageDisplayEdit = colorBlockEdit.querySelector('.imageDisplay');
+        const imageInputEdit = colorBlockEdit.querySelector('.imageInput');
+        imageDisplayEdit.src = '';
+        imageInputEdit.value = ''; // Reset image
+    }
+});
 
-     colorBlockEdit.innerHTML = `
-     <h4>Màu ${colorIdEdit}</h4>
-     <label for="color-name-${colorIdEdit}">Tên Màu:</label>
-     <input type="text" name="color-name-${colorIdEdit}" id="color-name-${colorIdEdit}" placeholder="Nhập tên màu" required>
+// Lắng nghe sự kiện "change" cho input file (load image)
+colorContainerEdit.addEventListener('change', (event) => {
+    if (event.target && event.target.classList.contains('imageInput')) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const colorBlockEdit = event.target.closest('.color-block');
+                const imageDisplayEdit = colorBlockEdit.querySelector('.imageDisplay');
+                imageDisplayEdit.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+});
 
-     <label for="image-color-${colorIdEdit}">Hình ảnh:</label>
-     <div class="LoadImageContent">
-         <div class="picturebox">
-             <img class="imageDisplay" src="" alt="No image" />
-         </div>
-         <button type="button" class="loadImageBtn">Load Image</button>
-         <input type="file" name="image-color-${colorIdEdit}" class="imageInput" style="display: none;" accept="image/*">
-         <button type="button" class="cancelBtn">Cancel Image</button>
-     </div>
+// Khi nhấn nút 'Thêm Biến thể' để thêm một màu mới
+addColorBtnEdit.addEventListener('click', () => {
+    const colorIdEdit = getNextColorIdEdit();
+    const colorBlockEdit = document.createElement('div');
+    colorBlockEdit.classList.add('color-block');
+    colorBlockEdit.setAttribute('data-color-id', colorIdEdit);
 
-     <label>Size và Số lượng:</label>
-     <div class="size-container" id="size-container-${colorIdEdit}"></div>
-     <button type="button" class="add-size-btnEdit" data-color="${colorIdEdit}">Thêm Size</button>
+    colorBlockEdit.innerHTML = `
+        <h4>Màu ${colorIdEdit}</h4>
+        <label for="color-name-${colorIdEdit}">Tên Màu:</label>
+        <input type="text" name="color-name-${colorIdEdit}" id="color-name-${colorIdEdit}" placeholder="Nhập tên màu" required>
 
-     <button type="button" class="remove-color-btnEdit">Xóa biến thể</button>
- `;
+        <label for="image-color-${colorIdEdit}">Hình ảnh:</label>
+        <div class="LoadImageContent">
+            <div class="picturebox">
+                <img class="imageDisplay" src="" alt="No image" />
+            </div>
+            <button type="button" class="loadImageBtnEdit action-btn">Load Image</button>
+            <input type="file" name="image-color-${colorIdEdit}" class="imageInput" style="display: none;" accept="image/*">
+            <button type="button" class="cancelBtnEdit action-btn">Cancel Image</button>
+        </div>
 
-     colorContainerEdit.appendChild(colorBlockEdit);
- });
+        <label>Size và Số lượng:</label>
+        <div class="size-container" id="size-container-${colorIdEdit}"></div>
+        <button type="button" class="add-size-btnEdit" data-color="${colorIdEdit}">Thêm Size</button>
 
- // Hàm lấy số ID tiếp theo dựa trên màu hiện tại (Edit)
- function getNextColorIdEdit() {
-     const colorBlocksEdit = colorContainerEdit.querySelectorAll('.color-block');
-     return colorBlocksEdit.length + 1;
- }
+        <button type="button" class="remove-color-btnEdit">Xóa biến thể</button>
+    `;
 
- // Cập nhật lại ID của các màu còn lại (Edit)
- function updateColorIdsEdit() {
-     const colorBlocksEdit = colorContainerEdit.querySelectorAll('.color-block');
+    colorContainerEdit.appendChild(colorBlockEdit);
+});
 
-     colorBlocksEdit.forEach((block, index) => {
-         const colorIdEdit = index + 1;
-         block.querySelector('h4').textContent = `Màu ${colorIdEdit}`;
-         block.setAttribute('data-color-id', colorIdEdit);
-         block.querySelector('label[for^="color-name"]').setAttribute('for', `color-name-${colorIdEdit}`);
-         block.querySelector('input[name^="color-name"]').setAttribute('name', `color-name-${colorIdEdit}`);
-         block.querySelector('input[name^="size-"]').setAttribute('name', `size-${colorIdEdit}[]`);
-         block.querySelector('input[name^="quantity-"]').setAttribute('name', `quantity-${colorIdEdit}[]`);
-     });
- }
+// Hàm lấy số ID tiếp theo dựa trên màu hiện tại (Edit)
+function getNextColorIdEdit() {
+    const colorBlocksEdit = colorContainerEdit.querySelectorAll('.color-block');
+    return colorBlocksEdit.length + 1;
+}
 
+// Cập nhật lại ID của các màu còn lại (Edit)
+function updateColorIdsEdit() {
+    const colorBlocksEdit = colorContainerEdit.querySelectorAll('.color-block');
 
-
-
+    colorBlocksEdit.forEach((block, index) => {
+        const colorIdEdit = index + 1;
+        block.querySelector('h4').textContent = `Màu ${colorIdEdit}`;
+        block.setAttribute('data-color-id', colorIdEdit);
+        block.querySelector('label[for^="color-name"]').setAttribute('for', `color-name-${colorIdEdit}`);
+        block.querySelector('input[name^="color-name"]').setAttribute('name', `color-name-${colorIdEdit}`);
+        block.querySelector('input[name^="size-"]').setAttribute('name', `size-${colorIdEdit}[]`);
+        block.querySelector('input[name^="quantity-"]').setAttribute('name', `quantity-${colorIdEdit}[]`);
+    });
+}
 
 
 

@@ -77,13 +77,13 @@ public class CartController extends HttpServlet {
         switch (path){
             case "/Cart":
                 Cart_View(req, resp);
-                break;
+                return;
             case "/Count":
                 Count(req, resp);
-                break;
+                return;
             case "/AddCartQuantity":
                 Cart_Add_Quantity(req,resp);
-                break;
+                return;
         }
         HttpSession session = req.getSession();
         UserDTO userDTO = (UserDTO) session.getAttribute("user");
@@ -113,19 +113,26 @@ public class CartController extends HttpServlet {
     public void Count(HttpServletRequest req,HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
-        HttpSession session = req.getSession();
-        UserDTO userDTO = (UserDTO) session.getAttribute("user");
-        if (userDTO==null || !userDTO.isActive()){
+        try {
+            HttpSession session = req.getSession();
+            UserDTO userDTO = (UserDTO) session.getAttribute("user");
+            if (userDTO == null || !userDTO.isActive()) {
+                JSONObject json = new JSONObject();
+                json.put("quantityItemCart", 0);
+                resp.getWriter().println(json.toString());
+                return;
+            }
+            int idUser = userDTO.getUserID();
+            int quantity = iCartService.CountQuantityCartItem(idUser);
             JSONObject json = new JSONObject();
-            json.put("quantityItemCart",0);
+            json.put("quantityItemCart", quantity);
+            resp.getWriter().println(json.toString());
+        } catch (Exception e) {
+            JSONObject json = new JSONObject();
+            json.put("quantityItemCart", 0);
             resp.getWriter().println(json.toString());
             return;
         }
-        int idUser = userDTO.getUserID();
-        int quantity = iCartService.CountQuantityCartItem(idUser);
-        JSONObject json = new JSONObject();
-        json.put("quantityItemCart",quantity);
-        resp.getWriter().println(json.toString());
     }
     public void Load_Cart_View(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();

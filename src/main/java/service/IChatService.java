@@ -8,5 +8,5 @@ import jakarta.websocket.Session;
 import java.util.List;
 
 public interface IChatService {
-    ChatDTO getOrCreateChatId(int userId);
+    int getOrCreateChatId(int userId);
 }

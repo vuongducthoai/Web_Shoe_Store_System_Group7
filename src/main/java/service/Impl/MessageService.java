@@ -19,10 +19,6 @@ public class MessageService implements IMessageService {
     private final ChatDAO chatDAO = new ChatDAO();
     private final MessageDAO messageDAO = new MessageDAO();
 
-    @Override
-    public Chat getOrCreateChatId(int userId) throws SQLException {
-        return chatDAO.getOrCreateChat(userId);
-    }
 
     @Override
     public void saveMessage(MessageDTO messageDTO) throws SQLException {
@@ -91,5 +87,10 @@ public class MessageService implements IMessageService {
         customer.setFullName(dto.getFullName());
         customer.setPhone(dto.getPhone());
         return customer;
+    }
+
+    @Override
+    public void updateMessageStatus(int chatId, int userID){
+        messageDAO.updateMessageStatus(chatId,userID);
     }
 }

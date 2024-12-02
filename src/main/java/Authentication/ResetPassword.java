@@ -97,7 +97,7 @@ public class ResetPassword {
                     "            background-color: #f9f9f9;" +
                     "        }" +
                     "        .container {" +
-                    "            max-width: 800px;" +
+                    "            max-width: 1200px;" +
                     "            margin: 0 auto;" +
                     "            background-color: #fff;" +
                     "            padding: 20px;" +
@@ -212,7 +212,7 @@ public class ResetPassword {
                     "     </strong>" +
                     "     có giá trị là" +
                     "     <strong>" +
-                    formatter.format(total) +
+                    formatter.format(total) +" đ"+
                     "     </strong>" +
                     "     đã được xác nhận." +
                     "    </p>" +
@@ -229,13 +229,13 @@ public class ResetPassword {
                     "    <thead>" +
                     "     <tr>" +
                     "      <th>" +
-                    "       Sản phẩm" +
+                    "       Tên Sản phẩm" +
                     "      </th>" +
                     "      <th>" +
                     "       Số lượng" +
                     "      </th>" +
                     "      <th>" +
-                    "       Chưa bao gồm thuế" +
+                    "       Giá" +
                     "      </th>" +
                     "     </tr>" +
                     "    </thead>" +
@@ -244,14 +244,14 @@ public class ResetPassword {
                 content +=
                         "     <tr>" +
                                 "      <td>" +
-                                "       <img  height='50' src='"+item.getProductDTO().getBase64Image()+"' width='50'/>" +
-                                item.getProductDTO().getProductName() +
+                                item.getProductDTO().getProductName() +"(size: "+item.getProductDTO().getSize()+" - color"+
+                                " <div style='border: 1px solid ; border-radius: 5px; background-color: "+item.getProductDTO().getColor()+"; width: 13px; height: 13px; display: inline-block;'></div>)"+
                                 "      </td>" +
                                 "      <td>" +
                                 item.getQuantity() +
                                 "      </td>" +
                                 "      <td>" +
-                                formatter.format((int)item.getProductDTO().getPrice())+
+                                formatter.format((int)item.getProductDTO().getPrice())+" đ/sp" +
                                 "      </td>" +
                                 "     </tr>";
             }
@@ -273,7 +273,7 @@ public class ResetPassword {
                     "       Giảm giá:" +
                     "      </td>" +
                     "      <td class='value'>" +
-                    formatter.format(discount)+" đ" +
+                    "- "+ formatter.format(discount)+" đ" +
                     "      </td>" +
                     "     </tr>" +
                     "     <tr>" +
@@ -281,7 +281,7 @@ public class ResetPassword {
                     "       Phí vận chuyển:" +
                     "      </td>" +
                     "      <td class='value'>" +
-                    "-"+formatter.format(deliver)+" đ" +
+                    formatter.format(deliver)+" đ" +
                     "      </td>" +
                     "     </tr>" +
                     "     <tr>" +

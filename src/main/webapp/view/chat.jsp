@@ -177,6 +177,18 @@
             font-size: 1rem;
             font-style: italic;
         }
+        .new-message-indicator {
+            background-color: #ff6f61;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-top: 5px;
+            display: inline-block;
+            font-weight: bold;
+            transition: opacity 0.3s ease;
+        }
+
     </style>
 </head>
 <body>
