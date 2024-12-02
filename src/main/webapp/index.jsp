@@ -122,7 +122,19 @@
             line-height: 1.4rem;
         }
 
+        .countdown {
+            margin-bottom: 2px;
+            margin-left: 40px;
+            color: black;
+            font-size: 34px;
+            font-weight: bold;
+        }
 
+        .star-rating::before {
+            content: '⭐⭐⭐⭐⭐';
+            font-size: 16px;  /* Điều chỉnh kích thước sao */
+            color: orangered;     /* Đặt màu sao */
+        }
 
     </style>
 </head>
@@ -135,45 +147,55 @@
 <jsp:include page="./view/slider.jsp"></jsp:include>
 <!-- arrival section-->
 <section class="container arrival">
-    <div class="section-heading">
-        <div class="heading">
-            <h2 class="heading-two">Sản phẩm<span>Khuyến Mãi</span> </h2>
+    <div class="section-heading" style="padding: 0; margin-bottom: 20px; color: orange">
+        <div style="display: flex; align-items: center">
+            <img src="./image/flashSale.png">
+            <div class="countdown" id="countdown">ACBB</div>
         </div>
     </div>
-    <div class="wrapper" style="gap: 70px">
-        <c:forEach var="promotionProduct" items="${promotionProductDTOList}">
-            <div class="product" style="position: relative;">
-                <div class="product-image">
-                    <figure><img src="${promotionProduct.product.getBase64Image()}" alt="Foundation"></figure>
-                </div>
-                <div class="product-details">
-                    <p class="product_name">${promotionProduct.product.productName}</p>
-                    <p class="product_desc" style="margin-top: 5px">${promotionProduct.product.description}</p>
-                    <div class="col-footer" style="display: flex; align-items: center; justify-content: space-between; margin-top: 10px">
-                        <p class="shoe-price">${promotionProduct.product.sellingPrice}₫ <span style="color: #999; margin-left: 10px" class="shoe-price strike-through">${promotionProduct.product.price}₫</span>
-                    </div>
-                </div>
-                <div class="home-product-item_sale-off">
-                    <span class="home-product-item_sale-off-percent">${promotionProduct.promotion.discountValue}%</span>
-                    <span class="home-product-item_sale-off-label">GIẢM</span>
-                </div>
-            </div>
+    <div class="wrapper" style="flex-wrap: wrap" id="product-list">
+            <c:forEach var="promotionProduct" items="${promotionProductDTOList}">
+                <div class="product" style="position: relative; flex: 0 0 23%; max-width: 25%; height: 435px">
+                    <form action="/product/details" method="GET">
+                        <input type="hidden" name="productName" value="${promotionProduct.product.productName}">
+                        <div class="product-image">
+                            <figure><img src="${promotionProduct.product.getBase64Image()}" alt="Foundation"></figure>
+                        </div>
+                        <div class="product-details">
+                            <div style="display: flex; align-items: center; justify-content: space-between">
+                                <p class="product_name">${promotionProduct.product.productName}</p>
+                                <span class="star-rating"></span>
+                            </div>
 
-        </c:forEach>
+                            <p class="product_desc" style="margin-top: 5px">${promotionProduct.product.description}</p>
+                            <div class="col-footer" style="display: flex; align-items: center; justify-content: space-between; margin-top: 10px">
+                                <p class="shoe-price">${promotionProduct.product.sellingPrice}₫ <span style="color: #999; margin-left: 10px" class="shoe-price strike-through">${promotionProduct.product.price}₫</span>
+                            </div>
+                        </div>
+                        <div class="home-product-item_sale-off">
+                            <span class="home-product-item_sale-off-percent">${promotionProduct.promotion.discountValue}%</span>
+                            <span class="home-product-item_sale-off-label">GIẢM</span>
+                        </div>
+                        <button type="submit" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0;  cursor: pointer"></button> <!-- Invisible button for clicking -->
+                    </form>
+                </div>
+            </c:forEach>
     </div>
+
     <div>
-        <ul class="pagination">
+        <ul class="pagination" id="pagination">
             <li class="page-item">
-                <a class="page-link" href="#" aria-label="Previous">
+                <a class="page-link" href="#" aria-label="Previous" id="previous">
                     <span aria-hidden="true">&laquo;</span>
                     <span class="sr-only">Previous</span>
                 </a>
             </li>
             <c:forEach begin="1" end ="${numpage}" var = "i">
-                <li class="page-item"><a class="page-link" href="Paging?index=${i}">${i}</a></li>
+<%--                Paging?index=${i}--%>
+                <li class="page-item"><a class="page-link page-link-item" href="#">${i}</a></li>
             </c:forEach>
             <li class="page-item">
-                <a class="page-link" href="#" aria-label="Next">
+                <a class="page-link" href="#" aria-label="Next" id="next">
                     <span aria-hidden="true">&raquo;</span>
                     <span class="sr-only">Next</span>
                 </a>
@@ -203,41 +225,86 @@
                 </button>
             </c:forEach>
         </div>
-
     </div>
-    <!-- section wrapper and col -->
-    <div class="grid-wrapper">
-        <c:forEach var="product" items="${productDTOList}">
-            <div class="product">
-                <div class="product-image">
-                    <figure><img src="./image/shoes3.png" alt="Foundation"></figure>
-                </div>
-                <div class="product-details">
-                    <p class="product_name">${product.productName}</p>
-                    <p class="product_desc" style="margin-top: 5px">${product.description}</p>
-                    <div class="col-footer" style="display: flex; align-items: center; justify-content: space-between; margin-top: 10px">
-                        <p class="shoe-price">${product.price}₫</p
-                        <p class="shoe-sold">Đã bán :${product.quantity}
-                    </div>
 
-                </div>
+    <div class="wrapper wrapper1" style="flex-wrap: wrap">
+        <c:forEach var="product" items="${productDTOList}">
+            <div class="product" style="flex: 0 0 23%; max-width: 25%; height: 435px; position: relative;">
+                <form action="/product/details" method="GET">
+                    <input type="hidden" name="productName" value="${product.productName}">
+                    <div class="product-image">
+                        <figure><img src="${product.getBase64Image()}" alt="Image of ${product.productName}"></figure>
+                    </div>
+                    <div class="product-details">
+                        <div style="display: flex; align-items: center; justify-content: space-between">
+                            <p class="product_name">${product.productName}</p>
+                            <span class="star-rating"></span> <!-- You can add stars dynamically here -->
+                        </div>
+                        <p class="product_desc" style="margin-top: 5px">${product.description}</p>
+                        <div class="col-footer" style="display: flex; align-items: center; justify-content: space-between; margin-top: 10px">
+                            <p class="shoe-price">${product.price}₫</p>
+                            <span style="color: #999; margin-left: 10px" class="shoe-sold">Đã bán: ${product.quantity}</span>
+                        </div>
+                    </div>
+                    <!-- Invisible button for submitting the form -->
+                    <button type="submit" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer"></button>
+                </form>
             </div>
         </c:forEach>
     </div>
+
+
     <button style="margin-top: 30px; background-color: #baba14;" id="load-more-btns" class="btn">Xem thêm</button>
 </section>
+<%
+    String startDate = (String) request.getAttribute("startDate");
+    String endDate = (String) request.getAttribute("endDate");
+%>
+
+<script type="text/javascript">
+    var startDate = "<%= startDate != null ? startDate : "" %>";
+    var endDate = "<%= endDate != null ? endDate : "" %>";
+
+    if (startDate && endDate) {
+        var start = new Date(startDate);
+        var end = new Date(endDate);
+
+
+        function updateCountdown() {
+            var now = new Date().getTime();
+            var distance = end - now;
+
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("countdown").innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+
+            if (distance < 0) {
+                clearInterval(x);
+                document.getElementById("countdown").innerHTML = "EXPIRED";
+            }
+        }
+
+        var x = setInterval(updateCountdown, 1000);
+    }
+</script>
+
 <!-- customer review -->
 <jsp:include page="view/customer/review.jsp"></jsp:include>
 <script src="./js/toastMessage.js"></script>
 <%--Footer--%>
 <jsp:include page="./view/footer.jsp"></jsp:include>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="./js/promotionProduct.js"></script>
 <script src="./js/index.js"></script>
+
+
 <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
 <script>
     AOS.init();
 </script>
-
 </body>
 
 </html>

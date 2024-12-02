@@ -14,6 +14,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/toastMessage.css">
     <style>
         *{
             margin: 0;
@@ -87,6 +88,7 @@
         }
 
         section nav ul li a{
+            font-weight: 600;
             font-size: 20px;
             text-decoration: none;
             color: black;
@@ -112,7 +114,7 @@
             color: orangered !important;
             font-size: 20px;
             font-weight: 600;
-            margin-left: 5px;
+            margin-left: 10px;
             display: inline-block;
         }
 
@@ -159,22 +161,29 @@
 <section >
     <nav>
         <a style="text-decoration: none" href="/home" class="logo">
-            <img src="../image/shoe.png">
+            <img src="${pageContext.request.contextPath}/image/shoe.png">
         </a>
 
         <ul>
-            <li><a href="#Home">Trang Chủ</a></li>
-            <li><a href="#Products">Sản Phẩm</a></li>
+            <li><a href="/home">Trang Chủ</a></li>
+            <li><a href="/customer/product/filter">Sản Phẩm</a></li>
             <li><a href="#Review">Về Chúng Tôi</a></li>
             <li><a href="#Servises">Dịch Vụ</a></li>
         </ul>
 
         <div class="icons">
-            <i style="font-size: 30px; position: relative;" class="fa-solid fa-bell"><span style="position: absolute;left: 20px; top: -10px;font-size: 18px; color: red">3</span></i>
-            <i onclick="redirectToCartPage()" style="font-size: 30px; margin-left: 20px; position: relative;" class="fa-solid fa-cart-shopping">
+            <i onclick = "redirectToChatPage()" class="fa-solid fa-message" style="font-size: 30px; position: relative; margin-right: 15px">
+                <span style="position: absolute;left: 30px; top: -10px;font-size: 18px; color: red">0</span>
+            </i>
+            <i onclick = "redirectToNotifyPage()" style="font-size: 30px; position: relative;" class="fa-solid fa-bell">
+                <span style="position: absolute;left: 20px; top: -10px;font-size: 18px; color: red">0
+                </span>
+            </i>       
+            <i onclick="redirectToCartPage()" style="font-size: 30px; margin-left: 15px; position: relative;" class="fa-solid fa-cart-shopping">
                     <span class="quantityItemCart" style="position: absolute;left: 35px; top: -10px;font-size: 18px; color: red">
                         0
                     </span></i>
+
 
                 <c:choose>
                     <c:when test="${sessionScope.user == null}">
@@ -186,7 +195,7 @@
                          <span class="user-icon">
                             <i style="font-size: 30px; margin-left: 20px;" class="fa-solid fa-user"></i>
                             <div class="dropdown-menu">
-                                <a href="#">Tài Khoản Của Tôi</a>
+                                <a href="/InformationUser">Tài Khoản Của Tôi</a>
                                 <a class="sign-out" href="/logout">Đăng xuất</a>
                             </div>
                          </span>
@@ -197,6 +206,8 @@
     </nav>
 </section>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="${pageContext.request.contextPath}/js/toastMessage.js"></script>
 <script src="${pageContext.request.contextPath}/js/ItemCart.js"></script>
+<script src="${pageContext.request.contextPath}/js/DirectHeader.js"></script>
 </body>
 </html>

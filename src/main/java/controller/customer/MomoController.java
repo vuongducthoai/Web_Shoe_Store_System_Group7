@@ -43,6 +43,8 @@ public class MomoController extends HttpServlet {
             return;
         }
         if (userDTO.getAccount().getRole()== RoleType.ADMIN){
+            req.setAttribute("error","Trang này không khả dụng");
+            req.getRequestDispatcher("/view/errror.jsp").forward(req, resp);
             return;
         }
         switch (path) {
@@ -65,6 +67,8 @@ public class MomoController extends HttpServlet {
             return;
         }
         if (userDTO.getAccount().getRole()== RoleType.ADMIN){
+            req.setAttribute("error","Trang này không khả dụng");
+            req.getRequestDispatcher("/view/errror.jsp").forward(req, resp);
             return;
         }
         switch (path) {
@@ -123,7 +127,7 @@ public class MomoController extends HttpServlet {
         UserDTO userDTO = (UserDTO) session.getAttribute("user");
         int idUser = userDTO.getUserID();
         AddressDTO addressDTO = addressService.getAddressByID(idUser);
-        if (addressDTO== null){
+        if (addressDTO.getCity()== null){
             req.setAttribute("errCode",1);
             req.setAttribute("message","Không thể lấy được địa chỉ giao hàng, vui lòng cập nhật thông tin cá nhân");
             cartController.Load_Cart_View(req,resp);

@@ -6,19 +6,16 @@ import com.google.gson.Gson;
 import dto.*;
 import entity.Product;
 import entity.Response;
+import entity.User;
+import io.vavr.Tuple3;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import service.IProductPromotion;
-import service.IProductService;
-import service.IResponseService;
-import service.IReviewService;
-import service.Impl.ProductPromotionImpl;
-import service.Impl.ProductServiceImpl;
-import service.Impl.ResponseServiceImpl;
-import service.Impl.ReviewServiceImpl;
+import jakarta.servlet.http.HttpSession;
+import service.*;
+import service.Impl.*;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -32,10 +29,12 @@ public class ProductInformationController extends HttpServlet {
     private IReviewService reviewService = new ReviewServiceImpl();
     private IResponseService responseService = new ResponseServiceImpl();
     private IProductPromotion productPromotion = new ProductPromotionImpl();
+    private IUserService userService = new UserServiceImpl();
+
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         String productName = req.getParameter("productName");
         if (productName == null || productName.trim().isEmpty()) {
-            req.setAttribute("error", "Tên sản phẩm không hợp lệ.");
+            System.out.print("Ten sp khong hop le");
             return;
         }
 
@@ -43,9 +42,8 @@ public class ProductInformationController extends HttpServlet {
         List<ProductDTO> productDetails = productService.findByName(productName);
         System.out.println(productDetails);
         if (productDetails == null || productDetails.isEmpty()) {
-//            req.setAttribute("error", "Không tìm thấy sản phẩm.");
-//            req.getRequestDispatcher("/error.jsp").forward(req, resp);
-            System.out.println("Không tìm thấy sản phẩm");
+            req.setAttribute("error", "Sản phẩm không tồn tại");
+            req.getRequestDispatcher("/view/error.jsp").forward(req, resp);
         } else {
             List<String> images = productDetails.stream()
                     .map(ProductDTO::getBase64Image)
@@ -83,26 +81,26 @@ public class ProductInformationController extends HttpServlet {
             }
 
             req.setAttribute("reviews", reviews);
-            req.setAttribute("averageRating", reviewService.averageRating(reviews));
+            double rate = reviewService.averageRating(reviews);
+            System.out.println(rate);
+            req.setAttribute("averageRating", rate);
 
 
-            Map<ProductDTO, Double> RecommendProducts = productService.findRandomProducts(productName, productDetails.getFirst().getCategoryDTO().getCategoryId());
+            List<Tuple3<ProductDTO, Double, PromotionProductDTO>>  RecommendProducts = (List<Tuple3<ProductDTO, Double, PromotionProductDTO>>) productService.findRandomProducts(productName, productDetails.getFirst().getCategoryDTO().getCategoryId());
             if (RecommendProducts == null || RecommendProducts.isEmpty()) {
                 System.out.println("RecommendProducts is null or empty.");
                 return;
             }
-//            List<PromotionProductDTO> listRecommendProductPromotion = new ArrayList<>();
-//            for(ProductDTO productDTO : RecommendProducts.keySet()) {
-//                promotionProductDTO = new PromotionProductDTO();
-//                promotionProductDTO = productPromotion.promotioOnProductInfo(productDTO.getProductName());
-//                listRecommendProductPromotion.add(promotionProductDTO);
-//            }
-//            if(!listRecommendProductPromotion.isEmpty()) {
-//                req.setAttribute("recommendProductsPromotion", listRecommendProductPromotion);
-//            }else  System.out.println("RecommendProductsPromotion is null or empty.");
-            req.setAttribute("RecommendProducts", RecommendProducts);
 
-            req.setAttribute("role", 1);
+            req.setAttribute("RecommendProducts", RecommendProducts);
+            HttpSession session = req.getSession();
+
+            UserDTO userDTO = (UserDTO) session.getAttribute("user");
+            if(userDTO != null){
+                if(userService.checkAdmin(userDTO.getUserID()))
+                    req.setAttribute("role", 1);
+            }
+
 
             req.setAttribute("images", images);
             req.setAttribute("colors", colors);
@@ -149,7 +147,7 @@ public class ProductInformationController extends HttpServlet {
                 System.out.println(e.getMessage());
                 e.printStackTrace();
                 req.setAttribute("error", "Có lỗi xảy ra: " + e.getMessage());
-                req.getRequestDispatcher("/errorCatchDelete.jsp").forward(req, resp);
+
                 return;
             }
 
@@ -182,9 +180,10 @@ public class ProductInformationController extends HttpServlet {
 
                 ReviewDTO reviewDTO = new ReviewDTO();
                 reviewDTO.setReviewID(reviewID);
-
+                HttpSession session = req.getSession();
                 AdminDTO adminDTO = new AdminDTO();
-                adminDTO.setUserID(8);
+                UserDTO user = (UserDTO) session.getAttribute("user");
+                adminDTO.setUserID(user.getUserID());
 
                 ResponseDTO response = new ResponseDTO();
                 response.setResponseID(responseID);
@@ -214,4 +213,5 @@ public class ProductInformationController extends HttpServlet {
 
         //doGet(req, resp);
     }
+
 }

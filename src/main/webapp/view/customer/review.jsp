@@ -65,7 +65,7 @@
 
         .testimonial .col p{
             margin-top: 10px;
-            font-size: 15px;
+            font-size: 20px;
             white-space: nowrap;
         }
 
@@ -148,7 +148,7 @@
                                 <p style="color: #333333">${review.date}</p>
                             </div>
                         </div>
-                        <p class="product_message">Sản phẩm: ${review.productDTO.productName} </p> <span>Size: ${review.productDTO.size}</span>
+                        <p class="product_message" style="font-size: 20px">Sản phẩm: ${review.productDTO.productName} </p> <span>Size: ${review.productDTO.size}</span>
                         <p class="testi-message">${review.comment}</p>
 
                     </div>

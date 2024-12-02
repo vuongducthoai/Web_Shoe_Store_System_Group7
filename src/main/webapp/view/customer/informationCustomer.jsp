@@ -42,7 +42,10 @@
             <!-- Form -->
             <form action="Information" method="post">
                 <!-- Hidden field for userID -->
-                <input type="hidden" name="userID" value="<c:out value='${userID}' />">
+                <input type="text" name="userID" value="<c:out value='${userID}' />">
+                <input type="text" name="accountID" value="<c:out value='${accountID}' />" readonly>
+                <input type="text" name="addressID" value="<c:out value='${addressID}' />"
+                >
 
                 <!-- Personal Information -->
                 <div class="form-group">

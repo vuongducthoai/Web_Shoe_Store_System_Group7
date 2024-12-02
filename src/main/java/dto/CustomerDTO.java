@@ -24,10 +24,15 @@ public class CustomerDTO extends UserDTO {
     private ChatDTO chatDTO;
     private List<ReviewDTO> reviewDTOList;
     private List<NotifyDTO> notifyDTOList;
+    private Boolean lastMessageStatus;
 
 
     public CustomerDTO(int userID, String fullName, String phone) {
         super(userID, fullName, phone);
+    }
+    public CustomerDTO(int userID, String fullName, String phone, Boolean status) {
+        super(userID, fullName, phone);
+        this.lastMessageStatus = status;
     }
 
     public CustomerDTO(int userID, String fullName, String phone, int accountId, RoleType role)

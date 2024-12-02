@@ -12,9 +12,6 @@
 
 
 
-main{
-    margin-top: 178px;
-}
 
 
 .product-name{
@@ -239,7 +236,6 @@ main{
 
 .reviews {
     max-height: 69vh;
-    margin-top: 30px;
     overflow-y: scroll;
 
 }

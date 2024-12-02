@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -17,7 +17,7 @@
 <header>
     <jsp:include page="./view/header.jsp"></jsp:include>
 </header>
-<main>
+<main style="margin-top: 100px;">
 
 
     <div class="container">
@@ -31,59 +31,6 @@
                         </c:forEach>
                     </div>
                     <img src="${images[0]}" alt="" class="product-image-focus col-sm-9 img-fluid rounded-4">
-<%--                    <div id="demo" class="carousel slide" data-bs-ride="carousel">--%>
-<%--                        <!-- Indicators/dots -->--%>
-<%--                        <div class="carousel-indicators" id="carousel-indicators"></div>--%>
-
-<%--                        <!-- The slideshow/carousel -->--%>
-<%--                        <div class="carousel-inner" id="carousel-inner"></div>--%>
-
-<%--                        <!-- Left and right controls/icons -->--%>
-<%--                        <button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev">--%>
-<%--                            <span class="carousel-control-prev-icon"></span>--%>
-<%--                        </button>--%>
-<%--                        <button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next">--%>
-<%--                            <span class="carousel-control-next-icon"></span>--%>
-<%--                        </button>--%>
-<%--                    </div>--%>
-<%--                    <script>--%>
-<%--                        // Hàm để lấy danh sách ảnh từ servlet--%>
-<%--                        fetch('/product/details') // Thay URL_CỦA_SERVLET bằng đường dẫn thực tế tới servlet của bạn--%>
-<%--                            .then(response => response.json()) // Chuyển đổi phản hồi thành JSON--%>
-<%--                            .then(images => {--%>
-<%--                                // Lấy các phần tử carousel-inner và carousel-indicators--%>
-<%--                                const carouselInner = document.getElementById('carousel-inner');--%>
-<%--                                const carouselIndicators = document.getElementById('carousel-indicators');--%>
-
-<%--                                // Lặp qua danh sách ảnh và tạo các item và indicator cho carousel--%>
-<%--                                images.forEach((src, index) => {--%>
-<%--                                    // Tạo phần tử carousel-item--%>
-<%--                                    const carouselItem = document.createElement('div');--%>
-<%--                                    carouselItem.classList.add('carousel-item');--%>
-<%--                                    if (index === 0) carouselItem.classList.add('active'); // Đặt phần tử đầu tiên là active--%>
-
-<%--                                    const img = document.createElement('img');--%>
-<%--                                    img.src = src;--%>
-<%--                                    img.alt = `Slide ${index + 1}`;--%>
-<%--                                    img.classList.add('d-block');--%>
-<%--                                    img.style.width = "100%";--%>
-
-<%--                                    carouselItem.appendChild(img);--%>
-<%--                                    carouselInner.appendChild(carouselItem);--%>
-
-<%--                                    // Tạo phần tử indicator--%>
-<%--                                    const indicator = document.createElement('button');--%>
-<%--                                    indicator.type = "button";--%>
-<%--                                    indicator.setAttribute('data-bs-target', '#demo');--%>
-<%--                                    indicator.setAttribute('data-bs-slide-to', index);--%>
-<%--                                    if (index === 0) indicator.classList.add('active');--%>
-
-<%--                                    carouselIndicators.appendChild(indicator);--%>
-<%--                                });--%>
-<%--                            })--%>
-<%--                            .catch(error => console.error('Error loading images:', error));--%>
-
-<%--                    </script>--%>
                 </div>
 
 
@@ -362,23 +309,29 @@
                 <div class="reviews">
                     <c:forEach var="review" items="${reviews}">
                         <div class="review">
-                            <div class="user-info">${review.customer.getFullName()}<span
-                                    class="date">${review.date}</span></div>
+                            <div class="user-info">${review.customer.getFullName()}
+                                <span class="date">
+
+                                    <fmt:formatDate value="${review.date}" pattern="dd/MM/yyyy" />
+                                </span>
+                            </div>
                             <div class="d-flex">
                                 <c:forEach begin="1" end="${review.ratingValue}">
                                     <div class="rating">★</div>
                                 </c:forEach>
                             </div>
                             <p>${review.comment}</p>
-                            <img style="width: 100px;" src="${review.getBase64Image()}"><br>
+                            <img style="width: 100px; border: none;" src="${review.getBase64Image()}" data-bs-toggle="modal" data-bs-target="#imageModal" class="img-thumbnail review-image"><br>
                             <c:if test="${review.getResponse().getResponseID() != 0}">
                                 <div class="response-container mb-2 d-flex justify-content-between me-2 mt-2">
                                     <div class="m-2">
                                         <i class="fa-solid fa-arrow-right-from-bracket"></i>
                                         <span class="response-name">${review.response.admin.fullName}</span><br>
                                         <span class="response-content">${review.response.content}</span><br>
-                                        <span class="response-date fw-lighter"
-                                              style="font-size: 10px">${review.response.timeStamp}</span><br>
+                                        <span class="response-date fw-lighter" style="font-size: 10px">
+                                            <!-- Định dạng lại thời gian phản hồi -->
+                                            <fmt:formatDate value="${review.response.timeStamp}" pattern="dd/MM/yyyy" />
+                                        </span><br>
                                         <input type="hidden" id="ResponseID"
                                                value="${review.getResponse().getResponseID()}">
                                     </div>
@@ -403,6 +356,21 @@
                             </c:if>
                         </div>
                     </c:forEach>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="imageModalLabel">Phóng to hình ảnh</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <img id="modalImage" src="" class="img-fluid" alt="Review Image" style="height: 500px;">
+                    </div>
                 </div>
             </div>
         </div>
@@ -470,12 +438,12 @@
 
             <c:forEach var="recomendProduct" items="${RecommendProducts}">
                 <div class="col-3">
-                    <a href="${pageContext.request.contextPath}/product/details?productName=${recomendProduct.key.productName}"
+                    <a href="${pageContext.request.contextPath}/product/details?productName=${recomendProduct._1().productName}"
                        class="text-decoration-none">
                         <div class="card-product card" style="border:none">
                             <c:choose>
-                                <c:when test="${recomendProduct.key.getImage() != null}">
-                                    <img src="${recomendProduct.key.getBase64Image()}" alt=""
+                                <c:when test="${recomendProduct._1().getImage() != null}">
+                                    <img src="${recomendProduct._1().getBase64Image()}" alt=""
                                          class="card-img-top rounded-4">
                                 </c:when>
                                 <c:otherwise>
@@ -483,16 +451,42 @@
                                 </c:otherwise>
                             </c:choose>
                             <div class="card-product-body">
-                                <h5 class="card-product-name mt-2">${recomendProduct.key.productName}</h5>
+                                <h5 class="card-product-name mt-2">${recomendProduct._1().productName}</h5>
                                 <div class="d-flex price d-inline-block">
-                                    <span class="d-block rated-number mb-2">${recomendProduct.value != null ? recomendProduct.value: 0}/5</span>
+                                    <span class="d-block rated-number mb-2">${recomendProduct._2() != null ? recomendProduct._2(): 0}/5</span>
                                     <i class="fa-solid fa-star me-1 mt-1 ms-2 " style="color: #FF5722;"></i>
 
                                 </div>
-                                <span class="current-price fw-bold fs-4">${recomendProduct.key.price}đ</span>
-<%--                                <span class="old-price fs-4 ms-4">$350</span>--%>
-<%--                                <span--%>
-<%--                                        class="product-badge badge bg-danger rounded-pill align-items-center ms-3">-40%</span>--%>
+                                <c:if test="${not empty recomendProduct._3()}">
+                                    <div class="price  d-inline-block ">
+
+                                        <c:set var="finalPrice" value="${recomendProduct._1().price}" />
+
+                                        <c:if test="${recomendProduct._3().getPromotion().getDiscountType().name() == 'VND'}">
+                                            <c:set var="finalPrice" value="${recomendProduct._1().price - recomendProduct._3().getPromotion().getDiscountValue()}" />
+                                        </c:if>
+
+                                        <c:if test="${recomendProduct._3().getPromotion().getDiscountType().name() == 'Percentage'}">
+                                            <c:set var="finalPrice" value="${recomendProduct._1().price - (recomendProduct._1().price * recomendProduct._3().getPromotion().getDiscountValue() / 100)}" />
+                                        </c:if>
+                                        <c:if test="${recomendProduct._3().getPromotion().getDiscountType().name() == 'VND'}">
+                                            <span class="product-badge badge bg-danger rounded-pill align-items-center">-${recomendProduct._3().getPromotion().getDiscountValue()}VND</span>
+                                        </c:if>
+                                        <c:if test="${recomendProduct._3().getPromotion().getDiscountType().name() != 'VND'}">
+                                            <span class="product-badge badge bg-success rounded-pill align-items-center">
+                                                -${recomendProduct._3().getPromotion().getDiscountValue()}%
+                                            </span>
+                                        </c:if>
+                                        <br><span class="current-price fw-bold fs-4 ">${finalPrice} VND</span>
+                                        <br><span class="old-price fs-4">${recomendProduct._1().price} VND</span>
+
+                                    </div>
+
+                                </c:if>
+                                <c:if test="${empty recomendProduct._3()}">
+                                    <span class="current-price fw-bold fs-4">${recomendProduct._1().price} VND</span>
+                                </c:if>
+
                             </div>
                         </div>
                     </a>
@@ -511,8 +505,7 @@
     const productDetails = JSON.parse('${productDetails}');
     console.log("Product Details:", productDetails);
 </script>
-<script src="${pageContext.request.contextPath}/js/toastMessage.js"></script>
-<script src="${pageContext.request.contextPath}/js/ItemCart.js"></script>
+<%--<script src="${pageContext.request.contextPath}/js/toastMessage.js"></script>--%>
 <script src="${pageContext.request.contextPath}/js/ProductInformation.js"></script>
 </body>
 </html>

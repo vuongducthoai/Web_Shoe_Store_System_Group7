@@ -18,8 +18,9 @@ import service.Impl.ProductPromotionImpl;
 import service.Impl.ProductServiceImpl;
 import service.Impl.ReviewServiceImpl;
 
-import java.awt.print.Pageable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import java.io.IOException;
@@ -54,23 +55,29 @@ public class HomeController extends HttpServlet {
             //Load Promotion
             LocalDate startDate = LocalDate.parse("2024-01-20");
             LocalDate endDate = LocalDate.parse("2025-12-30");
-            int page = 4;
+            int limit = 8;
             int index = 1;
             int num = productPromotion.countProductPromotion(startDate, endDate);
-            int numpage = num / page;   //So luong trang
-            System.out.println("NumPage " + numpage);
-            int num2 = num % page;
+            int numpage = num / limit;   //So luong trang
+            int num2 = num % limit;
 
             if(num != 0 && num2 != 0){
                 numpage++;
             }
 
-            int offset = (index - 1) * page;
 
-           List<PromotionProductDTO> promotionProductDTOList = productPromotion.findTop8ProductPromotionNow(startDate, endDate, offset, page);
+            LocalDateTime startDateTime = LocalDateTime.of(2024, 1, 20, 0, 0, 0, 0);
+            LocalDateTime endDateTime = LocalDateTime.of(2025, 12, 30, 23, 59, 59, 999999999);
+
+            DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+            String startDateStr = startDateTime.format(formatter);
+            String endDateStr = endDateTime.format(formatter);
+            req.setAttribute("startDate", startDateStr);
+            req.setAttribute("endDate", endDateStr);
+
+           List<PromotionProductDTO> promotionProductDTOList = productPromotion.findTop8ProductPromotionNow(startDate, endDate, index - 1, limit);
            req.setAttribute("promotionProductDTOList", promotionProductDTOList);
-           req.setAttribute("index", index);
-           req.setAttribute("numpage", numpage);
+           req.setAttribute("numpage", numpage); // So luong trang
             req.getRequestDispatcher("./index.jsp").forward(req, resp);
         } else if(path.equals("/sign-in")) {
             resp.sendRedirect("/view/login.jsp");

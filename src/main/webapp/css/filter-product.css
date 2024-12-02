@@ -1,0 +1,234 @@
+.suggestions-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.suggestion-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.suggestion-item img {
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+.suggestion-item span {
+    font-size: 14px;
+    color: #333;
+}
+
+.suggestion-item:hover {
+    background-color: #f0f0f0;
+}
+
+
+
+.promotion-item:hover {
+    transform: translateY(-3px); /* Hiệu ứng nổi khi hover */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); /* Thêm shadow */
+}
+
+
+.promotion-item a:hover {
+    color: #2196F3;
+}
+
+
+.promotion-item {
+    cursor: pointer; /* Thêm cursor pointer cho cả li khi hover */
+}
+
+.promotion-item a {
+    transition: color 0.3s ease-in-out;
+    display: block; /* Đảm bảo rằng thẻ <a> bao quanh toàn bộ <li> */
+    width: 100%; /* Đảm bảo <a> chiếm toàn bộ chiều rộng của <li> */
+    height: 100%; /* Đảm bảo <a> chiếm toàn bộ chiều cao của <li> */
+}
+
+
+#category-list {
+    list-style-type: none; /* Tắt dấu chấm đầu dòng */
+    padding: 0;
+    margin: 0;
+}
+
+.category-item {
+    display: block;  /* Đảm bảo mỗi mục nằm trong một hàng riêng biệt */
+    margin-bottom: 10px; /* Thêm khoảng cách giữa các mục */
+}
+
+.category-btn {
+    text-decoration: none;
+    color: #4a5568; /* Màu text */
+    font-size: 1.1rem; /* Kích thước chữ */
+    display: block; /* Đảm bảo toàn bộ vùng của liên kết có thể click */
+}
+
+.category-btn:hover {
+    color: #2d3748; /* Màu khi hover */
+}
+
+
+#dropdownMenu {
+    max-width: 200px;
+    overflow-x: auto;
+}
+
+#dropdownMenu li {
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 6px;
+    /* Để góc tròn giống nút */
+    font-size: 15px;
+}
+
+#dropdownMenu li:hover {
+    background-color: #3b82f6;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.custom-slider___1 {
+    position: relative;
+    margin: 40px auto;
+    height: 4px;
+    width: 100%;
+}
+
+.custom-slider___1 .slide {
+    position: absolute;
+    top: 0;
+    height: 12px;
+    background: #EDEDED;
+    left: 9px;
+    right: 9px;
+}
+
+.custom-slider___1 .line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 12px;
+    background-color: #2196F3;
+}
+
+.custom-slider___1 .thumb {
+    position: absolute;
+    z-index: 2;
+    text-align: left;
+    border: 2px solid #2196F3;
+    background-color: #FFFFFF;
+    border-radius: 50%;
+    outline: none;
+    top: -5px;
+    height: 22px;
+    width: 22px;
+    margin-left: -9px;
+}
+
+.custom-slider___1 input {
+    -webkit-appearance: none;
+    appearance: none;
+    position: absolute;
+    pointer-events: none;
+    z-index: 3;
+    height: 3px;
+    top: 0;
+    width: 100%;
+    opacity: 0;
+    margin: 0;
+}
+
+.custom-slider___1 input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    pointer-events: all;
+    border-radius: 50%;
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+}
+
+
+.category-btn {
+    padding: 8px;
+    display: block;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.category-btn:hover {
+    background-color: #2196F3; /* Màu nền khi hover */
+}
+
+.text-white {
+    color: white;
+}
+
+.text-gray-700 {
+    color: #4b5563;
+}
+
+/* Viền mặc định cho các nút */
+.size-btn {
+    border-width: 2px; /* Viền mặc định */
+}
+
+/* Viền khi người dùng chọn */
+.size-btn.border-blue-500 {
+    border-color: #2196F3; /* Màu xanh dương */
+    border-width: 2px; /* Viền dày hơn khi được chọn */
+}
+
+
+.border-blue-500 {
+    border-color: #2196F3; /* Màu xanh dương */
+}
+
+/* Viền mặc định cho các nút màu */
+.flex button {
+    border-width: 2px; /* Viền mặc định */
+}
+
+/* Viền khi người dùng chọn */
+.flex button.border-blue-500 {
+    border-color: #2196F3; /* Màu xanh dương */
+    border-width: 4px; /* Viền dày hơn khi được chọn */
+}
+
+.selected-color {
+    box-shadow: 0 0 5px 2px rgba(0, 128, 255, 0.5); /* Ví dụ hiệu ứng đổ bóng */
+    border: 3px solid #00bfff; /* Thêm đường viền đặc biệt */
+}
+
+
+.color-btn {
+    border-radius: 50%; /* Đảm bảo nút là hình tròn */
+    width: 1.5rem; /* Hoặc giá trị khác nếu cần */
+    height: 1.5rem; /* Hoặc giá trị khác nếu cần */
+}
+
+body {
+    font-family: 'Calibri', 'Inter', 'Roboto', sans-serif;
+}

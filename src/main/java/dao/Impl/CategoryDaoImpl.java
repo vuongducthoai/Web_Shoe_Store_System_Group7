@@ -4,7 +4,9 @@ import JpaConfig.JpaConfig;
 import dao.ICategoryDao;
 import dto.CategoryDTO;
 import dto.ProductDTO;
+
 import entity.Category;
+import entity.Product;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
@@ -12,8 +14,9 @@ import jakarta.persistence.TypedQuery;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.stream.Collectors;
 import static util.ConvertImageStringToByteArray.convertBase64ToByteArray;
+
 
 public class CategoryDaoImpl implements ICategoryDao {
 
@@ -86,15 +89,35 @@ public class CategoryDaoImpl implements ICategoryDao {
         List<ProductDTO> productDTOList = new ArrayList<>();
         try {
             //Native SQL Query
-            String sql = "SELECT p.productName, MAX(p.price), SUBSTRING_INDEX(GROUP_CONCAT(TO_BASE64(p.image)), ',', 1), " +
-                    "MIN(p.description), COUNT(p.productName) " +
-                    "FROM Product p " +
-                    "WHERE p.status = 1 " +
-                    " AND p.categoryID = " + categoryId +
-                    " GROUP BY p.productName";
+            String hql = "WITH RankedProducts AS (\n" +
+                    "    SELECT \n" +
+                    "        p.productName, \n" +
+                    "        p.price, \n" +
+                    "        p.image, \n" +
+                    "        p.description, \n" +
+                    "        ROW_NUMBER() OVER (PARTITION BY p.productName ORDER BY p.price DESC) AS rn, \n" +
+                    "        COUNT(*) OVER (PARTITION BY p.productName) AS product_count, \n" +
+                    "        p.categoryId  \n" +
+                    "    FROM Product p \n" +
+                    "    WHERE p.status = 0\n" +
+                    ")\n" +
+                    "SELECT \n" +
+                    "    rp.productName, \n" +
+                    "    MAX(rp.price) AS max_price, \n" +
+                    "    -- Lấy ảnh đầu tiên trong mỗi nhóm sản phẩm, không cần GROUP_CONCAT\n" +
+                    "    (SELECT rp1.image \n" +
+                    "     FROM RankedProducts rp1 \n" +
+                    "     WHERE rp1.productName = rp.productName AND rp1.rn = 1) AS image,\n" +
+                    "    MIN(rp.description) AS min_description, \n" +
+                    "    rp.product_count, \n" +
+                    "    c.categoryName  \n" +
+                    "FROM RankedProducts rp \n" +
+                    "JOIN Category c ON rp.categoryId = c.categoryId  \n" +
+                    "WHERE c.categoryId = ?1\n" +
+                    "GROUP BY rp.productName, rp.product_count, c.categoryName";
 
-            Query query = entityManager.createNativeQuery(sql);
-
+            Query query = entityManager.createNativeQuery(hql);
+            query.setParameter(1, categoryId);
 
             // Phân trang
             query.setFirstResult(offset);
@@ -103,15 +126,13 @@ public class CategoryDaoImpl implements ICategoryDao {
             // Thực thi truy vấn
             List<Object[]> results = query.getResultList();
 
-            for(Object[] result : results) {
+            for(Object[] row : results) {
                 ProductDTO productDTO = new ProductDTO();
-                String productName = (String) result[0];
-                double price = (double) result[1];
-                String imageString = (String) result[2];
-                String description = (String) result[3];
-                int quantity = ((Long) result[4]).intValue();
-
-                byte[] image = convertBase64ToByteArray(imageString);
+                String productName = (String) row[0];
+                double price = (double) row[1];
+                byte[] image = (byte[]) row[2];
+                String description = (String) row[3];
+                int quantity = ((Long) row[4]).intValue();
 
                 productDTO.setProductName(productName);
                 productDTO.setPrice(price);
@@ -153,6 +174,31 @@ public class CategoryDaoImpl implements ICategoryDao {
         }
         finally {
             entityManager.close();
+        }
+    }
+
+    @Override
+    public List<CategoryDTO> findAllCategories() {
+        try (EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager()) {
+            try {
+                // Truy vấn tất cả danh mục và sản phẩm liên quan
+                List<Category> categories = entityManager.createQuery(
+                                "SELECT c FROM Category c LEFT JOIN FETCH c.products", Category.class)
+                        .getResultList();
+
+                // Ánh xạ từ Category sang CategoryDTO
+                return categories.stream()
+                        .map(category -> new CategoryDTO(
+                                category.getCategoryID(),
+                                category.getCategoryName(),
+                                category.getProducts().stream()
+                                        .map(Product::toDTO)  // Sử dụng phương thức riêng cho việc ánh xạ sản phẩm
+                                        .collect(Collectors.toList())
+                        ))
+                        .collect(Collectors.toList());
+            } finally {
+                entityManager.close();
+            }
         }
     }
 }

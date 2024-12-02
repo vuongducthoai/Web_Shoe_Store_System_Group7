@@ -2,11 +2,13 @@ package service.Impl;
 import dao.IReviewDAO;
 import dao.Impl.ProductDAOImpl;
 import dao.Impl.ReviewDAOImpl;
-import dto.CategoryDTO;
 import dto.ProductDTO;
+import dto.PromotionProductDTO;
 import dto.ReviewDTO;
-import entity.Category;
 import entity.Product;
+import io.vavr.Tuple;
+import io.vavr.Tuple3;
+import service.IProductPromotion;
 import service.IProductService;
 import service.IReviewService;
 
@@ -17,6 +19,7 @@ public class ProductServiceImpl implements IProductService {
 
     private ProductDAOImpl productDAO = new ProductDAOImpl();
     private IReviewDAO reviewDAO = new ReviewDAOImpl();
+    private IProductPromotion productPromotion = new ProductPromotionImpl();
     private IReviewService reviewService = new ReviewServiceImpl();
 
     @Override
@@ -127,8 +130,8 @@ public class ProductServiceImpl implements IProductService {
 
     }
 
-    public Map<ProductDTO, Double> findRandomProducts(String currentProductName, int CID) {
-        Map<ProductDTO, Double> result = new HashMap<>();
+    public List<Tuple3<ProductDTO, Double, PromotionProductDTO>>  findRandomProducts(String currentProductName, int CID) {
+        List<Tuple3<ProductDTO, Double, PromotionProductDTO>> resultList = new ArrayList<>();
         List<Product> products = productDAO.findRandomProducts(currentProductName, CID);
         for (Product product : products) {
             ProductDTO productDTO = new ProductDTO();
@@ -143,11 +146,15 @@ public class ProductServiceImpl implements IProductService {
                     .distinct().toList();
             List<ReviewDTO> reviews = reviewDAO.getReviewsByProductID(IDs);
             double rating = reviewService.averageRating(reviews);
-            result.put(productDTO, rating);
+
+            PromotionProductDTO promotionProductDTO = new PromotionProductDTO();
+            promotionProductDTO = productPromotion.promotioOnProductInfo(product.getProductName());
+
+            Tuple3<ProductDTO, Double, PromotionProductDTO> tuple = Tuple.of(productDTO, rating, promotionProductDTO);
+            resultList.add(tuple);
         }
 
-        return result;
-
+        return resultList;
     }
     public List<String> getDistinctProductNames() {
         // Lấy danh sách tất cả sản phẩm từ repository

@@ -11,6 +11,7 @@
       font-family: 'Roboto', Arial, sans-serif;
       margin: 0;
       padding: 0;
+      padding-top: 80px;
       background-color: #f9f9f9;
     }
 
@@ -196,7 +197,18 @@
       color: #555;
       border-color: #ddd;
     }
-
+    .no-orders-message {
+      text-align: center;
+      color: #f44336; /* Màu đỏ nổi bật */
+      font-weight: bold;
+      font-size: 18px; /* Kích thước chữ vừa phải */
+      margin-top: 20px; /* Khoảng cách phía trên */
+      padding: 10px;
+      background-color: #ffe6e6; /* Nền màu đỏ nhạt để làm nổi bật thông báo */
+      border: 1px solid #f44336; /* Viền màu đỏ */
+      border-radius: 5px; /* Bo góc cho mềm mại */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
+    }
     .btn-rate:hover {
       background-color: #e0e0e0;
     }
@@ -235,7 +247,7 @@
       const searchTerm = document.querySelector('.search-input').value.toLowerCase();
       const orders = document.querySelectorAll('.order-item');
       orders.forEach(order => {
-        // Lấy tên sản phẩm trong đơn hàng
+        // Lấy tên sản phẩm trong đơn hànzg
         const productName = order.querySelector('.product-name').innerText.toLowerCase();
 
         // Kiểm tra xem tên sản phẩm có chứa từ khóa tìm kiếm không
@@ -266,6 +278,9 @@
   </script>
 </head>
 <body>
+<header>
+  <jsp:include page="/view/header.jsp"></jsp:include>
+</header>
 <h2>Lịch Sử Mua Hàng</h2>
 
 <div class="order-history">
@@ -274,6 +289,12 @@
     <input type="text" class="search-input" placeholder="Tìm kiếm theo tên sản phẩm...">
     <button class="search-button">Tìm kiếm</button>
   </div>
+  <!-- Kiểm tra thông báo lỗi -->
+  <c:if test="${not empty errorMessage}">
+    <div class="no-orders-message">
+        ${errorMessage}
+    </div>
+  </c:if>
 
   <!-- Thanh điều hướng trạng thái -->
   <ul class="order-filter">
@@ -310,13 +331,11 @@
 
       <!-- Footer đơn hàng -->
       <div class="order-footer">
-        <a href="orderDetails?id=${order.orderId}" class="btn btn-more">Xem chi tiết</a>
-        <c:if test="${order.orderStatus == 'COMPLETED'}">
-          <a href="rateOrder?id=${order.orderId}" class="btn btn-rate">Đánh giá</a>
-        </c:if>
+        <a href="orderDetails?idOrder=${order.orderId}" class="btn btn-more">Xem chi tiết</a>
       </div>
     </div>
   </c:forEach>
 </div>
 </body>
+<%@ include file="/view/footer.jsp" %> <!-- Include footer.jsp -->
 </html>

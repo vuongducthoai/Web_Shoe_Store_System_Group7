@@ -35,7 +35,7 @@ public class ProductPromotionImpl implements IProductPromotion {
                     "   INNER JOIN Product p ON pp.productID = p.productID " +
                     "   WHERE pr.isActive = 1 " +
                     "   AND p.status = 1 " +
-                    "   AND pr.promotionType = 'VOUCHER_PRODUCT' " +
+//                    "   AND pr.promotionType = 'VOUCHER_PRODUCT' " +
                     "   AND pr.startDate >= ?1 " +
                     "   AND pr.endDate <= ?2 " +
                     ") AS RankedPromotions " +
@@ -43,10 +43,9 @@ public class ProductPromotionImpl implements IProductPromotion {
                     "ORDER BY startDate DESC";
 
             Query query = entityManager.createNativeQuery(sql);
-          //  query.setMaxResults(5); // Set to 5 if that's the correct limit
             query.setParameter(1, startDate);
             query.setParameter(2, endDate);
-            query.setFirstResult(offset);
+            query.setFirstResult(offset * limit);
             query.setMaxResults(limit);
 
             List<Object[]> results = query.getResultList();
@@ -124,7 +123,6 @@ public class ProductPromotionImpl implements IProductPromotion {
             Query query = entityManager.createNativeQuery(sql);
             query.setParameter(1, productName);
             List<Object[]> results = query.getResultList();
-            System.out.println("Result: " + results.size());
             for (Object[] row : results) {
 
                 String discountType = (String) row[4];
