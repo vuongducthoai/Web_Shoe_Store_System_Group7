@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -309,23 +309,29 @@
                 <div class="reviews">
                     <c:forEach var="review" items="${reviews}">
                         <div class="review">
-                            <div class="user-info">${review.customer.getFullName()}<span
-                                    class="date">${review.date}</span></div>
+                            <div class="user-info">${review.customer.getFullName()}
+                                <span class="date">
+
+                                    <fmt:formatDate value="${review.date}" pattern="dd/MM/yyyy" />
+                                </span>
+                            </div>
                             <div class="d-flex">
                                 <c:forEach begin="1" end="${review.ratingValue}">
                                     <div class="rating">★</div>
                                 </c:forEach>
                             </div>
                             <p>${review.comment}</p>
-                            <img style="width: 100px;" src="${review.getBase64Image()}"><br>
+                            <img style="width: 100px; border: none;" src="${review.getBase64Image()}" data-bs-toggle="modal" data-bs-target="#imageModal" class="img-thumbnail review-image"><br>
                             <c:if test="${review.getResponse().getResponseID() != 0}">
                                 <div class="response-container mb-2 d-flex justify-content-between me-2 mt-2">
                                     <div class="m-2">
                                         <i class="fa-solid fa-arrow-right-from-bracket"></i>
                                         <span class="response-name">${review.response.admin.fullName}</span><br>
                                         <span class="response-content">${review.response.content}</span><br>
-                                        <span class="response-date fw-lighter"
-                                              style="font-size: 10px">${review.response.timeStamp}</span><br>
+                                        <span class="response-date fw-lighter" style="font-size: 10px">
+                                            <!-- Định dạng lại thời gian phản hồi -->
+                                            <fmt:formatDate value="${review.response.timeStamp}" pattern="dd/MM/yyyy" />
+                                        </span><br>
                                         <input type="hidden" id="ResponseID"
                                                value="${review.getResponse().getResponseID()}">
                                     </div>
@@ -350,6 +356,21 @@
                             </c:if>
                         </div>
                     </c:forEach>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="imageModalLabel">Phóng to hình ảnh</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <img id="modalImage" src="" class="img-fluid" alt="Review Image" style="height: 500px;">
+                    </div>
                 </div>
             </div>
         </div>
