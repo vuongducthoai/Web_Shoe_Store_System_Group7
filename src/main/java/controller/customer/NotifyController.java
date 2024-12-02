@@ -30,6 +30,9 @@ public class NotifyController extends HttpServlet {
             RequestDispatcher dispatcher = request.getRequestDispatcher("/view/notify.jsp");
             dispatcher.forward(request, response);
         }
+        else{
+            response.sendRedirect("/view/login.jsp");
+        }
 
 
     }
