@@ -431,7 +431,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-
 function editProduct(button) {
     event.preventDefault();
     // Lấy thông tin sản phẩm từ thuộc tính data- của nút sửa
@@ -465,13 +464,11 @@ function editProduct(button) {
 }
 
 
-// thêm biến thể
+// thêm biến thể phần add sản phẩm
 let colorCounter = 1; // Đếm số lượng màu đã thêm
-
 
 const addColorBtn = document.getElementById('add-color-btn');
 const colorContainer = document.getElementById('color-container');
-
 
 addColorBtn.addEventListener('click', () => {
     // Sử dụng số thứ tự dựa trên màu hiện tại, không dùng colorCounter
@@ -506,26 +503,19 @@ addColorBtn.addEventListener('click', () => {
        <button type="button" class="remove-color-btn">Xóa biến thể</button>
    `;
 
-
     colorContainer.appendChild(colorBlock);
     console.log(colorContainer.innerHTML);
-    console.log(`Số lượng color-block hiện tại: `+getColorBlockCount());
-
-
-
-
-
+    console.log(`Số lượng color-block hiện tại: ` + getColorBlockCount());
 
     const addSizeBtn = colorBlock.querySelector('.add-size-btn');
     const sizeContainer = colorBlock.querySelector('.size-container');
-
 
     addSizeBtn.addEventListener('click', () => {
         const sizeBlock = document.createElement('div');
         sizeBlock.classList.add('size-block');
         sizeBlock.innerHTML = `
-           <input type="text" name="size-${colorId}[]" placeholder="Nhập size">
-           <input type="text" name="quantity-${colorId}[]" placeholder="Nhập số lượng">
+           <input type="text" name="size-${colorId}[]" placeholder="Nhập size" required>
+           <input type="text" name="quantity-${colorId}[]" placeholder="Nhập số lượng" required>
            <button type="button" class="remove-size-btn">Xóa Size</button>
        `;
         sizeContainer.appendChild(sizeBlock);
@@ -535,10 +525,6 @@ addColorBtn.addEventListener('click', () => {
             sizeContainer.removeChild(sizeBlock);
         });
     });
-
-
-
-
 
 
     // Load Image Logic
@@ -552,7 +538,6 @@ addColorBtn.addEventListener('click', () => {
         imageInput.click();
     });
 
-
     imageInput.addEventListener('change', (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -564,14 +549,12 @@ addColorBtn.addEventListener('click', () => {
         }
     });
 
-
     cancelBtn.addEventListener('click', () => {
         imageDisplay.src = '';
         imageInput.value = '';
     });
 
 
-    // Remove Color Block and update other color blocks' IDs
     const removeColorBtn = colorBlock.querySelector('.remove-color-btn');
     removeColorBtn.addEventListener('click', () => {
         colorContainer.removeChild(colorBlock);
@@ -618,129 +601,214 @@ function getColorBlockCount() {
 
 
 //thêm biến thể phần edit sản phẩm
- let colorCounterEdit = 1; // Đếm số lượng màu đã thêm trong chế độ Edit
 
- const addColorBtnEdit = document.getElementById('add-color-btnEdit');
- const colorContainerEdit = document.getElementById('color-container-edit');
+let colorCounterEdit = 1; // Đếm số lượng màu đã thêm trong chế độ Edit
 
- // Lắng nghe sự kiện "click" trên colorContainerEdit
- colorContainerEdit.addEventListener('click', (event) => {
+const addColorBtnEdit = document.getElementById('add-color-btnEdit');
+const colorContainerEdit = document.getElementById('color-container-edit');
 
-     // Thêm Size
-     if (event.target && event.target.classList.contains('add-size-btnEdit')) {
-         const colorIdEdit = event.target.getAttribute('data-color');
-         const sizeContainerEdit = document.getElementById(`size-container-${colorIdEdit}`);
-         const sizeBlockEdit = document.createElement('div');
-         sizeBlockEdit.classList.add('size-block');
-         sizeBlockEdit.innerHTML = `
-         <input type="text" name="size-${colorIdEdit}[]" placeholder="Nhập size">
-         <input type="text" name="quantity-${colorIdEdit}[]" placeholder="Nhập số lượng">
-         <button type="button" class="remove-size-btnEdit">Xóa Size</button>
-     `;
-         sizeContainerEdit.appendChild(sizeBlockEdit);
-     }
+// Lắng nghe sự kiện "click" trên colorContainerEdit
+colorContainerEdit.addEventListener('click', (event) => {
 
-     // Xóa size
-     if (event.target && event.target.classList.contains('remove-size-btnEdit')) {
-         const sizeBlockEdit = event.target.closest('.size-block');
-         sizeBlockEdit.parentElement.removeChild(sizeBlockEdit);
-     }
+    // Thêm Size
+    if (event.target && event.target.classList.contains('add-size-btnEdit')) {
+        const colorIdEdit = event.target.getAttribute('data-color');
+        const sizeContainerEdit = document.getElementById(`size-container-${colorIdEdit}`);
+        const sizeBlockEdit = document.createElement('div');
+        sizeBlockEdit.classList.add('size-block');
+        sizeBlockEdit.innerHTML = `
+            <input type="text" name="size-${colorIdEdit}[]" placeholder="Nhập size" required>
+            <input type="text" name="quantity-${colorIdEdit}[]" placeholder="Nhập số lượng" required>
+            <button type="button" class="remove-size-btnEdit">Xóa Size</button>
+        `;
+        sizeContainerEdit.appendChild(sizeBlockEdit);
+    }
 
-     // Xóa biến thể
-     if (event.target && event.target.classList.contains('remove-color-btnEdit')) {
-         const colorBlockEdit = event.target.closest('.color-block');
-         colorContainerEdit.removeChild(colorBlockEdit);
-         updateColorIdsEdit(); // Cập nhật lại ID màu sau khi xóa
-     }
+    // Xóa size
+    if (event.target && event.target.classList.contains('remove-size-btnEdit')) {
+        const sizeBlockEdit = event.target.closest('.size-block');
+        sizeBlockEdit.parentElement.removeChild(sizeBlockEdit);
+    }
 
-     // Load hình ảnh
-     if (event.target && event.target.classList.contains('loadImageBtnEdit')) {
-         const colorBlockEdit = event.target.closest('.color-block');
-         const imageInputEdit = colorBlockEdit.querySelector('.imageInput');
-         imageInputEdit.click(); // Kích hoạt input file
-     }
+    // Xóa biến thể
+    if (event.target && event.target.classList.contains('remove-color-btnEdit')) {
+        const colorBlockEdit = event.target.closest('.color-block');
+        colorContainerEdit.removeChild(colorBlockEdit);
+        updateColorIdsEdit(); // Cập nhật lại ID màu sau khi xóa
+    }
 
-     // Hủy hình ảnh
-     if (event.target && event.target.classList.contains('cancelBtnEdit')) {
-         const colorBlockEdit = event.target.closest('.color-block');
-         const imageDisplayEdit = colorBlockEdit.querySelector('.imageDisplay');
-         const imageInputEdit = colorBlockEdit.querySelector('.imageInput');
-         imageDisplayEdit.src = '';
-         imageInputEdit.value = ''; // Reset image
-     }
- });
+    // Load hình ảnh
+    if (event.target && event.target.classList.contains('loadImageBtnEdit')) {
+        const colorBlockEdit = event.target.closest('.color-block');
+        const imageInputEdit = colorBlockEdit.querySelector('.imageInput');
+        imageInputEdit.click(); // Kích hoạt input file
+    }
 
- // Lắng nghe sự kiện "change" cho input file (load image)
- colorContainerEdit.addEventListener('change', (event) => {
-     if (event.target && event.target.classList.contains('imageInput')) {
-         const file = event.target.files[0];
-         if (file) {
-             const reader = new FileReader();
-             reader.onload = (e) => {
-                 const colorBlockEdit = event.target.closest('.color-block');
-                 const imageDisplayEdit = colorBlockEdit.querySelector('.imageDisplay');
-                 imageDisplayEdit.src = e.target.result;
-             };
-             reader.readAsDataURL(file);
-         }
-     }
- });
+    // Hủy hình ảnh
+    if (event.target && event.target.classList.contains('cancelBtnEdit')) {
+        const colorBlockEdit = event.target.closest('.color-block');
+        const imageDisplayEdit = colorBlockEdit.querySelector('.imageDisplay');
+        const imageInputEdit = colorBlockEdit.querySelector('.imageInput');
+        imageDisplayEdit.src = '';
+        imageInputEdit.value = ''; // Reset image
+    }
+});
 
- // Khi nhấn nút 'Thêm Biến thể' để thêm một màu mới
- addColorBtnEdit.addEventListener('click', () => {
-     const colorIdEdit = getNextColorIdEdit();
-     const colorBlockEdit = document.createElement('div');
-     colorBlockEdit.classList.add('color-block');
-     colorBlockEdit.setAttribute('data-color-id', colorIdEdit);
+// Lắng nghe sự kiện "change" cho input file (load image)
+colorContainerEdit.addEventListener('change', (event) => {
+    if (event.target && event.target.classList.contains('imageInput')) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const colorBlockEdit = event.target.closest('.color-block');
+                const imageDisplayEdit = colorBlockEdit.querySelector('.imageDisplay');
+                imageDisplayEdit.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+});
 
-     colorBlockEdit.innerHTML = `
-     <h4>Màu ${colorIdEdit}</h4>
-     <label for="color-name-${colorIdEdit}">Tên Màu:</label>
-     <input type="text" name="color-name-${colorIdEdit}" id="color-name-${colorIdEdit}" placeholder="Nhập tên màu" required>
+// Khi nhấn nút 'Thêm Biến thể' để thêm một màu mới
+addColorBtnEdit.addEventListener('click', () => {
+    const colorIdEdit = getNextColorIdEdit();
+    const colorBlockEdit = document.createElement('div');
+    colorBlockEdit.classList.add('color-block');
+    colorBlockEdit.setAttribute('data-color-id', colorIdEdit);
 
-     <label for="image-color-${colorIdEdit}">Hình ảnh:</label>
-     <div class="LoadImageContent">
-         <div class="picturebox">
-             <img class="imageDisplay" src="" alt="No image" />
-         </div>
-         <button type="button" class="loadImageBtn">Load Image</button>
-         <input type="file" name="image-color-${colorIdEdit}" class="imageInput" style="display: none;" accept="image/*">
-         <button type="button" class="cancelBtn">Cancel Image</button>
-     </div>
+    colorBlockEdit.innerHTML = `
+        <h4>Màu ${colorIdEdit}</h4>
+        <label for="color-name-${colorIdEdit}">Tên Màu:</label>
+        <input type="text" name="color-name-${colorIdEdit}" id="color-name-${colorIdEdit}" placeholder="Nhập tên màu" required>
 
-     <label>Size và Số lượng:</label>
-     <div class="size-container" id="size-container-${colorIdEdit}"></div>
-     <button type="button" class="add-size-btnEdit" data-color="${colorIdEdit}">Thêm Size</button>
+        <label for="image-color-${colorIdEdit}">Hình ảnh:</label>
+        <div class="LoadImageContent">
+            <div class="picturebox">
+                <img class="imageDisplay" src="" alt="No image" />
+            </div>
+            <button type="button" class="loadImageBtnEdit action-btn">Load Image</button>
+            <input type="file" name="image-color-${colorIdEdit}" class="imageInput" style="display: none;" accept="image/*">
+            <button type="button" class="cancelBtnEdit action-btn">Cancel Image</button>
+        </div>
 
-     <button type="button" class="remove-color-btnEdit">Xóa biến thể</button>
- `;
+        <label>Size và Số lượng:</label>
+        <div class="size-container" id="size-container-${colorIdEdit}"></div>
+        <button type="button" class="add-size-btnEdit" data-color="${colorIdEdit}">Thêm Size</button>
 
-     colorContainerEdit.appendChild(colorBlockEdit);
- });
+        <button type="button" class="remove-color-btnEdit">Xóa biến thể</button>
+    `;
 
- // Hàm lấy số ID tiếp theo dựa trên màu hiện tại (Edit)
- function getNextColorIdEdit() {
-     const colorBlocksEdit = colorContainerEdit.querySelectorAll('.color-block');
-     return colorBlocksEdit.length + 1;
- }
+    colorContainerEdit.appendChild(colorBlockEdit);
+});
 
- // Cập nhật lại ID của các màu còn lại (Edit)
- function updateColorIdsEdit() {
-     const colorBlocksEdit = colorContainerEdit.querySelectorAll('.color-block');
+// Hàm lấy số ID tiếp theo dựa trên màu hiện tại (Edit)
+function getNextColorIdEdit() {
+    const colorBlocksEdit = colorContainerEdit.querySelectorAll('.color-block');
+    return colorBlocksEdit.length + 1;
+}
 
-     colorBlocksEdit.forEach((block, index) => {
-         const colorIdEdit = index + 1;
-         block.querySelector('h4').textContent = `Màu ${colorIdEdit}`;
-         block.setAttribute('data-color-id', colorIdEdit);
-         block.querySelector('label[for^="color-name"]').setAttribute('for', `color-name-${colorIdEdit}`);
-         block.querySelector('input[name^="color-name"]').setAttribute('name', `color-name-${colorIdEdit}`);
-         block.querySelector('input[name^="size-"]').setAttribute('name', `size-${colorIdEdit}[]`);
-         block.querySelector('input[name^="quantity-"]').setAttribute('name', `quantity-${colorIdEdit}[]`);
-     });
- }
+// Cập nhật lại ID của các màu còn lại (Edit)
+function updateColorIdsEdit() {
+    const colorBlocksEdit = colorContainerEdit.querySelectorAll('.color-block');
+
+    colorBlocksEdit.forEach((block, index) => {
+        const colorIdEdit = index + 1;
+        block.querySelector('h4').textContent = `Màu ${colorIdEdit}`;
+        block.setAttribute('data-color-id', colorIdEdit);
+        block.querySelector('label[for^="color-name"]').setAttribute('for', `color-name-${colorIdEdit}`);
+        block.querySelector('input[name^="color-name"]').setAttribute('name', `color-name-${colorIdEdit}`);
+        block.querySelector('input[name^="size-"]').setAttribute('name', `size-${colorIdEdit}[]`);
+        block.querySelector('input[name^="quantity-"]').setAttribute('name', `quantity-${colorIdEdit}[]`);
+    });
+}
 
 
 
+
+
+// Kiểm tra bắt lỗi
+
+function validateForm() {
+    // Biểu thức chính quy chỉ chấp nhận số nguyên hoặc số thực
+    const numberRegex = /^\d+$/;
+
+    // Kiểm tra trường 'price'
+    const priceInput = document.querySelector('[id*="product-price"]');
+    if (priceInput && !numberRegex.test(priceInput.value)) {
+        alert("Vui lòng nhập giá trị hợp lệ cho trường 'Giá'. Giá chỉ được chứa số!");
+        priceInput.focus();
+        return false; // Ngăn form gửi đi
+    }
+
+    // Kiểm tra tất cả các trường 'size'
+    const sizeInputs = document.querySelectorAll("input[name^='size-']");
+    for (let sizeInput of sizeInputs) {
+        if (!numberRegex.test(sizeInput.value)) {
+            alert("Vui lòng nhập giá trị hợp lệ cho tất cả các trường 'Size'. Size chỉ được chứa số!");
+            sizeInput.focus();
+            return false; // Ngăn form gửi đi
+        }
+    }
+
+    // Kiểm tra tất cả các trường 'quantity'
+    const quantityInputs = document.querySelectorAll("input[name^='quantity-']");
+    for (let quantityInput of quantityInputs) {
+        if (!numberRegex.test(quantityInput.value)) {
+            alert("Vui lòng nhập giá trị hợp lệ cho tất cả các trường 'Số lượng'. Số lượng chỉ được chứa số!");
+            quantityInput.focus();
+            return false; // Ngăn form gửi đi
+        }
+    }
+
+    // Nếu tất cả hợp lệ
+    return true;
+}
+
+
+function validateFormEditProduct() {
+    // Biểu thức chính quy chấp nhận số nguyên hoặc số thực
+    const numberRegex = /^\d+(\.\d+)?$/;
+
+    // Kiểm tra trường 'price'
+    const priceInput = document.querySelector('#edit-product-price');
+    if (priceInput && (!priceInput.value.trim() || !numberRegex.test(priceInput.value))) {
+        alert("Vui lòng nhập giá trị hợp lệ cho trường 'Giá'. Giá chỉ được chứa số!");
+        priceInput.focus();
+        return false;
+    }
+
+    // Kiểm tra tất cả các trường 'size'
+    const sizeInputs = document.querySelectorAll("input[name^='size-']");
+    for (let sizeInput of sizeInputs) {
+        if (!sizeInput.value.trim() || !numberRegex.test(sizeInput.value)) {
+            alert("Vui lòng nhập giá trị hợp lệ cho tất cả các trường 'Size'. Size chỉ được chứa số!");
+            sizeInput.focus();
+            return false;
+        }
+    }
+
+    // Kiểm tra tất cả các trường 'quantity'
+    const quantityInputs = document.querySelectorAll("input[name^='quantity-']");
+    for (let quantityInput of quantityInputs) {
+        if (!quantityInput.value.trim() || !numberRegex.test(quantityInput.value)) {
+            alert("Vui lòng nhập giá trị hợp lệ cho tất cả các trường 'Số lượng'. Số lượng chỉ được chứa số!");
+            quantityInput.focus();
+            return false;
+        }
+    }
+
+    // Nếu tất cả hợp lệ
+    return true;
+}
+
+document.getElementById("btn-edit-product").addEventListener("click", function (event) {
+    addForm.style.display = "none";
+    deleteForm.style.display = "none";
+    editForm.style.display = "flex";
+
+
+});
 
 
 

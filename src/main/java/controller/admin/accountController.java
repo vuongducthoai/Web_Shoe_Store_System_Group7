@@ -3,8 +3,10 @@ package controller.admin;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import dao.IAccountDAO;
+import dao.ICategoryDao;
 import dao.IProductDAO;
 import dao.Impl.AccountDaoImpl;
+import dao.Impl.CategoryDaoImpl;
 import dao.Impl.ProductDAOImpl;
 import dto.*;
 import enums.RoleType;
@@ -16,10 +18,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import service.ICartService;
-import service.IProductPromotion;
-import service.IProductService;
-import service.IPromotionService;
+import service.*;
 import service.Impl.*;
 
 import java.io.BufferedReader;
@@ -33,11 +32,44 @@ public class accountController extends HttpServlet {
     IAccountDAO accountDAO = new AccountDaoImpl();
     IPromotionService promotionService = new PromotionServiceImpl();
     IProductService productService = new ProductServiceImpl();
-    IProductPromotion promotionProductService = new ProductPromotionImpl();
+    private final IOrderService orderService = new OrderServiceImpl();
+    IProductDAO productDAO = new ProductDAOImpl();
+    ICategoryDao categoryDao   = new CategoryDaoImpl();
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        synchronized (getServletContext()) {
+            if (getServletContext().getAttribute("fullOrderList") == null) {
+                List<OrderDTO> orderDTOList = orderService.findAllOrders();
+                getServletContext().setAttribute("fullOrderList", orderDTOList);
+            }
+        }
+    }
+
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // Lấy danh sách tài khoản từ DAO
+        List<ProductDTO> products = productDAO.getListProductDTO();
+        req.setAttribute("products", products);
+        List<CategoryDTO> categoryDTOList = categoryDao.categoryDTOList();
+        req.setAttribute("CategoryList", categoryDTOList);
+
         List<AccountDTO> accounts = accountDAO.getListAccountDTO();
+        String searchKeyword = req.getParameter("search");
+        String orderStatus = req.getParameter("status");
+        String startDate = req.getParameter("startDate");
+        String endDate = req.getParameter("endDate");
+
+        // Gọi phương thức Service để lấy danh sách đơn hàng đã lọc
+        List<OrderDTO> orderDTOList = orderService.getFilteredOrders(searchKeyword, orderStatus, startDate, endDate);
+
+        // Gửi dữ liệu đã lọc đến JSP
+        req.setAttribute("orderDTOList", orderDTOList);
+        req.setAttribute("searchKeyword", searchKeyword);
+        req.setAttribute("status", orderStatus);
+        req.setAttribute("startDate", startDate);
+        req.setAttribute("endDate", endDate);
 
         if (accounts == null || accounts.isEmpty()) {
             // Nếu không có tài khoản, in ra thông báo lỗi

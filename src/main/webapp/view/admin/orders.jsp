@@ -65,7 +65,7 @@
 
 <div class="container py-5">
     <div class="filters mb-4">
-        <form action="${pageContext.request.contextPath}/admin/orders" method="get" class="row g-2 align-items-center">
+        <form action="${pageContext.request.contextPath}/Admin" method="get" class="row g-2 align-items-center">
             <!-- Tìm kiếm từ khóa -->
             <div class="col-md-3">
                 <input type="text" name="search" value="${searchKeyword != null ? searchKeyword : ''}" placeholder="Tìm kiếm đơn hàng"

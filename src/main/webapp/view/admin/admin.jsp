@@ -141,7 +141,7 @@
                                     <td>
                                         <form action="ProductController" method="post" >
                                             <input type="hidden" name="productName" value="${product.productName}" >
-                                            <button class="action-btn" name="submitAction" value="showInfo" >Sửa</button>
+                                            <button class="action-btn" id="btn-edit-product" name="submitAction" value="showInfo" >Sửa</button>
                                         </form>
 
                                     </td>
@@ -162,15 +162,15 @@
 
 
                     <!-- nút thêm sản phẩm -->
-                    <form action="ProductController" method="post" enctype="multipart/form-data">
+                    <form action="ProductController" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
                         <div class="product-management-form" id="add-product-management-form">
                             <h3>Thêm sản phẩm mới</h3>
 
                             <label for="add-product-name">Tên sản phẩm</label>
-                            <input type="text" id="add-product-name" name="productName" placeholder="Nhập tên sản phẩm">
+                            <input type="text" id="add-product-name" name="productName" placeholder="Nhập tên sản phẩm" required>
 
                             <label for="add-product-price">Giá</label>
-                            <input type="text" id="add-product-price" name="productPrice" placeholder="Nhập giá sản phẩm">
+                            <input type="text" id="add-product-price" name="productPrice" placeholder="Nhập giá sản phẩm" required>
 
                             <label for="add-product-category">Danh mục</label>
                             <select id="add-product-category" name="CategoryName">
@@ -182,7 +182,7 @@
                             </select>
 
                             <label for="add-product-description">Mô tả</label>
-                            <input type="text" id="add-product-description" name="productDescription" placeholder="Nhập mô tả sản phẩm">
+                            <input type="text" id="add-product-description" name="productDescription" placeholder="Nhập mô tả sản phẩm" required>
 
                             <!-- Khu vực thêm biến thể (màu sắc) -->
                             <h4>Danh sách biến thể</h4>
@@ -195,17 +195,17 @@
 
 
                     <%--  Nút sửa sản phẩm--%>
-                    <form action="ProductController" method="post" enctype="multipart/form-data">
+                    <form action="ProductController" method="post" enctype="multipart/form-data" onsubmit="return validateFormEditProduct()">
                         <div class="product-management-form" id="edit-product-management-form">
                             <h3>Sửa sản phẩm</h3>
 
                             <!-- Dữ liệu chung -->
 
                             <label for="edit-product-name">Tên sản phẩm</label>
-                            <input type="text" id="edit-product-name" name="productName" value="${productName}" placeholder="Nhập tên sản phẩm">
+                            <input type="text" id="edit-product-name" name="productName" value="${productName}" placeholder="Nhập tên sản phẩm" required>
 
                             <label for="edit-product-price">Giá</label>
-                            <input type="text" id="edit-product-price" name="productPrice" value="${productPrice}" placeholder="Nhập giá sản phẩm">
+                            <input type="text" id="edit-product-price" name="productPrice" value="${productPrice}" placeholder="Nhập giá sản phẩm" required>
 
                             <label for="edit-product-category">Danh mục</label>
                             <select id="edit-product-category" name="CategoryName">
@@ -217,60 +217,64 @@
                             </select>
 
                             <label for="edit-product-description">Mô tả</label>
-                            <textarea id="edit-product-description" name="productDescription" placeholder="Nhập mô tả sản phẩm">${productDescription}</textarea>
+                            <textarea id="edit-product-description" name="productDescription" placeholder="Nhập mô tả sản phẩm"  required>${productDescription} </textarea>
 
                             <!-- Khu vực sửa biến thể (màu sắc) -->
                             <h4>Danh sách biến thể</h4>
                             <div id="color-container-edit">
-                                <!-- Lặp qua các màu -->
-                                <c:forEach var="color" items="${colors}">
-                                    <div class="color-block" data-color-id="${color}">
-                                        <h4>Màu ${color}</h4>
+                                <!-- Lặp qua Map colorIdToNameMap -->
+                                <c:forEach var="entry" items="${colorIdToNameMap}">
+                                    <c:set var="colorId" value="${entry.key}" />
+                                    <c:set var="colorName" value="${entry.value}" />
 
-                                        <label for="color-name-${color}">Tên Màu:</label>
-                                        <input type="text" name="color-name-${color}" value="${color}" id="color-name-${color}" required>
+                                    <div class="color-block" data-color-id="${colorId}">
+                                        <h4>Màu ${colorId}</h4>
 
-                                        <label for="image-color-${color}">Hình ảnh:</label>
+                                        <label for="color-name-${colorId}">Tên Màu:</label>
+                                        <input type="text" name="color-name-${colorId}" value="${colorName}" id="color-name-${colorId}" required>
+
+                                        <label for="image-color-${colorId}">Hình ảnh:</label>
                                         <div class="LoadImageContent">
                                             <div class="picturebox">
-                                                <img class="imageDisplay" src="${colorImageMap[color]}" alt="Current image" />
+                                                <img class="imageDisplay" src="${colorIdToImageMap[colorId]}" alt="Current image" />
                                             </div>
                                             <button type="button" class="loadImageBtn">Load Image</button>
-                                            <input type="file" name="image-color-${color}" class="imageInput" style="display: none;" accept="image/*">
+                                            <input type="file" name="image-color-${colorId}" class="imageInput" style="display: none;" accept="image/*">
                                             <button type="button" class="cancelBtn">Cancel Image</button>
                                         </div>
 
                                         <label>Size và Số lượng:</label>
-                                        <div class="size-container" id="size-container-${color}">
-                                            <!-- Lặp qua các size và quantity thuộc màu này -->
-                                            <c:forEach var="entry" items="${sizeQuantityMap[color]}">
+                                        <div class="size-container" id="size-container-${colorId}">
+                                            <!-- Lặp qua Map sizeQuantityMap -->
+                                            <c:forEach var="sizeEntry" items="${sizeQuantityMap[colorId]}">
                                                 <div class="size-block">
-                                                    <input type="text" name="size-${color}[]" value="${entry.key}" placeholder="Nhập size">
-                                                    <input type="text" name="quantity-${color}[]" value="${entry.value}" placeholder="Nhập số lượng">
+                                                    <input type="text" name="size-${colorId}[]" value="${sizeEntry.key}" placeholder="Nhập size" required>
+                                                    <input type="text" name="quantity-${colorId}[]" value="${sizeEntry.value}" placeholder="Nhập số lượng" required>
                                                     <button type="button" class="remove-size-btnEdit">Xóa Size</button>
                                                 </div>
                                             </c:forEach>
                                         </div>
-                                        <button type="button" class="add-size-btnEdit" data-color="${color}">Thêm Size</button>
+                                        <button type="button" class="add-size-btnEdit" data-color="${colorId}">Thêm Size</button>
 
                                         <button type="button" class="remove-color-btnEdit">Xóa biến thể</button>
                                     </div>
                                 </c:forEach>
-
                             </div>
                             <button type="button" id="add-color-btnEdit">Thêm biến thể</button>
-
                             <button class="action-btn" name="submitAction" value="edit-product">Lưu thay đổi</button>
+
                         </div>
                     </form>
 
 
-                <%-- Nút xóa sản phẩm--%>
-                    <div class="product-management-form" id="delete-product-management-form">
-                        <h3>Xóa sản phẩm</h3>
-                        <input type="text" id="delete-product-id" placeholder="Nhập ID sản phẩm">
-                        <button class="action-btn">Xóa sản phẩm</button>
-                    </div>
+                    <%-- Nút xóa sản phẩm--%>
+                    <form action="ProductController" method="post" >
+                        <div class="product-management-form" id="delete-product-management-form">
+                            <h3>Xóa sản phẩm</h3>
+                            <input type="text" name="productName" id="delete-product-id" placeholder="Nhập tên sản phẩm">
+                            <button class="action-btn" name="submitAction" value="delete-product">Xóa sản phẩm</button>
+                        </div>
+                    </form>
                 </div>
             </div>
             <!-- kết thúc quản lý sản phẩm -->
@@ -287,7 +291,7 @@
                                 <th>Tên danh mục</th>
                                 <th>Sản phẩm trong danh mục</th>
                             </tr>
-                            <c:forEach var="category" items="${categoryList}">
+                            <c:forEach var="category" items="${CategoryList}">
                                 <tr>
                                     <td>${category.categoryId}</td>
                                     <td>${category.categoryName}</td>
@@ -515,42 +519,8 @@
 
             <!-- chức năng quản lý đơn hàng -->
             <div class="order-management" id="order-management">
-                <div class="title">Quản lý đơn hàng</div>
-                <input type="text" id="order-search" placeholder="Nhập ID đơn hàng">
-                <button class="action-btn" id="btn-search-order">Tìm</button>
-                <div class="table-container">
-                    <table class="table table-bordered table-hover">
-                        <tr class="row-dark">
-                            <th>ID Đơn Hàng</th>
-                            <th>Tên Khách Hàng</th>
-                            <th>Ngày Đặt</th>
-                            <th>Trạng Thái</th>
-                            <th>Tổng Giá Trị</th>
-                            <th>Thao Tác</th>
-                        </tr>
-                        <tr>
-                            <td>1001</td>
-                            <td>Nguyễn Văn A</td>
-                            <td>2023-10-01</td>
-                            <td>Đang xử lý</td>
-                            <td>1,500,000₫</td>
-                            <td><button class="action-btn">Xem chi tiết</button></td>
-                        </tr>
-                        <tr>
-                            <td>1002</td>
-                            <td>Trần Thị B</td>
-                            <td>2023-10-02</td>
-                            <td>Hoàn thành</td>
-                            <td>800,000₫</td>
-                            <td><button class="action-btn">Xem chi tiết</button></td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="order-management-actions">
-                    <button class="action-btn" id="btn-order-view">Xem chi tiết đơn hàng</button>
-                    <button class="action-btn" id="btn-order-edit">Cập nhật trạng thái</button>
-                    <button class="action-btn" id="btn-order-delete">Hủy đơn hàng</button>
-                </div>
+
+                    <div>   <jsp:include page="orders.jsp" />  </div>
             </div>
             <!-- kết thúc chức năng quản lý đơn hàng -->
 
