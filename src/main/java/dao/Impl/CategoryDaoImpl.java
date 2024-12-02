@@ -99,7 +99,7 @@ public class CategoryDaoImpl implements ICategoryDao {
                     "        COUNT(*) OVER (PARTITION BY p.productName) AS product_count, \n" +
                     "        p.categoryId  \n" +
                     "    FROM Product p \n" +
-                    "    WHERE p.status = 1\n" +
+                    "    WHERE p.status = 0\n" +
                     ")\n" +
                     "SELECT \n" +
                     "    rp.productName, \n" +

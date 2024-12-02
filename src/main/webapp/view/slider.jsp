@@ -54,7 +54,10 @@
 <%--      </div>--%>
   <div class="slides-container">
     <div class="slide">
-      <img>
+      <img style="width: 100%; height: 100vh" src="../image/bannerShoeSport.webp">
+    </div>
+    <div class="slide">
+      <img style="width: 100%; height: 100vh" src="../image/banner2.jpg">
     </div>
   </div>
     </div>
