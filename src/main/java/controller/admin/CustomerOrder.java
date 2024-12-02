@@ -33,11 +33,12 @@ import java.util.List;
 public class CustomerOrder extends HttpServlet {
     private IOrderService orderService = new OrderServiceImpl();
     private IReviewService reviewService = new ReviewServiceImpl();
+    private String orderIdParam;
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getServletPath();
         int customerId = 48;
-        String customerIdParam = req.getParameter("id");
+//        String customerIdParam = req.getParameter("id");
         if ("/customer/orders".equals(path)) {
 
              // Ví dụ, lấy từ session hoặc context xác thực
@@ -55,7 +56,8 @@ public class CustomerOrder extends HttpServlet {
             dispatcher.forward(req, resp);
         } else if ("/customer/orderDetails".equals(path)) {
             // Lấy ID đơn hàng từ tham số yêu cầu
-            String orderIdParam = req.getParameter("id");
+               orderIdParam = req.getParameter("idOrder");
+
 
             if (orderIdParam != null) {
                 int orderId = Integer.parseInt(orderIdParam);
@@ -166,7 +168,7 @@ public class CustomerOrder extends HttpServlet {
         boolean isAdded = reviewService.addReview(reviewDTO);
 
         if (isAdded) {
-            resp.sendRedirect(request.getContextPath() + "/orderDetails?id=${order.orderId}");
+            resp.sendRedirect(request.getContextPath() + "/customer/orderDetails?idOrder="+orderIdParam);
         } else {
             resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Không thể thêm đánh giá.");
         }
@@ -177,6 +179,7 @@ public class CustomerOrder extends HttpServlet {
         String productIdStr = request.getParameter("editProduct-ID");
         String customerIdStr = request.getParameter("editUser-ID");
         String reviewIdStr = request.getParameter("editReviewID");
+
         int reviewId = Integer.parseInt(reviewIdStr);
 
         ReviewDTO reviewDTO = prepareReviewDTO(comment, ratingValueStr, productIdStr, customerIdStr,reviewId, request);
@@ -185,7 +188,7 @@ public class CustomerOrder extends HttpServlet {
         boolean isUpdated = reviewService.updateReview(reviewDTO);
 
         if (isUpdated) {
-            resp.sendRedirect(request.getContextPath() + "/customer/orders");
+            resp.sendRedirect(request.getContextPath() + "/customer/orderDetails?idOrder="+orderIdParam);
         } else {
             resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Không thể cập nhật đánh giá.");
         }

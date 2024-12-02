@@ -5,11 +5,9 @@ import dto.AddressDTO;
 import dto.CustomerDTO;
 import service.IAccountService;
 import service.IAddressService;
-import service.ICartService;
 import service.ICustomerService;
 import service.Impl.AccountServiceImpl;
 import service.Impl.AddressServiceImpl;
-import service.Impl.CartServiceImpl;
 import service.Impl.CustomerServiceImpl;
 
 import jakarta.servlet.ServletException;
@@ -30,31 +28,27 @@ public class InformationController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-            // Lấy session hiện tại
 //            HttpSession session = req.getSession(false);
-
-            // Kiểm tra session hợp lệ
+//
 //            if (session == null || session.getAttribute("userID") == null) {
-//                // Chuyển hướng về trang đăng nhập nếu chưa đăng nhập
 //                resp.sendRedirect("login.jsp");
 //                return;
 //            }
 
-            // Lấy thông tin accountID từ session
+            // Lấy thông tin từ session
 //            int accountID = (int) session.getAttribute("userID");
-            int accountID =22;
-
-
-                    // Lấy thông tin tài khoản
+            int accountID = 22;
+            // Lấy thông tin tài khoản
             AccountDTO accountDTO = iAccountService.getAccountByID(accountID);
-
             if (accountDTO != null) {
-                // Lấy thông tin khách hàng
-                CustomerDTO customerDTO = iCustomerService.getCustomerByID(accountDTO.getUser().getUserID());
+                // Lấy thông tin khách hàng với Address đã được JOIN FETCH
+                CustomerDTO customerDTO = iCustomerService.getCustomerByAccountID(accountID);
 
                 if (customerDTO != null) {
+                    // Đảm bảo AddressDTO được tải cùng với CustomerDTO
                     AddressDTO addressDTO = customerDTO.getAddressDTO();
                     if (addressDTO != null) {
+                        req.setAttribute("addressID", addressDTO.getAddressID());
                         req.setAttribute("numberHouse", addressDTO.getHouseNumber());
                         req.setAttribute("streetName", addressDTO.getStreetName());
                         req.setAttribute("district", addressDTO.getDistrict());
@@ -69,28 +63,19 @@ public class InformationController extends HttpServlet {
                     req.setAttribute("phone", customerDTO.getPhone());
                     req.setAttribute("dateOfBirth", customerDTO.getDateOfBirth());
                     req.setAttribute("loyalty", customerDTO.getLoyalty());
-
                 }
 
-
-                // Thêm email từ accountDTO
                 req.setAttribute("email", accountDTO.getEmail());
+                req.setAttribute("accountID", accountDTO.getAccountID());
 
-                // Chuyển tiếp đến trang hiển thị thông tin cá nhân
                 req.getRequestDispatcher("/view/customer/informationCustomer.jsp").forward(req, resp);
-
             } else {
-                // Nếu không tìm thấy thông tin, chuyển hướng về trang lỗi
                 resp.sendRedirect("error.jsp");
-
             }
         } catch (Exception e) {
-            // Xử lý lỗi và chuyển hướng đến trang lỗi
             System.out.println("Error in doGet: " + e.getMessage());
-//            resp.sendRedirect("error.jsp");
-
+            resp.sendRedirect("error.jsp");
         }
-
     }
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -105,6 +90,8 @@ public class InformationController extends HttpServlet {
             String streetName = req.getParameter("streetName");
             String district = req.getParameter("district");
             String city = req.getParameter("city");
+            int addressID = Integer.parseInt(req.getParameter("addressID"));
+
 
             // Chuyển đổi dateOfBirth thành java.sql.Date
             java.sql.Date dateOfBirth = java.sql.Date.valueOf(dateOfBirthStr);
@@ -121,6 +108,7 @@ public class InformationController extends HttpServlet {
             addressDTO.setStreetName(streetName);
             addressDTO.setDistrict(district);
             addressDTO.setCity(city);
+            addressDTO.setAddressID(addressID);
 
 
             // Cập nhật dữ liệu
