@@ -23,7 +23,7 @@ public class Chat {
     @JoinColumn(name = "userID")
     private Customer customer;
 
-    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Message> messages;
 
     @Temporal(TemporalType.TIMESTAMP)

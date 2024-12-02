@@ -13,6 +13,12 @@ import java.util.*;
 @AllArgsConstructor
 public class ChatDTO {
     private int chatId;
-    private User user;
-    private String createdDate;
+    private CustomerDTO customer;
+    private Date createdDate;
+    private List<MessageDTO> messages;
+
+    public ChatDTO(int chatId, Date createdDate) {
+        this.chatId = chatId;
+        this.createdDate = createdDate;
+    }
 }

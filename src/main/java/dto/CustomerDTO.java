@@ -1,5 +1,7 @@
 package dto;
 
+import entity.Chat;
+import enums.RoleType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,7 +24,23 @@ public class CustomerDTO extends UserDTO {
     private ChatDTO chatDTO;
     private List<ReviewDTO> reviewDTOList;
     private List<NotifyDTO> notifyDTOList;
+    private Boolean lastMessageStatus;
 
+
+    public CustomerDTO(int userID, String fullName, String phone) {
+        super(userID, fullName, phone);
+    }
+    public CustomerDTO(int userID, String fullName, String phone, Boolean status) {
+        super(userID, fullName, phone);
+        this.lastMessageStatus = status;
+    }
+
+    public CustomerDTO(int userID, String fullName, String phone, int accountId, RoleType role)
+    {
+        super(userID, accountId, role);
+        this.getFullName();
+        this.setPhone(phone);
+    }
 
     public CustomerDTO(int userID, String fullName, String phone, boolean active, Date dateOfBirth, int loyalty) {
         super(userID, fullName, phone,active, null, null); // Gọi constructor lớp cha (UserDTO)

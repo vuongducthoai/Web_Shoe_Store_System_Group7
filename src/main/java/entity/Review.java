@@ -25,12 +25,12 @@ public class Review {
     @JoinColumn(name = "productID")
     private Product product;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userID")
     private Customer customer;
     private String comment;
 
-    @OneToOne(mappedBy = "review")
+    @OneToOne(mappedBy = "review", fetch = FetchType.LAZY)
     private Response response;
 
     @Lob

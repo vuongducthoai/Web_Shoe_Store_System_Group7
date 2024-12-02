@@ -3,20 +3,20 @@ package controller.customer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.gson.Gson;
-import dto.ProductDTO;
-import dto.ResponseDTO;
-import dto.ReviewDTO;
-import dto.UserDTO;
+import dto.*;
 import entity.Product;
 import entity.Response;
+import io.vavr.Tuple3;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import service.IProductPromotion;
 import service.IProductService;
 import service.IResponseService;
 import service.IReviewService;
+import service.Impl.ProductPromotionImpl;
 import service.Impl.ProductServiceImpl;
 import service.Impl.ResponseServiceImpl;
 import service.Impl.ReviewServiceImpl;
@@ -32,16 +32,18 @@ public class ProductInformationController extends HttpServlet {
     private IProductService productService = new ProductServiceImpl();
     private IReviewService reviewService = new ReviewServiceImpl();
     private IResponseService responseService = new ResponseServiceImpl();
+    private IProductPromotion productPromotion = new ProductPromotionImpl();
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         String productName = req.getParameter("productName");
+        System.out.print("lllllllllll: " + productName);
         if (productName == null || productName.trim().isEmpty()) {
-            req.setAttribute("error", "Tên sản phẩm không hợp lệ.");
+            System.out.print("Ten sp khong hop le");
             return;
         }
 
         // Lấy thông tin sản phẩm từ cơ sở dữ liệu
         List<ProductDTO> productDetails = productService.findByName(productName);
-
+        System.out.println(productDetails);
         if (productDetails == null || productDetails.isEmpty()) {
 //            req.setAttribute("error", "Không tìm thấy sản phẩm.");
 //            req.getRequestDispatcher("/error.jsp").forward(req, resp);
@@ -65,21 +67,39 @@ public class ProductInformationController extends HttpServlet {
                     .sorted()
                     .toList();
 
+
+
             List<Integer> IDs = productDetails.stream()
                     .map(ProductDTO::getProductId)
                     .distinct().toList();
+            System.out.println(IDs.size());
             List<ReviewDTO> reviews = reviewService.getReviewsByProductID(IDs);
 
+            PromotionProductDTO promotionProductDTO = new PromotionProductDTO();
+            promotionProductDTO = productPromotion.promotioOnProductInfo(productDetails.getFirst().getProductName());
 
+            if(promotionProductDTO!= null) {
+                System.out.println("co sp");
+                System.out.println(promotionProductDTO.getPromotion().getEndDate());
+                req.setAttribute("promotion", promotionProductDTO);
+            }
 
             req.setAttribute("reviews", reviews);
-            req.setAttribute("averageRating", reviewService.averageRating(reviews));
+            double rate = reviewService.averageRating(reviews);
+            System.out.println(rate);
+            req.setAttribute("averageRating", rate);
 
 
-            Map<ProductDTO, Double> RecommendProducts = productService.findRandomProducts(productName, productDetails.getFirst().getCategoryDTO().getCategoryId());
+            List<Tuple3<ProductDTO, Double, PromotionProductDTO>> RecommendProducts = productService.findRandomProducts(productName, productDetails.getFirst().getCategoryDTO().getCategoryId());
             if (RecommendProducts == null || RecommendProducts.isEmpty()) {
                 System.out.println("RecommendProducts is null or empty.");
                 return;
+            }else{
+//                for(Tuple3<ProductDTO, Double, PromotionProductDTO> tuple : RecommendProducts){
+//                    System.out.println("cccc: "+tuple._1().getProductName());
+//                    System.out.println("cccc: "+tuple._2().toString());
+//                    System.out.println("cccc: "+tuple._3().getProductName());
+//                }
             }
 
             req.setAttribute("RecommendProducts", RecommendProducts);
@@ -92,7 +112,6 @@ public class ProductInformationController extends HttpServlet {
             req.setAttribute("price", productDetails.getFirst().getPrice());
             req.setAttribute("name", productDetails.getFirst().getProductName());
             req.setAttribute("description", productDetails.getFirst().getDescription());
-
 
 
             ObjectMapper objectMapper = new ObjectMapper();
@@ -166,14 +185,14 @@ public class ProductInformationController extends HttpServlet {
                 ReviewDTO reviewDTO = new ReviewDTO();
                 reviewDTO.setReviewID(reviewID);
 
-                UserDTO userDTO = new UserDTO();
-                userDTO.setUserID(48);
+                AdminDTO adminDTO = new AdminDTO();
+                adminDTO.setUserID(8);
 
                 ResponseDTO response = new ResponseDTO();
                 response.setResponseID(responseID);
                 response.setContent(responseContent);
                 response.setReview(reviewDTO);
-                response.setAdmin(userDTO);
+                response.setAdmin(adminDTO);
                 Date currentDate = new Date();
                 response.setTimeStamp(currentDate);
 

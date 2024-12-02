@@ -18,24 +18,32 @@ import java.util.List;
 
 public class ProductPromotionImpl implements IProductPromotion {
     @Override
-    public List<PromotionProductDTO> findTop5ProductPromotionNow(LocalDate startDate, LocalDate endDate) {
+    public List<PromotionProductDTO> findTop8ProductPromotionNow(LocalDate startDate, LocalDate endDate, int offset, int limit) {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
         List<PromotionProductDTO> promotionProductDTOList = new ArrayList<>();
 
         try {
-            String sql = "SELECT p.productName, pr.startDate, pr.endDate, p.description, p.image, pr.discountValue, pr.discountType, pr.promotionName, p.price " +
-                    "FROM PromotionProduct pp " +
-                    "INNER JOIN Promotion pr ON pp.promotionID = pr.promotionID " +
-                    "INNER JOIN Product p ON pp.productID = p.productID " +
-                    "WHERE pr.isActive = 1 " +
-                    "AND p.status = 1 " +
-                    "AND pr.promotionType = 'VOUCHER_PRODUCT' " +
-                    "AND pr.startDate <= '" + startDate +
-                    "' AND pr.endDate >=  '" + endDate +
-                    "' ORDER BY pr.startDate DESC";
+            String sql = "SELECT productName, startDate, endDate, description, image, discountValue, discountType, promotionName, price " +
+                    "FROM ( " +
+                    "   SELECT p.productName, pr.startDate, pr.endDate, p.description, p.image, pr.discountValue, pr.discountType, pr.promotionName, p.price, " +
+                    "          ROW_NUMBER() OVER (PARTITION BY p.productName ORDER BY pr.startDate DESC) AS rn " +
+                    "   FROM PromotionProduct pp " +
+                    "   INNER JOIN Promotion pr ON pp.promotionID = pr.promotionID " +
+                    "   INNER JOIN Product p ON pp.productID = p.productID " +
+                    "   WHERE pr.isActive = 1 " +
+                    "   AND p.status = 1 " +
+//                    "   AND pr.promotionType = 'VOUCHER_PRODUCT' " +
+                    "   AND pr.startDate >= ?1 " +
+                    "   AND pr.endDate <= ?2 " +
+                    ") AS RankedPromotions " +
+                    "WHERE rn = 1 " +
+                    "ORDER BY startDate DESC";
 
             Query query = entityManager.createNativeQuery(sql);
-            query.setMaxResults(5); // Set to 5 if that's the correct limit
+            query.setParameter(1, startDate);
+            query.setParameter(2, endDate);
+            query.setFirstResult(offset * limit);
+            query.setMaxResults(limit);
 
             List<Object[]> results = query.getResultList();
             System.out.println(results.size());
@@ -46,12 +54,10 @@ public class ProductPromotionImpl implements IProductPromotion {
 
                 Date startDate1 = new Date(startTimestamp.getTime());
                 Date endDate1 = new Date(endTimestamp.getTime());
-                System.out.println("Start Date: " + startDate1);
-                System.out.println("End Date: " + endDate1);
 
                 String description = (String) row[3];
                 byte[] image = (byte[]) row[4];
-                double discountValue = (double) row[5];
+                int discountValue = (int) row[5];
                 String discountType = (String) row[6];
                 String promotionName = (String) row[7];
                 double price = (double) row[8];
@@ -80,9 +86,9 @@ public class ProductPromotionImpl implements IProductPromotion {
                 productDTO.setPrice(price);
 
                 if (promotionDTO.getDiscountType().equals(DiscountType.VND)) {
-                    productDTO.setPrice(productDTO.getPrice() - promotionDTO.getDiscountValue());
+                    productDTO.setSellingPrice(productDTO.getPrice() - promotionDTO.getDiscountValue());
                 } else {
-                    productDTO.setPrice(productDTO.getPrice() * promotionDTO.getDiscountValue());
+                    productDTO.setSellingPrice( productDTO.getPrice() - (productDTO.getPrice() * promotionDTO.getDiscountValue() / 100));
                 }
 
                 promotionProductDTO.setProduct(productDTO);
@@ -96,6 +102,85 @@ public class ProductPromotionImpl implements IProductPromotion {
             entityManager.close();
         }
         return promotionProductDTOList;
+    }
+
+
+    public PromotionProductDTO promotioOnProductInfo(String productName){
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        List<PromotionProductDTO> promotionProductDTOList = new ArrayList<>();
+        try{
+            String sql ="select * from PromotionProduct "+
+            "inner join Promotion on Promotion.promotionID = PromotionProduct.promotionID "+
+            "inner join Product on Product.productID = PromotionProduct.productID "+
+            "where Promotion.isActive = 1 "+
+            "and Promotion.promotionType = 'VOUCHER_PRODUCT' "+
+            "and Promotion.minimumLoyalty = 0 "+
+            "and Promotion.startDate < NOW() "+
+            "and Product.productName = ?";
+            Query query = entityManager.createNativeQuery(sql);
+            query.setParameter(1, productName);
+            List<Object[]> results = query.getResultList();
+            for (Object[] row : results) {
+
+                String discountType = (String) row[4];
+                int discountValue = (int) row[5];
+                Date endDate = (Date) row[6];
+                String promotionName = (String) row[9];
+
+                PromotionProductDTO promotionProductDTO = new PromotionProductDTO();
+
+                PromotionDTO promotionDTO = new PromotionDTO();
+                promotionDTO.setPromotionName(promotionName);
+                promotionDTO.setDiscountValue(discountValue);
+                DiscountType discountTypeEnum = DiscountType.valueOf(discountType);
+                promotionDTO.setDiscountType(discountTypeEnum);
+                promotionDTO.setEndDate(endDate);
+                promotionProductDTO.setPromotion(promotionDTO);
+
+                promotionProductDTOList.add(promotionProductDTO);
+
+            }
+        }catch(Exception e){
+            System.out.println( e.getMessage());
+        }
+        finally{
+            entityManager.close();
+        }
+        if(promotionProductDTOList.size() > 0)
+            return promotionProductDTOList.get(0);
+        return null;
+    }
+
+    @Override
+    public int countPromotion(LocalDate startDate, LocalDate endDate) {
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        try {
+            String sql = "SELECT COUNT(*) " +
+                    "FROM ( " +
+                    "   SELECT p.productName, pr.startDate, pr.endDate, p.description, p.image, pr.discountValue, pr.discountType, pr.promotionName, p.price, " +
+                    "          ROW_NUMBER() OVER (PARTITION BY p.productName ORDER BY pr.startDate DESC) AS rn " +
+                    "   FROM PromotionProduct pp " +
+                    "   INNER JOIN Promotion pr ON pp.promotionID = pr.promotionID " +
+                    "   INNER JOIN Product p ON pp.productID = p.productID " +
+                    "   WHERE pr.isActive = 1 " +
+                    "   AND p.status = 1 " +
+//                    "   AND pr.promotionType = 'VOUCHER_PRODUCT' " +
+                    "   AND pr.startDate >= ?1 " +
+                    "   AND pr.endDate <= ?2 " +
+                    ") AS RankedPromotions " +
+                    "WHERE rn = 1";
+            Query query = entityManager.createNativeQuery(sql);
+            query.setParameter(1, startDate);
+            query.setParameter(2, endDate);
+            Long count = (Long) query.getSingleResult();
+            return count.intValue();
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
+            return 0;
+        } finally {
+            entityManager.close();
+        }
+
     }
 
 }

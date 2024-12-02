@@ -7,9 +7,17 @@
   <link rel="stylesheet" href="https://unpkg.com/bs-brain@2.0.4/components/logins/login-9/assets/css/login-9.css">
 </head>
 <style>
+  * {
+    font-size: 18px;
+    font-weight: 500;
+  }
   .error-message {
     color: red;
     margin-bottom: 15px;
+  }
+
+  input{
+    text-transform: none;
   }
 
   .captcha-message {
@@ -17,66 +25,58 @@
     color: red;
   }
 
+  .hero-right {
+    background-image: url("../image/bannerLogo.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+  }
+
   @media (max-width: 768px) {
-    .hero-left {
+    .hero-right {
       display: none;
     }
 
-    .hero-right {
+    .hero-left {
       margin: auto;
     }
   }
 </style>
 <body>
+<jsp:include page="./header.jsp"></jsp:include>
 <!-- Login 9 - Bootstrap Brain Component -->
-<section class="bg-primary py-3 py-md-5 py-xl-8">
+<section class="py-md-5">
   <div class="container">
-    <div class="row align-items-center">
-    <%-- Hero Left   --%>
+    <div class="row">
+      <%-- Hero left --%>
       <div class="col-12 col-md-6 hero-left">
-        <div class="d-flex text-bg-primary">
-          <div class="col-12 col-xl-9">
-            <img class="img-fluid rounded mb-4" loading="lazy" src="../image/shoe-Photoroom.png" width="245" height="80" alt="ShoeStore Logo">
-            <hr class="border-primary-subtle mb-4">
-            <h2 class="h1 mb-4">We make digital products that drive you to stand out.</h2>
-            <p class="lead mb-5">We write words, take photos, make videos, and interact with artificial intelligence.</p>
-            <div class="text-end">
-              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-grip-horizontal" viewBox="0 0 16 16">
-                <path d="M2 8a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm0-3a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm3 3a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm0-3a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm3 3a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm0-3a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm3 3a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm0-3a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm3 3a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm0-3a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
-              </svg>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <%-- Hero Right --%>
-      <div class="col-12 col-md-6 hero-right">
         <div class="card border-0 rounded-4">
-          <div class="card-body p-3 p-md-4 p-xl-5">
+          <div class="card-body p-md-4">
             <div class="row">
               <div class="col-12">
-                <div class="mb-4">
-                  <h3>Sign in</h3>
-                  <p>Don't have an account? <a href="Register.jsp">Sign up</a></p>
+                <div class="mb-3">
+                  <h1 style="text-align: center">Đăng Nhập</h1>
+                  <p>Bạn chưa có tài khoản? <a href="Register.jsp">Đăng Ký</a></p>
                 </div>
               </div>
             </div>
             <form onsubmit="return validateForm()" action="loginEmail" method="post">
               <div class="row gy-3 overflow-hidden">
                 <div class="col-12">
-                  <div class="form-floating mb-3">
-                    <input type="email" class="form-control" name="email" id="email" placeholder="name@example.com" required>
+                  <div class="form-floating mb-2">
+                    <input style="text-transform: none" type="email" class="form-control" name="email" id="email" placeholder="name@example.com" required>
                     <label for="email" class="form-label">Email</label>
                   </div>
                 </div>
                 <div class="col-12">
-                  <div class="form-floating mb-3">
-                    <input type="password" class="form-control" name="password" id="password" placeholder="Password" required>
+                  <div class="form-floating mb-2">
+                    <input style="text-transform: none" type="password" class="form-control" name="password" id="password" placeholder="Mật khẩu" required>
                     <label for="password" class="form-label">Password</label>
                   </div>
                 </div>
                 <div class="col-12">
-                  <div class="form-floating mb-3">
+                  <div class="form-floating mb-2">
                     <div id="captcha" class="g-recaptcha" data-sitekey="6LdFY4EqAAAAACbQyuCRoJDTJHiYPuCsTXng2isF"></div>
                     <span id="captcha-message" class="captcha-message">Vui lòng xác thực 2 bước và thử lại</span>
                   </div>
@@ -86,27 +86,27 @@
                   <div class="form-check">
                     <input class="form-check-input" type="checkbox" name="remember_me" id="remember_me">
                     <label class="form-check-label text-secondary" for="remember_me">
-                      Keep me logged in
+                     Ghi nhớ đăng nhập
                     </label>
                   </div>
                 </div>
                 <div class="col-12">
                   <div class="d-grid">
-                    <button class="btn btn-primary btn-lg" type="submit">Log in now</button>
+                    <button class="btn btn-primary btn-lg" type="submit">Đăng nhập</button>
                   </div>
                 </div>
               </div>
             </form>
             <div class="row">
               <div class="col-12">
-                <div class="d-flex gap-2 justify-content-end mt-4">
-                  <a href="requestPassword">Forgot password</a>
+                <div class="d-flex gap-2 justify-content-end mt-2">
+                  <a href="requestPassword">Quên mật khẩu</a>
                 </div>
               </div>
             </div>
             <div class="row">
               <div class="col-12">
-                <p class="mt-4 mb-4">Or continue with</p>
+                <p class="mt-2 mb-1" style="font-size: 18px; font-weight: 600">Hoặc tiếp tục với</p>
                 <div class="d-flex gap-2 gap-sm-3 justify-content-center">
                   <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:8080/login&response_type=code&client_id=347868096033-jmjks5edljqsd2aetc3bnmdpdl7fvrak.apps.googleusercontent.com" class="btn btn-outline-danger bsb-btn-circle bsb-btn-circle-2xl">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-google" viewBox="0 0 16 16">
@@ -124,6 +124,14 @@
           </div>
         </div>
       </div>
+
+        <%-- Hero Right   --%>
+        <div class="col-12 col-md-6 hero-right">
+          <div class="d-flex text-bg-primary">
+            <div class="col-12 col-xl-9">
+            </div>
+          </div>
+        </div>
     </div>
   </div>
 </section>

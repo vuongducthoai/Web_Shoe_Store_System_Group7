@@ -6,7 +6,7 @@ import enums.AuthProvider;
 
 public interface IAccountService {
     boolean InsertAccount(AccountDTO accountDTO);
-    boolean findAccountForLogin(AccountDTO accountDTO);
+    AccountDTO findAccountForLogin(AccountDTO accountDTO);
     AccountDTO findAccountByEmail(String email);
     AccountDTO findAccoutByProvide(String provideID, AuthProvider authProvider);
     AccountDTO getAccountByID(int id);

@@ -11,13 +11,16 @@
 <head>
     <title>Register</title>
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/bs-brain@2.0.4/components/logins/login-9/assets/css/login-9.css">
     <style>
       .card-registration {
+        padding-top: 40px;
         max-width: 100%;
         width: 100%;
         margin: auto; /* Căn giữa form */
-        padding: 15px;
         box-sizing: border-box;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        /*transition: transform 0.3s ease, box-shadow 0.3s ease;*/
       }
 
       .error-message {
@@ -27,6 +30,9 @@
         display: none;
       }
 
+      input {
+        text-transform: none;
+      }
 
       .form-group select {
         margin-left: 12px;
@@ -55,10 +61,6 @@
       }
 
       @media(max-width: 576px){
-        .card-registration {
-          padding: 10px;
-        }
-
         .form-group select {
           margin-left: 10px;
         }
@@ -74,20 +76,18 @@
     </style>
 </head>
 <body>
+<jsp:include page="./header.jsp"></jsp:include>
 <section class="vh-100 gradient-custom">
   <div class="container h-100">
     <div class="row justify-content-center align-items-center h-100">
       <div class="">
         <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
-          <div class="p-4 p-md-5">
-            <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Registration Form</h3>
+          <div class="p-md-5">
+            <h3 class="mb-1 pb-2 pb-md-0 mb-md-3">ĐĂNG KÝ TÀI KHOẢN</h3>
             <form onsubmit="return validateForm()" action="register" method="post">
 
-            <%--flex-column: Tren man hinh nho, cac ptu trong hang se xep theo chieu doc
-                flex-md-row: Tren man hinh trung binh (kich thuoc >= 768px), cac phan tu se tro ve dang hang (row)
-            --%>
               <div class="row">
-                <div class="col-12 col-md-6 mb-4">
+                <div class="col-12 col-md-6 mb-2">
                   <div data-mdb-input-init class="form-outline flex-fill mb-0">
                     <label class="form-label" for="fullName">Họ Và Tên</label> <span class="require">* </span><br>
                     <input name="fullName" type="text" id="fullName" class="form-control" value="${customerDTO.getFullName()}"/>
@@ -95,7 +95,7 @@
 
                   </div>
                 </div>
-                <div class="col-12 col-md-6 mb-4">
+                <div class="col-12 col-md-6 mb-2">
                   <div data-mdb-input-init class="form-outline flex-fill mb-0">
                     <label class="form-label" for="phone">Phone</label><span class="require">*</span>
                     <input name="phone" type="tel" id="phone" class="form-control"  value="${customerDTO.getPhone()}"/>
@@ -105,7 +105,7 @@
               </div>
 
               <div class="row">
-                <div class="col-12 col-md-6 mb-4">
+                <div class="col-12 col-md-6 mb-2">
                   <label>Ngày sinh</label><span class="require">*</span>
                   <div class="row">
                     <div class="form-group">
@@ -167,7 +167,7 @@
 
 
                 </div>
-                <div class="col-12 col-md-6 mb-4">
+                <div class="col-12 col-md-6 mb-2">
                   <div class="row">
                     <div data-mdb-input-init class="col-md-6">
                       <label class="form-label" for="houseNumber" >Số Nhà</label><span class="require">*</span>
@@ -185,7 +185,7 @@
               </div>
 
               <div class="row">
-                <div class="col-12 col-md-6 mb-4">
+                <div class="col-12 col-md-6 mb-2">
 
                   <div data-mdb-input-init class="form-outline flex-fill mb-0">
                     <label class="form-label" for="email">Email</label><span class="require">*</span>
@@ -199,7 +199,7 @@
                   </div>
 
                 </div>
-                <div class="col-12 col-md-6 mb-4">
+                <div class="col-12 col-md-6 mb-2">
                   <div data-mdb-input-init class="form-outline flex-fill mb-0">
                     <label class="form-label" for="city">Chọn Tỉnh</label><span class="require">*</span>
                     <select class="form-control" id="city" name="province">
@@ -215,7 +215,7 @@
                 <div class="col-12 col-md-6 mb-4">
 
                   <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                    <label class="form-label" for="password">Password</label><span class="require">*</span>
+                    <label class="form-label" for="password">Mật khẩu</label><span class="require">*</span>
                     <input type="password" name="password" id="password" class="form-control" />
                     <span id="password-error" class="error-message">Mật khẩu phải có ít nhất 6 kí tự</span>
                   </div>
@@ -235,16 +235,16 @@
 
 
               <div class="row">
-                <div class="col-12 col-md-6 mb-4">
+                <div class="col-12 col-md-6 mb-2">
                   <div data-mdb-input-init class="form-outline flex-fill mb-0">
 
-                    <label class="form-label" for="re-password">Confirmation Password</label><span class="require">*</span>
+                    <label class="form-label" for="re-password">Nhập lại mật khẩu</label><span class="require">*</span>
                     <input name="re-password" type="password" id="re-password" class="form-control" name="re-password" />
                     <span id="re-password-error" class="error-message">Xác nhận mật khẩu là bắt buộc</span>
                   </div>
 
                 </div>
-                <div class="col-12 col-md-6 mb-4">
+                <div class="col-12 col-md-6 mb-2">
                   <div data-mdb-input-init class="form-outline flex-fill mb-0">
                     <label class="form-label" for="ward">Chọn Phường / Xã</label><span class="require">*</span>
                     <select class="form-control" id="ward" name="ward">
@@ -256,9 +256,28 @@
                 </div>
               </div>
 
-              <div class="mt-4 pt-2">
+              <div class="mt-2 pt-2">
                 <input data-mdb-ripple-init class="btn btn-primary btn-lg" type="submit" value="Submit" />
               </div>
+
+              <div class="row mt-1">
+                <div class="col-12">
+                  <h5 class="mt-2 mb-2 text-center">----------------Hoặc Đăng Ký Bằng-----------------</h5>
+                  <div class="d-flex gap-2 gap-sm-3 justify-content-center">
+                    <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:8080/login&response_type=code&client_id=347868096033-jmjks5edljqsd2aetc3bnmdpdl7fvrak.apps.googleusercontent.com" class="btn btn-outline-danger bsb-btn-circle bsb-btn-circle-2xl">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-google" viewBox="0 0 16 16">
+                        <path d="M15.545 6.558a9.42 9.42 0 0 1 .139 1.626c0 2.434-.87 4.492-2.384 5.885h.002C11.978 15.292 10.158 16 8 16A8 8 0 1 1 8 0a7.689 7.689 0 0 1 5.352 2.082l-2.284 2.284A4.347 4.347 0 0 0 8 3.166c-2.087 0-3.86 1.408-4.492 3.304a4.792 4.792 0 0 0 0 3.063h.003c.635 1.893 2.405 3.301 4.492 3.301 1.078 0 2.004-.276 2.722-.764h-.003a3.702 3.702 0 0 0 1.599-2.431H8v-3.08h7.545z" />
+                      </svg>
+                    </a>
+                    <a style="margin-left: 20px" href="https://www.facebook.com/v21.0/dialog/oauth?client_id=958382746118607&redirect_uri=http://localhost:8080/loginFacebook&scope=email" class="btn btn-outline-primary bsb-btn-circle bsb-btn-circle-2xl">
+                      <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-facebook" viewBox="0 0 16 16">
+                        <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z" />
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
             </form>
           </div>
         </div>

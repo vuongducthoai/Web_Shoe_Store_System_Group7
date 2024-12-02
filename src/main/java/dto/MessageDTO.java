@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 public class MessageDTO {
     private int MessageID;
-    private Chat chat;
+    private int chatId;
     private int userId;
     private String content;
     private Timestamp date;

@@ -20,7 +20,7 @@ public class PromotionDTO {
     private Date startDate;
     private Date endDate;
     private List<PromotionProductDTO> promotionProducts;
-    private double discountValue;
+    private int discountValue;
     private DiscountType discountType; // "percentage", "free-shipping", ...
     private int minimumLoyalty;
     private boolean isActive;

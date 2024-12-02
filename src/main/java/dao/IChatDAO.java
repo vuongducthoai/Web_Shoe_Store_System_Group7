@@ -1,6 +1,8 @@
 package dao;
 
+import entity.Chat;
+
 public interface IChatDAO {
-    int getOrCreateChatId(int userId);
+    int getOrCreateChat(int userId);
 
 }

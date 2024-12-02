@@ -25,11 +25,13 @@ public class OrderServiceImpl implements IOrderService {
         JSONObject jsonKQ = new JSONObject(json);
         String orderId = jsonKQ.getString("orderId");
         String extraData = jsonKQ.getString("extraData");
-
         byte[] decodedBytes = Base64.getDecoder().decode(extraData);
         String decodedString = new String(decodedBytes, StandardCharsets.UTF_8);
         JSONObject jsonObject = new JSONObject(decodedString);
         int idUser = jsonObject.getInt("idUser");
+        int discount = jsonObject.getInt("discount");
+        int feeShip = jsonObject.getInt("feeShip");
+        int amount = jsonKQ.getInt("amount");
         JSONArray ListJsonCartItem = jsonObject.getJSONArray("ListItem");
         CustomerDTO customer = new CustomerDTO();
             customer.setUserID(idUser);
@@ -44,13 +46,13 @@ public class OrderServiceImpl implements IOrderService {
             OrderItemDTOList.add(orderItem);
         }
         PaymentDTO paymentDTO = new PaymentDTO();
-            paymentDTO.setAmount(jsonKQ.getInt("amount"));
+            paymentDTO.setAmount(amount);
             paymentDTO.setMomoBillId(orderId);
         OrderDTO order = new OrderDTO();
             order.setCustomer(customer);
             order.setOrderItems(OrderItemDTOList);
             order.setPayment(paymentDTO);
-        return orderDao.CreateOrder(order);
+        return orderDao.CreateOrder(order,amount,discount,feeShip,orderId);
     }
 
     @Override

@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     const buttons = document.querySelectorAll(".btn-col");
     const loadMoreBtn = document.querySelector("#load-more-btns");
-    const productItems = document.querySelector(".grid-wrapper");
+    const productItems = document.querySelector(".wrapper1");
     let offset = 8;
     const limit = 8;
 
@@ -50,21 +50,26 @@ document.addEventListener("DOMContentLoaded", function () {
             const fragment = document.createDocumentFragment();
             data.forEach(product => {
                 const productDiv = document.createElement("div");
-                productDiv.className = "col- collection-item";
+                productDiv.className = "product";
+                productDiv.style.flex = "0 0 23%";
+                productDiv.style.maxWidth = "25%";
                 fragment.appendChild(productDiv);
+
                 productDiv.innerHTML = `
-                    <figure><img src="../image/shoes1.png" alt="${product.productName}"></figure>
-                    <div class="col-body">
-                        <h3 class="two">${product.productName}</h3>
-                        <h3 class="heading-three">${product.description}</h3>
-                        <div class="col-footer">
-                            <p class="shoe-price">${product.price}₫</p>
-                            <p class="sub-heading">Đã bán: ${product.quantity}</p>
-                            <p class="rating-icon"><i class="fa-solid fa-star"></i> <span class="rating-num">4.9</span></p>
-                        </div>
+                <div class="product-image">
+                     <figure><img src="${product.imageBase64}" alt="${product.productName}"></figure>
+                </div>
+                <div class="product-details">
+                    <p class="product_name">${product.productName}</p>
+                    <p class="product_desc" style="margin-top: 5px">${product.description}</p>
+                    <div class="col-footer" style="display: flex; align-items: center; justify-content: space-between; margin-top: 10px">
+                        <p class="shoe-price">${product.price}₫</p>
+                        <p class="shoe-sold">Đã bán: ${product.quantity}</p>
                     </div>
-                `;
+                </div>
+            `;
             });
+            // Assuming productItems is the container where products should be added
             productItems.appendChild(fragment);
             offset += limit;
         } else {
@@ -76,6 +81,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
     }
+
 
     // Debounce function để giảm tần suất gọi loadProducts
     function debounce(func, delay) {

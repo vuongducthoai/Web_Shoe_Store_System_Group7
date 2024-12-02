@@ -14,50 +14,47 @@ import java.util.Date;
 public class ChatDAO implements IChatDAO {
 
     @Override
-    public int getOrCreateChatId(int userId) {
+    public int getOrCreateChat(int userId) {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
-        int chatId = -1;
-
         try {
+            // Bắt đầu giao dịch
             transaction.begin();
 
-            // Tìm User với userId
-            Customer customer = entityManager.find(Customer.class, userId);
-            if (customer == null) {
-                throw new IllegalArgumentException("User not found with ID: " + userId);
-            }
-
-            // Kiểm tra xem đã tồn tại Chat cho user chưa
-            String jpql = "SELECT c FROM Chat c WHERE c.customer = :user ORDER BY c.createdDate DESC";
-            TypedQuery<Chat> query = entityManager.createQuery(jpql, Chat.class);
-            query.setParameter("user", customer);
+            // Truy vấn chatId của Customer hiện tại
+            String jpql = "SELECT c.id FROM Chat c WHERE c.customer.userID = :userId ORDER BY c.createdDate DESC";
+            TypedQuery<Integer> query = entityManager.createQuery(jpql, Integer.class);
+            query.setParameter("userId", userId);
             query.setMaxResults(1);
 
-            Chat existingChat = query.getResultStream().findFirst().orElse(null);
+            // Lấy chatId nếu có, nếu không có thì tạo mới
+            Integer chatId = query.getResultStream().findFirst().orElse(null);
 
-            if (existingChat != null) {
-                // Chat đã tồn tại
-                chatId = existingChat.getChatID();
-            } else {
-                // Tạo mới Chat
+            if (chatId == null) {
+                Customer customer = new Customer();
+                customer.setUserID(userId);
+
+                // Nếu không có chat, tạo mới Chat và gán customerId vào
                 Chat newChat = new Chat();
-                newChat.setCustomer(customer); // Gán đối tượng User vào Chat
+                newChat.setCustomer(customer); // Gán customerId vào chat mới
                 newChat.setCreatedDate(new Date());
 
-                entityManager.persist(newChat); // Lưu vào database
-                transaction.commit(); // Lưu thay đổi
-                chatId = newChat.getChatID(); // Lấy ID của Chat vừa tạo
+                entityManager.persist(newChat); // Lưu Chat mới vào cơ sở dữ liệu
+                transaction.commit(); // Commit giao dịch
+
+                chatId = newChat.getChatID(); // Lấy chatId mới tạo
             }
+
+            return chatId; // Trả về chatId (có thể là chatId cũ hoặc mới)
         } catch (Exception e) {
             if (transaction.isActive()) {
-                transaction.rollback();
+                transaction.rollback(); // Rollback nếu có lỗi
             }
             e.printStackTrace();
+            return -1; // Trả về null nếu có lỗi
         } finally {
-            entityManager.close();
+            entityManager.close(); // Đóng EntityManager
         }
-
-        return chatId;
     }
 }
+

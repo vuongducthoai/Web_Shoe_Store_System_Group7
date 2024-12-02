@@ -14,7 +14,7 @@ function validateForm() {
     const confirmPassword = document.getElementById('re-password').value.trim();
 
     // Regular Expression
-    const fullnameRegex = /^[A-Z][a-z]*$/;
+    const fullnameRegex = /^[a-zA-Z\u00C0-\u1EF9\u0300-\u036F\s]+$/i;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d).{6,}$/;
     const phoneRegex = /^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$/;

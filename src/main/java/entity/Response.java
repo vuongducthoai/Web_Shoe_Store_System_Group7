@@ -21,8 +21,8 @@ public class Response {
     private Date timeStamp;
     private String content;
 
-    @ManyToOne
-    @JoinColumn(name="userID")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="userID" )
     private Admin admin;
 
     @OneToOne

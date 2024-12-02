@@ -27,7 +27,7 @@ public class Promotion {
     @OneToMany(mappedBy = "promotion")
     private List<PromotionProduct> promotionProducts;
 
-    private double discountValue;
+    private int discountValue;
 
     @Enumerated(EnumType.STRING)
     private DiscountType discountType; // "percentage", , ...
