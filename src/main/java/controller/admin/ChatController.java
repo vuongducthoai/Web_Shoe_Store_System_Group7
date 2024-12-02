@@ -60,8 +60,10 @@ public class ChatController extends HttpServlet {
             RequestDispatcher dispatcher = req.getRequestDispatcher("/view/chat.jsp");
             dispatcher.forward(req, resp);
         } else {
-            // Nếu tham số không hợp lệ, gửi lỗi hoặc trang mặc định
+            session.invalidate();
+            resp.sendRedirect("/view/login.jsp");
+            return;
+            }
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing or invalid parameters");
-        }
     }
 }
