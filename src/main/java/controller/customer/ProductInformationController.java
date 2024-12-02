@@ -43,7 +43,7 @@ public class ProductInformationController extends HttpServlet {
         System.out.println(productDetails);
         if (productDetails == null || productDetails.isEmpty()) {
             req.setAttribute("error", "Sản phẩm không tồn tại");
-            req.getRequestDispatcher("./view/error.jsp").forward(req, resp);
+            req.getRequestDispatcher("/view/error.jsp").forward(req, resp);
         } else {
             List<String> images = productDetails.stream()
                     .map(ProductDTO::getBase64Image)
