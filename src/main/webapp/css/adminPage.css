@@ -797,3 +797,17 @@ th, td {
 #add-color-btnEdit:hover{
     background-color: #218838;
 }
+
+.add-size-btn,
+.add-size-btnEdit
+{
+    background-color: #28a745;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    display: block;
+    margin-bottom: 20px;
+}

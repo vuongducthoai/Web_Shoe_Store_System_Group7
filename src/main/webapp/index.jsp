@@ -210,21 +210,20 @@
 
     <div class="wrapper wrapper1" style="flex-wrap: wrap">
         <c:forEach var="product" items="${productDTOList}">
-
             <div class="product" style="flex: 0 0 23%; max-width: 25%">
                 <form action="/product/details" method="GET">
-                    <input type="hidden" name="productName" value="${promotionProduct.product.productName}">
-                <div class="product-image">
-                    <figure><img src="${product.getBase64Image()}" alt="Foundation"></figure>
-                </div>
-                <div class="product-details">
-                    <p class="product_name">${product.productName}</p>
-                    <p class="product_desc" style="margin-top: 5px">${product.description}</p>
-                    <div class="col-footer" style="display: flex; align-items: center; justify-content: space-between; margin-top: 10px">
-                        <p class="shoe-price">${product.price}₫</p
-                        <p class="shoe-sold">Đã bán :${product.quantity}
+                    <input type="hidden" name="productName" value="${product.productName}">
+                    <div class="product-image">
+                        <figure><img src="${product.getBase64Image()}" alt="Foundation"></figure>
                     </div>
-                </div>
+                    <div class="product-details">
+                        <p class="product_name">${product.productName}</p>
+                        <p class="product_desc" style="margin-top: 5px">${product.description}</p>
+                        <div class="col-footer" style="display: flex; align-items: center; justify-content: space-between; margin-top: 10px">
+                            <p class="shoe-price">${product.price}₫</p
+                            <p class="shoe-sold">Đã bán :${product.quantity}
+                        </div>
+                    </div>
                 </form>
             </div>
         </c:forEach>
