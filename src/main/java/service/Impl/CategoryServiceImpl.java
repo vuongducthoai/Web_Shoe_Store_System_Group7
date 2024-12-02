@@ -20,8 +20,79 @@ import java.util.stream.Stream;
 
 public class CategoryServiceImpl implements ICategoryService {
     ICategoryDao categoryDao = new CategoryDaoImpl();
-    IProductDAO productService = new ProductDAOImpl();
     public List<CategoryDTO> findAllCategories() { return categoryDao.findAllCategories(); }
+
+    @Override
+    public Map<String, Object> getFilteredAndSortedProducts(
+            List<CategoryDTO> categoryDTOList,
+            String selectedPromotion,
+            String selectedCategory,
+            String selectedSize,
+            String selectedColor,
+            String searchName,
+            String minPriceParam,
+            String maxPriceParam,
+            String sortOption,
+            String pageParam
+    ) {
+        // Get initial product data from the service
+        Map<String, Object> productInfo = getProductInfo(categoryDTOList);
+        Double minPrice = (Double) productInfo.get("minPrice");
+        Double maxPrice = (Double) productInfo.get("maxPrice");
+        List<Integer> sizes = (List<Integer>) productInfo.get("sizes");
+        List<String> colors = (List<String>) productInfo.get("colors");
+        List<String> promotions = (List<String>) productInfo.get("promotions");
+        List<String> categories = (List<String>) productInfo.get("categories");
+        Map<String, String> productNames = (Map<String, String>) productInfo.get("productNames");
+
+        // Calculate filter min and max prices
+        double filterMinPrice = minPriceParam != null ? Double.parseDouble(minPriceParam) : minPrice;
+        double filterMaxPrice = maxPriceParam != null ? Double.parseDouble(maxPriceParam) : maxPrice;
+        sortOption = (sortOption == null) ? "Phổ biến nhất" : sortOption;
+
+        // Filter products based on parameters
+        List<ProductDTO> filterProducts = filter(categoryDTOList, selectedCategory, filterMinPrice, filterMaxPrice, selectedColor, selectedSize, selectedPromotion, searchName);
+        String jsonSoldQuantityMap = jsonGetSoldQuantities(categoryDTOList);
+        filterProducts = distinctName(filterProducts);
+        List<ProductDTO> sortProducts = sortProducts(filterProducts, sortOption);
+
+        // Pagination logic
+        int currentPage = Integer.parseInt(pageParam);
+        int productsPerPage = 6;
+        int startIndex = (currentPage - 1) * productsPerPage;
+        int totalSize = (int) sortProducts.stream().filter(ProductDTO::isStatus).count();
+        int endIndex = Math.min(startIndex + productsPerPage, totalSize);
+        int totalPages = (int) Math.ceil((double) totalSize / productsPerPage);
+
+        // Get paginated products for the current page
+        String jsonCategoryList = jsonSaginatedProducts(sortProducts, startIndex, endIndex);
+
+        // Prepare the data to return
+        Map<String, Object> result = new HashMap<>();
+        result.put("soldQuantityMapJson", jsonSoldQuantityMap);
+        result.put("productsPerPage", productsPerPage);
+        result.put("totalSize", totalSize);
+        result.put("categoryListJson", jsonCategoryList);
+        result.put("currentPage", currentPage);
+        result.put("categories", categories);
+        result.put("jsonProductNames", new Gson().toJson(productNames));
+        result.put("promotions", promotions);
+        result.put("minPrice", minPrice);
+        result.put("maxPrice", maxPrice);
+        result.put("totalPages", totalPages);
+        result.put("sizeList", sizes);
+        result.put("colorList", colors);
+        result.put("selectedSize", selectedSize);
+        result.put("selectedColor", selectedColor);
+        result.put("selectedCategory", selectedCategory);
+        result.put("selectedPromotion", selectedPromotion);
+        result.put("filterMinPrice", filterMinPrice);
+        result.put("filterMaxPrice", filterMaxPrice);
+        result.put("sortOption", sortOption);
+        result.put("searchName", searchName);
+
+        return result;
+    }
 
     @Override
     public void insert(CategoryDTO categoryDTO) {
@@ -43,13 +114,11 @@ public class CategoryServiceImpl implements ICategoryService {
         return categoryDTOList;
     }
 
-    @Override
-    public List<ProductDTO> findAllProductByCategoryWithPagination(int categoryId, int offset, int limit) {
+    private List<ProductDTO> findAllProductByCategoryWithPagination(int categoryId, int offset, int limit) {
         return categoryDao.findAllProductByCategoryWithPagination(categoryId, offset, limit);
     }
 
-    @Override
-    public List<ProductDTO> distinctName(List<ProductDTO> products) {
+    private List<ProductDTO> distinctName(List<ProductDTO> products) {
         return products.stream()
                 .filter(ProductDTO::isStatus)
                 .collect(Collectors.toMap(
@@ -62,8 +131,7 @@ public class CategoryServiceImpl implements ICategoryService {
                 .toList();  // Chuyển thành danh sách (Java 16+)
     }
 
-    @Override
-    public List<ProductDTO> filter(List<CategoryDTO> cartItemDTOList, String selectedCategory, Double filterMinPrice, Double filterMaxPrice, String selectedColor, String selectedSize, String selectedPromotion, String searchName) {
+    private List<ProductDTO> filter(List<CategoryDTO> cartItemDTOList, String selectedCategory, Double filterMinPrice, Double filterMaxPrice, String selectedColor, String selectedSize, String selectedPromotion, String searchName) {
         return cartItemDTOList.stream()
                 // 1. Lọc theo tên danh mục (nếu cần)
                 .filter(c -> (selectedCategory == null || selectedCategory.equalsIgnoreCase("") || c.getCategoryName() != null && c.getCategoryName().equalsIgnoreCase(selectedCategory)))
@@ -93,8 +161,7 @@ public class CategoryServiceImpl implements ICategoryService {
                 .toList();
     }
 
-    @Override
-    public String jsonGetSoldQuantities(List<CategoryDTO> categories) {
+    private String jsonGetSoldQuantities(List<CategoryDTO> categories) {
         Map<String, Integer> soldQuantityMap = new HashMap<>();
 
         for (CategoryDTO category : categories) {
@@ -117,8 +184,7 @@ public class CategoryServiceImpl implements ICategoryService {
         return  new Gson().toJson(soldQuantityMap);
     }
 
-    @Override
-    public Map<String, Object> getProductInfo(List<CategoryDTO> cartItemDTOList) {
+    private Map<String, Object> getProductInfo(List<CategoryDTO> cartItemDTOList) {
         Set<String> colors = new HashSet<>();  // Mảng màu sắc
         Set<Integer> sizes = new HashSet<>();   // Mảng kích thước giày
         Map<String, Integer> promotions = new HashMap<>();   // Mảng các chương trình khuyến mãi
@@ -214,8 +280,7 @@ public class CategoryServiceImpl implements ICategoryService {
         return productInfo;
     }
 
-    @Override
-    public List<ProductDTO> sortProducts(List<ProductDTO> filteredProducts, String sortOption) {
+    private List<ProductDTO> sortProducts(List<ProductDTO> filteredProducts, String sortOption) {
         // Sao chép danh sách vào một ArrayList để tránh lỗi khi gọi sort() trên danh sách immutable
         List<ProductDTO> sortableList = new ArrayList<>(filteredProducts);
         Map<String, Integer> soldQuantityMap = new HashMap<>();
@@ -441,8 +506,7 @@ public class CategoryServiceImpl implements ICategoryService {
         return new AbstractMap.SimpleEntry<>(discountValue, timeRemaining);
     }
 
-    @Override
-    public String jsonSaginatedProducts(List<ProductDTO> products, int startIndex, int endIndex){
+    private String jsonSaginatedProducts(List<ProductDTO> products, int startIndex, int endIndex){
         List<ProductDTO> paginatedProducts = new ArrayList<>();
 
         if (startIndex >= 0 && endIndex <= products.stream().filter(ProductDTO::isStatus).count() && startIndex < endIndex) {

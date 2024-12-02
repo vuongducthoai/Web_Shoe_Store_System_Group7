@@ -1,7 +1,5 @@
 package controller.customer;
-
-import com.google.gson.Gson;
-import dto.*;
+import dto.CategoryDTO;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -35,69 +33,22 @@ public class FilterProductController extends HttpServlet {
 //            cartItemDTOList = new ArrayList<>();
         }
 
-        // Lấy dữ liệu ban đầu
-        Map<String, Object> productInfo = categoryService.getProductInfo(categoryDTOList);
-        Double minPrice = (Double) productInfo.get("minPrice");
-        Double maxPrice = (Double) productInfo.get("maxPrice");
-        List<Integer> sizes = (List<Integer>) productInfo.get("sizes");
-        List<String> colors = (List<String>) productInfo.get("colors");
-        List<String> promotions = (List<String>) productInfo.get("promotions");
-        List<String> categories = (List<String>) productInfo.get("categories");
-        Map<String, String> productNames = (Map<String, String>) productInfo.get("productNames");
+        Map<String, Object> responseData = categoryService.getFilteredAndSortedProducts(
+                categoryDTOList,
+                req.getParameter("selectedPromotion"),
+                req.getParameter("selectedCategory"),
+                req.getParameter("selectedSize"),
+                req.getParameter("selectedColor"),
+                req.getParameter("searchName"),
+                req.getParameter("minPrice"),
+                req.getParameter("maxPrice"),
+                req.getParameter("sortOption"),
+                pageParam
+        );
 
-        // Lấy các tham số lọc từ query parameters
-        String selectedPromotion = req.getParameter("selectedPromotion");
-        String selectedCategory = req.getParameter("selectedCategory");
-        String selectedSize = req.getParameter("selectedSize");
-        String selectedColor = req.getParameter("selectedColor");
-        String searchName = req.getParameter("searchName");
-        String minPriceParam = req.getParameter("minPrice");
-        String maxPriceParam = req.getParameter("maxPrice");
-        double filterMinPrice = minPriceParam != null ? Double.parseDouble(minPriceParam) : minPrice;
-        double filterMaxPrice = maxPriceParam != null ? Double.parseDouble(maxPriceParam) : maxPrice;
-        String sortOption = req.getParameter("sortOption") == null ? "Phổ biến nhất" : req.getParameter("sortOption");
-
-
-        List<ProductDTO> filterProducts = categoryService.filter(categoryDTOList, selectedCategory,  filterMinPrice, filterMaxPrice, selectedColor, selectedSize, selectedPromotion, searchName);
-        String jsonSoldQuantityMap = categoryService.jsonGetSoldQuantities(categoryDTOList);
-        filterProducts = categoryService.distinctName(filterProducts);
-        List<ProductDTO> sortProducts = categoryService.sortProducts(filterProducts, sortOption);
-
-        // Phân trang
-        int currentPage = Integer.parseInt(pageParam);
-        int productsPerPage = 6;
-        int startIndex = (currentPage - 1) * productsPerPage;
-        int totalSize = (int)sortProducts.stream().filter(ProductDTO::isStatus).count();
-        int endIndex = Math.min(startIndex + productsPerPage, totalSize);
-        int totalPages = (int) Math.ceil((double) totalSize / productsPerPage);
-
-        // Lấy danh sách sản phẩm cho trang hiện tại
-        String jsonCategoryList = categoryService.jsonSaginatedProducts(sortProducts, startIndex, endIndex); new ArrayList<>();
-        String jsonProductNames = new Gson().toJson(productNames);
-
-
-        req.setAttribute("soldQuantityMapJson", jsonSoldQuantityMap);
-        req.setAttribute("productsPerPage", productsPerPage);
-        req.setAttribute("minSize", totalSize != 0 ? 1 : 0);
-        req.setAttribute("totalSize", totalSize);
-        req.setAttribute("categoryListJson", jsonCategoryList);
-        req.setAttribute("currentPage", currentPage);
-        req.setAttribute("categories", categories);
-        req.setAttribute("jsonProductNames", jsonProductNames);
-        req.setAttribute("promotions", promotions);
-        req.setAttribute("minPrice", minPrice);
-        req.setAttribute("maxPrice", maxPrice);
-        req.setAttribute("totalPages", totalPages);
-        req.setAttribute("sizeList", sizes);
-        req.setAttribute("colorList", colors);
-        req.setAttribute("selectedSize", selectedSize);
-        req.setAttribute("selectedColor", selectedColor);
-        req.setAttribute("selectedCategory", selectedCategory);
-        req.setAttribute("selectedPromotion", selectedPromotion);
-        req.setAttribute("filterMinPrice", filterMinPrice);
-        req.setAttribute("filterMaxPrice", filterMaxPrice);
-        req.setAttribute("sortOption", sortOption);
-        req.setAttribute("searchName", searchName);
+        for (Map.Entry<String, Object> entry : responseData.entrySet()) {
+            req.setAttribute(entry.getKey(), entry.getValue());
+        }
 
         RequestDispatcher rq = req.getRequestDispatcher("/view/customer/filter-product.jsp");
         rq.forward(req, resp);
