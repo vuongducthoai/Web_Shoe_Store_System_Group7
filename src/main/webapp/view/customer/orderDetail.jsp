@@ -3,6 +3,8 @@
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
+
+
 <html lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -248,7 +250,7 @@
         <div class="overlay-content">
             <button class="close-btn" onclick="closeEditReviewForm()">X</button>
             <h2>Sửa Đánh Giá</h2>
-            <form id="editReviewForm" method="post" action="${pageContext.request.contextPath}/customer/orderDetails?id=${orderDetails.orderId}" enctype="multipart/form-data">
+            <form id="editReviewForm" method="post" action="${pageContext.request.contextPath}/customer/orderDetails?idOrder=${orderDetails.orderId}" enctype="multipart/form-data">
                 <input type="hidden" name="action" value="update" />
                 <input type="hidden" id="editReviewID" name="editReviewID" />
                 <input type="hidden" id="editUser-ID" name="editUser-ID" value="${customerId}"/>
@@ -386,6 +388,7 @@
     function closeEditReviewForm() {
         document.getElementById('editReviewOverlay').style.display = 'none';
     }
+
     // Thêm sự kiện click cho tất cả các nút Đánh giá
     document.querySelectorAll('.review-button').forEach(function (button) {
         button.addEventListener('click', function (event) {
@@ -394,7 +397,7 @@
             const productImage = productElement.getAttribute('data-product-image');
             const userID = productElement.getAttribute('data-user-id');
             const productID = productElement.getAttribute('data-product-id');
-            const  reviewID = productElement.getAttribute('data-review-id');
+            const reviewID = productElement.getAttribute('data-review-id');
 
             // Cập nhật thông tin vào form đánh giá
             document.getElementById('reviewProductName').value = productName;
@@ -411,6 +414,8 @@
     function closeReviewForm() {
         document.getElementById('reviewFormOverlay').style.display = 'none';
     }
+
+
 
     function redirectToProductInformation(name){
         console.log('get in')
@@ -429,4 +434,6 @@
 
 </script>
 </body>
+<%@ include file="/view/footer.jsp" %> <!-- Include footer.jsp -->
+
 </html>

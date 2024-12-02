@@ -98,9 +98,9 @@ public class CustomerServiceImpl implements ICustomerService {
     }
 
     @Override
-    public CustomerDTO getCustomerByID(int userID) {
+    public CustomerDTO getCustomerByAccountID(int accountID) {
         // Tìm khách hàng theo ID
-        Customer customer = customerDAO.getCustomerById(userID);
+        Customer customer = customerDAO.getCustomerByAccountID(accountID);
 
         if (customer != null) {
             // Tạo CustomerDTO để chuyển đổi dữ liệu
@@ -132,7 +132,7 @@ public class CustomerServiceImpl implements ICustomerService {
     @Override
     public boolean updateCustomer(CustomerDTO customerDTO) {
         try {
-            // Chuyển DTO sang entity để gọi dao
+            // Cập nhật thông tin Customer
             Customer customer = new Customer();
             customer.setUserID(customerDTO.getUserID());
             customer.setFullName(customerDTO.getFullName());
@@ -140,16 +140,7 @@ public class CustomerServiceImpl implements ICustomerService {
             customer.setDateOfBirth(customerDTO.getDateOfBirth());
             customer.setActive(customerDTO.isActive());
 
-            // Đặt địa chỉ nếu có
-            if (customerDTO.getAddressDTO() != null) {
-                Address address = new Address();
-                address.setHouseNumber(customerDTO.getAddressDTO().getHouseNumber());
-                address.setStreetName(customerDTO.getAddressDTO().getStreetName());
-                address.setDistrict(customerDTO.getAddressDTO().getDistrict());
-                address.setCity(customerDTO.getAddressDTO().getCity());
-                address.setProvince(customerDTO.getAddressDTO().getProvince());
-                customer.setAddress(address);
-            }
+
 
             // Gọi DAO để cập nhật customer
             return customerDAO.updateCustomerByID(customer);
@@ -161,5 +152,8 @@ public class CustomerServiceImpl implements ICustomerService {
     @Override
     public List<CustomerDTO> GetAllCustomer(){
         return customerDAO.GetAllCustomer();
+    }
+    public Integer getUserIDByAccountId(int accountID){
+        return customerDAO.getUserIDByAccountId(accountID);
     }
 }

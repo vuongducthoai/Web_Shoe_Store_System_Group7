@@ -8,6 +8,8 @@ import java.util.List;
 public interface ICustomerDAO {
     boolean insertCustomer(Customer customer);
     boolean updateCustomerByID(Customer customer);
-    Customer getCustomerById(int userID);
+    public Customer getCustomerByAccountID(int accountID);
     List<CustomerDTO> GetAllCustomer();
+    public Integer getUserIDByAccountId(int accountID);
+
 }

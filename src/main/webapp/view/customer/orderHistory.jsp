@@ -310,7 +310,7 @@
 
       <!-- Footer đơn hàng -->
       <div class="order-footer">
-        <a href="orderDetails?id=${order.orderId}" class="btn btn-more">Xem chi tiết</a>
+        <a href="orderDetails?idOrder=${order.orderId}" class="btn btn-more">Xem chi tiết</a>
       </div>
     </div>
   </c:forEach>

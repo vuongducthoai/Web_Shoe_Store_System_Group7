@@ -6,10 +6,12 @@ import entity.Account;
 import entity.User;
 import enums.RoleType;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.Query;
 
 public class UserDAOImpl implements IUserDAO {
+    private EntityManagerFactory entityManagerFactory;
 
     @Override
     public User getUserByAccountId(int accountID) {
@@ -68,6 +70,8 @@ public class UserDAOImpl implements IUserDAO {
         }
         return false;
     }
+
+
 
 
 }
