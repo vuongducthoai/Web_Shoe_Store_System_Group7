@@ -102,9 +102,9 @@ public class CustomerServiceImpl implements ICustomerService {
     }
 
     @Override
-    public CustomerDTO getCustomerByID(int userID) {
+    public CustomerDTO getCustomerByAccountID(int accountID) {
         // Tìm khách hàng theo ID
-        Customer customer = customerDAO.getCustomerById(userID);
+        Customer customer = customerDAO.getCustomerByAccountID(accountID);
 
         if (customer != null) {
             // Tạo CustomerDTO để chuyển đổi dữ liệu
@@ -146,6 +146,7 @@ public class CustomerServiceImpl implements ICustomerService {
             }
 
             // Create new Customer entity from DTO
+
             Customer customer = new Customer();
             customer.setDateOfBirth(customerDTO.getDateOfBirth());
             customer.setUserID(customerDTO.getUserID());
@@ -175,6 +176,7 @@ public class CustomerServiceImpl implements ICustomerService {
             account.setEmail(customerDTO.getAccount().getEmail());
             customer.setAccount(account);
 
+
             // Insert the new customer
             return customerDAO.updateCustomerByID(customer);
         } catch (Exception e) {
@@ -186,5 +188,8 @@ public class CustomerServiceImpl implements ICustomerService {
     @Override
     public List<CustomerDTO> GetAllCustomer(){
         return customerDAO.GetAllCustomer();
+    }
+    public Integer getUserIDByAccountId(int accountID){
+        return customerDAO.getUserIDByAccountId(accountID);
     }
 }

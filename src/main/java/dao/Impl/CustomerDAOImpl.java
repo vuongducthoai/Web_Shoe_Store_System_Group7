@@ -36,16 +36,33 @@ public class CustomerDAOImpl implements ICustomerDAO {
     }
 
     @Override
-    public Customer getCustomerById(int userID) {
+    public Customer getCustomerByAccountID(int accountID) {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
         try {
-            // Dùng JOIN FETCH để tải Customer kèm Address
-            String jpql = "SELECT c FROM Customer c LEFT JOIN FETCH c.address WHERE c.userID = :userID";
-            return entityManager.createQuery(jpql, Customer.class)
-                    .setParameter("userID", userID)
+            // Truy vấn với JOIN FETCH để lấy dữ liệu liên kết
+            String jpql = "SELECT c FROM Customer c LEFT JOIN FETCH c.address WHERE c.account.id = :accountID";
+            Customer customer = entityManager.createQuery(jpql, Customer.class)
+                    .setParameter("accountID", accountID)
+                    .getSingleResult();
+
+            // Chuyển đổi sang DTO nếu cần
+            return (customer);
+        } catch (NoResultException e) {
+            return null;
+        } finally {
+            entityManager.close();
+        }
+    }
+    public Integer getUserIDByAccountId(int accountID) {
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        try {
+            // Dùng JPQL để truy vấn chỉ lấy userID của Customer
+            String jpql = "SELECT c.userID FROM User c WHERE c.account.accountID = :accountID";
+            return entityManager.createQuery(jpql, Integer.class)
+                    .setParameter("accountID", accountID)
                     .getSingleResult();
         } catch (NoResultException e) {
-            return null; // Không tìm thấy customer
+            return null; // Nếu không tìm thấy customer
         } finally {
             entityManager.close();
         }
@@ -81,6 +98,7 @@ public class CustomerDAOImpl implements ICustomerDAO {
             }
 
             // Commit giao dịch
+
             transaction.commit();
             return true;
 

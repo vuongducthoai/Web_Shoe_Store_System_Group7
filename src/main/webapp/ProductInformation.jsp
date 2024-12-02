@@ -317,7 +317,7 @@
                                 </c:forEach>
                             </div>
                             <p>${review.comment}</p>
-                            <img style="width: 100px;" src="${review.getBase64Image()}"><br>
+                            <img style="width: 100px; border: none;" src="${review.getBase64Image()}" data-bs-toggle="modal" data-bs-target="#imageModal" class="img-thumbnail review-image"><br>
                             <c:if test="${review.getResponse().getResponseID() != 0}">
                                 <div class="response-container mb-2 d-flex justify-content-between me-2 mt-2">
                                     <div class="m-2">
@@ -350,6 +350,21 @@
                             </c:if>
                         </div>
                     </c:forEach>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="imageModalLabel">Phóng to hình ảnh</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <img id="modalImage" src="" class="img-fluid" alt="Review Image" style="height: 500px;">
+                    </div>
                 </div>
             </div>
         </div>

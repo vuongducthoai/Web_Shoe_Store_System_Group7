@@ -9,6 +9,7 @@ import entity.Account;
 import entity.User;
 import enums.RoleType;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.Query;
 
@@ -16,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class UserDAOImpl implements IUserDAO {
+    private EntityManagerFactory entityManagerFactory;
 
     @Override
     public User getUserByAccountId(int accountID) {
@@ -33,7 +35,7 @@ public class UserDAOImpl implements IUserDAO {
 
             int userId = (int) result[0];
             String role = (String) result[1];
-            Boolean active =(Boolean) result[2];
+            Boolean active = (Boolean) result[2];
             RoleType role1 = RoleType.valueOf(role);
             user = new User();
             user.setUserID(userId);
@@ -45,7 +47,7 @@ public class UserDAOImpl implements IUserDAO {
             System.out.println("Không tìm thấy User với accountID: " + accountID);
         } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             if (entityManager != null) {
                 entityManager.close();
             }
@@ -125,6 +127,28 @@ public class UserDAOImpl implements IUserDAO {
             e.printStackTrace();
         }
         return customerDTO;
+    }
+
+    public boolean checkAdmin(int userID) {
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        try {
+            String sql = "Select * from Admin inner join User on Admin.userID = User.userID where User.userID = ?";
+            Query query = entityManager.createNativeQuery(sql);
+            query.setParameter(1, userID);
+            Object[] result = (Object[]) query.getSingleResult();
+
+            if (result != null){
+                System.out.print("co admin");
+                return true;
+            }else System.out.print("ko admin");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+        return false;
     }
 
 

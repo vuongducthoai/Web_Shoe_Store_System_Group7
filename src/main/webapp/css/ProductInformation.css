@@ -236,7 +236,6 @@
 
 .reviews {
     max-height: 69vh;
-    margin-top: 30px;
     overflow-y: scroll;
 
 }
