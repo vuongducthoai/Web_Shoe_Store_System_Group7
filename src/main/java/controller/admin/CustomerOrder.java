@@ -38,6 +38,7 @@ public class CustomerOrder extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getServletPath();
         int customerId = 48;
+
 //        String customerIdParam = req.getParameter("id");
         if ("/customer/orders".equals(path)) {
 
