@@ -52,7 +52,7 @@ public class accountController extends HttpServlet {
         long quantityCompleted=statisticsService.getQuantityCompleted();
         long totalMoth= statisticsService.totalMoth();
         Map<Integer, Map<Integer, Long>> totalRevenueForLastFourYears = statisticsService.totalRevenueForLastFourYears();
-
+        Map<String,Integer>  top10product = statisticsService.top10Product();
         req.setAttribute("totalMoth", totalMoth);
         req.setAttribute("inventoryQuantity", inventoryQuantity);
         req.setAttribute("totalAmount", totalAmount);
@@ -60,7 +60,8 @@ public class accountController extends HttpServlet {
         req.setAttribute("promotionDTOList", promotionDTOList);
         req.setAttribute("nameProductList", nameProductList);
 
-
+        ObjectMapper objectMapper1 = new ObjectMapper();
+        String jsonDataTop10= objectMapper1.writeValueAsString(top10product);
 
         // Chuyển đổi dữ liệu Map thành JSON
         ObjectMapper objectMapper = new ObjectMapper();
@@ -68,6 +69,8 @@ public class accountController extends HttpServlet {
 
 // Truyền dữ liệu vào JSP
         req.setAttribute("dataByYear", jsonData);
+        req.setAttribute("top10product", jsonDataTop10);
+
         // Truyền danh sách tài khoản vào request
         req.setAttribute("accounts", accounts);
 

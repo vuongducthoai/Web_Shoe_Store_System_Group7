@@ -10,4 +10,5 @@ public interface IStatisticsService {
     long getQuantityCompleted();
     long totalMoth();
     Map<Integer, Map<Integer, Long>> totalRevenueForLastFourYears();
+    Map<String,Integer> top10Product();
 }

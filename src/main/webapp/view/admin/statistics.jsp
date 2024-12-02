@@ -6,7 +6,10 @@
 <script>
   // Lấy dữ liệu JSON từ request và chuyển nó thành đối tượng JavaScript
   const dataByYear = JSON.parse('<%= request.getAttribute("dataByYear") %>');
-  console.log("Dữ liệu từ JSP:", JSON.stringify(dataByYear, null, 2));
+  const topProducts = JSON.parse('<%= request.getAttribute("top10product")%>')
+  const labels = Object.keys(topProducts); // Tên sản phẩm
+  const data = Object.values(topProducts);
+
 </script>
 <div class="container">
   <!-- Thẻ thông tin -->
@@ -44,21 +47,4 @@
       <canvas id="horizontalChart"></canvas>
     </div>
   </div>
-</div>
-
-<div class="top-customers">
-  <h3 style="text-align: center;">Top 10 Khách hàng tiềm năng nhất</h3>
-  <table>
-    <thead>
-    <tr>
-      <th>Hạng</th>
-      <th>Tên Khách hàng</th>
-      <th>Tổng Đơn hàng</th>
-      <th>Doanh thu (VNĐ)</th>
-    </tr>
-    </thead>
-    <tbody id="customer-table">
-    <!-- Dữ liệu sẽ được thêm vào bằng JavaScript -->
-    </tbody>
-  </table>
 </div>
