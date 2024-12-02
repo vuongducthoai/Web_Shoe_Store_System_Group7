@@ -3,7 +3,10 @@ import JpaConfig.JpaConfig;
 import dao.IReviewDAO;
 import dto.*;
 
+import entity.Review;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.Query;
 
 import java.util.*;
@@ -143,6 +146,125 @@ public class ReviewDAOImpl implements IReviewDAO {
             entityManager.close();
         }
         return uniqueReviews;
+    }
+
+    @Override
+    public boolean addReview(Review review) {
+        if (review == null) {
+            System.err.println("Review is null");
+            return false;
+        }
+
+        try (EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager()) {
+            EntityTransaction transaction = entityManager.getTransaction();
+            try {
+                transaction.begin();
+
+                // Kiểm tra dữ liệu hợp lệ
+                if (review.getCustomer() == null || review.getCustomer().getUserID() == 0) {
+                    System.err.println("Customer ID is invalid");
+                    return false;
+                }
+                if (review.getProduct() == null || review.getProduct().getProductID() == 0) {
+                    System.err.println("Product ID is invalid");
+                    return false;
+                }
+                if (review.getRatingValue() == 0) {
+                    System.err.println("Rating is invalid");
+                    return false;
+                }
+                if (review.getComment() == null || review.getComment().trim().isEmpty()) {
+                    System.err.println("Comment is empty");
+                    return false;
+                }
+
+                // Lưu hoặc cập nhật thực thể
+                entityManager.merge(review);
+                transaction.commit();
+                return true;
+
+            } catch (Exception e) {
+                System.err.println("Error while adding review: " + e.getMessage());
+                e.printStackTrace();
+
+                // Rollback nếu có lỗi
+                if (transaction.isActive()) {
+                    System.err.println("Rolling back transaction");
+                    transaction.rollback();
+                }
+                return false;
+            }
+        }
+    }
+    @Override
+    public boolean updateReview(Review review) {
+        if (review == null) {
+            System.err.println("Review is null");
+            return false;
+        }
+
+        try (EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager()) {
+            EntityTransaction transaction = entityManager.getTransaction();
+            try {
+                transaction.begin();
+
+                // Kiểm tra dữ liệu hợp lệ
+                if (review.getCustomer() == null || review.getCustomer().getUserID() == 0) {
+                    System.err.println("Customer ID is invalid");
+                    return false;
+                }
+                if (review.getProduct() == null || review.getProduct().getProductID() == 0) {
+                    System.err.println("Product ID is invalid");
+                    return false;
+                }
+                if (review.getRatingValue() == 0) {
+                    System.err.println("Rating is invalid");
+                    return false;
+                }
+                if (review.getComment() == null || review.getComment().trim().isEmpty()) {
+                    System.err.println("Comment is empty");
+                    return false;
+                }
+
+                // Sử dụng merge để cập nhật hoặc thêm mới
+                entityManager.merge(review);
+                transaction.commit();
+                return true;
+
+            } catch (Exception e) {
+                System.err.println("Error while updating review: " + e.getMessage());
+                e.printStackTrace();
+
+                // Rollback nếu có lỗi
+                if (transaction.isActive()) {
+                    System.err.println("Rolling back transaction");
+                    transaction.rollback();
+                }
+                return false;
+            }
+        }
+    }
+    @Override
+    public Review getReviewsByProductId(int productId) {
+        try (EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager()) {
+            // Truy vấn một đánh giá của sản phẩm theo productId
+            String query = "SELECT r FROM Review r WHERE r.product.productID = :productId";
+
+            // Chỉ lấy 1 review, nếu có
+            Review review = entityManager.createQuery(query, Review.class)
+                    .setParameter("productId", productId)
+                    .setMaxResults(1)  // Giới hạn chỉ lấy 1 kết quả
+                    .getSingleResult();
+
+            return review; // Trả về 1 review
+        } catch (NoResultException e) {
+            System.err.println("No review found for product ID " + productId);
+            return null; // Nếu không tìm thấy review, trả về null
+        } catch (Exception e) {
+            System.err.println("Error while getting review by product ID: " + e.getMessage());
+            e.printStackTrace();
+            return null; // Trả về null nếu có lỗi
+        }
     }
 
 
