@@ -9,6 +9,6 @@ public interface IUserDAO {
     User getUserByAccountId(int accountID);
 
     CustomerDTO getInformationUser(int userID);
-
+    boolean checkAdmin(int userID);
 }
 
