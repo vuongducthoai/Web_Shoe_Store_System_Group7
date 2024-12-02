@@ -25,4 +25,6 @@ public interface IProductDAO {
     void deleteSize(String productName, String color, int size);
     void reduceProductInstances(String productName, String color, int size, int quantityDifference) ;
     ProductDTO getCommonInfoByName(String productName, String color) ;
+    void deleteProductByName(String productName);
+    void deleteProductFromCategory(String productName);
 }
