@@ -113,7 +113,7 @@ public class ProductPromotionImpl implements IProductPromotion {
             "inner join Promotion on Promotion.promotionID = PromotionProduct.promotionID "+
             "inner join Product on Product.productID = PromotionProduct.productID "+
             "where Promotion.isActive = 1 "+
-//            "and Promotion.promotionType = 'VOUCHER_PRODUCT' "+
+            "and Promotion.promotionType = 'VOUCHER_PRODUCT' "+
             "and Promotion.minimumLoyalty = 0 "+
             "and Promotion.startDate < NOW() "+
             "and Product.productName = ?";
