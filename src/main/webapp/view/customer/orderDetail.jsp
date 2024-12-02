@@ -174,6 +174,9 @@
     </style>
 </head>
 <body>
+<header>
+    <jsp:include page="/view/header.jsp"></jsp:include>
+</header>
 <!-- Kiểm tra nếu có thông tin đơn hàng -->
 <c:if test="${not empty orderDetails}">
     <div class="order-detail">
