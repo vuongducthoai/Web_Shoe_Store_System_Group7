@@ -53,9 +53,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 productDiv.className = "product";
                 productDiv.style.flex = "0 0 23%";
                 productDiv.style.maxWidth = "25%";
+                productDiv.style.height = "400px";
                 fragment.appendChild(productDiv);
 
                 productDiv.innerHTML = `
+            <form action="/product/details" method="GET">
+                <input type="hidden" name="productName" value="${product.productName}">
                 <div class="product-image">
                      <figure><img src="${product.imageBase64}" alt="${product.productName}"></figure>
                 </div>
@@ -67,6 +70,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         <p class="shoe-sold">Đã bán: ${product.quantity}</p>
                     </div>
                 </div>
+                 <button type="submit" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0;  cursor: pointer"></button> <!-- Invisible button for clicking -->
+               </form>
             `;
             });
             // Assuming productItems is the container where products should be added
