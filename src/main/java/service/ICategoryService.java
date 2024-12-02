@@ -20,4 +20,5 @@ public interface ICategoryService {
             String sortOption,
             String pageParam
     );
+    List<ProductDTO> findAllProductByCategoryWithPagination(int categoryId, int offset, int limit);
 }

@@ -1,8 +1,6 @@
 package service.Impl;
 
 import com.google.gson.Gson;
-import dao.IProductDAO;
-import dao.Impl.ProductDAOImpl;
 import dto.CategoryDTO;
 import dao.ICategoryDao;
 import dao.Impl.CategoryDaoImpl;
@@ -70,24 +68,24 @@ public class CategoryServiceImpl implements ICategoryService {
         // Prepare the data to return
         Map<String, Object> result = new HashMap<>();
         result.put("soldQuantityMapJson", jsonSoldQuantityMap);
-        result.put("productsPerPage", productsPerPage);
-        result.put("totalSize", totalSize);
+        result.put("productsPerPage", String.valueOf(productsPerPage));
+        result.put("totalSize", String.valueOf(totalSize));
         result.put("categoryListJson", jsonCategoryList);
-        result.put("currentPage", currentPage);
+        result.put("currentPage", String.valueOf(currentPage));
         result.put("categories", categories);
         result.put("jsonProductNames", new Gson().toJson(productNames));
         result.put("promotions", promotions);
         result.put("minPrice", minPrice);
         result.put("maxPrice", maxPrice);
-        result.put("totalPages", totalPages);
+        result.put("totalPages", String.valueOf(totalPages));
         result.put("sizeList", sizes);
         result.put("colorList", colors);
         result.put("selectedSize", selectedSize);
         result.put("selectedColor", selectedColor);
         result.put("selectedCategory", selectedCategory);
         result.put("selectedPromotion", selectedPromotion);
-        result.put("filterMinPrice", filterMinPrice);
-        result.put("filterMaxPrice", filterMaxPrice);
+        result.put("filterMinPrice", String.valueOf(filterMinPrice));
+        result.put("filterMaxPrice", String.valueOf(filterMaxPrice));
         result.put("sortOption", sortOption);
         result.put("searchName", searchName);
 
@@ -114,7 +112,7 @@ public class CategoryServiceImpl implements ICategoryService {
         return categoryDTOList;
     }
 
-    private List<ProductDTO> findAllProductByCategoryWithPagination(int categoryId, int offset, int limit) {
+    public List<ProductDTO> findAllProductByCategoryWithPagination(int categoryId, int offset, int limit) {
         return categoryDao.findAllProductByCategoryWithPagination(categoryId, offset, limit);
     }
 
@@ -270,8 +268,8 @@ public class CategoryServiceImpl implements ICategoryService {
         productInfo.put("sizes", sortedSizes);   // Danh sách kích thước đã sắp xếp
         productInfo.put("promotions", sortedPromotionNames);  // Danh sách chương trình khuyến mãi đã sắp xếp
         productInfo.put("categories", sortedCategoryNames);  // Danh sách danh mục đã sắp xếp theo số lượng sản phẩm
-        productInfo.put("minPrice", minPrice);   // Giá trị min
-        productInfo.put("maxPrice", maxPrice);   // Giá trị max
+        productInfo.put("minPrice", String.valueOf(minPrice));   // Giá trị min
+        productInfo.put("maxPrice", String.valueOf(maxPrice));   // Giá trị max
 
         // Chuyển Set sản phẩm thành chuỗi
 
@@ -475,7 +473,6 @@ public class CategoryServiceImpl implements ICategoryService {
 
         return 0;
     }
-
 
     private AbstractMap.SimpleEntry<Double, Long> calculatePromotionValue(ProductDTO productDTO, long currentTime) {
         double discountValue = 0;

@@ -55,22 +55,23 @@ public class Product {
     // Phương thức ánh xạ từ Product sang ProductDTO
     public ProductDTO toDTO() {
         return new ProductDTO(
-                this.productID,
-                this.productName,
-                this.price,
+                productID,
+                productName,
+                price,
                 0,
-                this.image,
-                this.color,
-                this.size,
-                this.status,
-                this.description,
-                this.createDate,
+                image,
+                color,
+                size,
+                status,
+                description,
+                createDate,
                 null,
                 null,
                 null,
-                this.promotionProducts != null ? this.promotionProducts.stream().map(PromotionProduct::toDTO).collect(Collectors.toList()) : null,
+                promotionProducts != null ? promotionProducts.stream().map(PromotionProduct::toDTO).collect(Collectors.toList()) : null,
                 0,
-                this.review != null ? this.review.toDTO() : null
+                this.review != null ? this.review.toDTO() : null,
+                image == null ? null : "data:image/png;base64," + Base64.getEncoder().encodeToString(image)
         );
     }
 }
