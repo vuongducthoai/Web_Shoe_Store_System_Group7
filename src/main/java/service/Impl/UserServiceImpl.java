@@ -3,6 +3,7 @@ package service.Impl;
 import dao.IUserDAO;
 import dao.Impl.UserDAOImpl;
 import dto.AccountDTO;
+import dto.CustomerDTO;
 import dto.UserDTO;
 import entity.User;
 import service.IUserService;
@@ -26,6 +27,9 @@ public class UserServiceImpl implements IUserService {
         return null;
     }
 
+    @Override
+    public CustomerDTO getInformationUser(int userID) {
+        return userDAO.getInformationUser(userID);
     public boolean checkAdmin(int userID){
        return userDAO.checkAdmin(userID);
     }
