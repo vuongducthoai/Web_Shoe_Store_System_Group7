@@ -123,7 +123,7 @@ public class MomoController extends HttpServlet {
         UserDTO userDTO = (UserDTO) session.getAttribute("user");
         int idUser = userDTO.getUserID();
         AddressDTO addressDTO = addressService.getAddressByID(idUser);
-        if (addressDTO== null){
+        if (addressDTO.getCity()== null){
             req.setAttribute("errCode",1);
             req.setAttribute("message","Không thể lấy được địa chỉ giao hàng, vui lòng cập nhật thông tin cá nhân");
             cartController.Load_Cart_View(req,resp);
