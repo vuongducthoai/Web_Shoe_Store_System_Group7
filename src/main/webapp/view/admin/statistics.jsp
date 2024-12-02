@@ -1,6 +1,13 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+
+
+<script>
+  // Lấy dữ liệu JSON từ request và chuyển nó thành đối tượng JavaScript
+  const dataByYear = JSON.parse('<%= request.getAttribute("dataByYear") %>');
+  console.log("Dữ liệu từ JSP:", JSON.stringify(dataByYear, null, 2));
+</script>
 <div class="container">
   <!-- Thẻ thông tin -->
   <div class="cards">
@@ -26,9 +33,7 @@
   <div class="charts">
     <div class="chart-container">
       <select id="year-select" onchange="updateChartData()">
-        <option value="2024">2024</option>
-        <option value="2025">2025</option>
-        <option value="2026">2026</option>
+        <!-- Dropdown sẽ được cập nhật bằng JS -->
       </select>
       <canvas id="myChart"></canvas>
     </div>

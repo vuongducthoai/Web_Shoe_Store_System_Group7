@@ -3,54 +3,32 @@ const horizontalCtx = document.getElementById('horizontalChart').getContext('2d'
 
 
 
-fetch('/JPAExample_war_exploded/Admin')
-    .then(response => response.json())  // Chuyển response thành JSON
-    .then(data => {
-        const dataByYear = {};
 
-        // Chuyển đổi dữ liệu từ backend thành cấu trúc mà bạn cần
-        for (const [year, months] of Object.entries(data)) {
-            // Khởi tạo mảng cho từng năm
-            dataByYear[year] = Array(12).fill(0);
+console.log(dataByYear); // Kiểm tra dữ liệu đã được truyền vào đúng
 
-            // Lặp qua các tháng và cập nhật giá trị
-            for (const [month, total] of Object.entries(months)) {
-                dataByYear[year][month - 1] = total; // Trừ 1 vì mảng bắt đầu từ 0
-            }
-        }
-
-        // Kiểm tra kết quả
-        console.log(dataByYear); // In ra kết quả trong console
-    })
-    .catch(error => {
-        console.error('Error fetching total revenue data:', error);
-    });
+// Tiếp tục xử lý dữ liệu như bình thường
+// Ví dụ: Hiển thị dữ liệu từ `dataByYear`
+for (let year in dataByYear) {
+    console.log(`Dữ liệu cho năm ${year}:`, dataByYear[year]);
+}
 
 
-// Dữ liệu cho các năm
-const dataByYear = {
-    2024: [50, 80, 65, 90, 40, 95, 100, 85, 75, 60, 70, 80],
-    2025: [60, 70, 80, 95, 50, 105, 110, 95, 85, 65, 80, 90],
-    2026: [55, 85, 70, 100, 45, 90, 105, 90, 80, 55, 65, 75]
-};
+
 
 const topProducts = {
     labels: ['Sản phẩm 1', 'Sản phẩm 2', 'Sản phẩm 3', 'Sản phẩm 4', 'Sản phẩm 5', 'Sản phẩm 6', 'Sản phẩm 7', 'Sản phẩm 8', 'Sản phẩm 9', 'Sản phẩm 10'],
     data: [120, 110, 105, 100, 95, 90, 85, 80, 75, 70]
 };
-
+const revenue2024 = [];
+for (let month = 1; month <= 12; month++) {
+    revenue2024.push(dataByYear["2024"][month] || 0); // Nếu không có dữ liệu thì gán là 0
+}
 // Biểu đồ dọc
 const myChart = new Chart(ctx, {
     type: 'bar',
     data: {
         labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        datasets: [{
-            label: 'Doanh thu hàng tháng',
-            data: dataByYear[2024],
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            borderColor: 'rgba(75, 192, 192, 1)',
-            borderWidth: 1
-        }]
+        datasets: []
     },
     options: {
         responsive: true,
@@ -92,13 +70,59 @@ const horizontalChart = new Chart(horizontalCtx, {
         }
     }
 });
+const currentYear = new Date().getFullYear();
 
-// Hàm cập nhật biểu đồ dọc
+// Tạo các năm từ 4 năm trước đến năm hiện tại
+const years = [];
+for (let i = 0; i <= 3; i++) {
+    years.push(currentYear - i); // Tạo mảng các năm từ 4 năm trước đến năm hiện tại
+}
+
+// Lấy dropdown để thêm các option
+const yearSelect = document.getElementById('year-select');
+
+// Thêm các năm vào dropdown
+years.forEach(year => {
+    const option = document.createElement('option');
+    option.value = year;
+    option.textContent = year;
+    yearSelect.appendChild(option);
+});
+
+// Hàm cập nhật biểu đồ khi chọn năm
 function updateChartData() {
     const selectedYear = document.getElementById('year-select').value;
-    myChart.data.datasets[0].data = dataByYear[selectedYear];
+    updateChart(selectedYear);
+}
+
+// Hàm cập nhật biểu đồ dọc
+function updateChart(year) {
+    const revenue = [];
+    for (let month = 1; month <= 12; month++) {
+        revenue.push(dataByYear[year][month] || 0); // Nếu không có dữ liệu, gán là 0
+    }
+
+    // Cập nhật datasets của biểu đồ
+    myChart.data.datasets = [{
+        label: `Doanh thu ${year}`,
+        data: revenue,
+        backgroundColor: 'rgba(75, 192, 192, 0.2)', // Màu nền
+        borderColor: 'rgba(75, 192, 192, 1)', // Màu viền
+        borderWidth: 1
+    }];
+
+    // Cập nhật biểu đồ
     myChart.update();
 }
+
+// Lắng nghe sự kiện khi chọn năm từ dropdown
+document.getElementById('year-select').addEventListener('change', function() {
+    const selectedYear = this.value;  // Lấy năm đã chọn
+    updateChart(selectedYear);  // Cập nhật biểu đồ
+});
+
+// Gọi hàm để hiển thị biểu đồ cho năm mặc định khi tải trang (ví dụ 2021)
+updateChart(currentYear);
 
 
 document.addEventListener("DOMContentLoaded", () => {

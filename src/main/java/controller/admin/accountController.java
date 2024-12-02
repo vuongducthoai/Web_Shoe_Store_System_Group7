@@ -1,5 +1,6 @@
 package controller.admin;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import dao.IAccountDAO;
 import dao.IProductDAO;
@@ -25,9 +26,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @WebServlet(urlPatterns = {"/Admin" ,"/Admin/account"})
 public class accountController extends HttpServlet {
@@ -64,18 +63,11 @@ public class accountController extends HttpServlet {
 
 
         // Chuyển đổi dữ liệu Map thành JSON
-        Gson gson = new Gson();
-        String jsonResponse = gson.toJson(totalRevenueForLastFourYears);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonData = objectMapper.writeValueAsString(totalRevenueForLastFourYears);
 
-
-
-        System.out.println("JSON Response: " + jsonResponse);
-
-        // Thiết lập response
-        resp.setContentType("application/json");
-        resp.setCharacterEncoding("UTF-8");
-        resp.getWriter().write(jsonResponse);
-
+// Truyền dữ liệu vào JSP
+        req.setAttribute("dataByYear", jsonData);
         // Truyền danh sách tài khoản vào request
         req.setAttribute("accounts", accounts);
 
