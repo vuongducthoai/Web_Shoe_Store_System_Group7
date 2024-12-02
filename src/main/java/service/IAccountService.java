@@ -10,5 +10,6 @@ public interface IAccountService {
     AccountDTO findAccountByEmail(String email);
     AccountDTO findAccoutByProvide(String provideID, AuthProvider authProvider);
     AccountDTO getAccountByID(int id);
+
 //    boolean updateAccountByAccountID(int accountID, AccountDTO accountDTO);
 }

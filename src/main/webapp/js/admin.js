@@ -9,6 +9,10 @@ var accountManagement = document.getElementById("account-management");
 var orderManagement =document.getElementById("order-management");
 var promotionManagement =document.getElementById("promotion-management")
 var statisticsManagement =document.getElementById("statistics-management")
+
+var addForm = document.querySelector("#add-product-management-form");
+var editForm = document.querySelector("#edit-product-management-form");
+var deleteForm = document.querySelector("#delete-product-management-form");
 // Lắng nghe sự kiện khi người dùng click vào "Quản lý sản phẩm"
 document.getElementById("manage-products-btn").addEventListener("click", function (event) {
 
@@ -19,10 +23,6 @@ document.getElementById("manage-products-btn").addEventListener("click", functio
     categoryManagement.style.display = "none";
     orderManagement.style.display="none";
     promotionManagement.style.display="none";
-    // nút thêm sửa xóa
-    var addForm = document.querySelector("#add-product-management-form");
-    var editForm = document.querySelector("#edit-product-management-form");
-    var deleteForm = document.querySelector("#delete-product-management-form");
 
 
     document.getElementById("btn-product-management-actions-add").addEventListener("click", function (event) {
@@ -33,11 +33,8 @@ document.getElementById("manage-products-btn").addEventListener("click", functio
 
 
     document.getElementById("btn-product-management-actions-edit").addEventListener("click", function (event) {
-        addForm.style.display = "none";
-        deleteForm.style.display = "none";
-        editForm.style.display = "flex";
+        openAdd();
     });
-
 
     document.getElementById("btn-product-management-actions-delete").addEventListener("click", function (event) {
         addForm.style.display = "none";
@@ -811,6 +808,93 @@ document.getElementById("btn-edit-product").addEventListener("click", function (
 });
 
 
+function sendEditProduct(productName) {
+    fetch('ProductController', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+            productName: productName,
+            submitAction: 'showInfo',
+        }),
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                openAdd();
+                // Gán dữ liệu vào form
+                document.getElementById('edit-product-name').value = data.productName;
+                document.getElementById('edit-product-price').value = data.productPrice;
+                document.getElementById('edit-product-category').value = data.productCategory;
+                document.getElementById('edit-product-description').value = data.productDescription;
+
+                // Hiển thị các biến thể
+                const colorContainer = document.getElementById('color-container-edit');
+                colorContainer.innerHTML = ''; // Xóa các nội dung cũ
+
+                for (const [colorId, colorName] of Object.entries(data.colorIdToNameMap)) {
+                    const colorDiv = document.createElement('div');
+                    colorDiv.classList.add('color-block');
+                    colorDiv.setAttribute('data-color-id', colorId);
+
+                    colorDiv.innerHTML = `
+                    <h4>Màu ${colorId}</h4>
+                    <label for="color-name-${colorId}">Tên Màu:</label>
+                    <input type="text" name="color-name-${colorId}" value="${colorName}" id="color-name-${colorId}" required>
+
+                    <label for="image-color-${colorId}">Hình ảnh:</label>
+                    <div class="LoadImageContent">
+                        <div class="picturebox">
+                            <img class="imageDisplay" src="${data.colorIdToImageMap[colorId]}" alt="Current image" />
+                        </div>
+                        <button type="button" class="loadImageBtn">Load Image</button>
+                        <input type="file" name="image-color-${colorId}" class="imageInput" style="display: none;" accept="image/*">
+                        <button type="button" class="cancelBtn">Cancel Image</button>
+                    </div>
+
+                    <label>Size và Số lượng:</label>
+                    <div class="size-container" id="size-container-${colorId}">
+                `;
+
+                    // Thêm các size và số lượng
+                    const sizeQuantityMap = data.sizeQuantityMap[colorId];
+                    for (const [size, quantity] of Object.entries(sizeQuantityMap)) {
+                        colorDiv.innerHTML += `
+                        <div class="size-block">
+                            <input type="text" name="size-${colorId}[]" value="${size}" placeholder="Nhập size" required>
+                            <input type="text" name="quantity-${colorId}[]" value="${quantity}" placeholder="Nhập số lượng" required>
+                            <button type="button" class="remove-size-btnEdit">Xóa Size</button>
+                        </div>
+                    `;
+                    }
+
+                    colorDiv.innerHTML += `
+                    </div>
+                    <button type="button" class="add-size-btnEdit" data-color="${colorId}">Thêm Size</button>
+                    <button type="button" class="remove-color-btnEdit">Xóa biến thể</button>
+                `;
+
+                    colorContainer.appendChild(colorDiv);
+                }
+            } else {
+                alert('Failed to load product information: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while loading product information.');
+        });
+}
 
 
-
+function openAdd(){
+    addForm.style.display = "none";
+    deleteForm.style.display = "none";
+    editForm.style.display = "flex";
+}

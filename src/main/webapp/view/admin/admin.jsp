@@ -139,11 +139,7 @@
 
                                     <td>${product.description}</td>
                                     <td>
-                                        <form action="Admin/product" method="post" >
-                                            <input type="hidden" name="productName" value="${product.productName}" >
-                                            <button class="action-btn" id="btn-edit-product" name="submitAction" value="showInfo" >Sửa</button>
-                                        </form>
-
+                                        <button class="action-btn" id="btn-edit-product" onclick="sendEditProduct('${product.productName}')">Sửa</button>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -222,43 +218,6 @@
                             <!-- Khu vực sửa biến thể (màu sắc) -->
                             <h4>Danh sách biến thể</h4>
                             <div id="color-container-edit">
-                                <!-- Lặp qua Map colorIdToNameMap -->
-                                <c:forEach var="entry" items="${colorIdToNameMap}">
-                                    <c:set var="colorId" value="${entry.key}" />
-                                    <c:set var="colorName" value="${entry.value}" />
-
-                                    <div class="color-block" data-color-id="${colorId}">
-                                        <h4>Màu ${colorId}</h4>
-
-                                        <label for="color-name-${colorId}">Tên Màu:</label>
-                                        <input type="text" name="color-name-${colorId}" value="${colorName}" id="color-name-${colorId}" required>
-
-                                        <label for="image-color-${colorId}">Hình ảnh:</label>
-                                        <div class="LoadImageContent">
-                                            <div class="picturebox">
-                                                <img class="imageDisplay" src="${colorIdToImageMap[colorId]}" alt="Current image" />
-                                            </div>
-                                            <button type="button" class="loadImageBtn">Load Image</button>
-                                            <input type="file" name="image-color-${colorId}" class="imageInput" style="display: none;" accept="image/*">
-                                            <button type="button" class="cancelBtn">Cancel Image</button>
-                                        </div>
-
-                                        <label>Size và Số lượng:</label>
-                                        <div class="size-container" id="size-container-${colorId}">
-                                            <!-- Lặp qua Map sizeQuantityMap -->
-                                            <c:forEach var="sizeEntry" items="${sizeQuantityMap[colorId]}">
-                                                <div class="size-block">
-                                                    <input type="text" name="size-${colorId}[]" value="${sizeEntry.key}" placeholder="Nhập size" required>
-                                                    <input type="text" name="quantity-${colorId}[]" value="${sizeEntry.value}" placeholder="Nhập số lượng" required>
-                                                    <button type="button" class="remove-size-btnEdit">Xóa Size</button>
-                                                </div>
-                                            </c:forEach>
-                                        </div>
-                                        <button type="button" class="add-size-btnEdit" data-color="${colorId}">Thêm Size</button>
-
-                                        <button type="button" class="remove-color-btnEdit">Xóa biến thể</button>
-                                    </div>
-                                </c:forEach>
                             </div>
                             <button type="button" id="add-color-btnEdit">Thêm biến thể</button>
                             <button class="action-btn" name="submitAction" value="edit-product">Lưu thay đổi</button>

@@ -1,14 +1,10 @@
 package controller.admin;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import dao.ICategoryDao;
 import dao.IProductDAO;
 import dao.Impl.CategoryDaoImpl;
 import dao.Impl.ProductDAOImpl;
-import dto.AccountDTO;
-import dto.CartItemDTO;
 import dto.CategoryDTO;
 import dto.ProductDTO;
 import entity.Category;
@@ -18,6 +14,10 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
+import service.ICategoryService;
+import service.IProductService;
+import service.Impl.CategoryServiceImpl;
+import service.Impl.ProductServiceImpl;
 
 
 import java.io.*;
@@ -32,18 +32,18 @@ import java.util.stream.Collectors;
         maxFileSize = 1024 * 1024 * 10,      // 10MB
         maxRequestSize = 1024 * 1024 * 50    // 50MB
 )
-public class productController extends HttpServlet {
-    IProductDAO productDAO = new ProductDAOImpl();
-    ICategoryDao categoryDao   = new CategoryDaoImpl();
+public class ProductController extends HttpServlet {
+    IProductService productService = new ProductServiceImpl();
+    ICategoryService categoryService = new CategoryServiceImpl();
 
     protected void LoadListproduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<ProductDTO> products = productDAO.getListProductDTO();
+        List<ProductDTO> products = productService.getListProductDTO();
         req.setAttribute("products", products);
-        List<CategoryDTO> categoryDTOList = categoryDao.categoryDTOList();
+        List<CategoryDTO> categoryDTOList = categoryService.categoryDTOList();
         req.setAttribute("CategoryList", categoryDTOList);
         req.getRequestDispatcher("/view/admin/admin.jsp").forward(req, resp);
-
     }
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("submitAction");
@@ -67,9 +67,7 @@ public class productController extends HttpServlet {
         catch (Exception e){
             e.printStackTrace();
         }
-
     }
-
 
 
     protected void addProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -77,7 +75,7 @@ public class productController extends HttpServlet {
         String productDescription = req.getParameter("productDescription");
         String categoryName = req.getParameter("CategoryName");
         double productPrice = Double.parseDouble(req.getParameter("productPrice"));
-        List<CategoryDTO> categoryDTOList = categoryDao.categoryDTOList();
+        List<CategoryDTO> categoryDTOList = categoryService.categoryDTOList();
         Category selectedCategory = null;
         for (CategoryDTO category : categoryDTOList) {
             if (category.getCategoryName().equals(categoryName)) {
@@ -146,7 +144,7 @@ public class productController extends HttpServlet {
                         product.setCreateDate(LocalDateTime.now());
                         product.setStatus(true);
 
-                        productDAO.AddProduct(product);
+                        productService.AddProduct(product);
                     }
                 }
             }
@@ -161,8 +159,11 @@ public class productController extends HttpServlet {
 
 
     protected void showInfo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
         String productName = request.getParameter("productName");
-        List<ProductDTO> products = productDAO.getListProductByName(productName);
+        List<ProductDTO> products = productService.getListProductByName(productName);
 
         if (products == null || products.isEmpty()) {
             request.setAttribute("error", "Không tìm thấy sản phẩm nào!");
@@ -171,10 +172,6 @@ public class productController extends HttpServlet {
         }
 
         ProductDTO firstProduct = products.get(0);
-        request.setAttribute("productName", firstProduct.getProductName());
-        request.setAttribute("productPrice", firstProduct.getPrice());
-        request.setAttribute("productCategory", firstProduct.getCategoryDTO().getCategoryName());
-        request.setAttribute("productDescription", firstProduct.getDescription());
 
         // Lấy danh sách màu sắc duy nhất
         List<String> colors = products.stream()
@@ -223,13 +220,21 @@ public class productController extends HttpServlet {
                     .findFirst()
                     .ifPresent(product -> colorIdToImageMap.put(colorId, product.getBase64Image()));
         }
+        // Tạo JSON để trả về
+        Map<String, Object> jsonResponse = new HashMap<>();
+        jsonResponse.put("success", true);
+        jsonResponse.put("productName", firstProduct.getProductName());
+        jsonResponse.put("productPrice", firstProduct.getPrice());
+        jsonResponse.put("productCategory", firstProduct.getCategoryDTO().getCategoryName());
+        jsonResponse.put("productDescription", firstProduct.getDescription());
+        jsonResponse.put("colorIdToNameMap", colorIdToNameMap);
+        jsonResponse.put("colorIdToImageMap", colorIdToImageMap);
+        jsonResponse.put("sizeQuantityMap", sizeQuantityMap);
 
-        // Set dữ liệu vào request
-        request.setAttribute("colorIdToNameMap", colorIdToNameMap);
-        request.setAttribute("colorIdToImageMap", colorIdToImageMap);
-        request.setAttribute("sizeQuantityMap", sizeQuantityMap);
-
-        response.sendRedirect(request.getContextPath() + "/Admin");
+        // Chuyển đổi Map thành JSON và gửi về client
+        Gson gson = new Gson();
+        String json = gson.toJson(jsonResponse);
+        response.getWriter().write(json);
     }
 
     protected void updateProduct(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -240,10 +245,10 @@ public class productController extends HttpServlet {
         String productDescription = request.getParameter("productDescription");
 
         // Gọi DAO để cập nhật thông tin sản phẩm
-        productDAO.updateProductByCommonInfo(productName, productPrice, categoryName, productDescription);
+        productService.updateProductByCommonInfo(productName, productPrice, categoryName, productDescription);
 
         //  Xử lý danh sách màu
-        List<String> oldColors = productDAO.getColorsByProduct(productName); // Lấy danh sách màu cũ từ DB
+        List<String> oldColors = productService.getColorsByProduct(productName); // Lấy danh sách màu cũ từ DB
         List<String> newColors = new ArrayList<>();
         int i = 1; // Khởi tạo chỉ số vòng lặp
         while (true) {
@@ -275,7 +280,7 @@ public class productController extends HttpServlet {
 
             // Nếu màu cũ không có trong danh sách màu mới, xóa màu
             if (!isColorInNewList) {
-                productDAO.deleteProductByColor(productName, oldColor);
+                productService.deleteProductByColor(productName, oldColor);
             }
         }
 
@@ -317,7 +322,7 @@ public class productController extends HttpServlet {
         double productPrice = Double.parseDouble(req.getParameter("productPrice"));
 
         // Lấy danh sách danh mục từ database
-        List<CategoryDTO> categoryDTOList = categoryDao.categoryDTOList();
+        List<CategoryDTO> categoryDTOList = categoryService.categoryDTOList();
         Category selectedCategory = null;
         for (CategoryDTO category : categoryDTOList) {
             if (category.getCategoryName().equals(categoryName)) {
@@ -387,7 +392,7 @@ public class productController extends HttpServlet {
                         product.setStatus(true);
 
                         // Thêm sản phẩm vào cơ sở dữ liệu
-                        productDAO.AddProduct(product);
+                        productService.AddProduct(product);
                     }
                 }
             }
@@ -419,21 +424,21 @@ public class productController extends HttpServlet {
         }
 
         // Cập nhật ảnh chỉ khi có ảnh mới, nếu không giữ nguyên ảnh cũ
-        if (imageBytes != null && productDAO.updateImage(color, productName, imageBytes)) {
+        if (imageBytes != null && productService.updateImage(color, productName, imageBytes)) {
             System.out.println(productName + " has been updated with new image.");
         } else {
             System.out.println("No new image for " + productName + ". Image not updated.");
         }
 
         // Lấy danh sách kích thước hiện tại từ DB
-        List<Integer> oldSizes = productDAO.getSizesByColor(color, productName);
+        List<Integer> oldSizes = productService.getSizesByColor(color, productName);
 
         // Lấy danh sách kích thước và số lượng mới từ request
         String[] sizeParams = request.getParameterValues("size-" + a + "[]");
         String[] quantityParams = request.getParameterValues("quantity-" + a + "[]");
 
         if (sizeParams != null && quantityParams != null) {
-            Map<Integer, Integer> oldQuantities = productDAO.getQuantitiesByColor(color, productName);
+            Map<Integer, Integer> oldQuantities = productService.getQuantitiesByColor(color, productName);
 
             for (int i = 0; i < sizeParams.length; i++) {
                 int newSize = Integer.parseInt(sizeParams[i]);
@@ -454,7 +459,7 @@ public class productController extends HttpServlet {
                             addProductBySizeAndQuantity(productName, color, newSize);
                         }
                     } else if (quantityDifference < 0) {
-                        productDAO.reduceProductInstances(productName, color, newSize, -quantityDifference);
+                        productService.reduceProductInstances(productName, color, newSize, -quantityDifference);
                     }
                 }
             }
@@ -462,7 +467,7 @@ public class productController extends HttpServlet {
             // Xóa các kích thước cũ không còn trong danh sách mới
             for (Integer oldSize : oldSizes) {
                 if (Arrays.stream(sizeParams).noneMatch(s -> Integer.parseInt(s) == oldSize)) {
-                    productDAO.deleteSize(productName, color, oldSize);
+                    productService.deleteSize(productName, color, oldSize);
                 }
             }
         }
@@ -470,8 +475,8 @@ public class productController extends HttpServlet {
 
     protected void addProductBySizeAndQuantity(String productName, String color, int size) throws ServletException, IOException {
         ProductDTO productDTO = new ProductDTO();
-        productDTO = productDAO.getCommonInfoByName(productName, color);
-        List<CategoryDTO> categoryDTOList = categoryDao.categoryDTOList();
+        productDTO = productService.getCommonInfoByName(productName, color);
+        List<CategoryDTO> categoryDTOList = categoryService.categoryDTOList();
         String categoryName= productDTO.getCategoryDTO().getCategoryName();
         Category selectedCategory = null;
         for (CategoryDTO category : categoryDTOList) {
@@ -492,14 +497,14 @@ public class productController extends HttpServlet {
         product.setImage(productDTO.getImage());
         product.setCreateDate(LocalDateTime.now());
         product.setStatus(true);
-        productDAO.AddProduct(product);
+        productService.AddProduct(product);
 
     }
 
     protected void deleteProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String productName = req.getParameter("productName");
         try{
-            productDAO.deleteProductByName(productName);
+            productService.deleteProductByName(productName);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -31,6 +31,102 @@ public class ProductServiceImpl implements IProductService {
     public List<ProductDTO> findByNameProduct(String name) {
         return productDAO.findByNameProduct(name);
     }
+
+    @Override
+    public boolean AddProduct(Product product) {
+        return productDAO.AddProduct(product);
+    }
+
+    @Override
+    public boolean UpdateProduct(Product product) {
+        return false;
+    }
+
+    @Override
+    public List<ProductDTO> getListProductDTO() {
+        return productDAO.getListProductDTO();
+    }
+
+    @Override
+    public ProductDTO getProductByID(int id) {
+        return null;
+    }
+
+    @Override
+    public List<ProductDTO> findListProductByCategoryID(int id) {
+        return List.of();
+    }
+
+    @Override
+    public List<ProductDTO> getListProductByName(String name) {
+        return productDAO.getListProductByName(name);
+    }
+
+    @Override
+    public List<String> getProductNamesForPromotion(int promotionId) {
+        return List.of();
+    }
+
+    @Override
+    public long getInventoryQuantity() {
+        return 0;
+    }
+
+    @Override
+    public Map<Integer, Integer> getQuantitiesByColor(String color, String productName) {
+        return productDAO.getQuantitiesByColor(color, productName);
+    }
+
+    @Override
+    public void updateProductByCommonInfo(String productName, double productPrice, String categoryName, String productDescription) {
+        productDAO.updateProductByCommonInfo(productName, productPrice, categoryName, productDescription);
+    }
+
+    @Override
+    public List<String> getColorsByProduct(String productName) {
+        return productDAO.getColorsByProduct(productName);
+    }
+
+    @Override
+    public void deleteProductByColor(String productName, String color) throws Exception {
+        productDAO.deleteProductByColor(productName, color);
+    }
+
+    @Override
+    public boolean updateImage(String color, String productName, byte[] imageBytes) {
+        return productDAO.updateImage(color, productName, imageBytes);
+    }
+
+    @Override
+    public List<Integer> getSizesByColor(String color, String productName) {
+        return productDAO.getSizesByColor(color, productName);
+    }
+
+    @Override
+    public void deleteSize(String productName, String color, int size) {
+        productDAO.deleteSize(productName, color, size);
+    }
+
+    @Override
+    public void reduceProductInstances(String productName, String color, int size, int quantityDifference) {
+        productDAO.reduceProductInstances(productName, color, size, quantityDifference);
+    }
+
+    @Override
+    public ProductDTO getCommonInfoByName(String productName, String color) {
+        return productDAO.getCommonInfoByName(productName, color);
+    }
+
+    @Override
+    public void deleteProductByName(String productName) {
+        productDAO.deleteProductByName(productName);
+    }
+
+    @Override
+    public void deleteProductFromCategory(String productName) {
+
+    }
+
     public Map<ProductDTO, Double> findRandomProducts(String currentProductName, int CID) {
         Map<ProductDTO, Double> result = new HashMap<>();
         List<Product> products = productDAO.findRandomProducts(currentProductName, CID);

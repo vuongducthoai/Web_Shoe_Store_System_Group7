@@ -3,39 +3,30 @@ package controller.admin;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import dao.IAccountDAO;
-import dao.ICategoryDao;
-import dao.IProductDAO;
 import dao.Impl.AccountDaoImpl;
-import dao.Impl.CategoryDaoImpl;
-import dao.Impl.ProductDAOImpl;
 import dto.*;
-import enums.RoleType;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import service.*;
 import service.Impl.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @WebServlet(urlPatterns = {"/Admin" ,"/Admin/account","/Admin/product"})
-public class accountController extends HttpServlet {
+public class AccountController extends HttpServlet {
     IAccountDAO accountDAO = new AccountDaoImpl();
     IPromotionService promotionService = new PromotionServiceImpl();
     IProductService productService = new ProductServiceImpl();
     private final IOrderService orderService = new OrderServiceImpl();
-    IProductDAO productDAO = new ProductDAOImpl();
-    ICategoryDao categoryDao   = new CategoryDaoImpl();
-
+    IProductService iProductService = new ProductServiceImpl();
+    ICategoryService iCategoryService = new CategoryServiceImpl();
     @Override
     public void init() throws ServletException {
         super.init();
@@ -50,9 +41,31 @@ public class accountController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<ProductDTO> products = productDAO.getListProductDTO();
+        HttpSession session = req.getSession();
+
+        // Lấy dữ liệu từ session
+        String productName = (String) session.getAttribute("productName");
+        Double productPrice = (Double) session.getAttribute("productPrice");
+        String productCategory = (String) session.getAttribute("productCategory");
+        String productDescription = (String) session.getAttribute("productDescription");
+
+        Map<Integer, String> colorIdToNameMap = (Map<Integer, String>) session.getAttribute("colorIdToNameMap");
+        Map<Integer, String> colorIdToImageMap = (Map<Integer, String>) session.getAttribute("colorIdToImageMap");
+        Map<Integer, Integer> sizeQuantityMap = (Map<Integer, Integer>) session.getAttribute("sizeQuantityMap");
+
+        // Xóa khỏi session nếu không còn cần thiết
+        session.removeAttribute("productName");
+        session.removeAttribute("productPrice");
+        session.removeAttribute("productCategory");
+        session.removeAttribute("productDescription");
+        session.removeAttribute("colorIdToNameMap");
+        session.removeAttribute("colorIdToImageMap");
+        session.removeAttribute("sizeQuantityMap");
+
+
+        List<ProductDTO> products = iProductService.getListProductDTO();
         req.setAttribute("products", products);
-        List<CategoryDTO> categoryDTOList = categoryDao.categoryDTOList();
+        List<CategoryDTO> categoryDTOList = iCategoryService.categoryDTOList();
         req.setAttribute("CategoryList", categoryDTOList);
 
         List<AccountDTO> accounts = accountDAO.getListAccountDTO();
@@ -91,7 +104,15 @@ public class accountController extends HttpServlet {
         req.setAttribute("quantityCompleted", quantityCompleted);
         req.setAttribute("promotionDTOList", promotionDTOList);
         req.setAttribute("nameProductList", nameProductList);
+        // Gửi dữ liệu qua request để forward tới JSP
+        req.setAttribute("productName", productName);
+        req.setAttribute("productPrice", productPrice);
+        req.setAttribute("productCategory", productCategory);
+        req.setAttribute("productDescription", productDescription);
 
+        req.setAttribute("colorIdToNameMap", colorIdToNameMap);
+        req.setAttribute("colorIdToImageMap", colorIdToImageMap);
+        req.setAttribute("sizeQuantityMap", sizeQuantityMap);
         ObjectMapper objectMapper1 = new ObjectMapper();
         String jsonDataTop10= objectMapper1.writeValueAsString(top10product);
 
@@ -99,7 +120,7 @@ public class accountController extends HttpServlet {
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonData = objectMapper.writeValueAsString(totalRevenueForLastFourYears);
 
-// Truyền dữ liệu vào JSP
+        // Truyền dữ liệu vào JSP
         req.setAttribute("dataByYear", jsonData);
         req.setAttribute("top10product", jsonDataTop10);
 

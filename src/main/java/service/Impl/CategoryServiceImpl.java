@@ -41,4 +41,24 @@ public class CategoryServiceImpl implements ICategoryService {
     public List<ProductDTO> findAllProductByCategoryWithPagination(int categoryId, int offset, int limit) {
         return categoryDao.findAllProductByCategoryWithPagination(categoryId, offset, limit);
     }
+
+    @Override
+    public List<Category> categoryList() {
+        return List.of();
+    }
+
+    @Override
+    public List<CategoryDTO> categoryDTOList() {
+        return categoryDao.categoryDTOList();
+    }
+
+    @Override
+    public boolean insert(Category category) {
+        return false;
+    }
+
+    @Override
+    public boolean remove(int categoryId) {
+        return false;
+    }
 }
