@@ -2,8 +2,6 @@ package controller.customer;
 
 import com.google.gson.Gson;
 import dto.*;
-import enums.DiscountType;
-import enums.PromotionType;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -15,12 +13,11 @@ import service.Impl.CategoryServiceImpl;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Stream;
 
 @WebServlet(urlPatterns = {"/customer/product/filter"})
-public class ListProductController extends HttpServlet {
+public class FilterProductController extends HttpServlet {
     ICategoryService categoryService = new CategoryServiceImpl();
-    List<CategoryDTO> cartItemDTOList = null;
+    List<CategoryDTO> categoryDTOList = null;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -33,13 +30,13 @@ public class ListProductController extends HttpServlet {
             return;
         }
 
-        if (cartItemDTOList == null) {
-            cartItemDTOList = categoryService.findAllCategories();
+        if (categoryDTOList == null) {
+            categoryDTOList = categoryService.findAllCategories();
 //            cartItemDTOList = new ArrayList<>();
         }
 
         // Lấy dữ liệu ban đầu
-        Map<String, Object> productInfo = categoryService.getProductInfo(cartItemDTOList);
+        Map<String, Object> productInfo = categoryService.getProductInfo(categoryDTOList);
         Double minPrice = (Double) productInfo.get("minPrice");
         Double maxPrice = (Double) productInfo.get("maxPrice");
         List<Integer> sizes = (List<Integer>) productInfo.get("sizes");
@@ -61,8 +58,8 @@ public class ListProductController extends HttpServlet {
         String sortOption = req.getParameter("sortOption") == null ? "Phổ biến nhất" : req.getParameter("sortOption");
 
 
-        List<ProductDTO> filterProducts = categoryService.filter(cartItemDTOList, selectedCategory,  filterMinPrice, filterMaxPrice, selectedColor, selectedSize, selectedPromotion, searchName);
-        String jsonSoldQuantityMap = categoryService.jsonGetSoldQuantities(cartItemDTOList);
+        List<ProductDTO> filterProducts = categoryService.filter(categoryDTOList, selectedCategory,  filterMinPrice, filterMaxPrice, selectedColor, selectedSize, selectedPromotion, searchName);
+        String jsonSoldQuantityMap = categoryService.jsonGetSoldQuantities(categoryDTOList);
         filterProducts = categoryService.distinctName(filterProducts);
         List<ProductDTO> sortProducts = categoryService.sortProducts(filterProducts, sortOption);
 
