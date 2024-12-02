@@ -42,8 +42,9 @@ public class ChatController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        // http://localhost:8080/JPAExample_war_exploded/Chat?userId=67&accountId=41&role=ADMIN
-        // ad 10,8 cus 115,70 cus 67 41
+        // http://localhost:8080/JPAExample_war_exploded/Chat?userId=70&accountId=115&role=CUSTOMER
+        //CUSTOMER , ADMIN
+        // ad 8,10 cus 70,115 cus 41,67
         // Lấy tham số từ URL
         String userIdParam = req.getParameter("userId");
         String accountIdParam = req.getParameter("accountId");

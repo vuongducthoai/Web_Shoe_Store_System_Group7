@@ -5,6 +5,7 @@ import dao.IMessageDAO;
 import entity.Message;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 
 import java.sql.Timestamp;
@@ -58,4 +59,37 @@ public class MessageDAO implements IMessageDAO {
             entityManager.close();
         }
     }
+
+    @Override
+    public void updateMessageStatus(int chatId, int userID) {
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction(); // Lấy transaction từ entityManager
+        try {
+            // Bắt đầu transaction
+            transaction.begin();
+
+            // Câu truy vấn UPDATE
+            String jqr = "UPDATE Message m SET m.isRead = true WHERE m.chat.chatID = :chatId AND m.userID != :userID";
+            Query query = entityManager.createQuery(jqr);
+            query.setParameter("chatId", chatId);
+            query.setParameter("userID", userID);
+
+            // Thực thi câu lệnh UPDATE
+            query.executeUpdate();
+
+            // Commit transaction
+            transaction.commit();
+        } catch (Exception e) {
+            // Nếu có lỗi, rollback transaction
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            entityManager.close(); // Đảm bảo đóng EntityManager
+        }
+    }
+
+
+
 }
