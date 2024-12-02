@@ -13,7 +13,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-
   <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/filter-product.css">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -25,6 +24,7 @@
 <div id="categoryListJson" style="display: none;">${categoryListJson}</div>
 <div id="jsonProductNames" style="display: none;">${jsonProductNames}</div>
 <div id="soldQuantityMapJson" style="display: none;">${soldQuantityMapJson}</div>
+<div id="jsonGetAvgReviewMap" style="display: none;">${jsonGetAvgReviewMap}</div>
 <div id="contextPath" data-contextPath="${pageContext.request.contextPath}"></div>
 <div id="selectedSize" selectedSize="${selectedSize}"></div>
 <div id="selectedColor" selectedColor="${selectedColor}"></div>
@@ -36,9 +36,9 @@
 <div id="totalSize" totalSize="${totalSize}"></div>
 <div id="searchName" searchName="${searchName}"></div>
 <header>
-  <jsp:include page="/view/header.jsp"></jsp:include>
+    <%@ include file="/view/header.jsp" %>
 </header>
-<main class="container mx-auto px-4 py-0" style="margin-top: 40px;">
+<main class="container mx-auto px-4 py-0" style="margin-top: 40px; font-family: 'Calibri', sans-serif !important;">
   <div style="display: flex; justify-content: flex-end; padding: 8px 0;">
     <div class="relative">
       <input class="border rounded-full px-4 py-2 w-64 pl-10" placeholder="Tìm kiếm sản phẩm..." type="text" />
@@ -112,7 +112,7 @@
                     type="range"
                     max="${maxPrice}"
                     min="${minPrice}"
-                    step="50000"
+                    step="${minPrice < 50000 ? minPrice : 50000}"
                     value="${minPrice}">
             <input
                     id="rangeMax"
@@ -120,7 +120,7 @@
                     type="range"
                     max="${maxPrice}"
                     min="${minPrice}"
-                    step="50000"
+                    step="${minPrice < 50000 ? minPrice : 50000}"
                     value="${maxPrice}">
           </div>
           <div class="flex justify-between text-sm text-gray-500 mt-2">
@@ -130,7 +130,7 @@
         </div>
         <div class="mb-6">
           <h3 class="font-medium mb-2">Màu sắc</h3>
-          <div class="flex space-x-2">
+          <div class="flex flex-wrap gap-2">
             <c:forEach var="color" items="${colorList}">
               <button
                       class="color-btn w-6 h-6 rounded-full cursor-pointer border-2 border-gray-300"
@@ -144,9 +144,11 @@
           <h3 class="font-medium mb-2">Kích thước</h3>
           <div class="flex flex-wrap gap-2">
             <c:forEach var="size" items="${sizeList}">
-              <button class="border rounded-full px-2 py-2 text-sm size-btn"
+              <button class="border px-2 py-2 text-sm size-btn"
+                      style="border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;"
                       data-size="${size}" onclick="selectSize(this)">
-                  ${size}</button>
+                  ${size}
+              </button>
             </c:forEach>
           </div>
         </div>

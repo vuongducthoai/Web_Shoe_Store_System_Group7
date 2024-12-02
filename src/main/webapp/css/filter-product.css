@@ -216,3 +216,15 @@
     border-color: #2196F3; /* Màu xanh dương */
     border-width: 4px; /* Viền dày hơn khi được chọn */
 }
+
+.selected-color {
+    box-shadow: 0 0 5px 2px rgba(0, 128, 255, 0.5); /* Ví dụ hiệu ứng đổ bóng */
+    border: 3px solid #00bfff; /* Thêm đường viền đặc biệt */
+}
+
+
+.color-btn {
+    border-radius: 50%; /* Đảm bảo nút là hình tròn */
+    width: 1.5rem; /* Hoặc giá trị khác nếu cần */
+    height: 1.5rem; /* Hoặc giá trị khác nếu cần */
+}
