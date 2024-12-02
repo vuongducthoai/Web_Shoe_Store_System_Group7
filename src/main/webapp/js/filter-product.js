@@ -525,7 +525,7 @@ function arrayBufferToBase64(buffer) {
 
 function handleProductClick(productName) {
     // Chuyển hướng đến URL chi tiết sản phẩm sử dụng đường dẫn tương đối
-    window.location.href = `/JPAExample_war_exploded/product/details?productName=${encodeURIComponent(productName)}`;
+    window.location.href = `/product/details?productName=${encodeURIComponent(productName)}`;
 }
 
 
