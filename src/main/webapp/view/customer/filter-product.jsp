@@ -14,6 +14,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
   <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/filter-product.css">
+  <link href="https://fonts.googleapis.com/css2?family=Calibri&display=swap" rel="stylesheet">
+
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
   <script type="text/javascript"
@@ -38,7 +40,7 @@
 <header>
     <%@ include file="/view/header.jsp" %>
 </header>
-<main class="container mx-auto px-4 py-0" style="margin-top: 40px; font-family: 'Calibri', sans-serif !important;">
+<main class="container mx-auto px-4 py-0" style="margin-top: 70px; margin-bottom: 10px; font-family: 'Calibri', sans-serif !important;">
   <div style="display: flex; justify-content: flex-end; padding: 8px 0;">
     <div class="relative">
       <input class="border rounded-full px-4 py-2 w-64 pl-10" placeholder="Tìm kiếm sản phẩm..." type="text" />

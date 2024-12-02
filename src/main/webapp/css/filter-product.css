@@ -228,3 +228,7 @@
     width: 1.5rem; /* Hoặc giá trị khác nếu cần */
     height: 1.5rem; /* Hoặc giá trị khác nếu cần */
 }
+
+body {
+    font-family: 'Calibri', 'Inter', 'Roboto', sans-serif;
+}

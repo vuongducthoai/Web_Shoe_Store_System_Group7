@@ -160,7 +160,7 @@
 <section >
     <nav>
         <a style="text-decoration: none" href="/home" class="logo">
-            <img src="../image/shoe.png">
+            <img src="${pageContext.request.contextPath}/image/shoe.png">
         </a>
 
         <ul>
