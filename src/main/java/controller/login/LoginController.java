@@ -4,6 +4,7 @@ import Authentication.FacebookAuth;
 import Authentication.GoogleAuth;
 import dto.AccountDTO;
 import dto.UserDTO;
+import enums.RoleType;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -55,7 +56,11 @@ public class LoginController extends HttpServlet {
         //Luu thong tin nguoi dung vao session
         req.setAttribute("loginSuccess" , true);
         session.setAttribute("user", userDTO);
-        resp.sendRedirect("/home");
+        if(userDTO.getAccount().getRole().equals(RoleType.ADMIN)) {
+            resp.sendRedirect("/view/admin/admin.jsp");
+        } else {
+            resp.sendRedirect("/home");
+        }
     }
 
 
@@ -85,7 +90,11 @@ public class LoginController extends HttpServlet {
                 HttpSession session = req.getSession();
                 //Luu thong tin nguoi dung vao session
                 session.setAttribute("user", userDTO);
-                resp.sendRedirect("/home");
+                if(userDTO.getAccount().getRole().equals(RoleType.ADMIN)){
+                    resp.sendRedirect("/view/admin/admin.jsp");
+                } else {
+                    resp.sendRedirect("/home");
+                }
             } else {
                 req.setAttribute("loginSuccess" , true);
                 req.setAttribute("errorMessage", "Email hoặc Password không chính xác");
