@@ -24,6 +24,7 @@ public class AccountServiceImpl implements IAccountService {
              */
             Customer customer = new Customer();
             customer.setFullName(accountDTO.getUser().getFullName());
+            customer.setActive(true);
 
             /*
                Cart

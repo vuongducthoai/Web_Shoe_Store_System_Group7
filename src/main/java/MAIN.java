@@ -1,8 +1,14 @@
 import JpaConfig.JpaConfig;
 import dao.IProductDAO;
+import dao.IUserDAO;
 import dao.Impl.ProductDAOImpl;
+import dao.Impl.UserDAOImpl;
 import dto.ProductDTO;
+import dto.UserDTO;
+import entity.User;
 import jakarta.persistence.EntityManager;
+import service.IUserService;
+import service.Impl.UserServiceImpl;
 
 import java.util.List;
 
@@ -27,11 +33,15 @@ public class MAIN {
 //        UserDAOImpl userDAO = new UserDAOImpl();
 //        User user1 = userDAO.getUserByAccountId(107);
 //        System.out.println(user1.getUserID());
+//
+//        IProductDAO productDAO = new ProductDAOImpl();
+//        List<ProductDTO> productDTOList = productDAO.fin0dAllWithPagination(0, 8);
+//        for (ProductDTO productDTO : productDTOList) {
+//            System.out.println(productDTO.getProductName());
+//        }
 
-        IProductDAO productDAO = new ProductDAOImpl();
-        List<ProductDTO> productDTOList = productDAO.findAllWithPagination(0, 8);
-        for (ProductDTO productDTO : productDTOList) {
-            System.out.println(productDTO.getProductName());
-        }
+        IUserService userService = new UserServiceImpl();
+        UserDTO userDTO = userService.findUserByAccoutId(118);
+        System.out.println(userDTO.getAccount().getRole());
     }
 }
