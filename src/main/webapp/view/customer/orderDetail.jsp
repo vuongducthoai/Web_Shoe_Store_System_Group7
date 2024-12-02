@@ -16,6 +16,7 @@
             font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
+            padding-top: 80px;
             background-color: #f7f7f7;
         }
 
@@ -435,5 +436,4 @@
 </script>
 </body>
 <%@ include file="/view/footer.jsp" %> <!-- Include footer.jsp -->
-
 </html>
