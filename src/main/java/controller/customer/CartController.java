@@ -57,6 +57,8 @@ public class CartController extends HttpServlet {
             return;
         }
         if (userDTO.getAccount().getRole()== RoleType.ADMIN){
+            req.setAttribute("error","Trang này không khả dụng");
+            req.getRequestDispatcher("/view/errror.jsp").forward(req, resp);
             return;
         }
         switch (path){
@@ -94,6 +96,8 @@ public class CartController extends HttpServlet {
             return;
         }
         if (userDTO.getAccount().getRole()== RoleType.ADMIN){
+            req.setAttribute("error","Trang này không khả dụng");
+            req.getRequestDispatcher("/view/errror.jsp").forward(req, resp);
             return;
         }
         switch (path){
