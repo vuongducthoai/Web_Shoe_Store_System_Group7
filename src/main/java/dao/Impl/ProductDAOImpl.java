@@ -238,7 +238,7 @@ public class ProductDAOImpl implements IProductDAO {
             String sql = "SELECT p.productId, p.productName, p.color, p.description, p.image, p.price, p.size, c.categoryID, c.categoryName " +
                     "FROM Product p " +
                     "INNER JOIN Category c ON p.categoryID = c.categoryID " +
-                    "WHERE p.productName = ?"; // Sử dụng tham số cho productName
+                    "WHERE p.productName = ? and p.status=1"; // Sử dụng tham số cho productName
 
             Query query = entityManager.createNativeQuery(sql);
             query.setParameter(1, name);
@@ -649,7 +649,7 @@ public class ProductDAOImpl implements IProductDAO {
 
 
 
-    public ProductDTO getCommonInfoByName(String productName) {
+    public ProductDTO getCommonInfoByName(String productName, String color) {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
         ProductDTO productDTO = null;
 
@@ -658,11 +658,12 @@ public class ProductDAOImpl implements IProductDAO {
             String sql = "SELECT p.productName, p.description, p.image, p.price, c.categoryID, c.categoryName " +
                     "FROM Product p " +
                     "INNER JOIN Category c ON p.categoryID = c.categoryID " +
-                    "WHERE p.productName = ? AND p.status = 1";
+                    "WHERE p.productName = ? AND p.color=? AND p.status = 1";
 
             // Tạo query và thiết lập tham số
             Query query = entityManager.createNativeQuery(sql);
             query.setParameter(1, productName);
+            query.setParameter(2, color);
 
 
             List<Object[]> results = query.getResultList();
