@@ -161,7 +161,7 @@
 <section >
     <nav>
         <a style="text-decoration: none" href="/home" class="logo">
-            <img src="../image/shoe.png">
+            <img src="${pageContext.request.contextPath}/image/shoe.png">
         </a>
 
         <ul>
@@ -193,7 +193,7 @@
                          <span class="user-icon">
                             <i style="font-size: 30px; margin-left: 20px;" class="fa-solid fa-user"></i>
                             <div class="dropdown-menu">
-                                <a href="#">Tài Khoản Của Tôi</a>
+                                <a href="/InformationUser">Tài Khoản Của Tôi</a>
                                 <a class="sign-out" href="/logout">Đăng xuất</a>
                             </div>
                          </span>

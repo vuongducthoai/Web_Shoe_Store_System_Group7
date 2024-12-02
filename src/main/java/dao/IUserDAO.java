@@ -1,10 +1,14 @@
 package dao;
 
+import dto.CustomerDTO;
+import entity.Customer;
 import entity.User;
-import jakarta.persistence.EntityManagerFactory;
+import java.util.*;
 
 public interface IUserDAO {
     User getUserByAccountId(int accountID);
-    boolean checkAdmin(int userID);
+
+    CustomerDTO getInformationUser(int userID);
+
 }
 

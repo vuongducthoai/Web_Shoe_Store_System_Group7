@@ -1,8 +1,11 @@
 package dao.Impl;
 
 import JpaConfig.JpaConfig;
+import dao.IAccountDAO;
 import dao.ICustomerDAO;
 import dto.CustomerDTO;
+import entity.Account;
+import entity.Address;
 import entity.Customer;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -11,7 +14,7 @@ import jakarta.persistence.NoResultException;
 import java.util.List;
 
 public class CustomerDAOImpl implements ICustomerDAO {
-
+    IAccountDAO accountDAO = new AccountDaoImpl();
     @Override
     public boolean insertCustomer(Customer customer) {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
@@ -70,35 +73,44 @@ public class CustomerDAOImpl implements ICustomerDAO {
     public boolean updateCustomerByID(Customer customer) {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
+
         try {
+            // Bắt đầu giao dịch
             transaction.begin();
 
-            // Tìm khách hàng dựa trên userID
-            Customer existingCustomer = entityManager.find(Customer.class, customer.getUserID());
-            if (existingCustomer == null) {
-                return false; // Khách hàng không tồn tại
+            // Tìm customer cũ trong cơ sở dữ liệu
+            Customer oldCustomer = entityManager.find(Customer.class, customer.getUserID());
+            System.out.println("Customer "+  oldCustomer.getFullName());
+            if (oldCustomer == null) {
+                System.out.println("Customer not found with ID: " + customer.getUserID());
+                return false;
             }
 
-            // Cập nhật thông tin khách hàng
-            existingCustomer.setFullName(customer.getFullName());
-            existingCustomer.setPhone(customer.getPhone());
-            existingCustomer.setDateOfBirth(customer.getDateOfBirth());
+            // Cập nhật thông tin customer
+            oldCustomer.setDateOfBirth(customer.getDateOfBirth());
+            oldCustomer.setPhone(customer.getPhone());
+            oldCustomer.setFullName(customer.getFullName());
 
-            // Cập nhật Address nếu có
-            if (customer.getAddress() != null) {
-                existingCustomer.setAddress(customer.getAddress());
+            // Cập nhật địa chỉ
+            Address address = customer.getAddress(); // Kiểm tra nếu customer đã có địa chỉ
+            if (address != null) {
+                oldCustomer.setAddress(address); // Cập nhật địa chỉ mới nếu có
             }
 
-            // Commit transaction
+            // Commit giao dịch
+
             transaction.commit();
             return true;
+
         } catch (Exception e) {
-            System.out.println("Error updating customer: " + e.getMessage());
+            // Rollback nếu có lỗi
             if (transaction.isActive()) {
                 transaction.rollback();
             }
+            e.printStackTrace();
             return false;
         } finally {
+            // Đóng EntityManager
             entityManager.close();
         }
     }
@@ -133,4 +145,6 @@ public class CustomerDAOImpl implements ICustomerDAO {
             entityManager.close();
         }
     }
+
+
 }

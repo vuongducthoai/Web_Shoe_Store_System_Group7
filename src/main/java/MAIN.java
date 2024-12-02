@@ -3,6 +3,7 @@ import dao.IProductDAO;
 import dao.IUserDAO;
 import dao.Impl.ProductDAOImpl;
 import dao.Impl.UserDAOImpl;
+import dto.CustomerDTO;
 import dto.ProductDTO;
 import dto.UserDTO;
 import entity.User;
@@ -40,8 +41,13 @@ public class MAIN {
 //            System.out.println(productDTO.getProductName());
 //        }
 
-        IUserService userService = new UserServiceImpl();
-        UserDTO userDTO = userService.findUserByAccoutId(118);
-        System.out.println(userDTO.getAccount().getRole());
+//        IUserService userService = new UserServiceImpl();
+//        UserDTO userDTO = userService.findUserByAccoutId(118);
+//        System.out.println(userDTO.getAccount().getRole());
+
+        IUserDAO userDAO = new UserDAOImpl();
+        CustomerDTO user = userDAO.getInformationUser(69);
+        System.out.println(user.getFullName());
+
     }
 }

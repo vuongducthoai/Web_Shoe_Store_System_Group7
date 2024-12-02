@@ -1,5 +1,6 @@
 package service.Impl;
 
+import JpaConfig.JpaConfig;
 import dao.ICustomerDAO;
 import dao.Impl.CustomerDAOImpl;
 import dto.AccountDTO;
@@ -7,6 +8,9 @@ import dto.AddressDTO;
 import dto.CustomerDTO;
 import dto.UserDTO;
 import entity.*;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
+import org.checkerframework.checker.units.qual.C;
 import service.IAccountService;
 import service.ICustomerService;
 import util.PasswordHashingSHA;
@@ -131,24 +135,56 @@ public class CustomerServiceImpl implements ICustomerService {
 
     @Override
     public boolean updateCustomer(CustomerDTO customerDTO) {
+
         try {
-            // Cập nhật thông tin Customer
+            Account account = new Account();
+            account.setEmail(customerDTO.getAccount().getEmail());
+            // Check if email already exists
+            if (accountService.findAccountByEmail(account.getEmail()) != null) {
+                System.out.println("Email already exists!");
+                return false;  // Early return if email exists
+            }
+
+            // Create new Customer entity from DTO
+
             Customer customer = new Customer();
-            customer.setUserID(customerDTO.getUserID());
-            customer.setFullName(customerDTO.getFullName());
-            customer.setPhone(customerDTO.getPhone());
             customer.setDateOfBirth(customerDTO.getDateOfBirth());
-            customer.setActive(customerDTO.isActive());
+            customer.setUserID(customerDTO.getUserID());
+            customer.setPhone(customerDTO.getPhone());
+            customer.setFullName(customerDTO.getFullName());
+
+            // Set Address
+            Address address = new Address();
+            address.setHouseNumber(customerDTO.getAddressDTO().getHouseNumber());
+            address.setStreetName(customerDTO.getAddressDTO().getStreetName());
+            address.setCity(customerDTO.getAddressDTO().getCity());
+            address.setProvince(customerDTO.getAddressDTO().getProvince());
+            address.setDistrict(customerDTO.getAddressDTO().getDistrict());
+            customer.setAddress(address);
+
+            // Create Account with hashed password
+
+            PasswordHashingSHA passwordHashingSHA = new PasswordHashingSHA();
+
+            String password = customerDTO.getAccount().getPassword();
+            try {
+                String passwordHash = passwordHashingSHA.toHexString(passwordHashingSHA.getSHA(password));
+                account.setPassword(passwordHash);
+            } catch (NoSuchAlgorithmException e) {
+                throw new RuntimeException(e);
+            }
+            account.setEmail(customerDTO.getAccount().getEmail());
+            customer.setAccount(account);
 
 
-
-            // Gọi DAO để cập nhật customer
+            // Insert the new customer
             return customerDAO.updateCustomerByID(customer);
         } catch (Exception e) {
-            System.out.println("Error in service updateCustomer: " + e.getMessage());
-            return false;
+            System.out.println("Error in insertCustomer: " + e.getMessage());
         }
+        return false;
     }
+
     @Override
     public List<CustomerDTO> GetAllCustomer(){
         return customerDAO.GetAllCustomer();
