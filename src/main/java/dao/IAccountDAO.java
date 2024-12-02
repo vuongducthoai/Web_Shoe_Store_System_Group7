@@ -3,13 +3,14 @@ package dao;
 import dto.AccountDTO;
 import dto.ProductDTO;
 import entity.Account;
+import entity.User;
 import enums.AuthProvider;
 
 import java.util.List;
 
 public interface IAccountDAO {
     boolean InsertAccount(Account account);
-    boolean findAccountForLogin(Account account);
+    AccountDTO findAccountForLogin(AccountDTO accountDTO);
     Account findAccountByEmail(String email);
     public Account getAccountByID(int accountID);
     public Account findAccoutByProvide(String provideID, AuthProvider authProvider);

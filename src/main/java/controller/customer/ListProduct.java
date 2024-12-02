@@ -1,5 +1,6 @@
 package controller.customer;
 
+import java.awt.*;
 import java.util.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -21,6 +22,8 @@ import com.google.gson.stream.JsonWriter;
 import com.google.gson.stream.JsonToken;
 import java.time.format.DateTimeFormatter;
 
+import java.util.List;
+
 @WebServlet("/loadProducts")
 public class ListProduct extends HttpServlet {
     ICategoryService iCategoryService = new CategoryServiceImpl();
@@ -35,7 +38,6 @@ public class ListProduct extends HttpServlet {
 
             List<ProductDTO> productDTOList;
             if ("all".equalsIgnoreCase(category)) {
-                System.out.println("Vuong Duc Thoai");
                 productDTOList = iProductService.findAllWithPagination(offset, limit);
             } else {
                 try {
@@ -52,7 +54,12 @@ public class ListProduct extends HttpServlet {
                 if (product.getCreateDate() == null) {
                     product.setCreateDate(LocalDateTime.now());
                 }
-                product.setImage(null);
+
+                if (product.getImage() != null && product.getImage().length > 0) {
+                    String imageBase64 = encodeImage(product.getImage());
+                    product.setImageBase64(imageBase64);
+                }
+
             }
 
             Gson gson = new GsonBuilder()
@@ -69,6 +76,10 @@ public class ListProduct extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             resp.getWriter().println("{\"error\":\"Internal Server Error\"}");
         }
+    }
+
+    public static String encodeImage(byte[] imageBytes) {
+        return "data:image/png;base64," + Base64.getEncoder().encodeToString(imageBytes);
     }
 
     public static class LocalDateTimeAdapter extends TypeAdapter<LocalDateTime> {

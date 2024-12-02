@@ -7,6 +7,7 @@ import dto.AddressDTO;
 import dto.CustomerDTO;
 import dto.UserDTO;
 import entity.*;
+import service.IAccountService;
 import service.ICustomerService;
 import util.PasswordHashingSHA;
 
@@ -15,10 +16,19 @@ import java.util.List;
 
 public class CustomerServiceImpl implements ICustomerService {
     private ICustomerDAO customerDAO = new CustomerDAOImpl();
-
+    private IAccountService accountService = new AccountServiceImpl();
     @Override
     public boolean insertCustomer(CustomerDTO customerDTO) {
         try {
+            Account account = new Account();
+            account.setEmail(customerDTO.getAccount().getEmail());
+            // Check if email already exists
+            if (accountService.findAccountByEmail(account.getEmail()) != null) {
+                System.out.println("Email already exists!");
+                return false;  // Early return if email exists
+            }
+
+
             // Create new Customer entity from DTO
             Customer customer = new Customer();
             customer.setDateOfBirth(customerDTO.getDateOfBirth());
@@ -34,7 +44,6 @@ public class CustomerServiceImpl implements ICustomerService {
             Chat chat = new Chat();
             chat.setCustomer(customer);
             customer.setChat(chat);
-
             // Set Address
             Address address = new Address();
             address.setHouseNumber(customerDTO.getAddressDTO().getHouseNumber());
@@ -45,15 +54,10 @@ public class CustomerServiceImpl implements ICustomerService {
             customer.setAddress(address);
 
             // Create Account with hashed password
-            Account account = new Account();
-            PasswordHashingSHA passwordHashingSHA = new PasswordHashingSHA();
-            account.setEmail(customerDTO.getAccount().getEmail());
 
-            // Check if email already exists
-            if (customerDAO.findAccountByEmail(account.getEmail())) {
-                System.out.println("Email already exists!");
-                return false;  // Early return if email exists
-            }
+            PasswordHashingSHA passwordHashingSHA = new PasswordHashingSHA();
+
+
 
             String password = customerDTO.getAccount().getPassword();
             try {
@@ -73,6 +77,8 @@ public class CustomerServiceImpl implements ICustomerService {
         }
         return false;
     }
+
+
     public AddressDTO convertToAddressDTO(Address address) {
 
         if (address == null) {

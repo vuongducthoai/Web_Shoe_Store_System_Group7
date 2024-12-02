@@ -1,5 +1,6 @@
 package entity;
 
+import dto.PromotionDTO;
 import enums.DiscountType;
 import enums.PromotionType;
 import jakarta.persistence.*;
@@ -27,7 +28,7 @@ public class Promotion {
     @OneToMany(mappedBy = "promotion")
     private List<PromotionProduct> promotionProducts;
 
-    private double discountValue;
+    private int discountValue;
 
     @Enumerated(EnumType.STRING)
     private DiscountType discountType; // "percentage", , ...
@@ -37,4 +38,19 @@ public class Promotion {
 
     @Enumerated(EnumType.STRING)
     private PromotionType promotionType;
+
+    public PromotionDTO toDTO() {
+        return new PromotionDTO(
+                this.promotionID,
+                this.promotionName,
+                this.startDate,
+                this.endDate,
+                null,
+                this.discountValue,
+                this.discountType,
+                this.minimumLoyalty,
+                this.isActive,
+                promotionType
+        );
+    }
 }

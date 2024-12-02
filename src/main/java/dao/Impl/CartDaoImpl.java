@@ -10,6 +10,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,74 +19,12 @@ public class CartDaoImpl implements ICartDao {
     @Override
     public List<CartItem> findAll(int userID) {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
-        return entityManager.createQuery("select c from  CartItem c where c.cart.customer.userID = :uID",CartItem.class)
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+        List<CartItem> list = entityManager.createQuery("select c from  CartItem c where c.cart.customer.userID = :uID",CartItem.class)
                 .setParameter("uID",userID).getResultList();
-//        List<CartItemDTO> cartItems = new ArrayList<>();
-//        try {
-//            List<Object[]> cartItem1 = entityManager.createQuery(
-//                            "select distinct c.cartItemId,c.quantity," +
-//                                    "p.id,p.productName,p.color,p.price,p.image,p.status,p.size,p.description," +
-//                                    "pr.id,pr.promotionName,pr.startDate,pr.endDate,pr.discountValue,pr.discountType,pr.minimumLoyalty,pr.isActive,pr.promotionType "+
-//                                    "from CartItem c join Product p on c.product.id = p.id left join Promotion pr on pr.id = p.promotion.id " +
-//                                    "where c.cart.customer.userID = :userId",Object[].class)
-//                    .setParameter("userId",Integer.valueOf(userID)).getResultList();
-//            for (Object[] row : cartItem1) {
-//                int cartItemId = (int) row[0];
-//                int quantity = (int) row[1];
-//                int productId = (int) row[2];
-//                String productName = (String) row[3];
-//                String productColor = (String) row[4];
-//                double productPrice = (double) row[5];
-//                byte[] productImage = (byte[]) row[6];
-//                Boolean productStatus = (Boolean) row[7];
-//                int productSize = (int) row[8];
-//                String productDescription = (String) row[9];
-//                PromotionDTO promotionDTO = new PromotionDTO();
-//                if (row[10] != null) {
-//                    int promotionId = (Integer) row[10];
-//                    String promotionName = (String) row[11];
-//                    Date promotionStartDate = (Date) row[12];
-//                    Date promotionEndDate = (Date) row[13];
-//                    Double promotionDiscountValue = (Double) row[14];
-//                    DiscountType promotionDiscountType = (DiscountType) row[15];
-//                    Integer promotionMinimumLoyalty = (Integer)     row[16];
-//                    Boolean promotionIsActive = (Boolean) row[17];
-//                    PromotionType promotionType = (PromotionType) row[18];
-//                    promotionDTO.setPromotionId(promotionId);
-//                    promotionDTO.setPromotionName(promotionName);
-//                    promotionDTO.setStartDate(promotionStartDate);
-//                    promotionDTO.setEndDate(promotionEndDate);
-//                    promotionDTO.setDiscountValue(promotionDiscountValue);
-//                    promotionDTO.setDiscountType(promotionDiscountType);
-//                    promotionDTO.setMinimumLoyalty(promotionMinimumLoyalty);
-//                    promotionDTO.setActive(promotionIsActive);
-//                    promotionDTO.setPromotionType(promotionType);
-//                }
-//                ProductDTO productDTO = new ProductDTO(
-////                        productId,
-////                        productName,
-////                        productPrice,
-////                        productImage,
-////                        productColor,
-////                        productSize,
-////                        productStatus,
-////                        productDescription,
-////                        null,
-////                        null,
-////                        null,
-////                        promotionDTO);
-//                );
-//                CartItemDTO cartItemDTO = new CartItemDTO(
-//                        cartItemId,
-//                        quantity,
-//                        null,
-//                        productDTO);
-//                cartItems.add(cartItemDTO);
-//            }
-//        } finally {
-//            entityManager.close();
-//        }
-//        System.out.println(cartItems.size());
+        transaction.commit();
+        return list;
     }
 
     @Override
@@ -239,6 +178,26 @@ public class CartDaoImpl implements ICartDao {
         }
         catch (Exception e){
             return 0;
+        }
+    }
+
+    @Override
+    public List<Promotion> GetAllPromotionByLoayti(int idUser) {
+        try{
+            EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+            int loyalty = (int) entityManager.createQuery("select c.loyalty from Customer c where c.userID = :userId")
+                    .setParameter("userId",idUser).getSingleResult();
+            Date date = Date.from(Instant.now());
+            List<Promotion> list = entityManager.createQuery("select pr from Promotion pr where " +
+                    "pr.minimumLoyalty<= :loyalty and pr.startDate <= :date and pr.endDate>= :date " +
+                            "and pr.promotionType = :type and pr.isActive = true order by pr.minimumLoyalty desc",Promotion.class)
+                    .setParameter("loyalty",loyalty)
+                    .setParameter("date",date).
+                    setParameter("type",PromotionType.VOUCHER_ORDER).getResultList();
+            return list;
+        }
+        catch (Exception e){
+            return List.of();
         }
     }
 

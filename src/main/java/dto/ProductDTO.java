@@ -1,6 +1,7 @@
 package dto;
 
 import entity.Review;
+import enums.DiscountType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 
 @AllArgsConstructor
@@ -51,6 +53,7 @@ public class ProductDTO {
     private int productId;
     private String productName;
     private double price;
+    private double sellingPrice;
     private byte[] image;
     private String color;
     private int size;
@@ -63,14 +66,35 @@ public class ProductDTO {
     private List<PromotionProductDTO> promotionProducts;
     private int quantity;
     private ReviewDTO reviewDTO;
+    private String imageBase64;
     public String getBase64Image() {
         if (image != null) {
             return "data:image/png;base64," + Base64.getEncoder().encodeToString(image);
         }
         return null; // hoặc đường dẫn ảnh mặc định nếu không có dữ liệu
     }
+    public double calculateDiscountedPrice() {
+        if (promotionProducts != null && !promotionProducts.isEmpty()) {
+            Date currentDate = new Date();
 
+            for (PromotionProductDTO promotionProduct : promotionProducts) {
+                PromotionDTO promotion = promotionProduct.getPromotion();
+                if (promotion != null && promotion.isActive() &&
+                        promotion.getStartDate() != null &&
+                        promotion.getEndDate() != null &&
+                        promotion.getStartDate().before(currentDate) &&
+                        promotion.getEndDate().after(currentDate)) {
 
-
+                    // Tính giá dựa trên loại chiết khấu
+                    if (promotion.getDiscountType() == DiscountType.Percentage) {
+                        return price - (price * (promotion.getDiscountValue() / 100));
+                    } else if (promotion.getDiscountType() == DiscountType.VND) {
+                        return price - promotion.getDiscountValue();
+                    }
+                }
+            }
+        }
+        return price; // Trả về giá gốc nếu không có khuyến mãi hợp lệ
+    }
 }
 

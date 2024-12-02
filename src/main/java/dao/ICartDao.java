@@ -4,6 +4,7 @@ import dto.*;
 import entity.Cart;
 import entity.CartItem;
 import entity.Customer;
+import entity.Promotion;
 
 import java.util.List;
 
@@ -19,4 +20,5 @@ public interface ICartDao {
     boolean AddItemWithQuantity(int idProduct,int userId,int quantity);
     int CountQuantity(ProductDTO productDTO);
     int CountQuantityCart(int UserID);
+    List<Promotion> GetAllPromotionByLoayti(int idUser);
 }

@@ -27,4 +27,5 @@ public class ReviewDTO {
         }
         return null; // hoặc đường dẫn ảnh mặc định nếu không có dữ liệu
     }
+
 }

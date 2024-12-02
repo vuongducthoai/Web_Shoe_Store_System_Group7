@@ -7,9 +7,7 @@ import dto.UserDTO;
 import entity.Account;
 import entity.User;
 import enums.AuthProvider;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.TypedQuery;
+import jakarta.persistence.*;
 
 import java.util.*;
 
@@ -41,43 +39,49 @@ public class AccountDaoImpl implements IAccountDAO {
     }
 
     @Override
-    public boolean findAccountForLogin(Account account) {
+    public AccountDTO findAccountForLogin(AccountDTO accountDTO) {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
-        try {
-            String jpql = "SELECT a FROM Account a WHERE a.email = :email AND a.password = :password";
-            Account result = entityManager.createQuery(jpql, Account.class)
-                    .setParameter("email", account.getEmail())
-                    .setParameter("password", account.getPassword())
-                    .getSingleResult();
+        AccountDTO accountDTO1 = null;
+        try{
+            String sql = "SELECT a.accountID FROM Account a WHERE a.email = ?1 AND a.password = ?2";
+            Query query = entityManager.createQuery(sql);
+            query.setParameter(1, accountDTO.getEmail());
+            query.setParameter(2, accountDTO.getPassword());
+            // Lấy kết quả trả về là Integer (vì chỉ một cột được chọn)
+            Integer accountId = (Integer) query.getSingleResult();
 
-            return result != null;
-        } catch (jakarta.persistence.NoResultException e) {
-            return false;
+            // Khởi tạo AccountDTO mới với giá trị trả về
+            accountDTO1 = new AccountDTO();
+            accountDTO1.setAccountID(accountId);
+        }catch (NoResultException e) {
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            entityManager.close();
+        }finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
         }
-        return false;
+        return accountDTO1;
     }
+
 
     @Override
     public Account findAccountByEmail(String email) {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
         try {
-            String jpql = "SELECT a FROM Account a WHERE a.email = :email AND a.authProvider = :authProvider";
+            String jpql = "SELECT a FROM Account a WHERE a.email = :email ";
             Account result = entityManager.createQuery(jpql, Account.class)
                     .setParameter("email", email)
-                    .setParameter("authProvider", AuthProvider.LOCAL)
                     .getSingleResult();
             return result;
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
         } finally {
             entityManager.close();
         }
         return null;
     }
+
 
     @Override
     public Account getAccountByID(int accountID) {  // Sửa tên phương thức để đồng nhất với interface

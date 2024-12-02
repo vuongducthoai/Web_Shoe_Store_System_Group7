@@ -5,10 +5,13 @@ import JpaConfig.JpaConfig;
 import dao.IOrderDao;
 import dto.*;
 import entity.*;
+import enums.AuthProvider;
 import enums.OrderStatus;
 import enums.PaymentMethod;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import service.GmailService;
+import service.Impl.GmailServiceImpl;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -16,10 +19,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class OrderImpl implements IOrderDao {
-    public boolean CreateOrder(OrderDTO order){
+    GmailService gmail_Service = new GmailServiceImpl();
+    public boolean CreateOrder(OrderDTO order,int amount, int discount, int feeShip,String orderId){
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
@@ -49,6 +54,11 @@ public class OrderImpl implements IOrderDao {
                     OrderItem orderItem = new OrderItem();
                     Product productTWP = entityManager.find(Product.class,item.getProductDTO().getProductId());
                     //
+                    item.setProductDTO(new ProductDTO());
+                    item.getProductDTO().setProductName(productTWP.getProductName());
+                    item.getProductDTO().setSize(productTWP.getSize());
+                    item.getProductDTO().setColor(productTWP.getColor());
+                    item.getProductDTO().setPrice(productTWP.getPrice());
                     List<CartItem> listCartItem = entityManager.createQuery("Select c " +
                                     "from CartItem c Where c.product.productName like :name " +
                                     "and c.product.color like :color and c.product.size = :size " +
@@ -86,21 +96,24 @@ public class OrderImpl implements IOrderDao {
                             entityManager.remove(cartItem);
                         }
                     }
-                    //
-
-                    Product product = entityManager.createQuery(
-                                    "select p from Product p " +
-                                            "where p.color like :color and p.size = :size " +
-                                            "and p.productName like :name and p.status = false " +
-                                            "and p.id not in (select o.product.id from OrderItem o " +
-                                            "                 where o.product.color like :color and o.product.size = :size " +
-                                            "                 and o.product.productName like :name)",
-                                    Product.class)
-                            .setParameter("color", productTWP.getColor())
-                            .setParameter("size", productTWP.getSize())
-                            .setParameter("name", productTWP.getProductName())
-                            .setMaxResults(1)
-                            .getSingleResult();
+                    Product product;
+                    try {
+                        product = entityManager.createQuery(
+                                        "select p from Product p " +
+                                                "where p.color like :color and p.size = :size " +
+                                                "and p.productName like :name and p.status = false " +
+                                                "and p.id not in (select o.product.id from OrderItem o " +
+                                                "                 where o.product.color like :color and o.product.size = :size " +
+                                                "                 and o.product.productName like :name)",
+                                        Product.class)
+                                .setParameter("color", productTWP.getColor())
+                                .setParameter("size", productTWP.getSize())
+                                .setParameter("name", productTWP.getProductName())
+                                .setMaxResults(1)
+                                .getSingleResult();
+                    }catch(Exception e){
+                        product = listProduct.get(0);
+                    }
                     orderItem.setOrder(orderEnty);
                     orderItem.setProduct(product);
                     orderItem.setQuantity(item.getQuantity());
@@ -121,6 +134,31 @@ public class OrderImpl implements IOrderDao {
                 orderEnty.setPayment(payment);
                 orderEnty.setOrderItems(orderItems);
                 payment.setOrder(orderEnty);
+                Double loyatiDouble = (Double) entityManager.createQuery("select sum(o.payment.amount)/1000 from Order o where " +
+                                "o.customer = :customer")
+                        .setParameter("customer",customer)
+                        .getSingleResult();
+                long loyati = Math.round(loyatiDouble);
+                customer.setLoyalty((int)loyati);
+                String finalAddress = address;
+                List<String> resultList = entityManager.createQuery("select a.email from Account a where a.user.userID = :userID " +
+                                "and a.authProvider <> :auth")
+                        .setParameter("userID", order.getCustomer().getUserID())
+                        .setParameter("auth", AuthProvider.FACEBOOK)
+                        .getResultList();
+
+                String gmail = resultList.isEmpty() ? null : resultList.get(0);
+                if (gmail.length()>0) {
+                    CompletableFuture.runAsync(() -> {
+                        try {
+                            // Gọi phương thức gửi email
+                            gmail_Service.sendGmailBill(order, amount, discount, feeShip, finalAddress,gmail,orderId);
+                        } catch (Exception e) {
+                            // Xử lý lỗi nếu cần
+                            e.printStackTrace();
+                        }
+                    });
+                }
             }
             transaction.commit();
         } catch (Exception e) {
@@ -128,6 +166,7 @@ public class OrderImpl implements IOrderDao {
             transaction.rollback();
             return false;
         }
+
         return true;
     }
     public boolean CanCreateOrder(List<CartItemDTO> cartItem){

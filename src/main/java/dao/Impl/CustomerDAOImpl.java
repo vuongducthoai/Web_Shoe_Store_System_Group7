@@ -3,8 +3,6 @@ package dao.Impl;
 import JpaConfig.JpaConfig;
 import dao.ICustomerDAO;
 import dto.CustomerDTO;
-import dto.ChatDTO;
-import entity.Account;
 import entity.Customer;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -32,22 +30,6 @@ public class CustomerDAOImpl implements ICustomerDAO {
             entityManager.close();
         }
         return false;
-    }
-
-    @Override
-    public boolean findAccountByEmail(String email) {
-        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
-        try {
-            String jpql = "SELECT a FROM Account a WHERE a.email = :email";
-            Account account = entityManager.createQuery(jpql, Account.class)
-                    .setParameter("email", email)
-                    .getSingleResult();
-            return account != null;
-        } catch (NoResultException e) {
-            return false; // Không tìm thấy account
-        } finally {
-            entityManager.close();
-        }
     }
 
     @Override
@@ -133,6 +115,4 @@ public class CustomerDAOImpl implements ICustomerDAO {
             entityManager.close();
         }
     }
-
-
 }

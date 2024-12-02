@@ -122,14 +122,6 @@ public class InformationController extends HttpServlet {
             addressDTO.setDistrict(district);
             addressDTO.setCity(city);
 
-            System.out.println("Received fullName: " + fullName);
-            System.out.println("Received phone: " + phone);
-            System.out.println("Received dateOfBirth: " + dateOfBirthStr);
-            System.out.println("Received userID: " + userID);
-            System.out.println("Received houseNumber: " + houseNumber);
-            System.out.println("Received streetName: " + streetName);
-            System.out.println("Received district: " + district);
-            System.out.println("Received city: " + city);
 
             // Cập nhật dữ liệu
             boolean customerUpdated = iCustomerService.updateCustomer(customerDTO);
