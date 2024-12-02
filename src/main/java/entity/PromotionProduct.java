@@ -1,6 +1,7 @@
 package entity;
 
 
+import dto.PromotionProductDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,4 +26,7 @@ public class PromotionProduct {
     @JoinColumn(name = "productID", nullable = false)
     private Product product;
 
+    public PromotionProductDTO toDTO() {
+        return new PromotionProductDTO(id, promotion.toDTO(), null);
+    }
 }
