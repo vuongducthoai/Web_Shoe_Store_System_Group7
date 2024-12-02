@@ -16,50 +16,46 @@
   <link rel="stylesheet" href="../css/slider.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
+    .view_more {
+      position: absolute;
+      font-weight: 700;
+      width: 203px;
+      font-size: 20px;
+      height: 68px;
+      right: 200px;
+      bottom: 217px;
+      background: greenyellow;
+      border-radius: 20px;
+      color: #000;
+      border: 3px solid red;
+    }
+
+    .view_more:hover {
+      cursor: pointer;
+      background-color: aqua;
+    }
+
+    .slide {
+      position: relative;
+    }
   </style>
 </head>
 <body>
 <section class="hero" id="hero-slider">
   <div class="main" id="Home">
     <div class="slider">
-<%--      <div class="slides-container">--%>
-<%--        <c:forEach var="promotionProduct" items="${promotionProductDTOList}">--%>
-<%--          <c:set var="productName" value="${promotionProduct.product.productName}" />--%>
-<%--          <c:set var="nameParts" value="${fn:split(productName, ' ')}" />--%>
 
-<%--          <!-- Set individual parts based on array indices -->--%>
-<%--          <c:set var="namePart1" value="${nameParts[0]}" />--%>
-<%--          <c:set var="namePart2" value="${nameParts[1]}" />--%>
-
-<%--          <div class="slide">--%>
-<%--            <div class="main_content">--%>
-<%--              <div>--%>
-<%--                <div class="main_text">--%>
-<%--                  <h1>${namePart1}<br><span>${namePart2}</span></h1>--%>
-<%--                  <p>${promotionProduct.product.description}</p>--%>
-<%--                  <button style="margin: 100px 0 0 50px;" class="btn btn-hero">pre-order now</button>--%>
-<%--                </div>--%>
-<%--                <div style="margin-top: 100px;" class="hero-img-off" data-aos="zoom-in-up">--%>
-<%--                  <h3 class="heading-three">${promotionProduct.promotion.promotionName}</h3>--%>
-<%--                  <p>StartDate: ${promotionProduct.promotion.startDate}</p>--%>
-<%--                  <p>EndDate: ${promotionProduct.promotion.endDate}</p>--%>
-<%--                </div>--%>
-<%--              </div>--%>
-<%--              <div class="main_image">--%>
-<%--                <img src="../image/shoes3.png">--%>
-<%--              </div>--%>
-<%--            </div>--%>
-<%--          </div>--%>
-<%--        </c:forEach>--%>
-<%--      </div>--%>
-  <div class="slides-container">
-    <div class="slide">
-      <img style="width: 100%; height: 100vh" src="../image/bannerShoeSport.webp">
-    </div>
-    <div class="slide">
-      <img style="width: 100%; height: 100vh" src="../image/banner2.jpg">
-    </div>
-  </div>
+      <div class="slides-container">
+        <div class="slide" style="position: relative;;">
+          <img style="width: 100%; height: 100vh" src="../image/bannerShoeSport.webp">
+          <button  class="view_more">View More</button>
+        </div>
+        <div class="slide" style="position: relative;;">
+          <img style="width: 100%; height: 100vh" src="../image/banner2.jpg">
+          <button class="view_more" style="         position: absolute;
+    ">View More</button>
+        </div>
+      </div>
     </div>
     <div class="slider-controls">
       <button class="prev"><i style="color: white" class="fa-solid fa-chevron-left"></i></button>
@@ -67,7 +63,6 @@
     </div>
   </div>
 </section>
-
 <script src="../js/slider.js">
 </script>
 </body>
