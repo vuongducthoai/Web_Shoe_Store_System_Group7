@@ -32,12 +32,26 @@
         </ul>
 
         <div class="icons">
+<<<<<<< Updated upstream
             <i style="font-size: 30px; position: relative;" class="fa-solid fa-bell"><span style="position: absolute;left: 20px; top: -10px;font-size: 18px; color: red">3</span></i>
             <i onclick="redirectToCartPage()" style="font-size: 30px; margin-left: 20px; position: relative;" class="fa-solid fa-cart-shopping">
                 <span class="quantityItemCart" style="position: absolute;left: 35px; top: -10px;font-size: 18px; color: red">
                     0
                 </span></i>
             <i style="font-size: 30px; margin-left: 20px;" class="fa-solid fa-user"></i>
+=======
+            <i onclick = "redirectToChatPage()" class="fa-solid fa-message" style="font-size: 30px; position: relative; margin-right: 15px">
+                <span style="position: absolute;left: 30px; top: -10px;font-size: 18px; color: red">0</span>
+            </i>
+            <i onclick = "redirectToNotifyPage()" style="font-size: 30px; position: relative;" class="fa-solid fa-bell">
+                <span style="position: absolute;left: 20px; top: -10px;font-size: 18px; color: red">0
+                </span>
+            </i>
+            <i onclick="redirectToCartPage()" style="font-size: 30px; margin-left: 15px; position: relative;" class="fa-solid fa-cart-shopping">
+                    <span class="quantityItemCart" style="position: absolute;left: 35px; top: -10px;font-size: 18px; color: red">
+                        0
+                    </span></i>
+>>>>>>> Stashed changes
 
 
             <c:choose>
