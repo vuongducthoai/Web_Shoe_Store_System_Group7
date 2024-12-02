@@ -185,6 +185,16 @@ addToCartBtn.onclick = function () {
 };
 
 
+const reviewImages = document.querySelectorAll('.review-image');
+reviewImages.forEach(image => {
+    image.addEventListener('click', function() {
+        const modalImage = document.getElementById('modalImage');
+        modalImage.src = this.src; // Set modal image to the clicked image
+    });
+});
+
+
+
 
 
 

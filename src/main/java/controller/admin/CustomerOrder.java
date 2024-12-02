@@ -38,7 +38,7 @@ public class CustomerOrder extends HttpServlet {
         String path = req.getServletPath();
         int customerId = 48;
         String customerIdParam = req.getParameter("id");
-        int customerId = 48;
+
         if ("/customer/orders".equals(path)) {
 
              // Ví dụ, lấy từ session hoặc context xác thực
