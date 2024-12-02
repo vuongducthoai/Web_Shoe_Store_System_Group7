@@ -691,6 +691,68 @@ public class ProductDAOImpl implements IProductDAO {
     }
 
 
+    public void deleteProductByName(String productName)  {
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        EntityTransaction transaction = null;
+
+        try {
+            transaction = entityManager.getTransaction();
+            transaction.begin();
+
+            String updateStatusSql = "UPDATE Product p SET p.status = 0 WHERE p.productName = ? ";
+            Query updateStatusQuery = entityManager.createNativeQuery(updateStatusSql);
+            updateStatusQuery.setParameter(1, productName);
+
+            int rowsUpdated = updateStatusQuery.executeUpdate();
+
+            if (rowsUpdated == 0) {
+                throw new Exception("No product found with the name: " + productName );
+            }
+
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    public void deleteProductFromCategory(String productName)  {
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        EntityTransaction transaction = null;
+
+        try {
+            transaction = entityManager.getTransaction();
+            transaction.begin();
+
+            // Cập nhật categoryId của sản phẩm về null
+            String updateCategorySql = "UPDATE Product p SET p.categoryId = NULL WHERE p.productName = ? ";
+            Query updateCategoryQuery = entityManager.createNativeQuery(updateCategorySql);
+            updateCategoryQuery.setParameter(1, productName);
+
+            int rowsUpdated = updateCategoryQuery.executeUpdate();
+
+            if (rowsUpdated == 0) {
+                throw new Exception("No product found with the name: " + productName);
+            }
+
+            // Commit transaction nếu mọi thứ thành công
+            transaction.commit();
+        } catch (Exception e) {
+            // Rollback nếu có lỗi
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            // Đảm bảo đóng EntityManager sau khi sử dụng
+            entityManager.close();
+        }
+    }
+
 
 
 }

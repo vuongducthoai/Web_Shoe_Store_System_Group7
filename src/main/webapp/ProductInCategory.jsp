@@ -106,43 +106,47 @@
     <div class="content-section">
         <h2 class="section-heading text-black">${categoryName}</h2>
 
+        <form action="CategoryController" method="post">
+            <!-- Trường hidden để xác định action -->
+            <input type="hidden" name="submitAction" value="deleteProductFromCategory" />
 
-        <div class="row shoes-list">
-            <c:forEach var="productGroup" items="${groupedProducts}">
-                <div class="col col-third">
-                    <!-- Hiển thị hình ảnh đại diện của sản phẩm -->
-                    <img src="${productGroup.representativeImage}" alt="Shoe" class="shoe-img">
+            <div class="row shoes-list">
+                <c:forEach var="productGroup" items="${groupedProducts}">
+                    <div class="col col-third">
+                        <!-- Hiển thị hình ảnh đại diện của sản phẩm -->
+                        <img src="${productGroup.representativeImage}" alt="Shoe" class="shoe-img">
 
-                    <div class="shoe-body">
-                        <h2 class="shoe-name">${productGroup.productName}</h2>
-                        <p class="shoe-price">Price: ${productGroup.productPrice}VNĐ</p>
+                        <div class="shoe-body">
+                            <h2 class="shoe-name">${productGroup.productName}</h2>
+                            <p class="shoe-price">Price: ${productGroup.productPrice} VNĐ</p>
 
-                        <!-- Hiển thị màu sắc, nối các màu lại thành một chuỗi -->
-                        <c:set var="colorString" value="" />
-                        <c:forEach var="color" items="${productGroup.colorsDistinct}">
-                            <c:set var="colorString" value="${colorString} ${color}" />
-                        </c:forEach>
-                        <p class="shoe-color">Color: ${colorString}</p>
+                            <!-- Hiển thị màu sắc, nối các màu lại thành một chuỗi -->
+                            <c:set var="colorString" value="" />
+                            <c:forEach var="color" items="${productGroup.colorsDistinct}">
+                                <c:set var="colorString" value="${colorString} ${color}" />
+                            </c:forEach>
+                            <p class="shoe-color">Color: ${colorString}</p>
 
-                        <!-- Hiển thị kích thước, nối các kích thước lại thành một chuỗi -->
-                        <c:set var="sizeString" value="" />
-                        <c:forEach var="size" items="${productGroup.sizesDistinct}">
-                            <c:set var="sizeString" value="${sizeString} ${size}" />
-                        </c:forEach>
-                        <p class="shoe-size">Size: ${sizeString}</p>
+                            <!-- Hiển thị kích thước, nối các kích thước lại thành một chuỗi -->
+                            <c:set var="sizeString" value="" />
+                            <c:forEach var="size" items="${productGroup.sizesDistinct}">
+                                <c:set var="sizeString" value="${sizeString} ${size}" />
+                            </c:forEach>
+                            <p class="shoe-size">Size: ${sizeString}</p>
 
-                        <p class="shoe-quantity">Quantity: ${productGroup.productQuantity}</p>
+                            <p class="shoe-quantity">Quantity: ${productGroup.productQuantity}</p>
 
-                        <button class="btn js-delete-product-from-category">Xóa sản phẩm</button>
+                            <!-- Trường input ẩn để gửi productName -->
+                            <input type="hidden" name="productName" value="${productGroup.productName}" />
+
+                            <!-- Nút xóa sản phẩm, mỗi nút xóa có value là productName -->
+                            <button class="btn js-delete-product-from-category" type="submit" name="deleteProduct" value="${productGroup.productName}">Xóa sản phẩm</button>
+                        </div>
                     </div>
-                </div>
-            </c:forEach>
+                </c:forEach>
+            </div>
+        </form>
 
-
-
-
-
-        </div>
     </div>
 </div>
 </body>
