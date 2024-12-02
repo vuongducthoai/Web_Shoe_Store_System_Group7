@@ -30,7 +30,7 @@ public class ProductDAOImpl implements IProductDAO {
                     "        ROW_NUMBER() OVER (PARTITION BY p.productName ORDER BY p.price DESC) AS rn, \n" +
                     "        COUNT(*) OVER (PARTITION BY p.productName) AS product_count \n" +
                     "    FROM Product p \n" +
-                    "    WHERE p.status = 1\n" +
+                    "    WHERE p.status = 0\n" +
                     ")\n" +
                     "SELECT \n" +
                     "    productName,\n" +

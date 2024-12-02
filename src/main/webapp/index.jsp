@@ -153,7 +153,7 @@
             <div class="countdown" id="countdown">ACBB</div>
         </div>
     </div>
-        <div class="wrapper" style="flex-wrap: wrap" id="product-list">
+    <div class="wrapper" style="flex-wrap: wrap" id="product-list">
             <c:forEach var="promotionProduct" items="${promotionProductDTOList}">
                 <div class="product" style="position: relative; flex: 0 0 23%; max-width: 25%; height: 435px">
                     <form action="/product/details" method="GET">
@@ -180,7 +180,8 @@
                     </form>
                 </div>
             </c:forEach>
-        </div>
+    </div>
+
     <div>
         <ul class="pagination" id="pagination">
             <li class="page-item">
@@ -228,24 +229,25 @@
 
     <div class="wrapper wrapper1" style="flex-wrap: wrap">
         <c:forEach var="product" items="${productDTOList}">
-            <div class="product" style="flex: 0 0 23%; max-width: 25%; height: 435px">
+            <div class="product" style="flex: 0 0 23%; max-width: 25%; height: 435px; position: relative;">
                 <form action="/product/details" method="GET">
                     <input type="hidden" name="productName" value="${product.productName}">
                     <div class="product-image">
-                        <figure><img src="${product.getBase64Image()}" alt="Foundation"></figure>
+                        <figure><img src="${product.getBase64Image()}" alt="Image of ${product.productName}"></figure>
                     </div>
                     <div class="product-details">
                         <div style="display: flex; align-items: center; justify-content: space-between">
                             <p class="product_name">${product.productName}</p>
-                            <span class="star-rating"></span>
+                            <span class="star-rating"></span> <!-- You can add stars dynamically here -->
                         </div>
                         <p class="product_desc" style="margin-top: 5px">${product.description}</p>
                         <div class="col-footer" style="display: flex; align-items: center; justify-content: space-between; margin-top: 10px">
-                            <p class="shoe-price">${product.price}₫</p
-                            <p class="shoe-sold">Đã bán :${product.quantity}
+                            <p class="shoe-price">${product.price}₫</p>
+                            <span style="color: #999; margin-left: 10px" class="shoe-sold">Đã bán: ${product.quantity}</span>
                         </div>
                     </div>
-                    <button type="submit" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0;  cursor: pointer"></button> <!-- Invisible button for clicking -->
+                    <!-- Invisible button for submitting the form -->
+                    <button type="submit" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer"></button>
                 </form>
             </div>
         </c:forEach>
