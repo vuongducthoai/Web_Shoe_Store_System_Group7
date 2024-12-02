@@ -90,6 +90,9 @@ public class productController extends HttpServlet {
                case "edit-product":
                     updateProduct(req, resp);
                     break;
+                case "delete-product":
+                    deleteProduct(req, resp);
+                    break;
             }
         }
         catch (Exception e){
@@ -265,89 +268,8 @@ protected void showInfo(HttpServletRequest request, HttpServletResponse response
 
 
 
-//    protected void updateProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        int productID = Integer.parseInt(req.getParameter("edit-productID"));
-//        String productName = req.getParameter("edit-productName");
-//        double productPrice = Double.parseDouble(req.getParameter("edit-productPrice"));
-//
-//        String productColor = req.getParameter("edit-productColor");
-//        int productSize = Integer.parseInt(req.getParameter("edit-productSize"));
-//        String categoryName = req.getParameter("edit-CategoryName");
-//        String productDescription = req.getParameter("edit-productDescription");
-//
-//        List<CategoryDTO> categoryDTOList = categoryDao.categoryDTOList();
-//        Category selectedCategory = null;
-//        for (CategoryDTO category : categoryDTOList) {
-//            if (category.getCategoryName().equals(categoryName)) {
-//                selectedCategory = new Category(); // Khởi tạo đối tượng Category
-//                selectedCategory.setCategoryID(category.getCategoryId());
-//                selectedCategory.setCategoryName(category.getCategoryName());
-//                break;
-//            }
-//        }
-//        Part filePart = req.getPart("edit-productImage"); // "productImage" là tên của input file
-//        byte[] imageBytes = null;
-//
-//        if (filePart != null && filePart.getSize() > 0) {
-//            try (InputStream inputStream = filePart.getInputStream();
-//                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-//                byte[] buffer = new byte[1024];
-//                int bytesRead;
-//                while ((bytesRead = inputStream.read(buffer)) != -1) {
-//                    outputStream.write(buffer, 0, bytesRead);
-//                }
-//                imageBytes = outputStream.toByteArray(); // Chuyển đổi ảnh thành mảng byte
-//            }
-//        }
-//        else {
-//            ProductDTO existingProduct = productDAO.getProductByID(productID); // Lấy sản phẩm hiện tại từ database
-//            if (existingProduct != null) {
-//                imageBytes = existingProduct.getImage(); // Gán lại ảnh cũ
-//            }
-//        }
-//
-//        // Debug - Kiểm tra ảnh
-//        System.out.println("Image uploaded: " + (imageBytes != null ? "Yes" : "No"));
-//        System.out.println("Product ID: " + req.getParameter("edit-productID"));
-//        System.out.println("Product Name: " + req.getParameter("edit-productName"));
-//        System.out.println("Product Price: " + req.getParameter("edit-productPrice"));
-//        System.out.println("Product Color: " + req.getParameter("edit-productColor"));
-//        System.out.println("Product Size: " + req.getParameter("edit-productSize"));
-//        System.out.println("Category Name: " + req.getParameter("edit-CategoryName"));
-//        System.out.println("Product Description: " + req.getParameter("edit-productDescription"));
-//
-//
-//
-//        Product product = new Product();
-//        product.setProductID(productID);
-//        product.setProductName(productName);
-//        product.setPrice(productPrice);
-//        product.setImage(imageBytes);
-//        product.setColor(productColor);
-//        product.setSize(productSize);
-//        product.setCategory(selectedCategory);
-//        product.setDescription(productDescription);
-//        product.setCreateDate(LocalDateTime.now());
-//        product.setStatus(true);
-//
-//        try
-//        {
-//            if  (productDAO.AddProduct(product))
-//            {
-//                System.out.println("Update successful");
-//                resp.sendRedirect(req.getContextPath() + "/ProductController");
-//            }
-//            else{
-//                System.out.println("Update fail");
-//            }
-//        }
-//        catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-
     protected void updateProduct(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        // 1. Cập nhật thông tin chung
+        //  Cập nhật thông tin chung
         String productName = request.getParameter("productName");
         double productPrice = Double.parseDouble(request.getParameter("productPrice"));
         String categoryName = request.getParameter("CategoryName");
@@ -356,7 +278,7 @@ protected void showInfo(HttpServletRequest request, HttpServletResponse response
         // Gọi DAO để cập nhật thông tin sản phẩm
         productDAO.updateProductByCommonInfo(productName, productPrice, categoryName, productDescription);
 
-        // 2. Xử lý danh sách màu
+        //  Xử lý danh sách màu
         List<String> oldColors = productDAO.getColorsByProduct(productName); // Lấy danh sách màu cũ từ DB
         List<String> newColors = new ArrayList<>();
         int i = 1; // Khởi tạo chỉ số vòng lặp
@@ -610,6 +532,15 @@ protected void showInfo(HttpServletRequest request, HttpServletResponse response
 
     }
 
+    protected void deleteProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String productName = req.getParameter("productName");
+        try{
+            productDAO.deleteProductByName(productName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        LoadListproduct(req, resp);
+    }
 
 
 

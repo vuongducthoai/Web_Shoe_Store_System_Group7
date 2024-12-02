@@ -35,7 +35,6 @@ public class ProductInformationController extends HttpServlet {
     private IProductPromotion productPromotion = new ProductPromotionImpl();
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         String productName = req.getParameter("productName");
-        System.out.print("lllllllllll: " + productName);
         if (productName == null || productName.trim().isEmpty()) {
             System.out.print("Ten sp khong hop le");
             return;
@@ -94,12 +93,6 @@ public class ProductInformationController extends HttpServlet {
             if (RecommendProducts == null || RecommendProducts.isEmpty()) {
                 System.out.println("RecommendProducts is null or empty.");
                 return;
-            }else{
-//                for(Tuple3<ProductDTO, Double, PromotionProductDTO> tuple : RecommendProducts){
-//                    System.out.println("cccc: "+tuple._1().getProductName());
-//                    System.out.println("cccc: "+tuple._2().toString());
-//                    System.out.println("cccc: "+tuple._3().getProductName());
-//                }
             }
 
             req.setAttribute("RecommendProducts", RecommendProducts);

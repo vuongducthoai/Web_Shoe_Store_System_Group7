@@ -19,6 +19,8 @@ import service.Impl.ProductServiceImpl;
 import service.Impl.ReviewServiceImpl;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import java.io.IOException;
@@ -64,6 +66,14 @@ public class HomeController extends HttpServlet {
             }
 
 
+            LocalDateTime startDateTime = LocalDateTime.of(2024, 1, 20, 0, 0, 0, 0);
+            LocalDateTime endDateTime = LocalDateTime.of(2025, 12, 30, 23, 59, 59, 999999999);
+
+            DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+            String startDateStr = startDateTime.format(formatter);
+            String endDateStr = endDateTime.format(formatter);
+            req.setAttribute("startDate", startDateStr);
+            req.setAttribute("endDate", endDateStr);
 
            List<PromotionProductDTO> promotionProductDTOList = productPromotion.findTop8ProductPromotionNow(startDate, endDate, index - 1, limit);
            req.setAttribute("promotionProductDTOList", promotionProductDTOList);

@@ -164,8 +164,8 @@
         </a>
 
         <ul>
-            <li><a href="#Home">Trang Chủ</a></li>
-            <li><a href="#Products">Sản Phẩm</a></li>
+            <li><a href="/home">Trang Chủ</a></li>
+            <li><a href="/customer/product/filter">Sản Phẩm</a></li>
             <li><a href="#Review">Về Chúng Tôi</a></li>
             <li><a href="#Servises">Dịch Vụ</a></li>
         </ul>

@@ -1,5 +1,6 @@
 package entity;
 
+import dto.ProductDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,7 +8,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @AllArgsConstructor
@@ -48,4 +51,27 @@ public class Product {
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<PromotionProduct> promotionProducts;
+
+    // Phương thức ánh xạ từ Product sang ProductDTO
+    public ProductDTO toDTO() {
+        return new ProductDTO(
+                productID,
+                productName,
+                price,
+                0,
+                image,
+                color,
+                size,
+                status,
+                description,
+                createDate,
+                null,
+                null,
+                null,
+                promotionProducts != null ? promotionProducts.stream().map(PromotionProduct::toDTO).collect(Collectors.toList()) : null,
+                0,
+                this.review != null ? this.review.toDTO() : null,
+                image == null ? null : "data:image/png;base64," + Base64.getEncoder().encodeToString(image)
+        );
+    }
 }

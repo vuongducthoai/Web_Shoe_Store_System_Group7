@@ -53,6 +53,9 @@ public class CategoryController extends HttpServlet {
                 case "viewProducts":
                     getListProductsInCategory(req, resp);
                     break;
+                case "deleteProductFromCategory":
+                    deleteProductFromCategory(req, resp);
+                    break;
 
             }
         }
@@ -204,7 +207,21 @@ public class CategoryController extends HttpServlet {
         }
     }
 
+    private void deleteProductFromCategory(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String productName = req.getParameter("deleteProduct");
 
+        if (productName != null) {
+            try {
+                // Gọi hàm để xóa sản phẩm khỏi danh mục
+                productDAO.deleteProductFromCategory(productName);
+                doGet(req,resp);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+        }
+    }
 }
 
 
