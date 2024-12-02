@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dto.ChatDTO;
 import dto.CustomerDTO;
 import dto.MessageDTO;
+import dto.UserDTO;
 import entity.Account;
 import entity.Chat;
 import entity.User;
@@ -24,6 +25,7 @@ import service.Impl.CustomerServiceImpl;
 import service.Impl.MessageService;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.net.http.WebSocket;
 import java.sql.SQLException;
 import java.util.List;
@@ -41,32 +43,18 @@ public class ChatController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
         HttpSession session = req.getSession();
-        // http://localhost:8080/JPAExample_war_exploded/Chat?userId=70&accountId=115&role=CUSTOMER
-        //CUSTOMER , ADMIN
-        // ad 8,10 cus 70,115 cus 41,67
-        // Lấy tham số từ URL
-        String userIdParam = req.getParameter("userId");
-        String accountIdParam = req.getParameter("accountId");
-        String roleParam = req.getParameter("role");
-
+        UserDTO userDTO = (UserDTO) session.getAttribute("user");
         // Kiểm tra và chuyển đổi dữ liệu
-        if (userIdParam != null && accountIdParam != null && roleParam != null) {
-            int userId = Integer.parseInt(userIdParam);
-            int accountId = Integer.parseInt(accountIdParam);
-            RoleType role = RoleType.valueOf(roleParam);  // Chuyển đổi thành RoleType từ string
-
-            // Tạo đối tượng Account và User
-            Account account = new Account(accountId, "admin@example.com", "password", null, "providerID", role, null, null);
-            User user = new User(userId, "Nguyễn Văn A", null, true, account, null);
+        if (userDTO != null) {
 
             // Chuyển đổi đối tượng User thành JSON để truyền qua JSP
             ObjectMapper objectMapper = new ObjectMapper();
-            String userJson = objectMapper.writeValueAsString(user);
+            String userJson = objectMapper.writeValueAsString(userDTO);
 
-            // Đặt thuộc tính để truyền vào JSP
             req.setAttribute("userJson", userJson);
-            req.setAttribute("role", role.name());
+            req.setAttribute("role", userDTO.getAccount().getRole());
 
             // Chuyển tiếp đến trang chat.jsp
             RequestDispatcher dispatcher = req.getRequestDispatcher("/view/chat.jsp");

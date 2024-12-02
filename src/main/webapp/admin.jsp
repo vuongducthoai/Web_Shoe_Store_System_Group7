@@ -266,11 +266,13 @@
 
 
                 <%-- Nút xóa sản phẩm--%>
+                    <form action="ProductController" method="post" >
                     <div class="product-management-form" id="delete-product-management-form">
                         <h3>Xóa sản phẩm</h3>
-                        <input type="text" id="delete-product-id" placeholder="Nhập ID sản phẩm">
-                        <button class="action-btn">Xóa sản phẩm</button>
+                        <input type="text" name="productName" id="delete-product-id" placeholder="Nhập tên sản phẩm">
+                        <button class="action-btn" name="submitAction" value="delete-product">Xóa sản phẩm</button>
                     </div>
+                    </form>
                 </div>
             </div>
             <!-- kết thúc quản lý sản phẩm -->

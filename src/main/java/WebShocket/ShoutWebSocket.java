@@ -60,8 +60,8 @@ public class ShoutWebSocket {
             if (messageContent.startsWith("user:")) {
                 // Xử lý khi người dùng gửi thông tin userId
                 String userJson = messageContent.substring(5); // Cắt bỏ "user:" phía trước
-                User user = objectMapper.readValue(userJson, User.class);
-                session.getUserProperties().put("user", user);// Chuyển JSON thành đối tượng User
+                UserDTO user = objectMapper.readValue(userJson, UserDTO.class);
+                session.getUserProperties().put("user", user);
                 int userId = user.getUserID();
                 session.getUserProperties().put("userId", userId);  // Lưu userId vào session
                 System.out.println("User ID: " + userId);  // Debug: in ra userId
@@ -119,24 +119,26 @@ public class ShoutWebSocket {
         List<CustomerDTO> customerList = customerService.GetAllCustomer();
         StringBuilder customerListHtml = new StringBuilder();
 
-        // Duyệt qua tất cả khách hàng
-        for (CustomerDTO customer : customerList) {
-            // Xây dựng HTML cho khách hàng với thông báo nếu có tin nhắn chưa xem
-            customerListHtml.append("<div class='customer-item' onclick='switchChat(")
-                    .append(customer.getUserID())
-                    .append(")'><tr>")
-                    .append(customer.getFullName());
+        if(customerList != null) {
+            // Duyệt qua tất cả khách hàng
+            for (CustomerDTO customer : customerList) {
+                // Xây dựng HTML cho khách hàng với thông báo nếu có tin nhắn chưa xem
+                customerListHtml.append("<div class='customer-item' onclick='switchChat(")
+                        .append(customer.getUserID())
+                        .append(")'><tr>")
+                        .append(customer.getFullName());
 
-            // Thêm thông báo "Có tin nhắn chưa xem" nếu có tin nhắn chưa đọc
-            if (customer.getLastMessageStatus() !=null && customer.getLastMessageStatus() == false) {
-                customerListHtml.append("<span class='new-message-indicator'>có tin nhắn mới</span>");
+                // Thêm thông báo "Có tin nhắn chưa xem" nếu có tin nhắn chưa đọc
+                if (customer.getLastMessageStatus() != null && customer.getLastMessageStatus() == false) {
+                    customerListHtml.append("<span class='new-message-indicator'>có tin nhắn mới</span>");
+                }
+
+                customerListHtml.append("</div>");
             }
 
-            customerListHtml.append("</div>");
+            // Gửi danh sách khách hàng cho admin
+            session.getBasicRemote().sendText(customerListHtml.toString());
         }
-
-        // Gửi danh sách khách hàng cho admin
-        session.getBasicRemote().sendText(customerListHtml.toString());
     }
 
     private void loadMessagesForCustomer(Session session, int userId, int chatId) throws IOException, SQLException {
@@ -156,6 +158,7 @@ public class ShoutWebSocket {
                 messageCache.put(userId, fetchedMessages); // Lưu vào bộ nhớ đệm
                 sendMessagesToSession(userId, session);
             } else {
+                chatSessions.computeIfAbsent(userId, k -> new HashSet<>()).add(session);
                 session.getBasicRemote().sendText("No previous messages.");
             }
         }
@@ -288,7 +291,7 @@ public class ShoutWebSocket {
             lastOpponentMessage.setRead(true);
             int userId = Integer.parseInt(session.getUserProperties().get("userId").toString());
             messageService.updateMessageStatus(lastOpponentMessage.getChatId(), userId);
-            User user = (User) session.getUserProperties().get("user");
+            UserDTO user = (UserDTO) session.getUserProperties().get("user");
             if ("ADMIN".equals(user.getAccount().getRole().name().toString())) {
                 sendListCusToAdmin(session);
             }

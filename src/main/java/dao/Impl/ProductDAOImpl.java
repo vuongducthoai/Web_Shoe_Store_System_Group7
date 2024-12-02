@@ -30,7 +30,7 @@ public class ProductDAOImpl implements IProductDAO {
                     "        ROW_NUMBER() OVER (PARTITION BY p.productName ORDER BY p.price DESC) AS rn, \n" +
                     "        COUNT(*) OVER (PARTITION BY p.productName) AS product_count \n" +
                     "    FROM Product p \n" +
-                    "    WHERE p.status = 1\n" +
+                    "    WHERE p.status = 0\n" +
                     ")\n" +
                     "SELECT \n" +
                     "    productName,\n" +
@@ -334,18 +334,51 @@ public class ProductDAOImpl implements IProductDAO {
     }
 
 
+//    public List<Product> findRandomProducts(String currentProductName, int categoryID) {
+//        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+//        try {
+//            System.out.print(currentProductName);
+//            // JPQL truy vấn các sản phẩm cùng CategoryID nhưng khác tên
+//            String jpql = "SELECT DISTINCT p FROM Product p WHERE p.category.categoryID = :categoryID " +
+//                    "AND p.productName <> :currentProductName and p.status = true";
+//
+//            TypedQuery<Product> query = entityManager.createQuery(jpql, Product.class);
+//            query.setParameter("categoryID", categoryID);
+//            query.setParameter("currentProductName", currentProductName);
+//
+//            // Lấy danh sách kết quả
+//            List<Product> products = query.getResultList();
+//
+//            if (products.isEmpty()) {
+//                System.out.println("No products found for category ID: " + categoryID);
+//                return Collections.emptyList();
+//            }
+//
+//            // Trộn danh sách để lấy ngẫu nhiên
+//            Collections.shuffle(products);
+//
+//            // Trả về danh sách dù có ít hơn 4 sản phẩm
+//            return products.size() <= 4 ? products : products.subList(0, 4);
+//        } catch (Exception e) {
+//            System.err.println("Error during findRandomProducts:");
+//            e.printStackTrace();
+//            return Collections.emptyList();
+//        } finally {
+//            entityManager.close();
+//        }
+//    }
+
     public List<Product> findRandomProducts(String currentProductName, int categoryID) {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
         try {
             // JPQL truy vấn các sản phẩm cùng CategoryID nhưng khác tên
-            String jpql = "SELECT DISTINCT p FROM Product p WHERE p.category.categoryID = :categoryID " +
+            String jpql = "SELECT p FROM Product p WHERE p.category.categoryID = :categoryID " +
                     "AND p.productName <> :currentProductName and p.status = true";
 
             TypedQuery<Product> query = entityManager.createQuery(jpql, Product.class);
             query.setParameter("categoryID", categoryID);
             query.setParameter("currentProductName", currentProductName);
 
-            // Lấy danh sách kết quả
             List<Product> products = query.getResultList();
 
             if (products.isEmpty()) {
@@ -353,11 +386,21 @@ public class ProductDAOImpl implements IProductDAO {
                 return Collections.emptyList();
             }
 
+            // Dùng Set để theo dõi các tên sản phẩm đã xuất hiện
+            Set<String> uniqueNames = new HashSet<>();
+            List<Product> filteredProducts = new ArrayList<>();
+
+            for (Product product : products) {
+                if (uniqueNames.add(product.getProductName())) {
+                    filteredProducts.add(product); // Chỉ thêm sản phẩm nếu tên chưa xuất hiện
+                }
+            }
+
             // Trộn danh sách để lấy ngẫu nhiên
-            Collections.shuffle(products);
+            Collections.shuffle(filteredProducts);
 
             // Trả về danh sách dù có ít hơn 4 sản phẩm
-            return products.size() <= 4 ? products : products.subList(0, 4);
+            return filteredProducts.size() <= 4 ? filteredProducts : filteredProducts.subList(0, 4);
         } catch (Exception e) {
             System.err.println("Error during findRandomProducts:");
             e.printStackTrace();
@@ -366,6 +409,7 @@ public class ProductDAOImpl implements IProductDAO {
             entityManager.close();
         }
     }
+
 
 
     public Map<Integer, Integer> getQuantitiesByColor(String color, String productName) {
@@ -690,6 +734,68 @@ public class ProductDAOImpl implements IProductDAO {
         return productDTO;
     }
 
+
+    public void deleteProductByName(String productName)  {
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        EntityTransaction transaction = null;
+
+        try {
+            transaction = entityManager.getTransaction();
+            transaction.begin();
+
+            String updateStatusSql = "UPDATE Product p SET p.status = 0 WHERE p.productName = ? ";
+            Query updateStatusQuery = entityManager.createNativeQuery(updateStatusSql);
+            updateStatusQuery.setParameter(1, productName);
+
+            int rowsUpdated = updateStatusQuery.executeUpdate();
+
+            if (rowsUpdated == 0) {
+                throw new Exception("No product found with the name: " + productName );
+            }
+
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    public void deleteProductFromCategory(String productName)  {
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        EntityTransaction transaction = null;
+
+        try {
+            transaction = entityManager.getTransaction();
+            transaction.begin();
+
+            // Cập nhật categoryId của sản phẩm về null
+            String updateCategorySql = "UPDATE Product p SET p.categoryId = NULL WHERE p.productName = ? ";
+            Query updateCategoryQuery = entityManager.createNativeQuery(updateCategorySql);
+            updateCategoryQuery.setParameter(1, productName);
+
+            int rowsUpdated = updateCategoryQuery.executeUpdate();
+
+            if (rowsUpdated == 0) {
+                throw new Exception("No product found with the name: " + productName);
+            }
+
+            // Commit transaction nếu mọi thứ thành công
+            transaction.commit();
+        } catch (Exception e) {
+            // Rollback nếu có lỗi
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            // Đảm bảo đóng EntityManager sau khi sử dụng
+            entityManager.close();
+        }
+    }
 
 
 

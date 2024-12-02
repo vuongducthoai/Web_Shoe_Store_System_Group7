@@ -121,9 +121,11 @@
         <div class="col-md-8">
             <c:forEach var="cart" items="${CartList}">
                 <div class="cart-item d-flex align-items-center custom-bg">
-                    <a href="/product/details?productName=${cart.productDTO.productName}">
-                    <img class="border border-dark" alt="Gradient Graphic T-shirt" height="150" src="${cart.productDTO.getBase64Image()}" width="150"/>
-                    </a>
+                    <form action="/product/details" style="position: relative" method="get">
+                        <input name="productName" hidden="hidden" value="${cart.productDTO.productName}">
+                        <img  class="border border-dark" alt="Gradient Graphic T-shirt" height="150" src="${cart.productDTO.getBase64Image()}" width="150"/>
+                        <button type="submit" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0;"></button>
+                    </form>
                     <div class="ms-3">
                         <h4>
                             ${cart.productDTO.productName}

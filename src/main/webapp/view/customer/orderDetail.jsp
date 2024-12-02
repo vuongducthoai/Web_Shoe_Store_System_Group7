@@ -8,6 +8,8 @@
 <html lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <title>Chi Tiết Đơn Hàng</title>
     <style>
         body {
@@ -189,8 +191,9 @@
         <!-- Chi tiết các sản phẩm trong đơn hàng -->
         <div class="order-detail-content">
             <c:forEach var="item" items="${orderDetails.orderItems}">
-                <div
-                        class="order-detail-item"
+                <div onclick="redirectToProductInformation('${item.productDTO.productName}')"
+
+                     class="order-detail-item"
                         data-product-name="${item.productDTO.productName}"
                         data-product-image="${item.productDTO.getBase64Image()}"
                         data-user-id="${customerId}"
@@ -218,8 +221,8 @@
                             <c:if test="${not empty item.productDTO.reviewDTO}">
                                 <img src="${item.productDTO.reviewDTO.getBase64Image()}" alt="Review Image" />
                             </c:if>
-                            <button class="edit-review-button"
-                                    onclick="openEditReviewOverlay(${item.productDTO.productId}, '${item.productDTO.productName}', '${item.productDTO.getBase64Image()}', '${item.productDTO.reviewDTO.ratingValue}', '${item.productDTO.reviewDTO.comment}','${item.productDTO.reviewDTO.getBase64Image()}' , '${item.productDTO.reviewDTO.reviewID}')">
+                            <button class="edit-review-button mb-3"
+                                    onclick="openEditReviewOverlay(${item.productDTO.productId}, '${item.productDTO.productName}', '${item.productDTO.getBase64Image()}', '${item.productDTO.reviewDTO.ratingValue}', '${item.productDTO.reviewDTO.comment}','${item.productDTO.reviewDTO.getBase64Image()}' , '${item.productDTO.reviewDTO.reviewID}'); event.stopPropagation();">
                                 Sửa Đánh Giá
                             </button>
                         </c:if>
@@ -412,6 +415,22 @@
         document.getElementById('reviewFormOverlay').style.display = 'none';
     }
 
+
+
+    function redirectToProductInformation(name){
+        console.log('get in')
+        console.log(name)
+        const form = document.createElement('form');
+        form.method = 'GET';
+        form.action = `${pageContext.request.contextPath}/product/details`;
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'productName';
+        input.value = name
+        form.appendChild(input);
+        document.body.appendChild(form);
+        form.submit();
+    }
 
 </script>
 </body>

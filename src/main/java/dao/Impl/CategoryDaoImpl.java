@@ -4,7 +4,9 @@ import JpaConfig.JpaConfig;
 import dao.ICategoryDao;
 import dto.CategoryDTO;
 import dto.ProductDTO;
+
 import entity.Category;
+import entity.Product;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
@@ -12,6 +14,9 @@ import jakarta.persistence.TypedQuery;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import static util.ConvertImageStringToByteArray.convertBase64ToByteArray;
+
 
 public class CategoryDaoImpl implements ICategoryDao {
 
@@ -94,7 +99,7 @@ public class CategoryDaoImpl implements ICategoryDao {
                     "        COUNT(*) OVER (PARTITION BY p.productName) AS product_count, \n" +
                     "        p.categoryId  \n" +
                     "    FROM Product p \n" +
-                    "    WHERE p.status = 1\n" +
+                    "    WHERE p.status = 0\n" +
                     ")\n" +
                     "SELECT \n" +
                     "    rp.productName, \n" +
@@ -169,6 +174,31 @@ public class CategoryDaoImpl implements ICategoryDao {
         }
         finally {
             entityManager.close();
+        }
+    }
+
+    @Override
+    public List<CategoryDTO> findAllCategories() {
+        try (EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager()) {
+            try {
+                // Truy vấn tất cả danh mục và sản phẩm liên quan
+                List<Category> categories = entityManager.createQuery(
+                                "SELECT c FROM Category c LEFT JOIN FETCH c.products", Category.class)
+                        .getResultList();
+
+                // Ánh xạ từ Category sang CategoryDTO
+                return categories.stream()
+                        .map(category -> new CategoryDTO(
+                                category.getCategoryID(),
+                                category.getCategoryName(),
+                                category.getProducts().stream()
+                                        .map(Product::toDTO)  // Sử dụng phương thức riêng cho việc ánh xạ sản phẩm
+                                        .collect(Collectors.toList())
+                        ))
+                        .collect(Collectors.toList());
+            } finally {
+                entityManager.close();
+            }
         }
     }
 }
