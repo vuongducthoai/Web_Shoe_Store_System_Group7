@@ -237,15 +237,6 @@
                         </i>
                     </button>
                 </form>
-<%--                <form action="/Cart/Add" method="post">--%>
-                    <input type="text" value="17" name="idProduct" class = "inputID"/>
-                    <input type="text" value="17" name="idProduct" class = "inpQuantity"/>
-                    <button class="btn btn-dark w-100" onclick="AddItemQuantity()">
-                        TWP
-                        <i class="fas fa-arrow-right">
-                        </i>
-                    </button>
-<%--                </form>--%>
             </div>
         </div>
     </div>
