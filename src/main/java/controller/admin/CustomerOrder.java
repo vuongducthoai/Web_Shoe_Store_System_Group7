@@ -39,8 +39,9 @@ public class CustomerOrder extends HttpServlet {
         int customerId = 48;
         String customerIdParam = req.getParameter("id");
         if ("/customer/orders".equals(path)) {
-//            int customerId = 48; // Ví dụ, lấy từ session hoặc context xác thực
- //           int customerId = Integer.parseInt(customerIdParam);
+
+             // Ví dụ, lấy từ session hoặc context xác thực
+            //int customerId = Integer.parseInt(customerIdParam);
             // Gọi service để lấy danh sách đơn hàng của khách hàng
             List<OrderDTO> customerOrders = orderService.getOrdersByCustomerId(customerId);
             if (customerOrders != null && !customerOrders.isEmpty()) {

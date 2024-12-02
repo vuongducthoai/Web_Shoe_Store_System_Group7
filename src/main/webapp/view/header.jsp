@@ -176,10 +176,12 @@
                 <span style="position: absolute;left: 30px; top: -10px;font-size: 18px; color: red">0</span>
             </i>
             <i style="font-size: 30px; position: relative;" class="fa-solid fa-bell"><span style="position: absolute;left: 20px; top: -10px;font-size: 18px; color: red">0</span></i>
+
             <i onclick="redirectToCartPage()" style="font-size: 30px; margin-left: 15px; position: relative;" class="fa-solid fa-cart-shopping">
                     <span class="quantityItemCart" style="position: absolute;left: 35px; top: -10px;font-size: 18px; color: red">
                         0
                     </span></i>
+
 
                 <c:choose>
                     <c:when test="${sessionScope.user == null}">
@@ -204,5 +206,6 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/toastMessage.js"></script>
 <script src="${pageContext.request.contextPath}/js/ItemCart.js"></script>
+<script src="${pageContext.request.contextPath}/js/DirectHeader.js"></script>
 </body>
 </html>

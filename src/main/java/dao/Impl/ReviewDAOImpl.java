@@ -31,8 +31,7 @@ public class ReviewDAOImpl implements IReviewDAO {
                     "JOIN User u ON r.userID = u.userID " +
                     "LEFT JOIN Response res on res.reviewID = r.reviewID "+
                     "LEFT JOIN User adminUser ON res.userID = adminUser.userID "+
-                    "WHERE u.active =1 "+
-                    "AND p.productID IN (" + productIDsString + ")";
+                    "WHERE p.productID IN (" + productIDsString + ")";
 
 
             List<Object[]> results = entityManager.createNativeQuery(sql).getResultList();
