@@ -373,12 +373,27 @@ protected void showInfo(HttpServletRequest request, HttpServletResponse response
         }
 
 
-            // Xóa màu không còn trong danh sách mới
+        System.out.println("Old Colors: " + oldColors);
+        System.out.println("New Colors: " + newColors);
+
         for (String oldColor : oldColors) {
-            if (!Arrays.asList(newColors).contains(oldColor)) {
+            boolean isColorInNewList = false;  // Biến để kiểm tra xem màu cũ có xuất hiện trong danh sách màu mới không
+
+            // Kiểm tra xem oldColor có tồn tại trong newColors không
+            for (String newColor : newColors) {
+                if (oldColor.equals(newColor)) {
+                    isColorInNewList = true;  // Nếu tìm thấy thì không cần xóa màu cũ
+                    break;  // Dừng vòng lặp vì đã tìm thấy màu cũ trong danh sách mới
+                }
+            }
+
+            // Nếu màu cũ không có trong danh sách màu mới, xóa màu
+            if (!isColorInNewList) {
                 productDAO.deleteProductByColor(productName, oldColor);
             }
         }
+
+
 
         // Thêm màu mới vào danh sách
         for (String newColor : newColors) {
@@ -499,10 +514,10 @@ protected void showInfo(HttpServletRequest request, HttpServletResponse response
 
     private void updateOldColor(HttpServletRequest request, String color, String productName, int a) throws Exception {
         // Cập nhật hình ảnh nếu có thay đổi
-
         Part filePart = request.getPart("image-color-" + a);
         byte[] imageBytes = null;
 
+        // Kiểm tra nếu có ảnh được tải lên
         if (filePart != null && filePart.getSize() > 0) {
             try (InputStream inputStream = filePart.getInputStream();
                  ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
@@ -511,17 +526,18 @@ protected void showInfo(HttpServletRequest request, HttpServletResponse response
                 while ((bytesRead = inputStream.read(buffer)) != -1) {
                     outputStream.write(buffer, 0, bytesRead);
                 }
-                imageBytes = outputStream.toByteArray();
+                imageBytes = outputStream.toByteArray();  // Lưu ảnh nếu có thay đổi
             } catch (IOException e) {
-                // Xử lý lỗi nếu có
-                e.printStackTrace();
+                e.printStackTrace();  // Xử lý lỗi nếu có
             }
         }
 
-        if (productDAO.updateImage(color, productName, imageBytes))
-            System.out.println(productName + " has been updated");
-        else
-            System.out.println(productName + " has not been updated");
+        // Cập nhật ảnh chỉ khi có ảnh mới, nếu không giữ nguyên ảnh cũ
+        if (imageBytes != null && productDAO.updateImage(color, productName, imageBytes)) {
+            System.out.println(productName + " has been updated with new image.");
+        } else {
+            System.out.println("No new image for " + productName + ". Image not updated.");
+        }
 
         // Lấy danh sách kích thước hiện tại từ DB
         List<Integer> oldSizes = productDAO.getSizesByColor(color, productName);
@@ -538,7 +554,6 @@ protected void showInfo(HttpServletRequest request, HttpServletResponse response
                 int newQuantity = Integer.parseInt(quantityParams[i]);
 
                 if (!oldSizes.contains(newSize)) {
-
                     // Thêm sản phẩm dựa trên số lượng mới
                     for (int j = 0; j < newQuantity; j++) {
                         addProductBySizeAndQuantity(productName, color, newSize);
@@ -569,7 +584,7 @@ protected void showInfo(HttpServletRequest request, HttpServletResponse response
 
     protected void addProductBySizeAndQuantity(String productName, String color, int size) throws ServletException, IOException {
         ProductDTO productDTO = new ProductDTO();
-        productDTO = productDAO.getCommonInfoByName(productName);
+        productDTO = productDAO.getCommonInfoByName(productName, color);
         List<CategoryDTO> categoryDTOList = categoryDao.categoryDTOList();
         String categoryName= productDTO.getCategoryDTO().getCategoryName();
         Category selectedCategory = null;
