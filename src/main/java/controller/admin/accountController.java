@@ -27,7 +27,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-@WebServlet(urlPatterns = {"/Admin" ,"/Admin/account"})
+@WebServlet(urlPatterns = {"/Admin" ,"/Admin/account","/Admin/product"})
 public class accountController extends HttpServlet {
     IAccountDAO accountDAO = new AccountDaoImpl();
     IPromotionService promotionService = new PromotionServiceImpl();

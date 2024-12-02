@@ -36,6 +36,14 @@ public class productController extends HttpServlet {
     IProductDAO productDAO = new ProductDAOImpl();
     ICategoryDao categoryDao   = new CategoryDaoImpl();
 
+    protected void LoadListproduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        List<ProductDTO> products = productDAO.getListProductDTO();
+        req.setAttribute("products", products);
+        List<CategoryDTO> categoryDTOList = categoryDao.categoryDTOList();
+        req.setAttribute("CategoryList", categoryDTOList);
+        req.getRequestDispatcher("/view/admin/admin.jsp").forward(req, resp);
+
+    }
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("submitAction");
@@ -147,7 +155,7 @@ public class productController extends HttpServlet {
             i++;
         }
 
-        resp.sendRedirect(req.getContextPath() + "/ProductController");
+        resp.sendRedirect(req.getContextPath() + "/Admin");
     }
 
 
@@ -221,12 +229,8 @@ public class productController extends HttpServlet {
         request.setAttribute("colorIdToImageMap", colorIdToImageMap);
         request.setAttribute("sizeQuantityMap", sizeQuantityMap);
 
-        request.getRequestDispatcher("/view/admin/admin.jsp").forward(request, response);
+        response.sendRedirect(request.getContextPath() + "/Admin");
     }
-
-
-
-
 
     protected void updateProduct(HttpServletRequest request, HttpServletResponse response) throws Exception {
         //  Cập nhật thông tin chung
@@ -302,7 +306,7 @@ public class productController extends HttpServlet {
                 a++;
             }
         }
-        //LoadListproduct(request, response);
+        response.sendRedirect(request.getContextPath() + "/Admin");
 
     }
 
@@ -501,7 +505,5 @@ public class productController extends HttpServlet {
         }
         req.getRequestDispatcher("/view/admin/admin.jsp").forward(req, resp);
     }
-
-
 
 }

@@ -139,7 +139,7 @@
 
                                     <td>${product.description}</td>
                                     <td>
-                                        <form action="ProductController" method="post" >
+                                        <form action="Admin/product" method="post" >
                                             <input type="hidden" name="productName" value="${product.productName}" >
                                             <button class="action-btn" id="btn-edit-product" name="submitAction" value="showInfo" >Sửa</button>
                                         </form>
