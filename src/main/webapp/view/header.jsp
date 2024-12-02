@@ -171,6 +171,13 @@
         </ul>
 
         <div class="icons">
+            <i onclick = "redirectToChatPage()" class="fa-solid fa-message" style="font-size: 30px; position: relative; margin-right: 15px">
+                <span style="position: absolute;left: 30px; top: -10px;font-size: 18px; color: red">0</span>
+            </i>
+            <i onclick = "redirectToNotifyPage()" style="font-size: 30px; position: relative;" class="fa-solid fa-bell">
+                <span style="position: absolute;left: 20px; top: -10px;font-size: 18px; color: red">0
+                </span>
+            </i>
             <i class="fa-solid fa-message" style="font-size: 30px; position: relative; margin-right: 15px">
                 <span style="position: absolute;left: 30px; top: -10px;font-size: 18px; color: red">3</span>
             </i>
@@ -179,6 +186,7 @@
                     <span class="quantityItemCart" style="position: absolute;left: 35px; top: -10px;font-size: 18px; color: red">
                         0
                     </span></i>
+
 
                 <c:choose>
                     <c:when test="${sessionScope.user == null}">

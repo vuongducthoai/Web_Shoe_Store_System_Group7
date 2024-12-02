@@ -2,12 +2,14 @@ package controller.customer;
 
 import dao.Impl.NotifyDAO;
 import dto.NotifyDTO;
+import dto.UserDTO;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,13 +18,19 @@ import java.util.List;
 public class NotifyController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int customerID = Integer.parseInt(request.getParameter("customerID"));
+        HttpSession session = request.getSession();
+        UserDTO userDTO = (UserDTO) session.getAttribute("user");
+        int customerID = userDTO.getUserID();
+        // Kiểm tra và chuyển đổi dữ liệu
+        if (userDTO != null) {
+            NotifyDAO notifyDAO = new NotifyDAO();
+            List<NotifyDTO> notifications = notifyDAO.LoadNotifies(customerID);
 
-        NotifyDAO notifyDAO = new NotifyDAO();
-        List<NotifyDTO> notifications = notifyDAO.LoadNotifies(customerID);
+            request.setAttribute("notifications", notifications);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/view/notify.jsp");
+            dispatcher.forward(request, response);
+        }
 
-        request.setAttribute("notifications", notifications);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/view/notify.jsp");
-        dispatcher.forward(request, response);
+
     }
 }
