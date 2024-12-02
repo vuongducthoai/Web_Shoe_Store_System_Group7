@@ -3,6 +3,8 @@
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
+
+
 <html lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -172,13 +174,16 @@
     </style>
 </head>
 <body>
+<header>
+    <jsp:include page="/view/header.jsp"></jsp:include>
+</header>
 <!-- Kiểm tra nếu có thông tin đơn hàng -->
 <c:if test="${not empty orderDetails}">
     <div class="order-detail">
         <div class="order-detail-header">
             <h2>Chi Tiết Đơn Hàng #${orderDetails.orderId}</h2>
             <h2>Trạng Thái:  ${orderDetails.orderStatus}</h2>
-            <a href="/JPAExample_war_exploded/customer/orders" class="btn-back">Quay Lại</a>
+            <a href="/customer/orders" class="btn-back">Quay Lại</a>
         </div>
 
         <!-- Chi tiết các sản phẩm trong đơn hàng -->
@@ -242,7 +247,7 @@
         <div class="overlay-content">
             <button class="close-btn" onclick="closeEditReviewForm()">X</button>
             <h2>Sửa Đánh Giá</h2>
-            <form id="editReviewForm" method="post" action="${pageContext.request.contextPath}/customer/orderDetails?id=${orderDetails.orderId}" enctype="multipart/form-data">
+            <form id="editReviewForm" method="post" action="${pageContext.request.contextPath}/customer/orderDetails?idOrder=${orderDetails.orderId}" enctype="multipart/form-data">
                 <input type="hidden" name="action" value="update" />
                 <input type="hidden" id="editReviewID" name="editReviewID" />
                 <input type="hidden" id="editUser-ID" name="editUser-ID" value="${customerId}"/>
@@ -380,6 +385,7 @@
     function closeEditReviewForm() {
         document.getElementById('editReviewOverlay').style.display = 'none';
     }
+
     // Thêm sự kiện click cho tất cả các nút Đánh giá
     document.querySelectorAll('.review-button').forEach(function (button) {
         button.addEventListener('click', function (event) {
@@ -388,7 +394,7 @@
             const productImage = productElement.getAttribute('data-product-image');
             const userID = productElement.getAttribute('data-user-id');
             const productID = productElement.getAttribute('data-product-id');
-            const  reviewID = productElement.getAttribute('data-review-id');
+            const reviewID = productElement.getAttribute('data-review-id');
 
             // Cập nhật thông tin vào form đánh giá
             document.getElementById('reviewProductName').value = productName;
@@ -406,6 +412,9 @@
         document.getElementById('reviewFormOverlay').style.display = 'none';
     }
 
+
 </script>
 </body>
+<%@ include file="/view/footer.jsp" %> <!-- Include footer.jsp -->
+
 </html>
