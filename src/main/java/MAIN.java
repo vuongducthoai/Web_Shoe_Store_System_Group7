@@ -12,6 +12,7 @@ import service.IUserService;
 import service.Impl.UserServiceImpl;
 
 import java.util.List;
+import java.util.UUID;
 
 
 public class MAIN {
@@ -45,9 +46,10 @@ public class MAIN {
 //        UserDTO userDTO = userService.findUserByAccoutId(118);
 //        System.out.println(userDTO.getAccount().getRole());
 
-        IUserDAO userDAO = new UserDAOImpl();
-        CustomerDTO user = userDAO.getInformationUser(69);
-        System.out.println(user.getFullName());
+//        IUserDAO userDAO = new UserDAOImpl();
+//        CustomerDTO user = userDAO.getInformationUser(69);
+//        System.out.println(user.getFullName());
+
 
     }
 }
