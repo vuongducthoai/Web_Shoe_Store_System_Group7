@@ -154,32 +154,32 @@
         </div>
     </div>
     <div class="wrapper" style="flex-wrap: wrap" id="product-list">
-            <c:forEach var="promotionProduct" items="${promotionProductDTOList}">
-                <div class="product" style="position: relative; flex: 0 0 23%; max-width: 25%; height: 435px">
-                    <form action="/product/details" method="GET">
-                        <input type="hidden" name="productName" value="${promotionProduct.product.productName}">
-                        <div class="product-image">
-                            <figure><img src="${promotionProduct.product.getBase64Image()}" alt="Foundation"></figure>
+        <c:forEach var="promotionProduct" items="${promotionProductDTOList}">
+            <div class="product" style="position: relative; flex: 0 0 23%; max-width: 25%; height: 435px">
+                <form action="/product/details" method="GET">
+                    <input type="hidden" name="productName" value="${promotionProduct.product.productName}">
+                    <div class="product-image">
+                        <figure><img src="${promotionProduct.product.getBase64Image()}" alt="Foundation"></figure>
+                    </div>
+                    <div class="product-details">
+                        <div style="display: flex; align-items: center; justify-content: space-between">
+                            <p class="product_name">${promotionProduct.product.productName}</p>
+                            <span class="star-rating"></span>
                         </div>
-                        <div class="product-details">
-                            <div style="display: flex; align-items: center; justify-content: space-between">
-                                <p class="product_name">${promotionProduct.product.productName}</p>
-                                <span class="star-rating"></span>
-                            </div>
 
-                            <p class="product_desc" style="margin-top: 5px">${promotionProduct.product.description}</p>
-                            <div class="col-footer" style="display: flex; align-items: center; justify-content: space-between; margin-top: 10px">
-                                <p class="shoe-price">${promotionProduct.product.sellingPrice}₫ <span style="color: #999; margin-left: 10px" class="shoe-price strike-through">${promotionProduct.product.price}₫</span>
-                            </div>
+                        <p class="product_desc" style="margin-top: 5px">${promotionProduct.product.description}</p>
+                        <div class="col-footer" style="display: flex; align-items: center; justify-content: space-between; margin-top: 10px">
+                            <p class="shoe-price">${promotionProduct.product.sellingPrice}₫ <span style="color: #999; margin-left: 10px" class="shoe-price strike-through">${promotionProduct.product.price}₫</span>
                         </div>
-                        <div class="home-product-item_sale-off">
-                            <span class="home-product-item_sale-off-percent">${promotionProduct.promotion.discountValue}%</span>
-                            <span class="home-product-item_sale-off-label">GIẢM</span>
-                        </div>
-                        <button type="submit" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0;  cursor: pointer"></button> <!-- Invisible button for clicking -->
-                    </form>
-                </div>
-            </c:forEach>
+                    </div>
+                    <div class="home-product-item_sale-off">
+                        <span class="home-product-item_sale-off-percent">${promotionProduct.promotion.discountValue}%</span>
+                        <span class="home-product-item_sale-off-label">GIẢM</span>
+                    </div>
+                    <button type="submit" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0;  cursor: pointer"></button> <!-- Invisible button for clicking -->
+                </form>
+            </div>
+        </c:forEach>
     </div>
 
     <div>
@@ -191,7 +191,7 @@
                 </a>
             </li>
             <c:forEach begin="1" end ="${numpage}" var = "i">
-<%--                Paging?index=${i}--%>
+                <%--                Paging?index=${i}--%>
                 <li class="page-item"><a class="page-link page-link-item" href="#">${i}</a></li>
             </c:forEach>
             <li class="page-item">
