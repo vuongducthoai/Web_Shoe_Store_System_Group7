@@ -10,4 +10,5 @@ public interface ICustomerService {
     CustomerDTO getCustomerByAccountID(int accountID);
     List<CustomerDTO> GetAllCustomer();
     public Integer getUserIDByAccountId(int accountID);
+    int getCustomerLoyaty(int userID);
     }

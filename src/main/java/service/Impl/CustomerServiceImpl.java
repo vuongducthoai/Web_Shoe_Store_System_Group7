@@ -192,4 +192,8 @@ public class CustomerServiceImpl implements ICustomerService {
     public Integer getUserIDByAccountId(int accountID){
         return customerDAO.getUserIDByAccountId(accountID);
     }
+
+    public int getCustomerLoyaty(int userID){
+        return customerDAO.getCustomerLoyaty(userID);
+    }
 }

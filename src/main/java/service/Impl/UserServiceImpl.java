@@ -29,8 +29,13 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public CustomerDTO getInformationUser(int userID) {
-        return userDAO.getInformationUser(userID);
-        }
+//        return userDAO.getInformationUser(userID);
+//    public boolean checkAdmin(int userID){
+//       return userDAO.checkAdmin(userID);
+        return null;
+    }
+
+    @Override
     public boolean checkAdmin(int userID){
        return userDAO.checkAdmin(userID);
     }

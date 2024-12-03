@@ -56,7 +56,6 @@ public class LoginController extends HttpServlet {
         //Luu thong tin nguoi dung vao session
         req.setAttribute("loginSuccess" , true);
         session.setAttribute("user", userDTO);
-
             resp.sendRedirect("/home");
     }
 
@@ -80,21 +79,22 @@ public class LoginController extends HttpServlet {
                 return;
             }
 
-             accountDTO = accountService.findAccountForLogin(accountDTO);
+            accountDTO = accountService.findAccountForLogin(accountDTO);
             if(accountDTO != null) {
                 UserDTO userDTO = userService.findUserByAccoutId(accountDTO.getAccountID());
                 //Tao mot session moi hoac lay session hien co
                 HttpSession session = req.getSession();
                 //Luu thong tin nguoi dung vao session
                 session.setAttribute("user", userDTO);
+                req.setAttribute("errorMessage", "Đăng nhập thanhh công");
                 if(userDTO.getAccount().getRole().equals(RoleType.ADMIN)){
                     resp.sendRedirect("/view/admin/admin.jsp");
                 } else {
                     resp.sendRedirect("/home");
                 }
+
             } else {
-                req.setAttribute("loginSuccess" , true);
-                req.setAttribute("errorMessage", "Email hoặc Password không chính xác");
+                req.setAttribute("errorMessage", "Email hoặc mật khẩu không chính xác.");
                 req.getRequestDispatcher("/view/login.jsp").forward(req, resp);
             }
        }

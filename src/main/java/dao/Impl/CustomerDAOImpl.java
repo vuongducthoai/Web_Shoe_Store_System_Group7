@@ -10,6 +10,7 @@ import entity.Customer;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.NoResultException;
+import jakarta.persistence.Query;
 
 import java.util.List;
 
@@ -144,6 +145,24 @@ public class CustomerDAOImpl implements ICustomerDAO {
         } finally {
             entityManager.close();
         }
+    }
+
+    public int getCustomerLoyaty(int userID){
+        int result = 0;
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        try{
+            String sql = "select loyaty from Customer where userID=?";
+            Query query = entityManager.createNativeQuery(sql);
+            query.setParameter(1, userID);
+            List<Object[]> results = query.getResultList();
+            for (Object[] row : results) {
+                int loyaty = (int) row[0];
+                result = loyaty;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return result;
     }
 
 

@@ -50,6 +50,8 @@ public class CustomerOrder extends HttpServlet {
                 req.setAttribute("customerOrders", customerOrders);
             } else {
                 System.out.println("Lỗi: Không có đơn hàng");
+                req.setAttribute("errorMessage", "Không có đơn hàng nào."); // Truyền thông báo lỗi
+
             }
 
             // Chuyển hướng đến trang hiển thị đơn hàng
