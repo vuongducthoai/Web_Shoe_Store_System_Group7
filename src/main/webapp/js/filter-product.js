@@ -184,7 +184,7 @@ $('#rangeMin').on('input', function (e) {
     const newValue = parseInt(e.target.value);
 
     // Kiểm tra tính hợp lệ
-    if (newValue + away > filterData.maxPrice) {
+    if (newValue + away > maxPrice) {
         $(this).val(filterData.minPrice); // Reset giá trị nếu không hợp lệ
         return;
     }
@@ -204,7 +204,7 @@ $('#rangeMax').on('input', function (e) {
     const newValue = parseInt(e.target.value);
 
     // Kiểm tra tính hợp lệ
-    if (newValue - away < filterData.minPrice) {
+    if (newValue - away < minPrice) {
         $(this).val(filterData.maxPrice); // Reset giá trị nếu không hợp lệ
         return;
     }
@@ -283,20 +283,24 @@ function selectCategory(button) {
 }
 
 // Hàm xử lý khi click vào màu sắc
+// Hàm xử lý khi click vào màu sắc
 function selectColor(button) {
     // Kiểm tra nếu nút đã có lớp 'border-blue-500'
     if (button.classList.contains('border-blue-500')) {
         // Nếu có, bỏ lớp đi để hủy chọn màu
         button.classList.remove('border-blue-500');
+        button.classList.remove('selected-color'); // Bỏ lớp màu đặc biệt
         filterData.selectedColor = ""; // Hủy màu đã chọn
     } else {
         let colorButtons = document.querySelectorAll('.color-btn'); // Chỉ chọn nút màu
         colorButtons.forEach(function(btn) {
-            btn.classList.remove('border-blue-500'); // Chỉ xóa trạng thái nút màu
+            btn.classList.remove('border-blue-500'); // Xóa trạng thái nút màu
+            btn.classList.remove('selected-color'); // Bỏ lớp màu đặc biệt
         });
 
         // Thêm lớp đặc biệt vào nút đã chọn
         button.classList.add('border-blue-500'); // Thêm border màu xanh
+        button.classList.add('selected-color'); // Thêm lớp màu đặc biệt
 
         // Lưu lại màu sắc đã chọn
         filterData.selectedColor = rgbToHex(button.style.backgroundColor);
@@ -360,6 +364,9 @@ const categoryList = JSON.parse(categoryListJson);
 const soldQuantityMapJson = document.getElementById('soldQuantityMapJson').textContent;
 const soldQuantityMap = JSON.parse(soldQuantityMapJson);
 
+const jsonGetAvgReviewMap = document.getElementById('jsonGetAvgReviewMap').textContent;
+const avgReviewMap = JSON.parse(jsonGetAvgReviewMap);
+
 // Tìm phần tử <span> bằng ID
 const spanElement = document.getElementById("dynamicSpan");
 var totalSize = parseInt(document.getElementById("totalSize").getAttribute("totalSize"));
@@ -393,7 +400,7 @@ function renderProductList(products) {
         // Thêm tên sản phẩm vào Set để tránh trùng lặp
         addedProductNames.add(product.productName);
 
-        const averageRating = calculateAverageRating(products, product.productName);
+        const averageRating = avgReviewMap[product.productName];
 
         // Kiểm tra xem trung bình có phải là số nguyên không
         const formattedRating = Number.isInteger(averageRating) ? averageRating : averageRating.toFixed(1);
@@ -518,7 +525,7 @@ function arrayBufferToBase64(buffer) {
 
 function handleProductClick(productName) {
     // Chuyển hướng đến URL chi tiết sản phẩm sử dụng đường dẫn tương đối
-    window.location.href = `/JPAExample_war_exploded/product/details?productName=${encodeURIComponent(productName)}`;
+    window.location.href = `/product/details?productName=${encodeURIComponent(productName)}`;
 }
 
 
@@ -579,8 +586,6 @@ searchInput.addEventListener("input", function (event) {
 
     displaySuggestions(filteredKeyValue); // Hiển thị kết quả gợi ý
 });
-
-
 
 
 function removeAccents(str) {
@@ -700,27 +705,9 @@ function displaySuggestions(products) {
     });
 }
 
-
-
 // Ẩn danh sách gợi ý khi người dùng nhấn ra ngoài
 document.addEventListener('click', function(event) {
     if (!event.target.closest('.relative')) {
         suggestionsList.style.display = "none"; // Ẩn danh sách gợi ý khi nhấn ngoài ô tìm kiếm
     }
 });
-
-function calculateAverageRating(productList, productName) {
-    // Lọc các sản phẩm theo tên
-    const productReviews = productList
-        .filter(product => product && product.productName && product.productName.toLowerCase() === productName.toLowerCase())
-        .flatMap(product => {
-            // Trả về ratingValue từ reviewDTO nếu tồn tại và hợp lệ
-            return product.reviewDTO && product.reviewDTO.ratingValue !== 0 ? [product.reviewDTO.ratingValue] : [];
-        });
-
-    // Tính trung bình của các đánh giá
-    const totalRating = productReviews.reduce((sum, value) => sum + value, 0);
-    const averageRating = productReviews.length > 0 ? totalRating / productReviews.length : 0;
-
-    return averageRating;
-}

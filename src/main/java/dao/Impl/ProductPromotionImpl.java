@@ -105,7 +105,7 @@ public class ProductPromotionImpl implements IProductPromotion {
     }
 
 
-    public PromotionProductDTO promotioOnProductInfo(String productName){
+    public PromotionProductDTO promotioOnProductInfo(String productName, int loyaty){
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
         List<PromotionProductDTO> promotionProductDTOList = new ArrayList<>();
         try{
@@ -114,11 +114,12 @@ public class ProductPromotionImpl implements IProductPromotion {
             "inner join Product on Product.productID = PromotionProduct.productID "+
             "where Promotion.isActive = 1 "+
             "and Promotion.promotionType = 'VOUCHER_PRODUCT' "+
-            "and Promotion.minimumLoyalty = 0 "+
+            "and Promotion.minimumLoyalty <= ? "+
             "and Promotion.startDate < NOW() "+
             "and Product.productName = ?";
             Query query = entityManager.createNativeQuery(sql);
-            query.setParameter(1, productName);
+            query.setParameter(1, loyaty);
+            query.setParameter(2, productName);
             List<Object[]> results = query.getResultList();
             for (Object[] row : results) {
 
