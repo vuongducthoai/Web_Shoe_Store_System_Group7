@@ -7,6 +7,6 @@ import java.util.*;
 
 public interface IProductPromotion {
     List<PromotionProductDTO> findTop8ProductPromotionNow(LocalDate startDate, LocalDate endDate, int offset, int limit);
-    PromotionProductDTO promotioOnProductInfo (String productName);
+    PromotionProductDTO promotioOnProductInfo (String productName, int loyaty);
     int countProductPromotion(LocalDate startDate, LocalDate endDate);
 }

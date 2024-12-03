@@ -11,5 +11,5 @@ public interface ICustomerDAO {
     public Customer getCustomerByAccountID(int accountID);
     List<CustomerDTO> GetAllCustomer();
     public Integer getUserIDByAccountId(int accountID);
-
+    int getCustomerLoyaty(int userID);
 }
