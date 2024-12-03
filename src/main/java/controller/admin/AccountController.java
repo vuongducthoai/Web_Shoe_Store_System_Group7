@@ -14,14 +14,13 @@ import jakarta.servlet.http.HttpSession;
 import org.json.JSONObject;
 import service.*;
 import service.Impl.*;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.*;
 
 @WebServlet(urlPatterns = {"/Admin" ,"/Admin/account","/Admin/product"})
 public class AccountController extends HttpServlet {
-    IAccountDAO accountDAO = new AccountDaoImpl();
+    private final IAccountService accountService = new AccountServiceImpl();
     IPromotionService promotionService = new PromotionServiceImpl();
     IProductService productService = new ProductServiceImpl();
     private final IOrderService orderService = new OrderServiceImpl();
@@ -68,7 +67,7 @@ public class AccountController extends HttpServlet {
         List<CategoryDTO> categoryDTOList = iCategoryService.categoryDTOList();
         req.setAttribute("CategoryList", categoryDTOList);
 
-        List<AccountDTO> accounts = accountDAO.getListAccountDTO();
+        List<AccountDTO> accounts = accountService.getListAccounts();
         String searchKeyword = req.getParameter("search");
         String orderStatus = req.getParameter("status");
         String startDate = req.getParameter("startDate");
@@ -194,7 +193,7 @@ public class AccountController extends HttpServlet {
                     accountDTO.setPassword(password);
                     accountDTO.setUser(userDTO);
 
-                    boolean isUpdated = accountDAO.updateAccount(accountDTO);
+                    boolean isUpdated = accountService.updateAccount(accountDTO);
 
                     if (isUpdated) {
                         req.setAttribute("successMessage", "Cập nhật thành công tài khoản với ID " + accountID);
@@ -205,7 +204,7 @@ public class AccountController extends HttpServlet {
 
                 case "block":
                     // Chặn tài khoản
-                    boolean isBlocked = accountDAO.updateAccountActive(accountIDInt, 0);  // 0 là trạng thái bị chặn
+                    boolean isBlocked = accountService.updateAccountStatus(accountIDInt, 1);
                     if (isBlocked) {
                         req.setAttribute("successMessage", "Tài khoản đã bị chặn.");
                     } else {
@@ -215,7 +214,7 @@ public class AccountController extends HttpServlet {
 
                 case "unblock":
                     // Bỏ chặn tài khoản
-                    boolean isUnblocked = accountDAO.updateAccountActive(accountIDInt, 1);  // 1 là trạng thái hoạt động
+                    boolean isUnblocked = accountService.updateAccountStatus(accountIDInt, 0);
                     if (isUnblocked) {
                         req.setAttribute("successMessage", "Tài khoản đã được bỏ chặn.");
                     } else {
@@ -229,9 +228,8 @@ public class AccountController extends HttpServlet {
             }
 
             // Redirect về trang quản lý tài khoản
-            resp.sendRedirect(req.getContextPath() + "/Admin");
+            resp.sendRedirect(req.getContextPath() + "/Admin/account");
         }
-
 
     }
 }

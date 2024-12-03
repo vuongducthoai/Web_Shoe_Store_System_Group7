@@ -12,6 +12,7 @@ import service.IAccountService;
 import util.PasswordHashingSHA;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 public class AccountServiceImpl implements IAccountService {
     private IAccountDAO iAccountDAO = new AccountDaoImpl();
@@ -129,5 +130,19 @@ public class AccountServiceImpl implements IAccountService {
             return accountDTO;
         }
         return null;
+    }
+    @Override
+    public List<AccountDTO> getListAccounts() {
+        return iAccountDAO.getListAccountDTO();
+    }
+
+    @Override
+    public boolean updateAccount(AccountDTO account) {
+        return iAccountDAO.updateAccount(account);
+    }
+
+    @Override
+    public boolean updateAccountStatus(int accountID, int status) {
+        return iAccountDAO.updateAccountActive(accountID, status);
     }
 }

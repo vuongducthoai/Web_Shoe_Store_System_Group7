@@ -65,31 +65,35 @@
 
 <div class="container py-5">
     <div class="filters mb-4">
-        <form action="${pageContext.request.contextPath}/Admin" method="get" class="row g-2 align-items-center">
-            <!-- Tìm kiếm từ khóa -->
-            <div class="col-md-3">
-                <input type="text" name="search" value="${searchKeyword != null ? searchKeyword : ''}" placeholder="Tìm kiếm đơn hàng"
-                       class="form-control" aria-label="Tìm kiếm">
+        <form action="${pageContext.request.contextPath}/Admin" method="get" class="g-2 align-items-center">
+            <div class="row">
+                <!-- Tìm kiếm từ khóa -->
+                <div class="col-md-3">
+                    <input type="text" name="search" value="${searchKeyword != null ? searchKeyword : ''}" placeholder="Tìm kiếm đơn hàng"
+                           class="form-control" aria-label="Tìm kiếm">
+                </div>
+
+                <!-- Bộ lọc trạng thái -->
+                <div class="col-md-3">
+                    <select name="status" class="form-select" aria-label="Chọn trạng thái" style="margin-left: 50px">
+                        <option value="">Chọn trạng thái </option>
+                        <option value="WAITING_CONFIRMATION" ${status == 'WAITING_CONFIRMATION' ? 'selected' : ''}>WAITING_CONFIRMATION</option>
+                        <option value="CONFIRMED" ${status == 'CONFIRMED' ? 'selected' : ''}>CONFIRMED</option>
+                        <option value="SHIPPED" ${status == 'SHIPPED' ? 'selected' : ''}>SHIPPED</option>
+                        <option value="COMPLETED" ${status == 'COMPLETED' ? 'selected' : ''}>COMPLETED</option>
+                        <option value="CANCELLED" ${status == 'CANCELLED' ? 'selected' : ''}>CANCELLED</option>
+                    </select>
+                </div>
             </div>
 
-            <!-- Bộ lọc trạng thái -->
-            <div class="col-md-3">
-                <select name="status" class="form-select" aria-label="Chọn trạng thái">
-                    <option value="">Chọn trạng thái </option>
-                    <option value="WAITING_CONFIRMATION" ${status == 'WAITING_CONFIRMATION' ? 'selected' : ''}>WAITING_CONFIRMATION</option>
-                    <option value="CONFIRMED" ${status == 'CONFIRMED' ? 'selected' : ''}>CONFIRMED</option>
-                    <option value="SHIPPED" ${status == 'SHIPPED' ? 'selected' : ''}>SHIPPED</option>
-                    <option value="COMPLETED" ${status == 'COMPLETED' ? 'selected' : ''}>COMPLETED</option>
-                    <option value="CANCELLED" ${status == 'CANCELLED' ? 'selected' : ''}>CANCELLED</option>
-                </select>
-            </div>
-
-            <!-- Bộ lọc ngày -->
-            <div class="col-md-2">
-                <input type="date" name="startDate" value="${startDate != null ? startDate : ''}" class="form-control" aria-label="Ngày bắt đầu">
-            </div>
-            <div class="col-md-2">
-                <input type="date" name="endDate" value="${endDate != null ? endDate : ''}" class="form-control" aria-label="Ngày kết thúc">
+            <div class="row">
+                <!-- Bộ lọc ngày -->
+                <div class="col-md-3">
+                    <input type="date" name="startDate" value="${startDate != null ? startDate : ''}" class="form-control" aria-label="Ngày bắt đầu">
+                </div>
+                <div class="col-md-3" style="margin-left: 50px">
+                    <input type="date" name="endDate" value="${endDate != null ? endDate : ''}" class="form-control" aria-label="Ngày kết thúc">
+                </div>
             </div>
 
             <!-- Nút Lọc -->
