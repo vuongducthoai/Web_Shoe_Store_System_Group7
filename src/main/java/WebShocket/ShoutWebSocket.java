@@ -77,7 +77,7 @@ public class ShoutWebSocket {
                     // Nếu là customer, lấy tin nhắn liên quan
                     loadMessagesForCustomer(session, userId, -1);
                 }
-                UserChat = userService.getInformationUser(userId);
+                //
                 return;
             }
             if (messageContent.equals("loadMoreMessages")) {
@@ -271,7 +271,7 @@ public class ShoutWebSocket {
             String userName = "";
             UserDTO user = (UserDTO) session.getUserProperties().get("user");
             if ("ADMIN".equals(user.getAccount().getRole().name().toString())) {
-                userName = (message.getUserId() == Integer.parseInt(userId)) ? "You" : "Lưu Xuân Dũng";
+                userName = (message.getUserId() == Integer.parseInt(userId)) ? "You" : "Khách hàng" + message.getUserId();
             }
             else{
                 userName = (message.getUserId() == Integer.parseInt(userId)) ? "You" : "Chăm Sóc Khách Hàng";
