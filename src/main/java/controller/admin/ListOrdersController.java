@@ -24,7 +24,6 @@ public class ListOrdersController extends HttpServlet {
         synchronized (getServletContext()) {
             if (getServletContext().getAttribute("fullOrderList") == null) {
                 List<OrderDTO> orderDTOList = orderService.findAllOrders();
-                System.out.println("Loaded orders: " + orderDTOList.size()); // In ra số lượng đơn hàng
                 getServletContext().setAttribute("fullOrderList", orderDTOList);
             }
         }

@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -309,8 +309,12 @@
                 <div class="reviews">
                     <c:forEach var="review" items="${reviews}">
                         <div class="review">
-                            <div class="user-info">${review.customer.getFullName()}<span
-                                    class="date">${review.date}</span></div>
+                            <div class="user-info">${review.customer.getFullName()}
+                                <span class="date">
+
+                                    <fmt:formatDate value="${review.date}" pattern="dd/MM/yyyy" />
+                                </span>
+                            </div>
                             <div class="d-flex">
                                 <c:forEach begin="1" end="${review.ratingValue}">
                                     <div class="rating">★</div>
@@ -324,8 +328,10 @@
                                         <i class="fa-solid fa-arrow-right-from-bracket"></i>
                                         <span class="response-name">${review.response.admin.fullName}</span><br>
                                         <span class="response-content">${review.response.content}</span><br>
-                                        <span class="response-date fw-lighter"
-                                              style="font-size: 10px">${review.response.timeStamp}</span><br>
+                                        <span class="response-date fw-lighter" style="font-size: 10px">
+                                            <!-- Định dạng lại thời gian phản hồi -->
+                                            <fmt:formatDate value="${review.response.timeStamp}" pattern="dd/MM/yyyy" />
+                                        </span><br>
                                         <input type="hidden" id="ResponseID"
                                                value="${review.getResponse().getResponseID()}">
                                     </div>

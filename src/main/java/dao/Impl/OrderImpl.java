@@ -10,6 +10,7 @@ import enums.OrderStatus;
 import enums.PaymentMethod;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.Query;
 import service.GmailService;
 import service.Impl.GmailServiceImpl;
 
@@ -24,25 +25,26 @@ import java.util.stream.Collectors;
 
 public class OrderImpl implements IOrderDao {
     GmailService gmail_Service = new GmailServiceImpl();
-    public boolean CreateOrder(OrderDTO order,int amount, int discount, int feeShip,String orderId){
+
+    public boolean CreateOrder(OrderDTO order, int amount, int discount, int feeShip, String orderId) {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
-        try{
+        try {
             List<Order> order1 = entityManager.createQuery("Select o " +
-                    "from Order o Where o.payment.momoBillId like :momoID",Order.class)
-                    .setParameter("momoID",order.getPayment().getMomoBillId()).getResultList();
+                            "from Order o Where o.payment.momoBillId like :momoID", Order.class)
+                    .setParameter("momoID", order.getPayment().getMomoBillId()).getResultList();
             if (order1.isEmpty()) {
                 Customer customer = entityManager.find(Customer.class, Integer.valueOf(order.getCustomer().getUserID()));
                 List<OrderItemDTO> ListOrderItem = order.getOrderItems();
                 List<OrderItem> orderItems = new ArrayList<OrderItem>();
                 String address = "";
-                if (customer.getAddress()!=null) {
-                    address+=customer.getAddress().getHouseNumber()+", ";
-                    address+=customer.getAddress().getStreetName()+", ";
-                    address+=customer.getAddress().getCity()+", ";
-                    address+=customer.getAddress().getDistrict()+", ";
-                    address+=customer.getAddress().getProvince();
+                if (customer.getAddress() != null) {
+                    address += customer.getAddress().getHouseNumber() + ", ";
+                    address += customer.getAddress().getStreetName() + ", ";
+                    address += customer.getAddress().getCity() + ", ";
+                    address += customer.getAddress().getDistrict() + ", ";
+                    address += customer.getAddress().getProvince();
                 }
                 Order orderEnty = new Order();
                 orderEnty.setCustomer(customer);
@@ -52,7 +54,7 @@ public class OrderImpl implements IOrderDao {
                 entityManager.persist(orderEnty);
                 for (OrderItemDTO item : ListOrderItem) {
                     OrderItem orderItem = new OrderItem();
-                    Product productTWP = entityManager.find(Product.class,item.getProductDTO().getProductId());
+                    Product productTWP = entityManager.find(Product.class, item.getProductDTO().getProductId());
                     //
                     item.setProductDTO(new ProductDTO());
                     item.getProductDTO().setProductName(productTWP.getProductName());
@@ -62,37 +64,35 @@ public class OrderImpl implements IOrderDao {
                     List<CartItem> listCartItem = entityManager.createQuery("Select c " +
                                     "from CartItem c Where c.product.productName like :name " +
                                     "and c.product.color like :color and c.product.size = :size " +
-                                    "and c.cart.customer.userID = :userId ",CartItem.class)
-                            .setParameter("name",productTWP.getProductName())
-                            .setParameter("color",productTWP.getColor())
-                            .setParameter("size",productTWP.getSize())
-                            .setParameter("userId",order.getCustomer().getUserID())
+                                    "and c.cart.customer.userID = :userId ", CartItem.class)
+                            .setParameter("name", productTWP.getProductName())
+                            .setParameter("color", productTWP.getColor())
+                            .setParameter("size", productTWP.getSize())
+                            .setParameter("userId", order.getCustomer().getUserID())
                             .getResultList();
                     List<Product> listProduct = entityManager.createQuery("Select p" +
                                     " from Product p " +
                                     "Where p.productName like :name and p.size = :size " +
-                                    "and p.color like :color and p.status = true",Product.class)
-                            .setParameter("name",productTWP.getProductName())
-                            .setParameter("color",productTWP.getColor())
-                            .setParameter("size",productTWP.getSize())
+                                    "and p.color like :color and p.status = true", Product.class)
+                            .setParameter("name", productTWP.getProductName())
+                            .setParameter("color", productTWP.getColor())
+                            .setParameter("size", productTWP.getSize())
                             .setMaxResults(item.getQuantity())
                             .getResultList();
-                    if (listProduct.size()!= item.getQuantity()) {
+                    if (listProduct.size() != item.getQuantity()) {
                         transaction.rollback();
                         return false;
-                    }
-                    else{
+                    } else {
                         for (Product product1 : listProduct) {
                             product1.setStatus(false);
                         }
                     }
-                    if (!listCartItem.isEmpty()){
+                    if (!listCartItem.isEmpty()) {
                         CartItem cartItem = listCartItem.get(0);
                         int quantity = cartItem.getQuantity() - item.getQuantity();
                         if (quantity > 0) {
                             cartItem.setQuantity(quantity);
-                        }
-                        else{
+                        } else {
                             entityManager.remove(cartItem);
                         }
                     }
@@ -136,10 +136,10 @@ public class OrderImpl implements IOrderDao {
                 payment.setOrder(orderEnty);
                 Double loyatiDouble = (Double) entityManager.createQuery("select sum(o.payment.amount)/1000 from Order o where " +
                                 "o.customer = :customer")
-                        .setParameter("customer",customer)
+                        .setParameter("customer", customer)
                         .getSingleResult();
                 long loyati = Math.round(loyatiDouble);
-                customer.setLoyalty((int)loyati);
+                customer.setLoyalty((int) loyati);
                 String finalAddress = address;
                 List<String> resultList = entityManager.createQuery("select a.email from Account a where a.user.userID = :userID " +
                                 "and a.authProvider <> :auth")
@@ -148,11 +148,11 @@ public class OrderImpl implements IOrderDao {
                         .getResultList();
 
                 String gmail = resultList.isEmpty() ? null : resultList.get(0);
-                if (gmail.length()>0) {
+                if (gmail.length() > 0) {
                     CompletableFuture.runAsync(() -> {
                         try {
                             // Gọi phương thức gửi email
-                            gmail_Service.sendGmailBill(order, amount, discount, feeShip, finalAddress,gmail,orderId);
+                            gmail_Service.sendGmailBill(order, amount, discount, feeShip, finalAddress, gmail, orderId);
                         } catch (Exception e) {
                             // Xử lý lỗi nếu cần
                             e.printStackTrace();
@@ -169,7 +169,8 @@ public class OrderImpl implements IOrderDao {
 
         return true;
     }
-    public boolean CanCreateOrder(List<CartItemDTO> cartItem){
+
+    public boolean CanCreateOrder(List<CartItemDTO> cartItem) {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
         for (CartItemDTO item : cartItem) {
             try {
@@ -191,6 +192,7 @@ public class OrderImpl implements IOrderDao {
         }
         return true;
     }
+
     @Override
     public List<OrderDTO> findAllOrders() {
         try (EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager()) {
@@ -242,6 +244,7 @@ public class OrderImpl implements IOrderDao {
             }
         }
     }
+
     @Override
     public boolean updateOrderStatus(String orderId, OrderStatus newStatus) {
         try (EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager()) {
@@ -260,6 +263,7 @@ public class OrderImpl implements IOrderDao {
             }
         }
     }
+
     public List<OrderDTO> findOrdersByCustomerId(int customerId) {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
         try {
@@ -342,6 +346,7 @@ public class OrderImpl implements IOrderDao {
             entityManager.close();
         }
     }
+
     @Override
     public OrderDTO getOrderById(int orderId) {
         EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
@@ -423,4 +428,30 @@ public class OrderImpl implements IOrderDao {
         }
     }
 
+    public long quantityOrderCompleted() {
+
+        EntityManager entityManager = JpaConfig.getEmFactory().createEntityManager();
+        try {
+            // JPQL câu truy vấn để đếm số lượng đơn hàng có trạng thái 'COMPLETED'
+            String jpql = "SELECT COUNT(o) FROM Order o WHERE o.orderStatus = 'COMPLETED'";
+
+            // Tạo truy vấn
+            Query query = entityManager.createQuery(jpql);
+
+            // Lấy kết quả
+            Object result = query.getSingleResult();
+
+            // Trả về kết quả hoặc 0 nếu kết quả là null
+            return result != null ? ((Number) result).longValue() : 0L;
+        } catch (Exception e) {
+            // Xử lý lỗi (nếu có)
+            e.printStackTrace();
+            return 0L; // Trả về 0L nếu có lỗi
+        } finally {
+            // Đảm bảo EntityManager được đóng để tránh rò rỉ tài nguyên
+            if (entityManager != null && entityManager.isOpen()) {
+                entityManager.close();
+            }
+        }
+    }
 }

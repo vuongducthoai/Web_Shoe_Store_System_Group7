@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import service.IChatService;
 import service.ICustomerService;
 import service.IMessageService;
+import service.IUserService;
 import service.Impl.ChatService;
 import service.Impl.CustomerServiceImpl;
 import service.Impl.MessageService;
@@ -29,13 +30,16 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.Set;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import service.Impl.UserServiceImpl;
 
 @ServerEndpoint("/chat")
 public class ShoutWebSocket {
 
+    private UserDTO UserChat = null;
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final IMessageService messageService = new MessageService();
     private IChatService chatService = new ChatService();
+    private IUserService userService = new UserServiceImpl();
     private static final ICustomerService customerService = new CustomerServiceImpl();
     private static ConcurrentHashMap<Integer, Set<Session>> chatSessions = new ConcurrentHashMap<>();
     // Cấu trúc để lưu session của admin theo chatId
@@ -73,6 +77,7 @@ public class ShoutWebSocket {
                     // Nếu là customer, lấy tin nhắn liên quan
                     loadMessagesForCustomer(session, userId, -1);
                 }
+                //
                 return;
             }
             if (messageContent.equals("loadMoreMessages")) {
@@ -263,7 +268,15 @@ public class ShoutWebSocket {
             String messageTime = message.getDate().toString().split(" ")[1].substring(0, 5); // Lấy giờ và phút
             String userId = String.valueOf(session.getUserProperties().get("userId"));
             String messageClass = (message.getUserId() == Integer.parseInt(userId)) ? "right" : "left";
-            String userName = "User " + message.getUserId();
+            String userName = "";
+            UserDTO user = (UserDTO) session.getUserProperties().get("user");
+            if ("ADMIN".equals(user.getAccount().getRole().name().toString())) {
+                userName = (message.getUserId() == Integer.parseInt(userId)) ? "You" : "Khách hàng" + message.getUserId();
+            }
+            else{
+                userName = (message.getUserId() == Integer.parseInt(userId)) ? "You" : "Chăm Sóc Khách Hàng";
+            }
+
 
             // Tạo HTML cho từng tin nhắn
             messagesHtml.append("<div class='message ").append(messageClass).append("'>")

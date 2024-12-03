@@ -36,7 +36,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public boolean checkAdmin(int userID) {
-        return true;
+    public boolean checkAdmin(int userID){
+       return userDAO.checkAdmin(userID);
     }
 }

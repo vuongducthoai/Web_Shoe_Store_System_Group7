@@ -30,6 +30,7 @@ public class ProductInformationController extends HttpServlet {
     private IResponseService responseService = new ResponseServiceImpl();
     private IProductPromotion productPromotion = new ProductPromotionImpl();
     private IUserService userService = new UserServiceImpl();
+    private ICustomerService customerService = new CustomerServiceImpl();
 
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         String productName = req.getParameter("productName");
@@ -43,7 +44,7 @@ public class ProductInformationController extends HttpServlet {
         System.out.println(productDetails);
         if (productDetails == null || productDetails.isEmpty()) {
             req.setAttribute("error", "Sản phẩm không tồn tại");
-            req.getRequestDispatcher("/error.jsp").forward(req, resp);
+            req.getRequestDispatcher("/view/error.jsp").forward(req, resp);
         } else {
             List<String> images = productDetails.stream()
                     .map(ProductDTO::getBase64Image)
@@ -71,8 +72,21 @@ public class ProductInformationController extends HttpServlet {
             System.out.println(IDs.size());
             List<ReviewDTO> reviews = reviewService.getReviewsByProductID(IDs);
 
+            int loyaty=0;
+            HttpSession session = req.getSession();
+            UserDTO userDTO = (UserDTO) session.getAttribute("user");
+            if(userDTO != null){
+
+                loyaty = customerService.getCustomerLoyaty(userDTO.getUserID());
+            }
+
+
+            if(userDTO != null){
+                if(userService.checkAdmin(userDTO.getUserID()))
+                    req.setAttribute("role", 1);
+            }
             PromotionProductDTO promotionProductDTO = new PromotionProductDTO();
-            promotionProductDTO = productPromotion.promotioOnProductInfo(productDetails.getFirst().getProductName());
+            promotionProductDTO = productPromotion.promotioOnProductInfo(productDetails.getFirst().getProductName(),loyaty );
 
             if(promotionProductDTO!= null) {
                 System.out.println("co sp");
@@ -86,20 +100,15 @@ public class ProductInformationController extends HttpServlet {
             req.setAttribute("averageRating", rate);
 
 
-            List<Tuple3<ProductDTO, Double, PromotionProductDTO>> RecommendProducts = productService.findRandomProducts(productName, productDetails.getFirst().getCategoryDTO().getCategoryId());
+            List<Tuple3<ProductDTO, Double, PromotionProductDTO>>  RecommendProducts = (List<Tuple3<ProductDTO, Double, PromotionProductDTO>>) productService.findRandomProducts(productName, productDetails.getFirst().getCategoryDTO().getCategoryId());
+
             if (RecommendProducts == null || RecommendProducts.isEmpty()) {
                 System.out.println("RecommendProducts is null or empty.");
                 return;
             }
 
             req.setAttribute("RecommendProducts", RecommendProducts);
-            HttpSession session = req.getSession();
 
-            UserDTO userDTO = (UserDTO) session.getAttribute("user");
-            if(userDTO != null){
-                if(userService.checkAdmin(userDTO.getUserID()))
-                    req.setAttribute("role", 1);
-            }
 
 
             req.setAttribute("images", images);

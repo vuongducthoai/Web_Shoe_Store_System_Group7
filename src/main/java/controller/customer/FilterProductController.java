@@ -15,7 +15,7 @@ import java.util.*;
 @WebServlet(urlPatterns = {"/customer/product/filter"})
 public class FilterProductController extends HttpServlet {
     ICategoryService categoryService = new CategoryServiceImpl();
-    List<CategoryDTO> categoryDTOList = null;
+    List<CategoryDTO> categories = null;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -28,13 +28,10 @@ public class FilterProductController extends HttpServlet {
             return;
         }
 
-        if (categoryDTOList == null) {
-            categoryDTOList = categoryService.findAllCategories();
-//            cartItemDTOList = new ArrayList<>();
-        }
+        categories = categoryService.findAllCategories();
 
         Map<String, Object> responseData = categoryService.getFilteredAndSortedProducts(
-                categoryDTOList,
+                categories,
                 req.getParameter("selectedPromotion"),
                 req.getParameter("selectedCategory"),
                 req.getParameter("selectedSize"),

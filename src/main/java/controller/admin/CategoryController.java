@@ -23,17 +23,6 @@ import java.util.stream.Collectors;
 public class CategoryController extends HttpServlet {
     ICategoryDao categoryDao   = new CategoryDaoImpl();
     IProductDAO productDAO = new ProductDAOImpl();
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        List<CategoryDTO> categoryDTOList = categoryDao.categoryDTOList();
-        if (categoryDTOList == null || categoryDTOList.isEmpty()) {
-            // Nếu không có sản phẩm, in ra thông báo lỗi
-            System.out.println("Error: No products found or retrieval failed.");
-        }
-        req.setAttribute("categoryList", categoryDTOList);
-        req.getRequestDispatcher("/admin.jsp").forward(req, resp);
-    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -155,7 +144,7 @@ public class CategoryController extends HttpServlet {
             if  (categoryDao.insert(category))
             {
                 System.out.println("Add successful");
-                resp.sendRedirect(req.getContextPath() + "/CategoryController");
+                resp.sendRedirect(req.getContextPath() + "/Admin");
             }
             else{
                 System.out.println("Add fail");
@@ -178,7 +167,7 @@ public class CategoryController extends HttpServlet {
             if  (categoryDao.insert(category))
             {
                 System.out.println("Update successful");
-                resp.sendRedirect(req.getContextPath() + "/CategoryController");
+                resp.sendRedirect(req.getContextPath() + "/Admin");
             }
             else{
                 System.out.println("Update fail");
@@ -196,7 +185,7 @@ public class CategoryController extends HttpServlet {
             if  (categoryDao.remove(categoryId))
             {
                 System.out.println("Delete successful");
-                resp.sendRedirect(req.getContextPath() + "/CategoryController");
+                resp.sendRedirect(req.getContextPath() + "/Admin");
             }
             else{
                 System.out.println("Delete fail");
@@ -223,5 +212,4 @@ public class CategoryController extends HttpServlet {
         }
     }
 }
-
 

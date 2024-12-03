@@ -49,6 +49,24 @@ public class ProductDTO {
         this.productName = productName;
         this.categoryDTO = categoryDTO;
     }
+    public ProductDTO(String productName, double price, byte[] imageUrl, String color, int size, CategoryDTO categoryDTO, String description, boolean status) {
+        this.description = description;
+        this.status = status;
+        this.size = size;
+        this.color = color;
+        this.image = imageUrl;
+        this.price = price;
+        this.productName = productName;
+        this.categoryDTO = categoryDTO;
+    }
+    public ProductDTO(String productName)
+    {
+        this.productName=productName;
+    }
+    public ProductDTO(int productId )
+    {
+        this.productId = productId;
+    }
 
     private int productId;
     private String productName;

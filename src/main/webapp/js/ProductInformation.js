@@ -43,7 +43,15 @@ fa_plus.onclick = () => {
 }
 fa_minus.onclick = () => {
     var qual = Number(quantity.innerText) -1;
-    if(qual <= 0 ) alert("Không được nhỏ hơn 1")
+    if(qual <= 0 ) {
+        custom_toast({
+            title: "Cảnh báo",
+            message: "Số lượng sản phẩm phải lớn hơn 1.",
+            type: "warning",
+            duration: 6000
+        });
+        return;
+    }
     else
         quantity.innerText = qual.toString();
 }

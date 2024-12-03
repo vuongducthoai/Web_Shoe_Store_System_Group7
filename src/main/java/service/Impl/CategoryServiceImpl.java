@@ -1,6 +1,8 @@
 package service.Impl;
 
 import com.google.gson.Gson;
+import dao.IProductDAO;
+import dao.Impl.ProductDAOImpl;
 import dto.CategoryDTO;
 import dao.ICategoryDao;
 import dao.Impl.CategoryDaoImpl;
@@ -8,8 +10,9 @@ import dto.ProductDTO;
 import dto.PromotionDTO;
 import dto.PromotionProductDTO;
 import entity.Category;
-import enums.PromotionType;
+import entity.Product;
 import enums.DiscountType;
+import enums.PromotionType;
 import service.ICategoryService;
 
 import java.util.*;
@@ -18,7 +21,52 @@ import java.util.stream.Stream;
 
 public class CategoryServiceImpl implements ICategoryService {
     ICategoryDao categoryDao = new CategoryDaoImpl();
-    public List<CategoryDTO> findAllCategories() { return categoryDao.findAllCategories(); }
+    IProductDAO productService = new ProductDAOImpl();
+
+    @Override
+    public List<CategoryDTO> listCategory() {
+        List<Category> list = categoryDao.categoryList();
+        List<CategoryDTO> categoryDTOList = new ArrayList<>();
+        for (Category category : list) {
+            CategoryDTO categoryDTO = new CategoryDTO();
+            categoryDTO.setCategoryId(category.getCategoryID());
+            categoryDTO.setCategoryName(category.getCategoryName());
+            categoryDTOList.add(categoryDTO);
+        }
+        return categoryDTOList;
+    }
+
+    @Override
+    public List<ProductDTO> findAllProductByCategoryWithPagination(int categoryId, int offset, int limit) {
+        return categoryDao.findAllProductByCategoryWithPagination(categoryId, offset, limit);
+    }
+
+    @Override
+    public List<Category> categoryList() {
+        return List.of();
+    }
+
+    @Override
+    public List<CategoryDTO> categoryDTOList() {
+        return categoryDao.categoryDTOList();
+    }
+
+    @Override
+    public void insert(CategoryDTO categoryDTO) {
+        Category category = new Category();
+        category.setCategoryName(categoryDTO.getCategoryName());
+        categoryDao.insert(category);
+    }
+
+    @Override
+    public boolean remove(int categoryId) {
+        return false;
+    }
+
+    @Override
+    public List<CategoryDTO> findAllCategories() {
+        return categoryDao.findAllCategories();
+    }
 
     @Override
     public Map<String, Object> getFilteredAndSortedProducts(
@@ -44,15 +92,16 @@ public class CategoryServiceImpl implements ICategoryService {
         Map<String, String> productNames = (Map<String, String>) productInfo.get("productNames");
 
         // Calculate filter min and max prices
-        double filterMinPrice = minPriceParam != null ? Double.parseDouble(minPriceParam) : minPrice;
-        double filterMaxPrice = maxPriceParam != null ? Double.parseDouble(maxPriceParam) : maxPrice;
+        Double filterMinPrice = minPriceParam != null ? Double.parseDouble(minPriceParam) : minPrice;
+        Double filterMaxPrice = maxPriceParam != null ? Double.parseDouble(maxPriceParam) : maxPrice;
         sortOption = (sortOption == null) ? "Phổ biến nhất" : sortOption;
 
         // Filter products based on parameters
         List<ProductDTO> filterProducts = filter(categoryDTOList, selectedCategory, filterMinPrice, filterMaxPrice, selectedColor, selectedSize, selectedPromotion, searchName);
         String jsonSoldQuantityMap = jsonGetSoldQuantities(categoryDTOList);
+        String jsonGetAvgReviewMap = jsonGetAvgReview(categoryDTOList);
         filterProducts = distinctName(filterProducts);
-        List<ProductDTO> sortProducts = sortProducts(filterProducts, sortOption);
+        List<ProductDTO> sortProducts = sortProducts(categoryDTOList, filterProducts, sortOption);
 
         // Pagination logic
         int currentPage = Integer.parseInt(pageParam);
@@ -68,66 +117,86 @@ public class CategoryServiceImpl implements ICategoryService {
         // Prepare the data to return
         Map<String, Object> result = new HashMap<>();
         result.put("soldQuantityMapJson", jsonSoldQuantityMap);
-        result.put("productsPerPage", String.valueOf(productsPerPage));
-        result.put("totalSize", String.valueOf(totalSize));
+        result.put("jsonGetAvgReviewMap", jsonGetAvgReviewMap);
+        result.put("productsPerPage", productsPerPage);
+        result.put("totalSize", totalSize);
         result.put("categoryListJson", jsonCategoryList);
-        result.put("currentPage", String.valueOf(currentPage));
+        result.put("currentPage", currentPage);
         result.put("categories", categories);
         result.put("jsonProductNames", new Gson().toJson(productNames));
         result.put("promotions", promotions);
-        result.put("minPrice", minPrice);
-        result.put("maxPrice", maxPrice);
-        result.put("totalPages", String.valueOf(totalPages));
+        result.put("minPrice", minPrice.intValue());
+        result.put("maxPrice", maxPrice.intValue());
+        result.put("totalPages", totalPages);
         result.put("sizeList", sizes);
         result.put("colorList", colors);
         result.put("selectedSize", selectedSize);
         result.put("selectedColor", selectedColor);
         result.put("selectedCategory", selectedCategory);
         result.put("selectedPromotion", selectedPromotion);
-        result.put("filterMinPrice", String.valueOf(filterMinPrice));
-        result.put("filterMaxPrice", String.valueOf(filterMaxPrice));
+        result.put("filterMinPrice", filterMinPrice.intValue());
+        result.put("filterMaxPrice", filterMaxPrice.intValue());
         result.put("sortOption", sortOption);
         result.put("searchName", searchName);
 
         return result;
     }
 
-    @Override
-    public void insert(CategoryDTO categoryDTO) {
-        Category category = new Category();
-        category.setCategoryName(categoryDTO.getCategoryName());
-        categoryDao.insert(category);
-    }
-
-    @Override
-    public List<CategoryDTO> listCategory() {
-        List<Category> list = categoryDao.categoryList();
-        List<CategoryDTO> categoryDTOList = new ArrayList<>();
-        for (Category category : list) {
-            CategoryDTO categoryDTO = new CategoryDTO();
-            categoryDTO.setCategoryId(category.getCategoryID());
-            categoryDTO.setCategoryName(category.getCategoryName());
-            categoryDTOList.add(categoryDTO);
-        }
-        return categoryDTOList;
-    }
-
-    public List<ProductDTO> findAllProductByCategoryWithPagination(int categoryId, int offset, int limit) {
-        return categoryDao.findAllProductByCategoryWithPagination(categoryId, offset, limit);
-    }
 
     private List<ProductDTO> distinctName(List<ProductDTO> products) {
+        long currentTime = System.currentTimeMillis();  // Lấy thời gian hiện tại
+
         return products.stream()
+                .filter(Objects::nonNull)  // Kiểm tra sản phẩm không null
                 .filter(ProductDTO::isStatus)
                 .collect(Collectors.toMap(
                         ProductDTO::getProductName,  // Sử dụng tên sản phẩm làm khóa
                         p -> p,  // Giá trị là chính sản phẩm
-                        (existing, replacement) -> existing  // Nếu có trùng tên, giữ lại sản phẩm hiện tại
+                        (existing, replacement) -> {
+                            // Kiểm tra nếu cả hai sản phẩm đều có khuyến mãi đang hoạt động
+                            boolean existingHasPromotion = existing.getPromotionProducts() != null &&
+                                    existing.getPromotionProducts().stream()
+                                            .filter(Objects::nonNull)
+                                            .anyMatch(promotionProduct -> {
+                                                PromotionDTO promotion = promotionProduct.getPromotion();
+                                                return promotion != null &&
+                                                        promotion.getStartDate() != null &&
+                                                        promotion.getEndDate() != null &&
+                                                        currentTime >= promotion.getStartDate().getTime() &&
+                                                        currentTime <= promotion.getEndDate().getTime();
+                                            });
+
+                            boolean replacementHasPromotion = replacement.getPromotionProducts() != null &&
+                                    replacement.getPromotionProducts().stream()
+                                            .filter(Objects::nonNull)
+                                            .anyMatch(promotionProduct -> {
+                                                PromotionDTO promotion = promotionProduct.getPromotion();
+                                                return promotion != null &&
+                                                        promotion.getStartDate() != null &&
+                                                        promotion.getEndDate() != null &&
+                                                        currentTime >= promotion.getStartDate().getTime() &&
+                                                        currentTime <= promotion.getEndDate().getTime();
+                                            });
+
+                            // Nếu cả hai đều có khuyến mãi đang hoạt động, chọn cái có số lượng khuyến mãi nhiều hơn
+                            if (existingHasPromotion && replacementHasPromotion) {
+                                return (replacement.getPromotionProducts().size() > existing.getPromotionProducts().size()) ? replacement : existing;
+                            }
+
+                            // Nếu chỉ có một trong hai cái có khuyến mãi đang hoạt động, chọn cái có khuyến mãi
+                            if (replacementHasPromotion) {
+                                return replacement;
+                            } else {
+                                return existing;
+                            }
+                        }
                 ))
                 .values()
                 .stream()
                 .toList();  // Chuyển thành danh sách (Java 16+)
     }
+
+
 
     private List<ProductDTO> filter(List<CategoryDTO> cartItemDTOList, String selectedCategory, Double filterMinPrice, Double filterMaxPrice, String selectedColor, String selectedSize, String selectedPromotion, String searchName) {
         return cartItemDTOList.stream()
@@ -180,6 +249,46 @@ public class CategoryServiceImpl implements ICategoryService {
         }
 
         return  new Gson().toJson(soldQuantityMap);
+    }
+
+    private String jsonGetAvgReview(List<CategoryDTO> categories) {
+        // Map để lưu tổng điểm đánh giá và số lượng đánh giá của từng sản phẩm
+        Map<String, int[]> reviewStatsMap = new HashMap<>();
+
+        for (CategoryDTO category : categories) {
+            if (category.getProductDTOList() != null) {
+                for (ProductDTO product : category.getProductDTOList()) {
+                    String productName = product.getProductName();
+
+                    // Nếu sản phẩm chưa tồn tại trong map, thêm mới với [tổng điểm, số lượng]
+                    if (!reviewStatsMap.containsKey(productName)) {
+                        reviewStatsMap.put(productName, new int[]{0, 0});
+                    }
+
+                    // Đảm bảo sản phẩm có đánh giá
+                    if (product.getReviewDTO() != null) {
+                        int ratingValue = product.getReviewDTO().getRatingValue();
+
+                        // Cập nhật tổng điểm và số lượng đánh giá
+                        int[] stats = reviewStatsMap.get(productName);
+                        stats[0] += ratingValue; // Cộng tổng điểm
+                        stats[1] += 1;          // Tăng số lượng đánh giá
+                    }
+                }
+            }
+        }
+
+        // Tính điểm trung bình và lưu vào map mới
+        Map<String, Double> avgReviewMap = new HashMap<>();
+        for (Map.Entry<String, int[]> entry : reviewStatsMap.entrySet()) {
+            String productName = entry.getKey();
+            int[] stats = entry.getValue();
+            double avgRating = stats[1] > 0 ? (double) stats[0] / stats[1] : 0.0; // Ép kiểu để phép chia đúng
+            avgReviewMap.put(productName, avgRating);
+        }
+
+        // Chuyển kết quả thành JSON
+        return new Gson().toJson(avgReviewMap);
     }
 
     private Map<String, Object> getProductInfo(List<CategoryDTO> cartItemDTOList) {
@@ -268,8 +377,8 @@ public class CategoryServiceImpl implements ICategoryService {
         productInfo.put("sizes", sortedSizes);   // Danh sách kích thước đã sắp xếp
         productInfo.put("promotions", sortedPromotionNames);  // Danh sách chương trình khuyến mãi đã sắp xếp
         productInfo.put("categories", sortedCategoryNames);  // Danh sách danh mục đã sắp xếp theo số lượng sản phẩm
-        productInfo.put("minPrice", String.valueOf(minPrice));   // Giá trị min
-        productInfo.put("maxPrice", String.valueOf(maxPrice));   // Giá trị max
+        productInfo.put("minPrice", minPrice);   // Giá trị min
+        productInfo.put("maxPrice", maxPrice);   // Giá trị max
 
         // Chuyển Set sản phẩm thành chuỗi
 
@@ -278,23 +387,25 @@ public class CategoryServiceImpl implements ICategoryService {
         return productInfo;
     }
 
-    private List<ProductDTO> sortProducts(List<ProductDTO> filteredProducts, String sortOption) {
+    private List<ProductDTO> sortProducts(List<CategoryDTO> categories, List<ProductDTO> filteredProducts, String sortOption) {
         // Sao chép danh sách vào một ArrayList để tránh lỗi khi gọi sort() trên danh sách immutable
         List<ProductDTO> sortableList = new ArrayList<>(filteredProducts);
+
         Map<String, Integer> soldQuantityMap = new HashMap<>();
 
-        for (ProductDTO product : sortableList) {
-            String productName = product.getProductName();
+        for (CategoryDTO category : categories) {
+            if (category.getProductDTOList() != null) {
+                for (ProductDTO product : category.getProductDTOList()) {
+                    String productName = product.getProductName();
 
-            if (soldQuantityMap.containsKey(productName)) {
-                if (!product.isStatus()) {
-                    soldQuantityMap.put(productName, soldQuantityMap.get(productName) + 1);
-                }
-            } else {
-                if (!product.isStatus()) {
-                    soldQuantityMap.put(productName, 1);
-                } else {
-                    soldQuantityMap.put(productName, 0);
+                    if (!soldQuantityMap.containsKey(productName)) {
+                        soldQuantityMap.put(productName, 0);
+                    }
+
+                    // Giả sử product.getStatus() trả về true nếu chưa bán và false nếu đã bán
+                    if (!product.isStatus()) {
+                        soldQuantityMap.put(productName, soldQuantityMap.get(productName) + 1);
+                    }
                 }
             }
         }
@@ -405,9 +516,8 @@ public class CategoryServiceImpl implements ICategoryService {
                 break;
 
             case "Ưu đãi hấp dẫn nhất":
-                // Sắp xếp theo % giảm giá từ cao đến thấp
+                // Sắp xếp theo tổng rating của các reviewDTOList (sản phẩm nào có tổng rating lớn nhất)
                 sortableList.sort((p1, p2) -> {
-
                     int comparePromotions = comparePromotions(p1, p2);
                     if (comparePromotions != 0) {
                         return comparePromotions;
@@ -419,7 +529,6 @@ public class CategoryServiceImpl implements ICategoryService {
                     if (purchased2 != purchased1) {
                         return Integer.compare(purchased2, purchased1);
                     }
-
 
                     double ratingSum1 = calculateAverageRating(sortableList, p1.getProductName());
                     double ratingSum2 = calculateAverageRating(sortableList, p2.getProductName());
