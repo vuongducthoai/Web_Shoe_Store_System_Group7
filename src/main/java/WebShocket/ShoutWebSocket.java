@@ -268,7 +268,15 @@ public class ShoutWebSocket {
             String messageTime = message.getDate().toString().split(" ")[1].substring(0, 5); // Lấy giờ và phút
             String userId = String.valueOf(session.getUserProperties().get("userId"));
             String messageClass = (message.getUserId() == Integer.parseInt(userId)) ? "right" : "left";
-            String userName = (message.getUserId() == Integer.parseInt(userId)) ? "You" : UserChat.getFullName();
+            String userName = "";
+            UserDTO user = (UserDTO) session.getUserProperties().get("user");
+            if ("ADMIN".equals(user.getAccount().getRole().name().toString())) {
+                userName = (message.getUserId() == Integer.parseInt(userId)) ? "You" : "Lưu Xuân Dũng";
+            }
+            else{
+                userName = (message.getUserId() == Integer.parseInt(userId)) ? "You" : "Chăm Sóc Khách Hàng";
+            }
+
 
             // Tạo HTML cho từng tin nhắn
             messagesHtml.append("<div class='message ").append(messageClass).append("'>")

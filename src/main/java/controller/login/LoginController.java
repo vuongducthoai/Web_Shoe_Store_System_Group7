@@ -56,11 +56,8 @@ public class LoginController extends HttpServlet {
         //Luu thong tin nguoi dung vao session
         req.setAttribute("loginSuccess" , true);
         session.setAttribute("user", userDTO);
-        if(userDTO.getAccount().getRole().equals(RoleType.ADMIN)) {
-            resp.sendRedirect("/view/admin/admin.jsp");
-        } else {
+
             resp.sendRedirect("/home");
-        }
     }
 
 
