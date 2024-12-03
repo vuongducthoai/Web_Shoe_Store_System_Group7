@@ -59,7 +59,7 @@ public class LoginController extends HttpServlet {
         if(userDTO.getAccount().getRole().equals(RoleType.ADMIN)) {
             resp.sendRedirect("/view/admin/admin.jsp");
         } else {
-            resp.sendRedirect("/");
+            resp.sendRedirect("/home");
         }
     }
 
@@ -94,7 +94,7 @@ public class LoginController extends HttpServlet {
                 if(userDTO.getAccount().getRole().equals(RoleType.ADMIN)){
                     resp.sendRedirect("/view/admin/admin.jsp");
                 } else {
-                    resp.sendRedirect("/");
+                    resp.sendRedirect("/home");
                 }
 
             } else {

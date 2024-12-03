@@ -136,6 +136,14 @@
             color: orangered;     /* Đặt màu sao */
         }
 
+        .product_desc {
+            white-space: nowrap;            /* Đảm bảo không có xuống dòng */
+            overflow: hidden;               /* Ẩn phần vượt quá chiều rộng */
+            text-overflow: ellipsis;        /* Hiển thị dấu ba chấm khi nội dung bị cắt */
+            width: 100%;                    /* Đảm bảo phần tử không vượt quá chiều rộng của nó */
+            display: block;                 /* Đảm bảo phần tử có block-level để áp dụng */
+        }
+
     </style>
 </head>
 
@@ -155,7 +163,7 @@
     </div>
     <div class="wrapper" style="flex-wrap: wrap" id="product-list">
         <c:forEach var="promotionProduct" items="${promotionProductDTOList}">
-            <div class="product" style="position: relative; flex: 0 0 23%; max-width: 25%; height: 435px">
+            <div class="product" style="position: relative; flex: 0 0 23%; max-width: 25%; height: 480px">
                 <form action="/product/details" method="GET">
                     <input type="hidden" name="productName" value="${promotionProduct.product.productName}">
                     <div class="product-image">
@@ -229,7 +237,7 @@
 
     <div class="wrapper wrapper1" style="flex-wrap: wrap">
         <c:forEach var="product" items="${productDTOList}">
-            <div class="product" style="flex: 0 0 23%; max-width: 25%; height: 435px; position: relative;">
+            <div class="product" style="flex: 0 0 23%; max-width: 25%; height: 480px; position: relative;">
                 <form action="/product/details" method="GET">
                     <input type="hidden" name="productName" value="${product.productName}">
                     <div class="product-image">

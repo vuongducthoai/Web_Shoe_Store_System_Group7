@@ -25,7 +25,7 @@ import java.util.*;
 
 import java.io.IOException;
 
-@WebServlet(urlPatterns = {"/", "/sign-in", "/sign-up"})
+@WebServlet(urlPatterns = {"/home", "/sign-in", "/sign-up"})
 public class HomeController extends HttpServlet {
     private final ICategoryService categoryService = new CategoryServiceImpl();
     private final IProductService productService = new ProductServiceImpl();
@@ -34,7 +34,7 @@ public class HomeController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getServletPath();
-        if(path.equals("/")) {
+        if(path.equals("/home")) {
 
             //Load Category
             List<CategoryDTO> categoryDTOList = categoryService.listCategory();
