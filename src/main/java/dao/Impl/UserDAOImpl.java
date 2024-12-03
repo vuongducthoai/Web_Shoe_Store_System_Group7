@@ -17,7 +17,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class UserDAOImpl implements IUserDAO {
-    private EntityManagerFactory entityManagerFactory;
 
     @Override
     public User getUserByAccountId(int accountID) {
