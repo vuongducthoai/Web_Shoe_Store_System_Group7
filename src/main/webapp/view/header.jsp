@@ -193,14 +193,13 @@
                          <span class="user-icon">
                             <i style="font-size: 30px; margin-left: 20px;" class="fa-solid fa-user"></i>
                             <div class="dropdown-menu">
-<<<<<<< Updated upstream
+
                                 <a href="#">Tài Khoản Của Tôi</a>
-=======
+
                                 <a href="/InformationUser">Tài Khoản Của Tôi</a>
                                 <a href="/customer/orders"
-<%--                                   onclick="redirectToOrderHistoryPage()"--%>
                                 >Lịch sử đơn hàng</a>
->>>>>>> Stashed changes
+
                                 <a class="sign-out" href="/logout">Đăng xuất</a>
                             </div>
                          </span>

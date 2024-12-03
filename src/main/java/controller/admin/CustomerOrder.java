@@ -34,10 +34,6 @@ public class CustomerOrder extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getServletPath();
-<<<<<<< Updated upstream
-        int customerId = 48;
-//        String customerIdParam = req.getParameter("id");
-=======
 
         // Lấy session hiện tại
         HttpSession session = req.getSession(); // Không tạo session mới nếu chưa có
@@ -52,7 +48,7 @@ public class CustomerOrder extends HttpServlet {
 
                 UserDTO userDTO = (UserDTO) session.getAttribute("user");
         int customerId = userDTO.getUserID();
->>>>>>> Stashed changes
+
         if ("/customer/orders".equals(path)) {
             // Lấy danh sách đơn hàng của khách hàng từ service
             List<OrderDTO> customerOrders = orderService.getOrdersByCustomerId(customerId);

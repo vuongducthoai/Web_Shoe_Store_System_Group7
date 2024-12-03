@@ -284,7 +284,10 @@
                     <input type="file" id="editReviewImage" name="review-Image" accept="image/*"/>
                     <button type="button" id="cancelImageBtn" style="display: none;">Hủy ảnh</button>
                 </div>
-                <button type="submit">Cập nhật đánh giá</button>
+                <button type="submit" >Cập nhật đánh giá</button>
+                <script>
+
+                </script>
             </form>
         </div>
     </div>
