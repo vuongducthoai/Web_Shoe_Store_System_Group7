@@ -130,7 +130,7 @@ public class ProductServiceImpl implements IProductService {
 
     }
 
-    public List<Tuple3<ProductDTO, Double, PromotionProductDTO>>  findRandomProducts(String currentProductName, int CID) {
+    public List<Tuple3<ProductDTO, Double, PromotionProductDTO>> findRandomProducts(String currentProductName, int CID, int loyaty) {
         List<Tuple3<ProductDTO, Double, PromotionProductDTO>> resultList = new ArrayList<>();
         List<Product> products = productDAO.findRandomProducts(currentProductName, CID);
         for (Product product : products) {
@@ -148,7 +148,7 @@ public class ProductServiceImpl implements IProductService {
             double rating = reviewService.averageRating(reviews);
 
             PromotionProductDTO promotionProductDTO = new PromotionProductDTO();
-            promotionProductDTO = productPromotion.promotioOnProductInfo(product.getProductName());
+            promotionProductDTO = productPromotion.promotioOnProductInfo(product.getProductName(), loyaty);
 
             Tuple3<ProductDTO, Double, PromotionProductDTO> tuple = Tuple.of(productDTO, rating, promotionProductDTO);
             resultList.add(tuple);

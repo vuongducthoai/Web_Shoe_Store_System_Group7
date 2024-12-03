@@ -11,7 +11,6 @@ import java.util.Map;
 public interface IProductService {
     List<ProductDTO> findAllWithPagination(int offset, int limit);
     List<ProductDTO> findByName(String name);
-    List<Tuple3<ProductDTO, Double, PromotionProductDTO>>  findRandomProducts(String CurrentProductName, int CID);
     List<String> getDistinctProductNames();
     List<String> getListNameProductForPromotion(int promotionId);
     List<ProductDTO> findByNameProduct(String name);
@@ -35,4 +34,5 @@ public interface IProductService {
     void deleteProductByName(String productName);
     void deleteProductFromCategory(String productName);
 
+    List<Tuple3<ProductDTO, Double, PromotionProductDTO>> findRandomProducts(String CurrentProductName, int CID, int loyaty);
 }
