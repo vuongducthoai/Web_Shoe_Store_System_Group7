@@ -20,9 +20,10 @@ public class NotifyController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         UserDTO userDTO = (UserDTO) session.getAttribute("user");
-        int customerID = userDTO.getUserID();
+
         // Kiểm tra và chuyển đổi dữ liệu
         if (userDTO != null) {
+            int customerID = userDTO.getUserID();
             NotifyDAO notifyDAO = new NotifyDAO();
             List<NotifyDTO> notifications = notifyDAO.LoadNotifies(customerID);
 
