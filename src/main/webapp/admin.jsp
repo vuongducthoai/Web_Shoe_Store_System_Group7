@@ -265,13 +265,13 @@
                     </form>
 
 
-                <%-- Nút xóa sản phẩm--%>
+                    <%-- Nút xóa sản phẩm--%>
                     <form action="ProductController" method="post" >
-                    <div class="product-management-form" id="delete-product-management-form">
-                        <h3>Xóa sản phẩm</h3>
-                        <input type="text" name="productName" id="delete-product-id" placeholder="Nhập tên sản phẩm">
-                        <button class="action-btn" name="submitAction" value="delete-product">Xóa sản phẩm</button>
-                    </div>
+                        <div class="product-management-form" id="delete-product-management-form">
+                            <h3>Xóa sản phẩm</h3>
+                            <input type="text" name="productName" id="delete-product-id" placeholder="Nhập tên sản phẩm">
+                            <button class="action-btn" name="submitAction" value="delete-product">Xóa sản phẩm</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -368,6 +368,19 @@
 
 
             <!-- Bắt đầu quản lý tài khoản -->
+
+            <!-- Hiển thị thông báo nếu có -->
+            <c:if test="${not empty successMessage}">
+                <script>
+                    alert('${successMessage}');
+                </script>
+            </c:if>
+
+            <c:if test="${not empty errorMessage}">
+                <script>
+                    alert('${errorMessage}');
+                </script>
+            </c:if>
             <div class="account-management" id="account-management" style="display: none;">
                 <div class="title">Quản lý tài khoản khách hàng</div>
                 <input type="text" id="search-input" placeholder="Tìm kiếm theo tên khách hàng" >
@@ -375,11 +388,10 @@
                 <div class="table-container">
                     <table class="table table-bordered table-hover">
                         <thead>
-                        <tr>
+                        <tr class="row-dark">
                             <th>ID</th>
                             <th>Tên Khách Hàng</th>
                             <th>Email</th>
-                            <th>Mật khẩu</th>
                             <th>Số điện thoại</th>
                             <th>Trạng thái</th>
                             <th>Hành động</th>
@@ -390,16 +402,14 @@
                             <tr
                                 <%--ghi nhớ dữ liệu full của 3 cột--%>
                                     data-account-name="${account.user.fullName}"
-                                    data-account-email="${account.email}"
-                                    data-account-password="${account.password}">
+                                    data-account-email="${account.email}">
 
 
                                 <td>${account.accountID}</td>
                                 <td>${fn:substring(account.user.fullName, 0, 17)}<c:if test="${fn:length(account.user.fullName) > 17}">...</c:if></td>
                                 <td>${fn:substring(account.email, 0, 25)}<c:if test="${fn:length(account.email) > 25}">...</c:if></td>
-                                <td>${fn:substring(account.password, 0, 10)}<c:if test="${fn:length(account.password) > 10}">...</c:if></td>
                                 <td>${account.user.phone}</td>
-                                <td class="status">${account.user.active ? 'Hoạt động' : 'Bị chặn'}</td>
+                                <td class="status">${account.user.active ? 'Bị chặn' : 'Hoạt động'}</td>
                                 <td><button class="btn btn-primary btn-history" data-user-id="${account.user.userID}" onclick="viewHistory(this)">Xem lịch sử</button></td>
 
                             </tr>
@@ -431,10 +441,6 @@
                     <input type="text" id="view-account-email">
 
 
-                    <label for="view-account-pass">Mật Khẩu</label>
-                    <input type="text" id="view-account-pass">
-
-
                     <label for="view-account-phone">SĐT</label>
                     <input type="text" id="view-account-phone">
 
@@ -447,17 +453,15 @@
                     <div class="account-management-form" id="edit-account-management-form">
                         <h3>Sửa thông tin khách hàng</h3>
                         <input type="hidden" name="action" value="update">
+
                         <label for="edit-account-id-display">ID</label>
-                        <input type="text" id="edit-account-id-display" name="accountID" readonly> <!-- ID chỉ để xem -->
+                        <input type="text" id="edit-account-id-display" name="accountID" readonly>
+
                         <label for="edit-account-name">Họ Tên</label>
                         <input type="text" name="fullName" id="edit-account-name">
+
                         <label for="edit-account-email">Email</label>
                         <input type="text" name="email" id="edit-account-email">
-
-
-                        <label for="edit-account-pass">Mật Khẩu</label>
-                        <input type="text" name="password" id="edit-account-pass">
-
 
                         <label for="edit-account-phone">SĐT</label>
                         <input type="text" name="phone" id="edit-account-phone">
@@ -474,42 +478,27 @@
                 <form action="${pageContext.request.contextPath}/AccountController" method="POST">
                     <div class="account-management-form" id="block-account-management-form">
                         <h3>Chặn tài khoản khách hàng</h3>
+
                         <input type="hidden" name="action" value="block">
                         <label for="block-account-id">ID</label>
+
                         <input type="text" id="block-account-id" name="accountID" readonly>
                         <button class="action-btn" type="submit">Chặn</button>
                     </div>
                 </form>
 
-
                 <!--bỏ chặn khách hàng  -->
                 <form action="${pageContext.request.contextPath}/AccountController" method="POST">
                     <div class="account-management-form" id="unBlock-account-management-form">
                         <h3> Bỏ chặn tài khoản khách hàng</h3>
+
                         <input type="hidden" name="action" value="unblock">
                         <label for="unBlock-account-id">ID</label>
+
                         <input type="text" id="unBlock-account-id" name="accountID" readonly>
                         <button class="action-btn" type="submit">Bỏ chặn</button>
                     </div>
                 </form>
-                <!-- Popup lịch sử đơn hàng -->
-                <div class="order-history-popup" id="order-history-popup" style="display: none;">
-                    <h3>Lịch sử đơn hàng</h3>
-                    <table class="table table-bordered table-hover">
-                        <thead>
-                        <tr>
-                            <th>ID đơn hàng</th>
-                            <th>Ngày mua</th>
-                            <th>Sản phẩm</th>
-                            <th>Tổng tiền</th>
-                        </tr>
-                        </thead>
-                        <tbody id="order-history-content">
-                        <!-- Nội dung sẽ được cập nhật bằng JavaScript -->
-                        </tbody>
-                    </table>
-                    <button class="btn btn-secondary" id="close-history-popup">Đóng</button>
-                </div>
             </div>
 
 

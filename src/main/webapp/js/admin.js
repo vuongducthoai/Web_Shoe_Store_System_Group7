@@ -322,7 +322,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const inputID = document.getElementById('view-account-id');
     const inputName = document.getElementById('view-account-name');
     const inputEmail = document.getElementById('view-account-email');
-    const inputPassword = document.getElementById('view-account-pass');
     const inputPhone = document.getElementById('view-account-phone');
 
 
@@ -334,22 +333,14 @@ document.addEventListener('DOMContentLoaded', function () {
             const accountID = targetRow.cells[0].innerText.trim();
             const fullName = targetRow.getAttribute('data-account-name');
             const email = targetRow.getAttribute('data-account-email');
-
-
-            const password = targetRow.getAttribute('data-account-password');
-            const phone = targetRow.cells[4].innerText.trim();
+            const phone = targetRow.cells[3].innerText.trim();
 
 
             // Điền dữ liệu vào form
             inputID.value = accountID;
             inputName.value = fullName;
             inputEmail.value = email;
-            inputPassword.value = password;
             inputPhone.value = phone;
-            inputHistory.value = history;
-
-
-            // Hiển thị form nếu chưa hiển thị
         }
     });
 });
@@ -363,7 +354,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const inputID = document.getElementById('edit-account-id-display');
     const inputName = document.getElementById('edit-account-name');
     const inputEmail = document.getElementById('edit-account-email');
-    const inputPassword = document.getElementById('edit-account-pass');
     const inputPhone = document.getElementById('edit-account-phone');
 
 
@@ -375,22 +365,14 @@ document.addEventListener('DOMContentLoaded', function () {
             const accountID = targetRow.cells[0].innerText.trim();
             const fullName = targetRow.getAttribute('data-account-name');
             const email = targetRow.getAttribute('data-account-email');
-
-
-            const password = targetRow.getAttribute('data-account-password');
-            const phone = targetRow.cells[4].innerText.trim();
+            const phone = targetRow.cells[3].innerText.trim();
 
 
             // Điền dữ liệu vào form
             inputID.value = accountID;
             inputName.value = fullName;
             inputEmail.value = email;
-            inputPassword.value = password;
             inputPhone.value = phone;
-            inputHistory.value = history;
-
-
-            // Hiển thị form nếu chưa hiển thị
         }
     });
 });
