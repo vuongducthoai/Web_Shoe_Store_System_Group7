@@ -16,6 +16,9 @@ public interface IProductDAO {
     List<Product> findRandomProducts(String CurrentProductName, int CID);
     List<ProductDTO> findListProductByCategoryID(int id);
     List<ProductDTO> getListProductByName(String name);
+    List<String> getProductNamesForPromotion(int promotionId);
+    long getInventoryQuantity();
+    List<ProductDTO> findByNameProduct(String name);
     Map<Integer, Integer> getQuantitiesByColor(String color, String productName);
     void updateProductByCommonInfo(String productName, double productPrice, String categoryName, String productDescription);
     List<String> getColorsByProduct(String productName);
@@ -27,4 +30,5 @@ public interface IProductDAO {
     ProductDTO getCommonInfoByName(String productName, String color) ;
     void deleteProductByName(String productName);
     void deleteProductFromCategory(String productName);
+
 }

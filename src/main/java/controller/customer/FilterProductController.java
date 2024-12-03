@@ -28,10 +28,7 @@ public class FilterProductController extends HttpServlet {
             return;
         }
 
-        if (categories == null) {
-            categories = categoryService.findAllCategories();
-//            categoryDTOList = new ArrayList<>();
-        }
+        categories = categoryService.findAllCategories();
 
         Map<String, Object> responseData = categoryService.getFilteredAndSortedProducts(
                 categories,

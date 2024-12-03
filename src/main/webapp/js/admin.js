@@ -8,20 +8,21 @@ var categoryManagement = document.getElementById("category-management");
 var accountManagement = document.getElementById("account-management");
 var orderManagement =document.getElementById("order-management");
 var promotionManagement =document.getElementById("promotion-management")
+var statisticsManagement =document.getElementById("statistics-management")
+
+var addForm = document.querySelector("#add-product-management-form");
+var editForm = document.querySelector("#edit-product-management-form");
+var deleteForm = document.querySelector("#delete-product-management-form");
 // Lắng nghe sự kiện khi người dùng click vào "Quản lý sản phẩm"
 document.getElementById("manage-products-btn").addEventListener("click", function (event) {
 
-
+    statisticsManagement.style.display="none";
     banner.style.display = "none";
     productManagement.style.display = "block";
     accountManagement.style.display = "none";
     categoryManagement.style.display = "none";
     orderManagement.style.display="none";
     promotionManagement.style.display="none";
-    // nút thêm sửa xóa
-    var addForm = document.querySelector("#add-product-management-form");
-    var editForm = document.querySelector("#edit-product-management-form");
-    var deleteForm = document.querySelector("#delete-product-management-form");
 
 
     document.getElementById("btn-product-management-actions-add").addEventListener("click", function (event) {
@@ -32,11 +33,8 @@ document.getElementById("manage-products-btn").addEventListener("click", functio
 
 
     document.getElementById("btn-product-management-actions-edit").addEventListener("click", function (event) {
-        addForm.style.display = "none";
-        deleteForm.style.display = "none";
-        editForm.style.display = "flex";
+        openAdd();
     });
-
 
     document.getElementById("btn-product-management-actions-delete").addEventListener("click", function (event) {
         addForm.style.display = "none";
@@ -62,6 +60,7 @@ document.getElementById("manage-categrories-btn").addEventListener("click", func
     productManagement.style.display = "none";
     orderManagement.style.display="none";
     promotionManagement.style.display="none";
+    statisticsManagement.style.display="none";
 
 
 
@@ -110,6 +109,7 @@ document.getElementById("account-management-btn").addEventListener("click", func
     orderManagement.style.display="none";
     categoryManagement.style.display="none";
     promotionManagement.style.display="none";
+    statisticsManagement.style.display="none";
 
 
 
@@ -165,7 +165,7 @@ document.getElementById("order-management-btn").addEventListener("click", functi
     orderManagement.style.display="block";
     categoryManagement.style.display="none";
     promotionManagement.style.display="none";
-
+    statisticsManagement.style.display="none";
 
 
 
@@ -227,42 +227,6 @@ function viewHistory(button) {
 
 
 // Quản lý khuyến mãi
-function showSection(section) {
-    const promotionsContainer = document.getElementById('promotions-container');
-    const vouchersContainer = document.getElementById('vouchers-container');
-
-
-    if (section === 'promotions') {
-        promotionsContainer.style.display = 'block';
-        vouchersContainer.style.display = 'none';
-    } else {
-        promotionsContainer.style.display = 'none';
-        vouchersContainer.style.display = 'block';
-    }
-}
-showSection('promotions');
-function toggleForm() {
-    const overlay = document.getElementById('overlay');
-    overlay.style.display = overlay.style.display === 'flex' ? 'none' : 'flex';
-}
-
-
-// Thêm sự kiện cho nút Add Promotion
-document.querySelector('.add-promotion-btn').addEventListener('click', toggleForm);
-function toggleDropdown() {
-    const dropdownMenu = document.querySelector('.dropdown-menu');
-    dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
-}
-
-
-// Close the dropdown if clicked outside
-document.addEventListener('click', function(event) {
-    const dropdownButton = document.querySelector('.dropdown-button');
-    const dropdownMenu = document.querySelector('.dropdown-menu');
-    if (!dropdownButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
-        dropdownMenu.style.display = 'none';
-    }
-});
 
 
 // Function to handle form submission and display selected products
@@ -274,7 +238,20 @@ document.getElementById("promotion-management-btn").addEventListener("click", fu
     accountManagement.style.display ="none";
     orderManagement.style.display="none";
     categoryManagement.style.display="none";
+    statisticsManagement.style.display="none";
     promotionManagement.style.display="block";
+
+
+});
+document.getElementById("statistics-management-btn").addEventListener("click", function(event) {
+    banner.style.display = "none";
+    productManagement.style.display = "none";
+    accountManagement.style.display ="none";
+    orderManagement.style.display="none";
+    categoryManagement.style.display="none";
+    promotionManagement.style.display="none";
+    statisticsManagement.style.display="block";
+
 
 
 });
@@ -322,7 +299,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const inputID = document.getElementById('view-account-id');
     const inputName = document.getElementById('view-account-name');
     const inputEmail = document.getElementById('view-account-email');
-    const inputPassword = document.getElementById('view-account-pass');
     const inputPhone = document.getElementById('view-account-phone');
 
 
@@ -334,22 +310,14 @@ document.addEventListener('DOMContentLoaded', function () {
             const accountID = targetRow.cells[0].innerText.trim();
             const fullName = targetRow.getAttribute('data-account-name');
             const email = targetRow.getAttribute('data-account-email');
-
-
-            const password = targetRow.getAttribute('data-account-password');
-            const phone = targetRow.cells[4].innerText.trim();
+            const phone = targetRow.cells[3].innerText.trim();
 
 
             // Điền dữ liệu vào form
             inputID.value = accountID;
             inputName.value = fullName;
             inputEmail.value = email;
-            inputPassword.value = password;
             inputPhone.value = phone;
-            inputHistory.value = history;
-
-
-            // Hiển thị form nếu chưa hiển thị
         }
     });
 });
@@ -363,7 +331,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const inputID = document.getElementById('edit-account-id-display');
     const inputName = document.getElementById('edit-account-name');
     const inputEmail = document.getElementById('edit-account-email');
-    const inputPassword = document.getElementById('edit-account-pass');
     const inputPhone = document.getElementById('edit-account-phone');
 
 
@@ -375,22 +342,14 @@ document.addEventListener('DOMContentLoaded', function () {
             const accountID = targetRow.cells[0].innerText.trim();
             const fullName = targetRow.getAttribute('data-account-name');
             const email = targetRow.getAttribute('data-account-email');
-
-
-            const password = targetRow.getAttribute('data-account-password');
-            const phone = targetRow.cells[4].innerText.trim();
+            const phone = targetRow.cells[3].innerText.trim();
 
 
             // Điền dữ liệu vào form
             inputID.value = accountID;
             inputName.value = fullName;
             inputEmail.value = email;
-            inputPassword.value = password;
             inputPhone.value = phone;
-            inputHistory.value = history;
-
-
-            // Hiển thị form nếu chưa hiển thị
         }
     });
 });
@@ -451,7 +410,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-
 function editProduct(button) {
     event.preventDefault();
     // Lấy thông tin sản phẩm từ thuộc tính data- của nút sửa
@@ -485,13 +443,11 @@ function editProduct(button) {
 }
 
 
-// thêm biến thể
+// thêm biến thể phần add sản phẩm
 let colorCounter = 1; // Đếm số lượng màu đã thêm
-
 
 const addColorBtn = document.getElementById('add-color-btn');
 const colorContainer = document.getElementById('color-container');
-
 
 addColorBtn.addEventListener('click', () => {
     // Sử dụng số thứ tự dựa trên màu hiện tại, không dùng colorCounter
@@ -526,26 +482,19 @@ addColorBtn.addEventListener('click', () => {
        <button type="button" class="remove-color-btn">Xóa biến thể</button>
    `;
 
-
     colorContainer.appendChild(colorBlock);
     console.log(colorContainer.innerHTML);
-    console.log(`Số lượng color-block hiện tại: `+getColorBlockCount());
-
-
-
-
-
+    console.log(`Số lượng color-block hiện tại: ` + getColorBlockCount());
 
     const addSizeBtn = colorBlock.querySelector('.add-size-btn');
     const sizeContainer = colorBlock.querySelector('.size-container');
-
 
     addSizeBtn.addEventListener('click', () => {
         const sizeBlock = document.createElement('div');
         sizeBlock.classList.add('size-block');
         sizeBlock.innerHTML = `
-           <input type="text" name="size-${colorId}[]" placeholder="Nhập size">
-           <input type="text" name="quantity-${colorId}[]" placeholder="Nhập số lượng">
+           <input type="text" name="size-${colorId}[]" placeholder="Nhập size" required>
+           <input type="text" name="quantity-${colorId}[]" placeholder="Nhập số lượng" required>
            <button type="button" class="remove-size-btn">Xóa Size</button>
        `;
         sizeContainer.appendChild(sizeBlock);
@@ -555,10 +504,6 @@ addColorBtn.addEventListener('click', () => {
             sizeContainer.removeChild(sizeBlock);
         });
     });
-
-
-
-
 
 
     // Load Image Logic
@@ -572,7 +517,6 @@ addColorBtn.addEventListener('click', () => {
         imageInput.click();
     });
 
-
     imageInput.addEventListener('change', (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -584,14 +528,12 @@ addColorBtn.addEventListener('click', () => {
         }
     });
 
-
     cancelBtn.addEventListener('click', () => {
         imageDisplay.src = '';
         imageInput.value = '';
     });
 
 
-    // Remove Color Block and update other color blocks' IDs
     const removeColorBtn = colorBlock.querySelector('.remove-color-btn');
     removeColorBtn.addEventListener('click', () => {
         colorContainer.removeChild(colorBlock);
@@ -637,133 +579,7 @@ function getColorBlockCount() {
 }
 
 
-// //thêm biến thể phần edit sản phẩm
-//  let colorCounterEdit = 1; // Đếm số lượng màu đã thêm trong chế độ Edit
-//
-//  const addColorBtnEdit = document.getElementById('add-color-btnEdit');
-//  const colorContainerEdit = document.getElementById('color-container-edit');
-//
-//  // Lắng nghe sự kiện "click" trên colorContainerEdit
-//  colorContainerEdit.addEventListener('click', (event) => {
-//
-//      // Thêm Size
-//      if (event.target && event.target.classList.contains('add-size-btnEdit')) {
-//          const colorIdEdit = event.target.getAttribute('data-color');
-//          const sizeContainerEdit = document.getElementById(`size-container-${colorIdEdit}`);
-//          const sizeBlockEdit = document.createElement('div');
-//          sizeBlockEdit.classList.add('size-block');
-//          sizeBlockEdit.innerHTML = `
-//          <input type="text" name="size-${colorIdEdit}[]" placeholder="Nhập size">
-//          <input type="text" name="quantity-${colorIdEdit}[]" placeholder="Nhập số lượng">
-//          <button type="button" class="remove-size-btnEdit">Xóa Size</button>
-//      `;
-//          sizeContainerEdit.appendChild(sizeBlockEdit);
-//      }
-//
-//      // Xóa size
-//      if (event.target && event.target.classList.contains('remove-size-btnEdit')) {
-//          const sizeBlockEdit = event.target.closest('.size-block');
-//          sizeBlockEdit.parentElement.removeChild(sizeBlockEdit);
-//      }
-//
-//      // Xóa biến thể
-//      if (event.target && event.target.classList.contains('remove-color-btnEdit')) {
-//          const colorBlockEdit = event.target.closest('.color-block');
-//          colorContainerEdit.removeChild(colorBlockEdit);
-//          updateColorIdsEdit(); // Cập nhật lại ID màu sau khi xóa
-//      }
-//
-//      // Load hình ảnh
-//      if (event.target && event.target.classList.contains('loadImageBtnEdit')) {
-//          const colorBlockEdit = event.target.closest('.color-block');
-//          const imageInputEdit = colorBlockEdit.querySelector('.imageInput');
-//          imageInputEdit.click(); // Kích hoạt input file
-//      }
-//
-//      // Hủy hình ảnh
-//      if (event.target && event.target.classList.contains('cancelBtnEdit')) {
-//          const colorBlockEdit = event.target.closest('.color-block');
-//          const imageDisplayEdit = colorBlockEdit.querySelector('.imageDisplay');
-//          const imageInputEdit = colorBlockEdit.querySelector('.imageInput');
-//          imageDisplayEdit.src = '';
-//          imageInputEdit.value = ''; // Reset image
-//      }
-//  });
-//
-//  // Lắng nghe sự kiện "change" cho input file (load image)
-//  colorContainerEdit.addEventListener('change', (event) => {
-//      if (event.target && event.target.classList.contains('imageInput')) {
-//          const file = event.target.files[0];
-//          if (file) {
-//              const reader = new FileReader();
-//              reader.onload = (e) => {
-//                  const colorBlockEdit = event.target.closest('.color-block');
-//                  const imageDisplayEdit = colorBlockEdit.querySelector('.imageDisplay');
-//                  imageDisplayEdit.src = e.target.result;
-//              };
-//              reader.readAsDataURL(file);
-//          }
-//      }
-//  });
-//
-//  // Khi nhấn nút 'Thêm Biến thể' để thêm một màu mới
-//  addColorBtnEdit.addEventListener('click', () => {
-//      const colorIdEdit = getNextColorIdEdit();
-//      const colorBlockEdit = document.createElement('div');
-//      colorBlockEdit.classList.add('color-block');
-//      colorBlockEdit.setAttribute('data-color-id', colorIdEdit);
-//
-//      colorBlockEdit.innerHTML = `
-//      <h4>Màu ${colorIdEdit}</h4>
-//      <label for="color-name-${colorIdEdit}">Tên Màu:</label>
-//      <input type="text" name="color-name-${colorIdEdit}" id="color-name-${colorIdEdit}" placeholder="Nhập tên màu" required>
-//
-//      <label for="image-color-${colorIdEdit}">Hình ảnh:</label>
-//      <div class="LoadImageContent">
-//          <div class="picturebox">
-//              <img class="imageDisplay" src="" alt="No image" />
-//          </div>
-//          <button type="button" class="loadImageBtn">Load Image</button>
-//          <input type="file" name="image-color-${colorIdEdit}" class="imageInput" style="display: none;" accept="image/*">
-//          <button type="button" class="cancelBtn">Cancel Image</button>
-//      </div>
-//
-//      <label>Size và Số lượng:</label>
-//      <div class="size-container" id="size-container-${colorIdEdit}"></div>
-//      <button type="button" class="add-size-btnEdit" data-color="${colorIdEdit}">Thêm Size</button>
-//
-//      <button type="button" class="remove-color-btnEdit">Xóa biến thể</button>
-//  `;
-//
-//      colorContainerEdit.appendChild(colorBlockEdit);
-//  });
-//
-//
-//
-//
-//
-// // Hàm lấy số ID tiếp theo dựa trên màu hiện tại (Edit)
-//  function getNextColorIdEdit() {
-//      const colorBlocksEdit = colorContainerEdit.querySelectorAll('.color-block');
-//      return colorBlocksEdit.length + 1;
-//  }
-//
-//  // Cập nhật lại ID của các màu còn lại (Edit)
-//  function updateColorIdsEdit() {
-//      const colorBlocksEdit = colorContainerEdit.querySelectorAll('.color-block');
-//
-//      colorBlocksEdit.forEach((block, index) => {
-//          const colorIdEdit = index + 1;
-//          block.querySelector('h4').textContent = `Màu ${colorIdEdit}`;
-//          block.setAttribute('data-color-id', colorIdEdit);
-//          block.querySelector('label[for^="color-name"]').setAttribute('for', `color-name-${colorIdEdit}`);
-//          block.querySelector('input[name^="color-name"]').setAttribute('name', `color-name-${colorIdEdit}`);
-//          block.querySelector('input[name^="size-"]').setAttribute('name', `size-${colorIdEdit}[]`);
-//          block.querySelector('input[name^="quantity-"]').setAttribute('name', `quantity-${colorIdEdit}[]`);
-//      });
-//  }
-//
-
+//thêm biến thể phần edit sản phẩm
 
 let colorCounterEdit = 1; // Đếm số lượng màu đã thêm trong chế độ Edit
 
@@ -780,8 +596,8 @@ colorContainerEdit.addEventListener('click', (event) => {
         const sizeBlockEdit = document.createElement('div');
         sizeBlockEdit.classList.add('size-block');
         sizeBlockEdit.innerHTML = `
-            <input type="text" name="size-${colorIdEdit}[]" placeholder="Nhập size">
-            <input type="text" name="quantity-${colorIdEdit}[]" placeholder="Nhập số lượng">
+            <input type="text" name="size-${colorIdEdit}[]" placeholder="Nhập size" required>
+            <input type="text" name="quantity-${colorIdEdit}[]" placeholder="Nhập số lượng" required>
             <button type="button" class="remove-size-btnEdit">Xóa Size</button>
         `;
         sizeContainerEdit.appendChild(sizeBlockEdit);
@@ -889,3 +705,178 @@ function updateColorIdsEdit() {
 
 
 
+
+// Kiểm tra bắt lỗi
+
+function validateForm() {
+    // Biểu thức chính quy chỉ chấp nhận số nguyên hoặc số thực
+    const numberRegex = /^\d+$/;
+
+    // Kiểm tra trường 'price'
+    const priceInput = document.querySelector('[id*="product-price"]');
+    if (priceInput && !numberRegex.test(priceInput.value)) {
+        alert("Vui lòng nhập giá trị hợp lệ cho trường 'Giá'. Giá chỉ được chứa số!");
+        priceInput.focus();
+        return false; // Ngăn form gửi đi
+    }
+
+    // Kiểm tra tất cả các trường 'size'
+    const sizeInputs = document.querySelectorAll("input[name^='size-']");
+    for (let sizeInput of sizeInputs) {
+        if (!numberRegex.test(sizeInput.value)) {
+            alert("Vui lòng nhập giá trị hợp lệ cho tất cả các trường 'Size'. Size chỉ được chứa số!");
+            sizeInput.focus();
+            return false; // Ngăn form gửi đi
+        }
+    }
+
+    // Kiểm tra tất cả các trường 'quantity'
+    const quantityInputs = document.querySelectorAll("input[name^='quantity-']");
+    for (let quantityInput of quantityInputs) {
+        if (!numberRegex.test(quantityInput.value)) {
+            alert("Vui lòng nhập giá trị hợp lệ cho tất cả các trường 'Số lượng'. Số lượng chỉ được chứa số!");
+            quantityInput.focus();
+            return false; // Ngăn form gửi đi
+        }
+    }
+
+    // Nếu tất cả hợp lệ
+    return true;
+}
+
+
+function validateFormEditProduct() {
+    // Biểu thức chính quy chấp nhận số nguyên hoặc số thực
+    const numberRegex = /^\d+(\.\d+)?$/;
+
+    // Kiểm tra trường 'price'
+    const priceInput = document.querySelector('#edit-product-price');
+    if (priceInput && (!priceInput.value.trim() || !numberRegex.test(priceInput.value))) {
+        alert("Vui lòng nhập giá trị hợp lệ cho trường 'Giá'. Giá chỉ được chứa số!");
+        priceInput.focus();
+        return false;
+    }
+
+    // Kiểm tra tất cả các trường 'size'
+    const sizeInputs = document.querySelectorAll("input[name^='size-']");
+    for (let sizeInput of sizeInputs) {
+        if (!sizeInput.value.trim() || !numberRegex.test(sizeInput.value)) {
+            alert("Vui lòng nhập giá trị hợp lệ cho tất cả các trường 'Size'. Size chỉ được chứa số!");
+            sizeInput.focus();
+            return false;
+        }
+    }
+
+    // Kiểm tra tất cả các trường 'quantity'
+    const quantityInputs = document.querySelectorAll("input[name^='quantity-']");
+    for (let quantityInput of quantityInputs) {
+        if (!quantityInput.value.trim() || !numberRegex.test(quantityInput.value)) {
+            alert("Vui lòng nhập giá trị hợp lệ cho tất cả các trường 'Số lượng'. Số lượng chỉ được chứa số!");
+            quantityInput.focus();
+            return false;
+        }
+    }
+
+    // Nếu tất cả hợp lệ
+    return true;
+}
+
+document.getElementById("btn-edit-product").addEventListener("click", function (event) {
+    addForm.style.display = "none";
+    deleteForm.style.display = "none";
+    editForm.style.display = "flex";
+
+
+});
+
+
+function sendEditProduct(productName) {
+    fetch('ProductController', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+            productName: productName,
+            submitAction: 'showInfo',
+        }),
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                openAdd();
+                // Gán dữ liệu vào form
+                document.getElementById('edit-product-name').value = data.productName;
+                document.getElementById('edit-product-price').value = data.productPrice;
+                document.getElementById('edit-product-category').value = data.productCategory;
+                document.getElementById('edit-product-description').value = data.productDescription;
+
+                // Hiển thị các biến thể
+                const colorContainer = document.getElementById('color-container-edit');
+                colorContainer.innerHTML = ''; // Xóa các nội dung cũ
+
+                for (const [colorId, colorName] of Object.entries(data.colorIdToNameMap)) {
+                    const colorDiv = document.createElement('div');
+                    colorDiv.classList.add('color-block');
+                    colorDiv.setAttribute('data-color-id', colorId);
+
+                    colorDiv.innerHTML = `
+                    <h4>Màu ${colorId}</h4>
+                    <label for="color-name-${colorId}">Tên Màu:</label>
+                    <input type="text" name="color-name-${colorId}" value="${colorName}" id="color-name-${colorId}" required>
+
+                    <label for="image-color-${colorId}">Hình ảnh:</label>
+                    <div class="LoadImageContent">
+                        <div class="picturebox">
+                            <img class="imageDisplay" src="${data.colorIdToImageMap[colorId]}" alt="Current image" />
+                        </div>
+                        <button type="button" class="loadImageBtn">Load Image</button>
+                        <input type="file" name="image-color-${colorId}" class="imageInput" style="display: none;" accept="image/*">
+                        <button type="button" class="cancelBtn">Cancel Image</button>
+                    </div>
+
+                    <label>Size và Số lượng:</label>
+                    <div class="size-container" id="size-container-${colorId}">
+                `;
+
+                    // Thêm các size và số lượng
+                    const sizeQuantityMap = data.sizeQuantityMap[colorId];
+                    for (const [size, quantity] of Object.entries(sizeQuantityMap)) {
+                        colorDiv.innerHTML += `
+                        <div class="size-block">
+                            <input type="text" name="size-${colorId}[]" value="${size}" placeholder="Nhập size" required>
+                            <input type="text" name="quantity-${colorId}[]" value="${quantity}" placeholder="Nhập số lượng" required>
+                            <button type="button" class="remove-size-btnEdit">Xóa Size</button>
+                        </div>
+                    `;
+                    }
+
+                    colorDiv.innerHTML += `
+                    </div>
+                    <button type="button" class="add-size-btnEdit" data-color="${colorId}">Thêm Size</button>
+                    <button type="button" class="remove-color-btnEdit">Xóa biến thể</button>
+                `;
+
+                    colorContainer.appendChild(colorDiv);
+                }
+            } else {
+                alert('Failed to load product information: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while loading product information.');
+        });
+}
+
+
+function openAdd(){
+    addForm.style.display = "none";
+    deleteForm.style.display = "none";
+    editForm.style.display = "flex";
+}

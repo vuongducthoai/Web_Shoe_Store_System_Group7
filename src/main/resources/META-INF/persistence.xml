@@ -8,21 +8,20 @@
     <persistence-unit name="ShoeStore" transaction-type="RESOURCE_LOCAL">
         <properties>
             <!-- Database connection properties -->
-            <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://mysql-e0bbe0e-student-4819.h.aivencloud.com:22002/ShoeStore?useSSL=true&amp;requireSSL=true"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/shoe?useSSL=false"/>
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
-            <property name="jakarta.persistence.jdbc.user" value="avnadmin"/>
-            <property name="jakarta.persistence.jdbc.password" value="AVNS_1_j3OIsAxKQkzPaWMW2"/>
-
+            <property name="jakarta.persistence.jdbc.user" value="root"/>
+            <property name="jakarta.persistence.jdbc.password" value="Leduong2"/>
 
             <!-- Hibernate properties -->
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
             <property name="hibernate.hbm2ddl.auto" value="none"/>
-            <property name="hibernate.enable_lazy_load_no_trans>" value="true"/>
+            <property name="hibernate.enable_lazy_load_no_trans" value="true"/>
 
             <!-- Logging and formatting SQL -->
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
-            <property name="hibernate.use_sql_comments" value="none"/>
+            <property name="hibernate.use_sql_comments" value="false"/>
 
             <!-- Additional settings -->
             <property name="hibernate.generate_statistics" value="true"/>

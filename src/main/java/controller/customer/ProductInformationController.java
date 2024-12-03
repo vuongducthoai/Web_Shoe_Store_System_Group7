@@ -100,7 +100,8 @@ public class ProductInformationController extends HttpServlet {
             req.setAttribute("averageRating", rate);
 
 
-            List<Tuple3<ProductDTO, Double, PromotionProductDTO>> RecommendProducts = productService.findRandomProducts(productName, productDetails.getFirst().getCategoryDTO().getCategoryId(),loyaty);
+            List<Tuple3<ProductDTO, Double, PromotionProductDTO>>  RecommendProducts = (List<Tuple3<ProductDTO, Double, PromotionProductDTO>>) productService.findRandomProducts(productName, productDetails.getFirst().getCategoryDTO().getCategoryId());
+
             if (RecommendProducts == null || RecommendProducts.isEmpty()) {
                 System.out.println("RecommendProducts is null or empty.");
                 return;

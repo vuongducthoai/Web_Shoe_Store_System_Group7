@@ -1,0 +1,123 @@
+@media (max-width: 768px) {
+    .cards {
+        flex-direction: column; /* Chuyển các thẻ thông tin thành cột trên màn hình nhỏ */
+        gap: 10px;
+    }
+
+    .chart-container,
+    .horizontal-chart-container {
+        flex: 1 1 100%; /* Các biểu đồ sẽ chiếm toàn bộ chiều rộng màn hình */
+        height: 350px; /* Tăng chiều cao biểu đồ */
+    }
+
+    .card h2 {
+        font-size: 20px; /* Giảm kích thước font chữ */
+    }
+
+    .card p {
+        font-size: 14px; /* Giảm kích thước font chữ */
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        width: 100%; /* Đảm bảo container chiếm toàn bộ chiều rộng màn hình */
+    }
+
+    select {
+        width: 100%; /* Đảm bảo thẻ select chiếm toàn bộ chiều rộng màn hình */
+        margin-left: 0; /* Xóa margin left */
+    }
+
+    .card h2 {
+        font-size: 18px; /* Giảm kích thước font chữ cho các thẻ thông tin */
+    }
+
+    .card p {
+        font-size: 12px; /* Giảm kích thước font chữ cho các thẻ thông tin */
+    }
+
+    .charts {
+        flex-direction: column; /* Sắp xếp các biểu đồ theo chiều dọc */
+        gap: 15px;
+    }
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.container {
+    width: 90%;
+    margin: 0 auto;
+}
+
+.cards {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.card {
+    flex: 1;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Thêm hiệu ứng */
+}
+
+.card:hover {
+    transform: translateY(-10px); /* Di chuyển lên một chút */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Tăng bóng khi hover */
+}
+
+.card h2 {
+    margin: 10px 0;
+    font-size: 24px;
+    color: #333;
+}
+
+.card p {
+    font-size: 16px;
+    color: #666;
+}
+
+.charts {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+    flex-direction: column; /* Đặt biểu đồ theo chiều dọc */
+}
+
+.chart-container {
+    flex: 2;
+    height: 500px; /* Tăng kích thước biểu đồ doanh thu */
+}
+
+.horizontal-chart-container {
+    flex: 2;
+    height: 500px; /* Tăng kích thước biểu đồ top 10 sản phẩm bán chạy */
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
+}
+
+select {
+    margin-top: 20px;
+    padding: 10px;
+    font-size: 16px;
+    display: block;
+    margin-left: 20px;
+}

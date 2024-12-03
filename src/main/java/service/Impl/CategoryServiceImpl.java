@@ -1,6 +1,8 @@
 package service.Impl;
 
 import com.google.gson.Gson;
+import dao.IProductDAO;
+import dao.Impl.ProductDAOImpl;
 import dto.CategoryDTO;
 import dao.ICategoryDao;
 import dao.Impl.CategoryDaoImpl;
@@ -8,8 +10,9 @@ import dto.ProductDTO;
 import dto.PromotionDTO;
 import dto.PromotionProductDTO;
 import entity.Category;
-import enums.PromotionType;
+import entity.Product;
 import enums.DiscountType;
+import enums.PromotionType;
 import service.ICategoryService;
 
 import java.util.*;
@@ -18,7 +21,52 @@ import java.util.stream.Stream;
 
 public class CategoryServiceImpl implements ICategoryService {
     ICategoryDao categoryDao = new CategoryDaoImpl();
-    public List<CategoryDTO> findAllCategories() { return categoryDao.findAllCategories(); }
+    IProductDAO productService = new ProductDAOImpl();
+
+    @Override
+    public List<CategoryDTO> listCategory() {
+        List<Category> list = categoryDao.categoryList();
+        List<CategoryDTO> categoryDTOList = new ArrayList<>();
+        for (Category category : list) {
+            CategoryDTO categoryDTO = new CategoryDTO();
+            categoryDTO.setCategoryId(category.getCategoryID());
+            categoryDTO.setCategoryName(category.getCategoryName());
+            categoryDTOList.add(categoryDTO);
+        }
+        return categoryDTOList;
+    }
+
+    @Override
+    public List<ProductDTO> findAllProductByCategoryWithPagination(int categoryId, int offset, int limit) {
+        return categoryDao.findAllProductByCategoryWithPagination(categoryId, offset, limit);
+    }
+
+    @Override
+    public List<Category> categoryList() {
+        return List.of();
+    }
+
+    @Override
+    public List<CategoryDTO> categoryDTOList() {
+        return categoryDao.categoryDTOList();
+    }
+
+    @Override
+    public void insert(CategoryDTO categoryDTO) {
+        Category category = new Category();
+        category.setCategoryName(categoryDTO.getCategoryName());
+        categoryDao.insert(category);
+    }
+
+    @Override
+    public boolean remove(int categoryId) {
+        return false;
+    }
+
+    @Override
+    public List<CategoryDTO> findAllCategories() {
+        return categoryDao.findAllCategories();
+    }
 
     @Override
     public Map<String, Object> getFilteredAndSortedProducts(
@@ -94,42 +142,61 @@ public class CategoryServiceImpl implements ICategoryService {
         return result;
     }
 
-    @Override
-    public void insert(CategoryDTO categoryDTO) {
-        Category category = new Category();
-        category.setCategoryName(categoryDTO.getCategoryName());
-        categoryDao.insert(category);
-    }
-
-    @Override
-    public List<CategoryDTO> listCategory() {
-        List<Category> list = categoryDao.categoryList();
-        List<CategoryDTO> categoryDTOList = new ArrayList<>();
-        for (Category category : list) {
-            CategoryDTO categoryDTO = new CategoryDTO();
-            categoryDTO.setCategoryId(category.getCategoryID());
-            categoryDTO.setCategoryName(category.getCategoryName());
-            categoryDTOList.add(categoryDTO);
-        }
-        return categoryDTOList;
-    }
-
-    public List<ProductDTO> findAllProductByCategoryWithPagination(int categoryId, int offset, int limit) {
-        return categoryDao.findAllProductByCategoryWithPagination(categoryId, offset, limit);
-    }
 
     private List<ProductDTO> distinctName(List<ProductDTO> products) {
+        long currentTime = System.currentTimeMillis();  // Lấy thời gian hiện tại
+
         return products.stream()
+                .filter(Objects::nonNull)  // Kiểm tra sản phẩm không null
                 .filter(ProductDTO::isStatus)
                 .collect(Collectors.toMap(
                         ProductDTO::getProductName,  // Sử dụng tên sản phẩm làm khóa
                         p -> p,  // Giá trị là chính sản phẩm
-                        (existing, replacement) -> existing  // Nếu có trùng tên, giữ lại sản phẩm hiện tại
+                        (existing, replacement) -> {
+                            // Kiểm tra nếu cả hai sản phẩm đều có khuyến mãi đang hoạt động
+                            boolean existingHasPromotion = existing.getPromotionProducts() != null &&
+                                    existing.getPromotionProducts().stream()
+                                            .filter(Objects::nonNull)
+                                            .anyMatch(promotionProduct -> {
+                                                PromotionDTO promotion = promotionProduct.getPromotion();
+                                                return promotion != null &&
+                                                        promotion.getStartDate() != null &&
+                                                        promotion.getEndDate() != null &&
+                                                        currentTime >= promotion.getStartDate().getTime() &&
+                                                        currentTime <= promotion.getEndDate().getTime();
+                                            });
+
+                            boolean replacementHasPromotion = replacement.getPromotionProducts() != null &&
+                                    replacement.getPromotionProducts().stream()
+                                            .filter(Objects::nonNull)
+                                            .anyMatch(promotionProduct -> {
+                                                PromotionDTO promotion = promotionProduct.getPromotion();
+                                                return promotion != null &&
+                                                        promotion.getStartDate() != null &&
+                                                        promotion.getEndDate() != null &&
+                                                        currentTime >= promotion.getStartDate().getTime() &&
+                                                        currentTime <= promotion.getEndDate().getTime();
+                                            });
+
+                            // Nếu cả hai đều có khuyến mãi đang hoạt động, chọn cái có số lượng khuyến mãi nhiều hơn
+                            if (existingHasPromotion && replacementHasPromotion) {
+                                return (replacement.getPromotionProducts().size() > existing.getPromotionProducts().size()) ? replacement : existing;
+                            }
+
+                            // Nếu chỉ có một trong hai cái có khuyến mãi đang hoạt động, chọn cái có khuyến mãi
+                            if (replacementHasPromotion) {
+                                return replacement;
+                            } else {
+                                return existing;
+                            }
+                        }
                 ))
                 .values()
                 .stream()
                 .toList();  // Chuyển thành danh sách (Java 16+)
     }
+
+
 
     private List<ProductDTO> filter(List<CategoryDTO> cartItemDTOList, String selectedCategory, Double filterMinPrice, Double filterMaxPrice, String selectedColor, String selectedSize, String selectedPromotion, String searchName) {
         return cartItemDTOList.stream()
@@ -449,9 +516,8 @@ public class CategoryServiceImpl implements ICategoryService {
                 break;
 
             case "Ưu đãi hấp dẫn nhất":
-                // Sắp xếp theo % giảm giá từ cao đến thấp
+                // Sắp xếp theo tổng rating của các reviewDTOList (sản phẩm nào có tổng rating lớn nhất)
                 sortableList.sort((p1, p2) -> {
-
                     int comparePromotions = comparePromotions(p1, p2);
                     if (comparePromotions != 0) {
                         return comparePromotions;
@@ -463,7 +529,6 @@ public class CategoryServiceImpl implements ICategoryService {
                     if (purchased2 != purchased1) {
                         return Integer.compare(purchased2, purchased1);
                     }
-
 
                     double ratingSum1 = calculateAverageRating(sortableList, p1.getProductName());
                     double ratingSum2 = calculateAverageRating(sortableList, p2.getProductName());

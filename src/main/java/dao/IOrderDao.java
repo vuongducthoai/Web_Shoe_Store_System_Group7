@@ -14,4 +14,5 @@ public interface IOrderDao {
     boolean updateOrderStatus(String orderId, OrderStatus newStatus);
     List<OrderDTO> findOrdersByCustomerId(int customerId);
     OrderDTO getOrderById(int orderId);
+    long quantityOrderCompleted();
 }

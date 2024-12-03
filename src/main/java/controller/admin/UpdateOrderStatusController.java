@@ -32,9 +32,9 @@ public class UpdateOrderStatusController extends HttpServlet {
                 getServletContext().setAttribute("fullOrderList", updatedOrderList);
             }
             // Chuyển hướng về danh sách đơn hàng sau khi cập nhật
-            resp.sendRedirect(req.getContextPath() + "/admin/orders?message=success");
+            resp.sendRedirect(req.getContextPath() + "/Admin");
         } else {
-            resp.sendRedirect(req.getContextPath() + "/admin/orders?message=fail");
+            resp.sendRedirect(req.getContextPath() + "/Admin");
         }
     }
 }
