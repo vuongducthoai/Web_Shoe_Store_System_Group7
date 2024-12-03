@@ -63,6 +63,7 @@
 </head>
 <body>
 
+<jsp:include page="../header.jsp"></jsp:include>
 <div class="container py-5">
     <div class="filters mb-4">
         <form action="${pageContext.request.contextPath}/admin/orders" method="get" class="row g-2 align-items-center">
