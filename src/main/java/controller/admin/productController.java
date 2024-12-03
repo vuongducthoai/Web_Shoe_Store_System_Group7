@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
         maxFileSize = 1024 * 1024 * 10,      // 10MB
         maxRequestSize = 1024 * 1024 * 50    // 50MB
 )
-public class productController extends HttpServlet {
+public class ProductController extends HttpServlet {
     IProductService productService = new ProductServiceImpl();
     ICategoryService categoryService = new CategoryServiceImpl();
 
@@ -313,7 +313,6 @@ public class productController extends HttpServlet {
         }
         response.sendRedirect(request.getContextPath() + "/Admin");
 
-
     }
 
     private void addColorWithDetails(HttpServletRequest req, HttpServletResponse resp, List<String> oldColors) throws Exception {
@@ -509,7 +508,7 @@ public class productController extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        resp.sendRedirect(req.getContextPath() + "/Admin");
+        req.getRequestDispatcher("/view/admin/admin.jsp").forward(req, resp);
     }
 
 }
