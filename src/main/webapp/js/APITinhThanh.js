@@ -12,8 +12,15 @@ promise.then(function (result) {
 });
 
 function renderCity(data) {
+    var selectedProvince = '<c:out value="${customerDTO.getAddressDTO().getProvince()}" />';
+    alert(selectedProvince);
     for (const x of data) {
-        citis.options[citis.options.length] = new Option(x.Name, x.Name);
+        var option = new Option(x.Name, x.Name);
+        // Kiểm tra xem tỉnh nào được chọn và đánh dấu nó
+        if (x.Name === selectedProvince) {
+            option.selected = true;  // Chọn tỉnh nếu khớp
+        }
+        citis.options[citis.options.length] = option;
     }
     citis.onchange = function () {
         district.length = 1;
