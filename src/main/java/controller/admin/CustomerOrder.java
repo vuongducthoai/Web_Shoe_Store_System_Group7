@@ -18,10 +18,7 @@ import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.Part;
+import jakarta.servlet.http.*;
 import service.IOrderService;
 import service.IReviewService;
 import service.Impl.OrderServiceImpl;
@@ -37,50 +34,62 @@ public class CustomerOrder extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getServletPath();
+<<<<<<< Updated upstream
         int customerId = 48;
 //        String customerIdParam = req.getParameter("id");
-        if ("/customer/orders".equals(path)) {
+=======
 
-             // Ví dụ, lấy từ session hoặc context xác thực
-            //int customerId = Integer.parseInt(customerIdParam);
-            // Gọi service để lấy danh sách đơn hàng của khách hàng
+        // Lấy session hiện tại
+        HttpSession session = req.getSession(); // Không tạo session mới nếu chưa có
+//        if (session == null || session.getAttribute("userID") == null) {
+//            resp.sendRedirect("/sign-in"); // Chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
+//            return;
+//        }
+
+        // Lấy userID từ session
+
+
+
+                UserDTO userDTO = (UserDTO) session.getAttribute("user");
+        int customerId = userDTO.getUserID();
+>>>>>>> Stashed changes
+        if ("/customer/orders".equals(path)) {
+            // Lấy danh sách đơn hàng của khách hàng từ service
             List<OrderDTO> customerOrders = orderService.getOrdersByCustomerId(customerId);
+
             if (customerOrders != null && !customerOrders.isEmpty()) {
                 req.setAttribute("customerOrders", customerOrders);
             } else {
-                System.out.println("Lỗi: Không có đơn hàng");
-                req.setAttribute("errorMessage", "Không có đơn hàng nào."); // Truyền thông báo lỗi
-
+                req.setAttribute("errorMessage", "Không có đơn hàng nào.");
             }
 
-            // Chuyển hướng đến trang hiển thị đơn hàng
+            // Chuyển đến trang hiển thị lịch sử đơn hàng
             RequestDispatcher dispatcher = req.getRequestDispatcher("/view/customer/orderHistory.jsp");
             dispatcher.forward(req, resp);
         } else if ("/customer/orderDetails".equals(path)) {
             // Lấy ID đơn hàng từ tham số yêu cầu
-               orderIdParam = req.getParameter("idOrder");
-
+            String orderIdParam = req.getParameter("idOrder");
 
             if (orderIdParam != null) {
                 int orderId = Integer.parseInt(orderIdParam);
 
-                // Gọi lại service để lấy chi tiết đơn hàng từ database
+                // Lấy chi tiết đơn hàng
                 OrderDTO orderDetails = orderService.getOrderById(orderId);
 
                 if (orderDetails != null) {
-                    // Lấy thông tin review cho từng sản phẩm trong đơn hàng
+                    // Lấy review cho từng sản phẩm trong đơn hàng
                     for (OrderItemDTO item : orderDetails.getOrderItems()) {
                         int productId = item.getProductDTO().getProductId();
-                        ReviewDTO reviewDTO = reviewService.getReviewsByProductId(productId); // Lấy review cho sản phẩm
-                        item.getProductDTO().setReviewDTO(reviewDTO); // Gán review vào sản phẩm
+                        ReviewDTO reviewDTO = reviewService.getReviewsByProductId(productId);
+                        item.getProductDTO().setReviewDTO(reviewDTO);
                     }
 
                     req.setAttribute("orderDetails", orderDetails);
-                    req.setAttribute("customerId", customerId);
+                    req.setAttribute("customerId", customerId); // Truyền thêm customerId vào request
                     RequestDispatcher dispatcher = req.getRequestDispatcher("/view/customer/orderDetail.jsp");
                     dispatcher.forward(req, resp);
                 } else {
-                    resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Không tìm thấy đơn hàng");
+                    resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Không tìm thấy đơn hàng.");
                 }
             }
         }
