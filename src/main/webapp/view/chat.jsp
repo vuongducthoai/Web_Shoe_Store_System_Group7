@@ -38,9 +38,13 @@
 
     window.onload = function () {
 
-        var userJson = `${userJson}`;  // Dùng phương thức toJson() để chuyển đối tượng thành chuỗi JSON
+        var userJson = `${userJson}`;
 
-        socket = new WebSocket("ws://localhost:8080/chat");
+        // Dùng domain hiện tại để tự động xác định đường dẫn WebSocket
+        var wsUrl = window.location.protocol === "https:"
+            ? "wss://" + window.location.host + "/chat"  // Sử dụng 'wss' cho HTTPS
+            : "ws://" + window.location.host + "/chat"; // Sử dụng 'ws' cho HTTP
+        socket = new WebSocket(wsUrl);
 
         socket.onopen = function () {
             console.log("Connected to WebSocket");
