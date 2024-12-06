@@ -208,6 +208,25 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/toastMessage.js"></script>
 <script src="${pageContext.request.contextPath}/js/ItemCart.js"></script>
-<script src="${pageContext.request.contextPath}/js/DirectHeader.js"></script>
+<script>
+    // Hàm điều hướng đến trang chat
+    function redirectToChatPage() {
+        var contextPath = "${pageContext.request.contextPath}";  // Lấy context path từ JSP
+        window.location.href = contextPath + "/Chat";  // Chuyển hướng đến trang chat
+    }
+
+    // Hàm điều hướng đến trang thông báo
+    function redirectToNotifyPage() {
+        var contextPath = "${pageContext.request.contextPath}";  // Lấy context path từ JSP
+        window.location.href = contextPath + "/Notify";  // Chuyển hướng đến trang thông báo
+    }
+
+    // Hàm điều hướng đến trang giỏ hàng
+    function redirectToCartPage() {
+        var contextPath = "${pageContext.request.contextPath}";  // Lấy context path từ JSP
+        window.location.href = contextPath + "/Cart";  // Chuyển hướng đến trang giỏ hàng
+    }
+</script>
+
 </body>
 </html>

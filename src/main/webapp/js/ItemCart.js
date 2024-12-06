@@ -59,9 +59,6 @@ let AddItemWithQuantity = (idProduct,Quantity)=>{
         }
     })
 }
-function redirectToCartPage() {
-    window.location.href = "/CNPM/Cart";  // Thay "link-to-cart-page" bằng URL thực tế
-}
 RenderQuantityCart();
 
 ///Test ham nay khong dung
