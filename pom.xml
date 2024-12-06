@@ -180,15 +180,15 @@
             <version>2.15.0</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/jakarta.servlet.jsp/jakarta.servlet.jsp-api -->
+        <!-- https://mvnrepository.com/artifact/jakarta.servlet.jsp/jakarta.servlet.jsp-api -->
         <dependency>
             <groupId>jakarta.servlet.jsp</groupId>
             <artifactId>jakarta.servlet.jsp-api</artifactId>
-            <version>3.1.1</version>
+            <version>4.0.0</version>
             <scope>provided</scope>
         </dependency>
 
 
-        <!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
 
 
 
