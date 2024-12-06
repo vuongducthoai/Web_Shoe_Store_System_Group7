@@ -222,7 +222,7 @@ function viewHistory(button) {
     var customerId = button.getAttribute('data-user-id');
     console.log("User ID: " + customerId);
     // Gửi yêu cầu đến controller bằng cách chuyển hướng
-    window.location.href = '/JPAExample_war_exploded/customer/orders?id=' + customerId;
+    window.location.href = '/customer/orders?id=' + customerId;
 }
 
 
@@ -879,4 +879,41 @@ function openAdd(){
     addForm.style.display = "none";
     deleteForm.style.display = "none";
     editForm.style.display = "flex";
+}
+// kiểm tra mail
+function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+// kiểm tra sđt
+function isValidPhone(phone) {
+    const phoneRegex = /^0\d{9}$/;
+    return phoneRegex.test(phone);
+}
+// kiểm tra và báo lỗi
+function validateAccountForm(form) {
+    const emailInput = form.querySelector('input[name="email"]');
+    const phoneInput = form.querySelector('input[name="phone"]');
+
+    const email = emailInput.value.trim();
+    const phone = phoneInput.value.trim();
+
+    let isValid = true;
+    let errorMessage = '';
+
+    if (!isValidEmail(email)) {
+        isValid = false;
+        errorMessage += 'Email không đúng định dạng.\n';
+    }
+
+    if (!isValidPhone(phone)) {
+        isValid = false;
+        errorMessage += 'Số điện thoại phải là 10 số và bắt đầu bằng số 0.\n';
+    }
+
+    if (!isValid) {
+        alert(errorMessage);
+    }
+
+    return isValid;
 }

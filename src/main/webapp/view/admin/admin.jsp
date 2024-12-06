@@ -310,18 +310,8 @@
             </div>
             <!-- Kết thúc quản lý danh mục sản phẩm -->
 
+            <!-- Bắt đầu quản lý tài khoản -->
 
-            <c:if test="${not empty successMessage}">
-                <script>
-                    alert('${successMessage}');
-                </script>
-            </c:if>
-
-            <c:if test="${not empty errorMessage}">
-                <script>
-                    alert('${errorMessage}');
-                </script>
-            </c:if>
             <div class="account-management" id="account-management" style="display: none;">
                 <div class="title">Quản lý tài khoản khách hàng</div>
                 <input type="text" id="search-input" placeholder="Tìm kiếm theo tên khách hàng" >
@@ -341,7 +331,6 @@
                         <tbody id="account-table-body">
                         <c:forEach var="account" items="${accounts}">
                             <tr
-                                <%--ghi nhớ dữ liệu full của 3 cột--%>
                                     data-account-name="${account.user.fullName}"
                                     data-account-email="${account.email}">
 
@@ -350,7 +339,7 @@
                                 <td>${fn:substring(account.user.fullName, 0, 17)}<c:if test="${fn:length(account.user.fullName) > 17}">...</c:if></td>
                                 <td>${fn:substring(account.email, 0, 25)}<c:if test="${fn:length(account.email) > 25}">...</c:if></td>
                                 <td>${account.user.phone}</td>
-                                <td class="status">${account.user.active ? 'Bị chặn' : 'Hoạt động'}</td>
+                                <td class="status">${account.user.active ? 'Hoạt động' : 'Bị chặn'}</td>
                                 <td><button class="btn btn-primary btn-history" data-user-id="${account.user.userID}" onclick="viewHistory(this)">Xem lịch sử</button></td>
 
                             </tr>
@@ -390,7 +379,7 @@
 
 
                 <!-- sửa thông tin khách hàng  -->
-                <form action="Admin/account" method="POST">
+                <form action="Admin/account" method="POST" onsubmit="return validateAccountForm(this)">
                     <div class="account-management-form" id="edit-account-management-form">
                         <h3>Sửa thông tin khách hàng</h3>
                         <input type="hidden" name="action" value="update">

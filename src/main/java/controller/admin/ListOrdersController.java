@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-@WebServlet(urlPatterns = {"/admin/orders"})
+@WebServlet(urlPatterns = {"/Admin/orders"})
 public class ListOrdersController extends HttpServlet {
     private IOrderService orderService = new OrderServiceImpl();
 
