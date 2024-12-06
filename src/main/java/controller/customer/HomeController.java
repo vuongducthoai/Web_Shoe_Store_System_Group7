@@ -31,40 +31,36 @@ public class HomeController extends HttpServlet {
     private final IProductService productService = new ProductServiceImpl();
     private final IReviewService reviewService = new ReviewServiceImpl();
     private final IProductPromotion productPromotion = new ProductPromotionImpl();
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getServletPath();
         if(path.equals("/home")) {
 
-            //Load Category
+            // Load Category
             List<CategoryDTO> categoryDTOList = categoryService.listCategory();
             req.setAttribute("categoryDTOList", categoryDTOList);
 
-            //Load Product
-            List<ProductDTO> productDTOList = productService.findAllWithPagination(0 ,8);
+            // Load Product
+            List<ProductDTO> productDTOList = productService.findAllWithPagination(0, 8);
             req.setAttribute("productDTOList", productDTOList);
 
-
-            //Load Review
+            // Load Review
             List<ReviewDTO> reviewDTOList = reviewService.getTop5Reviews();
             req.setAttribute("reviewDTOList", reviewDTOList);
 
-
-
-
-            //Load Promotion
+            // Load Promotion
             LocalDate startDate = LocalDate.parse("2024-01-20");
             LocalDate endDate = LocalDate.parse("2025-12-30");
             int limit = 8;
             int index = 1;
             int num = productPromotion.countProductPromotion(startDate, endDate);
-            int numpage = num / limit;   //So luong trang
+            int numpage = num / limit; // Số lượng trang
             int num2 = num % limit;
 
-            if(num != 0 && num2 != 0){
+            if (num != 0 && num2 != 0) {
                 numpage++;
             }
-
 
             LocalDateTime startDateTime = LocalDateTime.of(2024, 1, 20, 0, 0, 0, 0);
             LocalDateTime endDateTime = LocalDateTime.of(2025, 12, 30, 23, 59, 59, 999999999);
@@ -75,14 +71,18 @@ public class HomeController extends HttpServlet {
             req.setAttribute("startDate", startDateStr);
             req.setAttribute("endDate", endDateStr);
 
-           List<PromotionProductDTO> promotionProductDTOList = productPromotion.findTop8ProductPromotionNow(startDate, endDate, index - 1, limit);
-           req.setAttribute("promotionProductDTOList", promotionProductDTOList);
-           req.setAttribute("numpage", numpage); // So luong trang
+            List<PromotionProductDTO> promotionProductDTOList = productPromotion.findTop8ProductPromotionNow(startDate, endDate, index - 1, limit);
+            req.setAttribute("promotionProductDTOList", promotionProductDTOList);
+            req.setAttribute("numpage", numpage); // Số lượng trang
             req.getRequestDispatcher("./index.jsp").forward(req, resp);
-        } else if(path.equals("/sign-in")) {
-            resp.sendRedirect("/view/login.jsp");
-        } else if(path.equals("/sign-up")) {
-            resp.sendRedirect("/view/Register.jsp");
+        } else if (path.equals("/sign-in")) {
+            // Dùng contextPath khi chuyển hướng
+            String loginPage = req.getContextPath() + "/view/login.jsp";
+            resp.sendRedirect(loginPage);
+        } else if (path.equals("/sign-up")) {
+            // Dùng contextPath khi chuyển hướng
+            String registerPage = req.getContextPath() + "/view/Register.jsp";
+            resp.sendRedirect(registerPage);
         }
     }
 }

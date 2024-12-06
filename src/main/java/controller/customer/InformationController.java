@@ -70,11 +70,11 @@ public class InformationController extends HttpServlet {
 
                 req.getRequestDispatcher("/view/customer/informationCustomer.jsp").forward(req, resp);
             } else {
-                resp.sendRedirect("error.jsp");
+                resp.sendRedirect(req.getContextPath() +"error.jsp");
             }
         } catch (Exception e) {
             System.out.println("Error in doGet: " + e.getMessage());
-            resp.sendRedirect("error.jsp");
+            resp.sendRedirect(req.getContextPath() +"error.jsp");
         }
     }
     @Override
@@ -118,7 +118,7 @@ public class InformationController extends HttpServlet {
             // Kiểm tra kết quả cập nhật và thực hiện chuyển hướng
             if (customerUpdated || addressUpdated) {
                 // Gọi lại doGet để lấy thông tin mới
-                resp.sendRedirect("Information"); // Điều này sẽ gọi lại doGet
+                resp.sendRedirect(req.getContextPath() +"Information"); // Điều này sẽ gọi lại doGet
                 System.out.println("Cập nhật thành công");
             } else {
                 // Nếu cập nhật thất bại, chuyển hướng về cùng trang
@@ -127,7 +127,7 @@ public class InformationController extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();  // In chi tiết lỗi ra console
             System.out.println("Error in doPost: " + e.getMessage());
-            resp.sendRedirect("/view/customer/informationCustomer.jsp");  // Chuyển hướng khi có lỗi
+            resp.sendRedirect(req.getContextPath() +"/view/customer/informationCustomer.jsp");  // Chuyển hướng khi có lỗi
         }
     }
 

@@ -32,7 +32,7 @@ public class NotifyController extends HttpServlet {
             dispatcher.forward(request, response);
         }
         else{
-            response.sendRedirect("/view/login.jsp");
+            response.sendRedirect(request.getContextPath() +"/view/login.jsp");
         }
 
 

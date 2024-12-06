@@ -24,7 +24,7 @@ public class StatisticsController extends HttpServlet {
 
         req.setAttribute("inventoryQuantity", inventoryQuantity);
         req.setAttribute("totalAmount", totalAmount);
-        RequestDispatcher dispatcher = req.getRequestDispatcher("/view/admin/statistics.jsp");
+        RequestDispatcher dispatcher = req.getRequestDispatcher( "/view/admin/statistics.jsp");
         dispatcher.forward(req, resp); // Đảm bảo forward trước khi gửi bất kỳ dữ liệu nào
 
 

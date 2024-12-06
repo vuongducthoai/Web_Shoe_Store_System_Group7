@@ -19,6 +19,6 @@ public class LogoutController extends HttpServlet {
             // Xóa session
             session.invalidate();
         }
-        response.sendRedirect("/home");
+        response.sendRedirect(request.getContextPath() +"/home");
     }
 }

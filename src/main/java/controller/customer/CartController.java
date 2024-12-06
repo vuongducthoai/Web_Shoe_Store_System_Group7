@@ -53,7 +53,7 @@ public class CartController extends HttpServlet {
         if (userDTO==null ||!userDTO.isActive()){
             // Xóa session
             session.invalidate();
-            resp.sendRedirect("/view/login.jsp");
+            resp.sendRedirect(req.getContextPath() +"/view/login.jsp");
             return;
         }
         if (userDTO.getAccount().getRole()== RoleType.ADMIN){
@@ -66,7 +66,7 @@ public class CartController extends HttpServlet {
                 Cart_View(req, resp);
                 break;
             case "/Cart/Add":
-                resp.sendRedirect("http://localhost:8080/Cart");
+                resp.sendRedirect(req.getContextPath() + "/Cart");
                 break;
             default:
                 break;
@@ -92,7 +92,7 @@ public class CartController extends HttpServlet {
         if (userDTO==null ||!userDTO.isActive()){
             // Xóa session
             session.invalidate();
-            resp.sendRedirect("/view/login.jsp");
+            resp.sendRedirect(req.getContextPath() +"/view/login.jsp");
             return;
         }
         if (userDTO.getAccount().getRole()== RoleType.ADMIN){

@@ -61,7 +61,7 @@ public class ChatController extends HttpServlet {
             dispatcher.forward(req, resp);
         } else {
             session.invalidate();
-            resp.sendRedirect("/view/login.jsp");
+            resp.sendRedirect(req.getContextPath() +"/view/login.jsp");
             return;
             }
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing or invalid parameters");

@@ -84,7 +84,7 @@ public class RegisterController extends HttpServlet {
             String code = sendOTPEmail.getRandom();
             session.setAttribute("code", code);
             sendOTPEmail.sendEmail(customerDTO.getAccount().getEmail(), code);
-            resp.sendRedirect("./OTPRegister.jsp");
+            resp.sendRedirect(req.getContextPath() +"./OTPRegister.jsp");
 
         } else if (path.equals("/verifyOTP")) {
             String num1 = req.getParameter("num1");
@@ -112,7 +112,7 @@ public class RegisterController extends HttpServlet {
                         req.getRequestDispatcher("/view/Register.jsp").forward(req, resp);
                         return;
                     }
-                    resp.sendRedirect("/view/login.jsp");
+                    resp.sendRedirect(req.getContextPath() +"/view/login.jsp");
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                     req.setAttribute("errorMessage", "Đã xảy ra lỗi. Vui lòng thử lại!");

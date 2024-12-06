@@ -57,9 +57,9 @@ public class LoginController extends HttpServlet {
         req.setAttribute("loginSuccess" , true);
         session.setAttribute("user", userDTO);
         if(userDTO.getAccount().getRole().equals(RoleType.ADMIN)) {
-            resp.sendRedirect("/Admin");
+            resp.sendRedirect(req.getContextPath() +"/Admin");
         } else {
-            resp.sendRedirect("/home");
+            resp.sendRedirect(req.getContextPath() +"/home");
         }
     }
 
@@ -92,9 +92,9 @@ public class LoginController extends HttpServlet {
                 session.setAttribute("user", userDTO);
                 req.setAttribute("errorMessage", "Đăng nhập thanhh công");
                 if(userDTO.getAccount().getRole().equals(RoleType.ADMIN)){
-                    resp.sendRedirect("/Admin");
+                    resp.sendRedirect(req.getContextPath() +"/Admin");
                 } else {
-                    resp.sendRedirect("/home");
+                    resp.sendRedirect(req.getContextPath() +"/home");
                 }
 
             } else {

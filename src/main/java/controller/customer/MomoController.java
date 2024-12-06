@@ -39,7 +39,7 @@ public class MomoController extends HttpServlet {
         UserDTO userDTO = (UserDTO) session.getAttribute("user");
         if (userDTO==null ||!userDTO.isActive()){
             session.invalidate();
-            resp.sendRedirect("/view/login.jsp");
+            resp.sendRedirect(req.getContextPath() +"/view/login.jsp");
             return;
         }
         if (userDTO.getAccount().getRole()== RoleType.ADMIN){
@@ -63,7 +63,7 @@ public class MomoController extends HttpServlet {
         UserDTO userDTO = (UserDTO) session.getAttribute("user");
         if (userDTO==null || !userDTO.isActive()){
             session.invalidate();
-            resp.sendRedirect("/view/login.jsp");
+            resp.sendRedirect(req.getContextPath() +"/view/login.jsp");
             return;
         }
         if (userDTO.getAccount().getRole()== RoleType.ADMIN){
@@ -166,7 +166,7 @@ public class MomoController extends HttpServlet {
             if (response.statusCode() == 200) {
                 JSONObject jsonKQ = new JSONObject((response.body()));
                 if (jsonKQ.getInt("resultCode") == 0)
-                    resp.sendRedirect(jsonKQ.getString("shortLink"));
+                    resp.sendRedirect(req.getContextPath() +jsonKQ.getString("shortLink"));
             } else {
                 req.setAttribute("errCode",1);
                 req.setAttribute("message","Phương thức thanh toán đang bị lỗi. Vui lòng thử lại sau.");
