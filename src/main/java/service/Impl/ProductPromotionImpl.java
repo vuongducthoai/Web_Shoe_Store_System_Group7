@@ -32,9 +32,9 @@ public class ProductPromotionImpl implements IProductPromotion {
     public int countProductPromotion(LocalDate startDate, LocalDate endDate) {
         return productPromotion.countPromotion(startDate, endDate);
     }
-    public  PromotionProductDTO promotioOnProductInfo (String productName){
-        return productPromotion.promotioOnProductInfo(productName);
-    }
+//    public  PromotionProductDTO promotioOnProductInfo (String productName){
+//        return productPromotion.promotioOnProductInfo(productName);
+//    }
     public boolean CheckPromotionProduct(Date start, Date end, List<String> productName) {
         List<PromotionProductDTO> promotionProductList = getAll();
 

@@ -97,7 +97,7 @@ function updateOrderSummary(name, type, startDate, endDate, discount, promotionI
     console.log(promotionId);
     // Hiển thị các sản phẩm đã chọn
 
-    const newUrl = `/JPAExample_war_exploded/Admin`;
+    const newUrl = `/Admin`;
 
 // Cập nhật URL mà không làm mới trang
     window.history.pushState(

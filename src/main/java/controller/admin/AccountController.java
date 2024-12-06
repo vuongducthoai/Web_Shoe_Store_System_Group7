@@ -204,7 +204,7 @@ public class AccountController extends HttpServlet {
 
                 case "block":
                     // Chặn tài khoản
-                    boolean isBlocked = accountService.updateAccountStatus(accountIDInt, 1);
+                    boolean isBlocked = accountService.updateAccountStatus(accountIDInt, 0);
                     if (isBlocked) {
                         req.setAttribute("successMessage", "Tài khoản đã bị chặn.");
                     } else {
@@ -214,7 +214,7 @@ public class AccountController extends HttpServlet {
 
                 case "unblock":
                     // Bỏ chặn tài khoản
-                    boolean isUnblocked = accountService.updateAccountStatus(accountIDInt, 0);
+                    boolean isUnblocked = accountService.updateAccountStatus(accountIDInt, 1);
                     if (isUnblocked) {
                         req.setAttribute("successMessage", "Tài khoản đã được bỏ chặn.");
                     } else {
@@ -228,7 +228,7 @@ public class AccountController extends HttpServlet {
             }
 
             // Redirect về trang quản lý tài khoản
-            resp.sendRedirect(req.getContextPath() + "/Admin/account");
+            resp.sendRedirect(req.getContextPath() + "/Admin");
         }
 
     }
