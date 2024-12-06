@@ -60,7 +60,7 @@ let AddItemWithQuantity = (idProduct,Quantity)=>{
     })
 }
 function redirectToCartPage() {
-    window.location.href = "/Cart";  // Thay "link-to-cart-page" bằng URL thực tế
+    window.location.href = "/CNPM/Cart";  // Thay "link-to-cart-page" bằng URL thực tế
 }
 RenderQuantityCart();
 
