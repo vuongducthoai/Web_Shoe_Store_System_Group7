@@ -203,34 +203,38 @@ public class OrderImpl implements IOrderDao {
 
                 // Chuyển đổi từ Order sang OrderDTO
                 List<OrderDTO> orderDTOs = orders.stream().map(order -> {
-
                     // Chuyển đổi Customer sang CustomerDTO
-                    CustomerDTO customerDTO = new CustomerDTO(
-                            order.getCustomer().getUserID(),
-                            order.getCustomer().getFullName(),
-                            order.getCustomer().getPhone(),
-                            order.getCustomer().isActive(),
-                            order.getCustomer().getDateOfBirth(),
-                            order.getCustomer().getLoyalty()
-                    );
-
+                    CustomerDTO customerDTO = null;
+                    if (order.getCustomer() != null) {
+                        customerDTO = new CustomerDTO(
+                                order.getCustomer().getUserID(),
+                                order.getCustomer().getFullName(),
+                                order.getCustomer().getPhone(),
+                                order.getCustomer().isActive(),
+                                order.getCustomer().getDateOfBirth(),
+                                order.getCustomer().getLoyalty()
+                        );
+                    }
 
                     // Chuyển đổi Payment sang PaymentDTO
-                    PaymentDTO paymentDTO = new PaymentDTO(
-                            order.getPayment().getPaymentId(),
-                            null, // Quan hệ vòng lặp OrderDTO, có thể set null
-                            order.getPayment().getPaymentMethod(),
-                            order.getPayment().getAmount(),
-                            order.getPayment().getPaymentDate(),
-                            order.getPayment().isStatus(),
-                            order.getPayment().getMomoBillId()
-                    );
+                    PaymentDTO paymentDTO = null;
+                    if (order.getPayment() != null) {
+                        paymentDTO = new PaymentDTO(
+                                order.getPayment().getPaymentId(),
+                                null, // Quan hệ vòng lặp OrderDTO, có thể set null
+                                order.getPayment().getPaymentMethod(),
+                                order.getPayment().getAmount(),
+                                order.getPayment().getPaymentDate(),
+                                order.getPayment().isStatus(),
+                                order.getPayment().getMomoBillId()
+                        );
+                    }
 
                     // Tạo OrderDTO
                     return new OrderDTO(
                             String.valueOf(order.getOrderId()),  // Convert orderId to String
                             customerDTO,
-                            null,
+                            null, // Quan hệ vòng lặp OrderDTO, có thể set null
                             paymentDTO,
                             order.getShippingAddress(),
                             order.getOrderStatus(),
@@ -244,6 +248,7 @@ public class OrderImpl implements IOrderDao {
             }
         }
     }
+
 
     @Override
     public boolean updateOrderStatus(String orderId, OrderStatus newStatus) {

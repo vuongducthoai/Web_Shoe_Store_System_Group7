@@ -186,7 +186,7 @@
         <div class="order-detail-header">
             <h2>Chi Tiết Đơn Hàng #${orderDetails.orderId}</h2>
             <h2>Trạng Thái:  ${orderDetails.orderStatus}</h2>
-            <a href="/customer/orders" class="btn-back">Quay Lại</a>
+            <a href="${pageContext.request.contextPath}//customer/orders" class="btn-back">Quay Lại</a>
         </div>
 
         <!-- Chi tiết các sản phẩm trong đơn hàng -->

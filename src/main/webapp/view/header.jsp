@@ -187,16 +187,16 @@
 
                 <c:choose>
                     <c:when test="${sessionScope.user == null}">
-                        <a class="sign-in" href="/sign-in">Đăng nhập</a>
+                        <a class="sign-in" href="${pageContext.request.contextPath}/sign-in">Đăng nhập</a>
                         <span style="font-size: 20px; font-weight: 900;">|</span>
-                        <a class="sign-up" href="/sign-up">Đăng ký</a>
+                        <a class="sign-up" href="${pageContext.request.contextPath}/sign-up">Đăng ký</a>
                     </c:when>
                     <c:otherwise>
                          <span class="user-icon">
                             <i style="font-size: 30px; margin-left: 20px;" class="fa-solid fa-user"></i>
                             <div class="dropdown-menu">
-                                <a href="/InformationUser">Tài Khoản Của Tôi</a>
-                                <a class="sign-out" href="/logout">Đăng xuất</a>
+                                <a href="${pageContext.request.contextPath}/InformationUser">Tài Khoản Của Tôi</a>
+                                <a class="sign-out" href="${pageContext.request.contextPath}/logout">Đăng xuất</a>
                             </div>
                          </span>
                     </c:otherwise>

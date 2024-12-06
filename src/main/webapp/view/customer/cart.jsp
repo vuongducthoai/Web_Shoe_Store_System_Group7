@@ -121,7 +121,7 @@
         <div class="col-md-8">
             <c:forEach var="cart" items="${CartList}">
                 <div class="cart-item d-flex align-items-center custom-bg">
-                    <form action="/product/details" style="position: relative" method="get">
+                    <form action="${pageContext.request.contextPath}/product/details" style="position: relative" method="get">
                         <input name="productName" hidden="hidden" value="${cart.productDTO.productName}">
                         <img  class="border border-dark" alt="Gradient Graphic T-shirt" height="150" src="${cart.productDTO.getBase64Image()}" width="150"/>
                         <button type="submit" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0;"></button>
@@ -147,7 +147,7 @@
                         </p>
                     </div>
                     <div class="ms-auto d-flex align-items-center">
-                        <form action="/Cart/Remove" method="post">
+                        <form action="${pageContext.request.contextPath}/Cart/Remove" method="post">
                             <input type="text" value="${cart.cartItemId}" name="cartItemId" hidden="hidden"/>
                             <input type="text" value="${idPr}" name="idPr" hidden="hidden"/>
                             <button class="btn btn-outline-secondary">
@@ -157,14 +157,14 @@
                         <span class="mx-2">
                                 ${cart.quantity}
                        </span>
-                        <form action="/Cart/Add" method="post">
+                        <form action="${pageContext.request.contextPath}/Cart/Add" method="post">
                             <input type="text" value="${cart.productDTO.productId}" name="idProduct" hidden="hidden"/>
                             <input type="text" value="${idPr}" name="idPr" hidden="hidden"/>
                             <button class="btn btn-outline-secondary">
                                 +
                             </button>
                         </form>
-                        <form action="/Cart/Delete_Item" method="post">
+                        <form action="${pageContext.request.contextPath}/Cart/Delete_Item" method="post">
                             <input type="text" value="${cart.cartItemId}" name="cartItemId" hidden="hidden">
                             <input type="text" value="${idPr}" name="idPr" hidden="hidden"/>
                             <button type="submit" class="btn btn-outline-danger ms-3">
@@ -228,7 +228,7 @@
                         <fmt:formatNumber value="${Sum}" groupingUsed="true"/> VND
                     </span>
                 </p>
-                <form action="/Momo_pay" method="post">
+                <form action="${pageContext.request.contextPath}/Momo_pay" method="post">
                     <input type="text" name="cartItem" value="${JsonCart}" hidden="hidden">
                     <input type="text" name="Total" value="${Sum}" hidden="hidden">
                     <input type="text" name="Discount" value="${discount}" hidden="hidden">

@@ -37,7 +37,7 @@
                     <i class="fas fa-check-circle success-icon"></i>
                     <h1 class="card-title mt-3">Giao dịch thành công!</h1>
                     <p class="card-text">Cảm ơn bạn đã mua hàng. Đơn hàng của bạn đã được xử lý thành công.</p>
-                    <a href="/home" class="btn btn-primary mt-3">Quay về trang chủ</a>
+                    <a href="${pageContext.request.contextPath}//home" class="btn btn-primary mt-3">Quay về trang chủ</a>
                 </div>
             </div>
         </div>

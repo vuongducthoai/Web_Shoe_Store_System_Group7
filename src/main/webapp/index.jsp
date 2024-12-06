@@ -164,7 +164,7 @@
     <div class="wrapper" style="flex-wrap: wrap" id="product-list">
         <c:forEach var="promotionProduct" items="${promotionProductDTOList}">
             <div class="product" style="position: relative; flex: 0 0 23%; max-width: 25%; height: 480px">
-                <form action="/product/details" method="GET">
+                <form action="${pageContext.request.contextPath}/product/details" method="GET">
                     <input type="hidden" name="productName" value="${promotionProduct.product.productName}">
                     <div class="product-image">
                         <figure><img src="${promotionProduct.product.getBase64Image()}" alt="Foundation"></figure>

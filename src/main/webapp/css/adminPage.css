@@ -98,7 +98,7 @@ nav a.active::after, nav a:hover::after {
 
 
 .sidebar {
-    width: 25%;
+    width: 18%;
     height: 100vh; /* Đảm bảo sidebar cao bằng màn hình */
     border-right: 2px solid #ccc;
     height: 100vh;

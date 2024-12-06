@@ -82,7 +82,7 @@
     </style>
 </head>
 <body class="bg-primary"><div class="container height-100 d-flex justify-content-center align-items-center">
-    <form action="/verifyOTP" method="POST">
+    <form action="${pageContext.request.contextPath}/verifyOTP" method="POST">
     <div class="position-relative">
         <div class="card p-2 text-center">
             <h6>Please enter the one time password <br> to verify your account</h6>

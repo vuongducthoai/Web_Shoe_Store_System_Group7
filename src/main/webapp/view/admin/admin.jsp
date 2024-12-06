@@ -141,7 +141,7 @@
 
 
                     <!-- nút thêm sản phẩm -->
-                    <form action="ProductController" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+                    <form action="${pageContext.request.contextPath}/ProductController" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
                         <div class="product-management-form" id="add-product-management-form">
                             <h3>Thêm sản phẩm mới</h3>
 
@@ -174,7 +174,7 @@
 
 
                     <%--  Nút sửa sản phẩm--%>
-                    <form action="ProductController" method="post" enctype="multipart/form-data" onsubmit="return validateFormEditProduct()">
+                    <form action="${pageContext.request.contextPath}/ProductController" method="post" enctype="multipart/form-data" onsubmit="return validateFormEditProduct()">
                         <div class="product-management-form" id="edit-product-management-form">
                             <h3>Sửa sản phẩm</h3>
 
@@ -210,7 +210,7 @@
 
 
                     <%-- Nút xóa sản phẩm--%>
-                    <form action="ProductController" method="post" >
+                    <form action="${pageContext.request.contextPath}/ProductController" method="post" >
                         <div class="product-management-form" id="delete-product-management-form">
                             <h3>Xóa sản phẩm</h3>
                             <input type="text" name="productName" id="delete-product-id" placeholder="Nhập tên sản phẩm">
@@ -238,7 +238,7 @@
                                     <td>${category.categoryId}</td>
                                     <td>${category.categoryName}</td>
                                     <td>
-                                        <form action="CategoryController" method="post" style="display:inline;">
+                                        <form action="${pageContext.request.contextPath}/CategoryController" method="post" style="display:inline;">
                                             <input type="hidden" name="submitAction" value="viewProducts">
                                             <input type="hidden" name="categoryId" value="${category.categoryId}">
                                             <input type="hidden" name="categoryName" value="${category.categoryName}">
@@ -264,7 +264,7 @@
 
 
                     <!-- nút thêm danh mục sản phẩm -->
-                    <form action="CategoryController" method="post" >
+                    <form action="${pageContext.request.contextPath}/CategoryController" method="post" >
                         <div class="category-management-form" id="add-category-management-form">
                             <h3>Thêm danh mục mới</h3>
 
@@ -283,7 +283,7 @@
 
 
                     <%-- sửa danh mục sản phẩm--%>
-                    <form action="CategoryController" method="post" >
+                    <form action="${pageContext.request.contextPath}/CategoryController" method="post" >
                         <div class="category-management-form" id="edit-category-management-form">
                             <h3>Sửa danh mục</h3>
                             <label for="edit-category-id">ID</label>
@@ -298,7 +298,7 @@
 
 
                     <%--nút xóa danh mục sản phẩm--%>
-                    <form action="CategoryController" method="post" >
+                    <form action="${pageContext.request.contextPath}/CategoryController" method="post" >
                         <div class="category-management-form" id="delete-category-management-form">
                             <h3>Xóa danh mục</h3>
                             <label for="delete-category-id">ID</label>
@@ -379,7 +379,7 @@
 
 
                 <!-- sửa thông tin khách hàng  -->
-                <form action="Admin/account" method="POST" onsubmit="return validateAccountForm(this)">
+                <form action="${pageContext.request.contextPath}/Admin/account" method="POST" onsubmit="return validateAccountForm(this)">
                     <div class="account-management-form" id="edit-account-management-form">
                         <h3>Sửa thông tin khách hàng</h3>
                         <input type="hidden" name="action" value="update">
@@ -405,7 +405,7 @@
                 <!-- chặn khách hàng  -->
 
 
-                <form action="Admin/account" method="POST">
+                <form action="${pageContext.request.contextPath}/Admin/account" method="POST">
                     <div class="account-management-form" id="block-account-management-form">
                         <h3>Chặn tài khoản khách hàng</h3>
 
@@ -418,7 +418,7 @@
                 </form>
 
                 <!--bỏ chặn khách hàng  -->
-                <form action="Admin/account" method="POST">
+                <form action="${pageContext.request.contextPath}/Admin/account" method="POST">
                     <div class="account-management-form" id="unBlock-account-management-form">
                         <h3> Bỏ chặn tài khoản khách hàng</h3>
 

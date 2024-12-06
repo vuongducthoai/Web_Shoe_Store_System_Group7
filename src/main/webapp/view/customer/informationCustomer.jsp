@@ -40,7 +40,7 @@
             </div>
 
             <!-- Form -->
-            <form action="Information" method="post">
+            <form action="${pageContext.request.contextPath}/Information" method="post">
                 <!-- Hidden field for userID -->
                 <input type="text" name="userID" value="<c:out value='${userID}' />">
                 <input type="text" name="accountID" value="<c:out value='${accountID}' />" readonly>

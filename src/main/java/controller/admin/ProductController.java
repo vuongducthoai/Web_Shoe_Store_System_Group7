@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
         maxFileSize = 1024 * 1024 * 10,      // 10MB
         maxRequestSize = 1024 * 1024 * 50    // 50MB
 )
-public class ProductController extends HttpServlet {
+public class productController extends HttpServlet {
     IProductService productService = new ProductServiceImpl();
     ICategoryService categoryService = new CategoryServiceImpl();
 
