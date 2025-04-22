@@ -5,7 +5,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Keyboard Ukey</title>
+    <title>Shoe Store</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link
             href="https://fonts.googleapis.com/css2?family=Libre+Bodoni:wght@500&family=Plus+Jakarta+Sans:wght@400;600&display=swap"
@@ -226,7 +226,7 @@
 
 
         <div class="btn-section">
-<%--            <button class="btn-col active" data-btn="all">All</button>--%>
+            <button class="btn-col active" data-btn="all">all</button>
             <c:forEach var="category" items="${categoryDTOList}">
                 <button class="btn-col" data-btn="${category.categoryId}">
                         ${category.categoryName}

@@ -161,7 +161,7 @@
 <section >
     <nav>
         <a style="text-decoration: none" href="/home" class="logo">
-            <img src="${pageContext.request.contextPath}/image/logo_Keyboard.png" width="100">
+            <img src="${pageContext.request.contextPath}/image/shoe.png">
         </a>
 
         <ul>
