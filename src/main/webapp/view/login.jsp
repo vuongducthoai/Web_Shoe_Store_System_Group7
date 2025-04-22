@@ -26,7 +26,7 @@
   }
 
   .hero-right {
-    background-image: url("../image/logo_login.png");
+    background-image: url("../image/bannerLogo.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

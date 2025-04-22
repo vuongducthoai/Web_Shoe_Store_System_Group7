@@ -22,8 +22,8 @@
         <div class="tag">
             <h1>Contact</h1>
             <a href="#"><i class="fa-solid fa-house"></i>484 Le Van Viet, TP.HCM</a>
-            <a href="#"><i class="fa-solid fa-phone"></i>+84 379331900</a>
-            <a href="#"><i class="fa-solid fa-envelope"></i>ukey_TpHCM@gmail.com</a>
+            <a href="#"><i class="fa-solid fa-phone"></i>+84 59716818</a>
+            <a href="#"><i class="fa-solid fa-envelope"></i>ShoeStoreVip@gmail.com</a>
             <div class="social_link">
                 <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
                 <a href="#"><i class="fa-brands fa-twitter"></i></a>
