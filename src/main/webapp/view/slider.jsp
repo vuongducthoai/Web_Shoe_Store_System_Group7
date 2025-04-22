@@ -47,7 +47,7 @@
 
       <div class="slides-container">
         <div class="slide" style="position: relative;;">
-          <img style="width: 100%; height: 100vh" src="../image/bannerShoeSport.webp">
+          <img style="width: 100%; height: 100vh" src="../image/banner1.jpg">
           <button  class="view_more">View More</button>
         </div>
         <div class="slide" style="position: relative;;">
@@ -56,12 +56,12 @@
              ">View More</button>
         </div>
         <div class="slide" style="position: relative;;">
-          <img style="width: 100%; height: 100vh" src="../image/banner3.webp">
+          <img style="width: 100%; height: 100vh" src="../image/banner3.jpg">
           <button class="view_more" style="         position: absolute;
              ">View More</button>
         </div>
         <div class="slide" style="position: relative;;">
-          <img style="width: 100%; height: 100vh" src="../image/banner4.webp">
+          <img style="width: 100%; height: 100vh" src="../image/banner4.jpg">
           <button class="view_more" style="         position: absolute;
              ">View More</button>
         </div>
