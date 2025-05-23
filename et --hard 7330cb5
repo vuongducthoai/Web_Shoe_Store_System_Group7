@@ -1,0 +1,156 @@
+[33m0737ab4[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{0}: pull --ff --recurse-submodules --progress origin (finish): returning to refs/heads/main
+[33m0737ab4[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{1}: pull --ff --recurse-submodules --progress origin (pick): Create keystore.jks
+[33m35028d3[m HEAD@{2}: pull --ff --recurse-submodules --progress origin (start): checkout 35028d32a57248ee47fdfde51cbcfcb131117825
+[33m7330cb5[m HEAD@{3}: commit: Create keystore.jks
+[33m45a6d94[m HEAD@{4}: pull --ff --recurse-submodules --progress origin: Fast-forward
+[33m9275b82[m HEAD@{5}: commit: Create dump.sql
+[33mc37298a[m HEAD@{6}: commit: Update persistence.xml
+[33m5910263[m HEAD@{7}: checkout: moving from Luc4 to main
+[33mbeaaf09[m[33m ([m[1;32mLuc4[m[33m)[m HEAD@{8}: commit: Update persistence.xml
+[33m91dba2e[m HEAD@{9}: commit: Update ProductController.java
+[33m10bf195[m[33m ([m[1;31morigin/Luc4[m[33m)[m HEAD@{10}: checkout: moving from main to Luc4
+[33m5910263[m HEAD@{11}: reset: moving to HEAD
+[33m5910263[m HEAD@{12}: commit: Update pom.xml
+[33m09042ca[m HEAD@{13}: commit: ds
+[33m95e5297[m HEAD@{14}: commit: comit
+[33mdac1370[m HEAD@{15}: commit: comit
+[33m7fbcea7[m HEAD@{16}: commit: comit
+[33macbee5f[m HEAD@{17}: pull --ff --recurse-submodules --progress origin: Fast-forward
+[33mf2d6be9[m HEAD@{18}: checkout: moving from Luc4 to main
+[33m10bf195[m[33m ([m[1;31morigin/Luc4[m[33m)[m HEAD@{19}: reset: moving to HEAD
+[33m10bf195[m[33m ([m[1;31morigin/Luc4[m[33m)[m HEAD@{20}: reset: moving to HEAD
+[33m10bf195[m[33m ([m[1;31morigin/Luc4[m[33m)[m HEAD@{21}: checkout: moving from main to Luc4
+[33mf2d6be9[m HEAD@{22}: checkout: moving from dung3 to main
+[33m250fb53[m[33m ([m[1;31morigin/dung3[m[33m, [m[1;32mdung3[m[33m)[m HEAD@{23}: checkout: moving from main to dung3
+[33mf2d6be9[m HEAD@{24}: reset: moving to HEAD
+[33mf2d6be9[m HEAD@{25}: checkout: moving from dung3 to main
+[33m250fb53[m[33m ([m[1;31morigin/dung3[m[33m, [m[1;32mdung3[m[33m)[m HEAD@{26}: checkout: moving from main to dung3
+[33mf2d6be9[m HEAD@{27}: commit: âs
+[33m53d6f59[m HEAD@{28}: reset: moving to HEAD
+[33m53d6f59[m HEAD@{29}: reset: moving to HEAD
+[33m53d6f59[m HEAD@{30}: checkout: moving from h1 to main
+[33m9f2b97e[m HEAD@{31}: reset: moving to HEAD
+[33m9f2b97e[m HEAD@{32}: checkout: moving from main to h1
+[33m8d65eff[m HEAD@{33}: reset: moving to HEAD
+[33m8d65eff[m HEAD@{34}: commit: Update chat.jsp
+[33m5ad3523[m HEAD@{35}: commit: ưe
+[33m7286798[m HEAD@{36}: pull --ff --recurse-submodules --progress origin: Fast-forward
+[33mce81d93[m HEAD@{37}: checkout: moving from dung3 to main
+[33m8bf4481[m HEAD@{38}: commit: Update ShoutWebSocket.java
+[33m05b91f7[m HEAD@{39}: commit: n
+[33md1ca767[m HEAD@{40}: checkout: moving from main to dung3
+[33mce81d93[m HEAD@{41}: commit: Update UserServiceImpl.java
+[33mafd4e74[m HEAD@{42}: pull --ff --recurse-submodules --progress origin: Fast-forward
+[33m3bd13a4[m HEAD@{43}: commit: Update LoginController.java
+[33m603e3b7[m HEAD@{44}: checkout: moving from dung3 to main
+[33md1ca767[m HEAD@{45}: reset: moving to HEAD
+[33md1ca767[m HEAD@{46}: checkout: moving from dung2 to dung3
+[33me80ec56[m[33m ([m[1;32mdung2[m[33m)[m HEAD@{47}: commit: rrt
+[33mb421b91[m[33m ([m[1;31morigin/dung2[m[33m)[m HEAD@{48}: checkout: moving from dung3 to dung2
+[33md1ca767[m HEAD@{49}: reset: moving to HEAD
+[33md1ca767[m HEAD@{50}: commit: sdssdsd
+[33m3fd344c[m HEAD@{51}: checkout: moving from main to dung3
+[33m63a35fb[m HEAD@{52}: pull --ff --recurse-submodules --progress origin: Fast-forward
+[33mf3201f8[m HEAD@{53}: checkout: moving from dung3 to main
+[33m3fd344c[m HEAD@{54}: checkout: moving from main to dung3
+[33mf3201f8[m HEAD@{55}: checkout: moving from dung3 to main
+[33m3fd344c[m HEAD@{56}: checkout: moving from dung2 to dung3
+[33mb421b91[m[33m ([m[1;31morigin/dung2[m[33m)[m HEAD@{57}: checkout: moving from dung3 to dung2
+[33m3fd344c[m HEAD@{58}: checkout: moving from main to dung3
+[33m459ed76[m HEAD@{59}: checkout: moving from dung3 to main
+[33m3fd344c[m HEAD@{60}: pull --ff --recurse-submodules --progress origin: Fast-forward
+[33maf2b2c8[m HEAD@{61}: checkout: moving from main to dung3
+[33m459ed76[m HEAD@{62}: checkout: moving from dung3 to main
+[33maf2b2c8[m HEAD@{63}: commit: sds
+[33m45227ab[m HEAD@{64}: checkout: moving from main to dung3
+[33mde4ffab[m HEAD@{65}: reset: moving to HEAD
+[33mde4ffab[m HEAD@{66}: checkout: moving from dung3 to main
+[33m45227ab[m HEAD@{67}: commit: Update CustomerOrder.java
+[33m23d52d2[m HEAD@{68}: checkout: moving from main to dung3
+[33m23d52d2[m HEAD@{69}: checkout: moving from dung2 to main
+[33mb421b91[m[33m ([m[1;31morigin/dung2[m[33m)[m HEAD@{70}: checkout: moving from main to dung2
+[33m23d52d2[m HEAD@{71}: rebase (finish): returning to refs/heads/main
+[33m23d52d2[m HEAD@{72}: rebase (continue): commit
+[33mc3515b2[m HEAD@{73}: pull --ff --recurse-submodules --progress origin (start): checkout c3515b2d614efd931aafeffee09e46d1b031961b
+[33mf48330b[m HEAD@{74}: checkout: moving from dung2 to main
+[33mac43100[m HEAD@{75}: commit: xcxc
+[33me813cac[m HEAD@{76}: checkout: moving from main to dung2
+[33mf48330b[m HEAD@{77}: reset: moving to HEAD
+[33mf48330b[m HEAD@{78}: commit: commit
+[33m9147fc5[m HEAD@{79}: pull --ff --recurse-submodules --progress origin: Fast-forward
+[33m0f05847[m HEAD@{80}: pull --ff --recurse-submodules --progress origin: Fast-forward
+[33md554ec0[m HEAD@{81}: checkout: moving from dung2 to main
+[33me813cac[m HEAD@{82}: commit: comit
+[33m823340a[m HEAD@{83}: checkout: moving from main to dung2
+[33me93e331[m HEAD@{84}: reset: moving to HEAD
+[33me93e331[m HEAD@{85}: pull --ff --recurse-submodules --progress origin: Fast-forward
+[33m1fd0da6[m HEAD@{86}: checkout: moving from dung2 to main
+[33m823340a[m HEAD@{87}: commit: commit
+[33mf3cbbab[m HEAD@{88}: checkout: moving from main to dung2
+[33m2c50dbf[m HEAD@{89}: checkout: moving from dung2 to main
+[33mf3cbbab[m HEAD@{90}: reset: moving to HEAD
+[33mf3cbbab[m HEAD@{91}: checkout: moving from main to dung2
+[33mf3cbbab[m HEAD@{92}: pull --ff --recurse-submodules --progress origin: Fast-forward
+[33m078abb4[m HEAD@{93}: checkout: moving from dung1 to main
+[33med63706[m[33m ([m[1;31morigin/dung1[m[33m, [m[1;32mdung1[m[33m)[m HEAD@{94}: commit: Update ShoutWebSocket.java
+[33me54d09e[m HEAD@{95}: checkout: moving from minh to dung1
+[33mc390b2f[m HEAD@{96}: reset: moving to HEAD
+[33mc390b2f[m HEAD@{97}: checkout: moving from manh to minh
+[33m547d463[m HEAD@{98}: checkout: moving from dung1 to manh
+[33me54d09e[m HEAD@{99}: commit: commit
+[33mc3dec3a[m HEAD@{100}: checkout: moving from main to dung1
+[33m078abb4[m HEAD@{101}: pull --ff --recurse-submodules --progress origin: Fast-forward
+[33m7313a9f[m HEAD@{102}: checkout: moving from dung1 to main
+[33mc3dec3a[m HEAD@{103}: commit: hi
+[33m2341bbe[m HEAD@{104}: checkout: moving from main to dung1
+[33m7313a9f[m HEAD@{105}: checkout: moving from dung1 to main
+[33m2341bbe[m HEAD@{106}: commit: Update ProductPromotionImpl.java
+[33m621ca2a[m HEAD@{107}: checkout: moving from main to dung1
+[33m26eae5e[m HEAD@{108}: commit: Update ProductPromotionImpl.java
+[33m1fa5dcc[m HEAD@{109}: pull --ff --recurse-submodules --progress origin: Fast-forward
+[33m067cd4a[m HEAD@{110}: checkout: moving from dung1 to main
+[33mac33ee2[m HEAD@{111}: commit: commit
+[33m7f31258[m HEAD@{112}: checkout: moving from main to dung1
+[33m7a11970[m HEAD@{113}: reset: moving to HEAD
+[33m7a11970[m HEAD@{114}: pull --ff --recurse-submodules --progress origin: Fast-forward
+[33me0ea462[m HEAD@{115}: pull --ff --recurse-submodules --progress origin: Fast-forward
+[33me601a60[m HEAD@{116}: commit: sds
+[33m18cc486[m HEAD@{117}: pull --ff --recurse-submodules --progress origin: Fast-forward
+[33m200414a[m HEAD@{118}: checkout: moving from dung1 to main
+[33mb6d6bc2[m HEAD@{119}: commit: sds
+[33ma9523ca[m HEAD@{120}: checkout: moving from main to dung1
+[33m200414a[m HEAD@{121}: reset: moving to HEAD
+[33m200414a[m HEAD@{122}: pull --ff --recurse-submodules --progress origin: Fast-forward
+[33m9a1f8c4[m HEAD@{123}: reset: moving to HEAD
+[33m9a1f8c4[m HEAD@{124}: commit: sds
+[33m16b8690[m HEAD@{125}: pull --ff --recurse-submodules --progress origin: Fast-forward
+[33m03b8bca[m HEAD@{126}: checkout: moving from dung1 to main
+[33ma9523ca[m HEAD@{127}: checkout: moving from main to dung1
+[33m03b8bca[m HEAD@{128}: checkout: moving from dung1 to main
+[33ma9523ca[m HEAD@{129}: commit: áá
+[33mf07399e[m HEAD@{130}: checkout: moving from main to dung1
+[33m3c41d47[m HEAD@{131}: pull --ff --recurse-submodules --progress origin: Fast-forward
+[33m8cb065b[m HEAD@{132}: checkout: moving from dung1 to main
+[33m36b2aaf[m HEAD@{133}: commit: á
+[33mb59979a[m HEAD@{134}: checkout: moving from main to dung1
+[33m741cbfa[m HEAD@{135}: reset: moving to HEAD
+[33m741cbfa[m HEAD@{136}: checkout: moving from dung1 to main
+[33mb59979a[m HEAD@{137}: reset: moving to HEAD
+[33mb59979a[m HEAD@{138}: commit: df
+[33m1b3ee23[m HEAD@{139}: checkout: moving from main to dung1
+[33m84c4bcb[m HEAD@{140}: reset: moving to HEAD
+[33m84c4bcb[m HEAD@{141}: reset: moving to 84c4bcb4ef558bceaff4ce684ca8561497c79169
+[33meaf3013[m HEAD@{142}: commit: df
+[33m84c4bcb[m HEAD@{143}: pull --ff --recurse-submodules --progress origin: Fast-forward
+[33m6e5d761[m HEAD@{144}: checkout: moving from dung1 to main
+[33m1b3ee23[m HEAD@{145}: commit: commit
+[33md365ad3[m HEAD@{146}: checkout: moving from main to dung1
+[33md365ad3[m HEAD@{147}: pull --ff --recurse-submodules --progress origin: Fast-forward
+[33mf399816[m HEAD@{148}: pull --ff --recurse-submodules --progress origin: Fast-forward
+[33mfe33af8[m HEAD@{149}: pull --ff --recurse-submodules --progress origin: Fast-forward
+[33mdcb15f0[m HEAD@{150}: commit: Update vcs.xml
+[33me26b9d0[m HEAD@{151}: pull --ff --recurse-submodules --progress origin: Fast-forward
+[33mf2cc898[m HEAD@{152}: pull --ff --recurse-submodules --progress origin: Fast-forward
+[33mf93a14f[m HEAD@{153}: pull --ff --recurse-submodules --progress origin: Fast-forward
+[33m25517cb[m HEAD@{154}: pull --ff --recurse-submodules --progress origin: Fast-forward
+[33ma88a51a[m HEAD@{155}: clone: from https://github.com/vuongducthoai/Web_Shoe_Store_System_Group7.git
